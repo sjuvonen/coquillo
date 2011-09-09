@@ -12,7 +12,7 @@ QT += network
 
 win32 {
 	INCLUDEPATH += resources/win/taglib/include
-	LIBS += resources/win/taglib.dll
+	LIBS += resources/windows/taglib/taglib.dll
 	CONFIG += windows
 	ICON = extra/coquillo.png
 }
@@ -45,6 +45,7 @@ FORMS +=   ui/AboutApp.ui \
            ui/SettingsPage4.ui \
            ui/TagEditorBasics.ui \
            ui/TagEditorPictures.ui \
+           ui/DirectorySelector.ui \
 
 HEADERS += src/cddb/Cddb.h src/cddb/CddbPrivate.h
 SOURCES += src/cddb/Cddb.cpp src/cddb/CddbPrivate.cpp
@@ -55,6 +56,7 @@ HEADERS += src/globals.h \
            src/CddbSearchDialog.h \
            src/DirectorySelectorWidget.h \
            src/EditorWidget.h \
+           src/FileSystemProxyModel.h \
            src/ImageCache.h \
            src/MainWindow.h \
            src/MetaDataImage.h \
@@ -76,6 +78,7 @@ SOURCES += src/globals.cpp \
            src/CddbSearchDialog.cpp \
            src/DirectorySelectorWidget.cpp \
            src/EditorWidget.cpp \
+           src/FileSystemProxyModel.cpp \
            src/ImageCache.cpp \
            src/main.cpp \
            src/MainWindow.cpp \

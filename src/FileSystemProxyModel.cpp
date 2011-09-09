@@ -12,6 +12,8 @@ FileSystemProxyModel::FileSystemProxyModel(QObject * parent)
 QString FileSystemProxyModel::rootPath() const {
 	if (sourceModel())
 		return sourceModel()->rootPath();
+
+	return QString();
 }
 
 void FileSystemProxyModel::setRootPath(const QString & path) {

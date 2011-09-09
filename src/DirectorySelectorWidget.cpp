@@ -18,63 +18,118 @@
 #include <QFileSystemModel>
 #include <QHeaderView>
 #include <QLineEdit>
+#include <QMenu>
 #include <QModelIndex>
+#include <QMouseEvent>
+#include <QToolButton>
 #include <QTreeView>
 #include <QVBoxLayout>
 
 #include "DirectorySelectorWidget.h"
+#include "FileSystemProxyModel.h"
+
+#include "uih/ui_DirectorySelector.h"
+
+#include <QDebug>
 
 DirectorySelectorWidget::DirectorySelectorWidget(QWidget * parent) : QWidget(parent) {
-	QFileSystemModel * model = new QFileSystemModel(this);
-	model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-	model->setRootPath("/");
 
-	_line = new QLineEdit(this);
+	_ui = new Ui::DirectorySelector;
+	_ui->setupUi(this);
 
-	_tree = new QTreeView(this);
-	_tree->setModel(model);
-	_tree->header()->setVisible(false);
+	_model = new QFileSystemModel(this);
+	_model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 
-	for (int i = 1; i < _tree->header()->count(); i++)
-		_tree->header()->hideSection(i);
+	_proxy = new FileSystemProxyModel(this);
+	_proxy->setSourceModel(_model);
 
-	QVBoxLayout * layout = new QVBoxLayout;
-	layout->addWidget(_line);
-	layout->addWidget(_tree);
+	_ui->directories->setModel(_proxy);
 
-	layout->setContentsMargins(2, -1, 2, -1);
+	_ui->dirUp->setIcon(style()->standardIcon(QStyle::SP_FileDialogToParent));
 
-	setLayout(layout);
-
-	connect(_tree, SIGNAL(clicked(const QModelIndex &)), this, SLOT(indexChanged(const QModelIndex &)));
-	connect(_line, SIGNAL(returnPressed()), this, SLOT(typedPathChanged()));
+	_ui->directories->viewport()->installEventFilter(this);
 }
 
 QString DirectorySelectorWidget::path() const {
-	return qobject_cast<QFileSystemModel *>(_tree->model())->filePath(_tree->currentIndex());
+	return _model->filePath(_ui->directories->currentIndex());
 }
 
 void DirectorySelectorWidget::setPath(const QString & path) {
-	const QModelIndex i = qobject_cast<QFileSystemModel *>(_tree->model())->index(path, 0);
+	const QModelIndex i = _model->index(path, 0);
 
-	_tree->setCurrentIndex(i);
-	_tree->expand(i);
-	_line->setText(path);
+	_ui->directories->setCurrentIndex( _proxy->mapFromSource(i) );
+	_ui->directories->expand(i);
+	_ui->location->setText(path);
 }
 
-void DirectorySelectorWidget::indexChanged(const QModelIndex & idx) {
-	const QString path = qobject_cast<QFileSystemModel *>(_tree->model())->filePath(idx);
-	_line->setText(path);
+void DirectorySelectorWidget::setRootPath(const QString & path) {
+	_model->setRootPath(path);
+
+	const QModelIndex idx = _proxy->mapFromSource( _model->index(path) );
+	_ui->directories->setRootIndex(idx);
+}
+
+void DirectorySelectorWidget::setRootIndex(const QModelIndex & idx) {
+	if (!idx.isValid())
+		return;
+
+	setRootPath( _model->filePath(_proxy->mapToSource(idx)) );
+}
+
+void DirectorySelectorWidget::changePath(const QModelIndex & idx) {
+	const QString path = _model->filePath( _proxy->mapToSource(idx) );
+	_ui->location->setText(path);
 
 	emit pathSelected(path);
 }
 
-void DirectorySelectorWidget::typedPathChanged() {
-	const QString path = _line->text();
-	const QModelIndex idx = qobject_cast<QFileSystemModel *>(_tree->model())->index(path);
+void DirectorySelectorWidget::changeToTypedPath() {
+	const QString path = _ui->location->text();
 
-	_tree->setCurrentIndex(idx);
-	_tree->expand(idx);
+	setRootPath(path);
+	setPath(path);
+}
 
-	emit pathSelected(path);
+void DirectorySelectorWidget::goDirectoryUp() {
+	const QModelIndex idx = _model->index( _model->rootPath() ).parent();
+
+	if (idx.isValid()) {
+		setRootIndex( _proxy->mapFromSource(idx) );
+
+	}
+}
+
+
+
+
+
+void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
+	QMenu menu(this);
+	QAction * setRoot = menu.addAction(tr("Set as root"));
+
+	QAction * a = menu.exec( _ui->directories->mapToGlobal(point) );
+
+	if (a == setRoot) {
+		setRootIndex( _ui->directories->currentIndex() );
+	}
+}
+
+
+
+
+
+bool DirectorySelectorWidget::eventFilter(QObject * object, QEvent * event) {
+
+	if (object == _ui->directories->viewport() && event->type() == QEvent::MouseButtonRelease) {
+		QMouseEvent * e = dynamic_cast<QMouseEvent*>(event);
+		const QModelIndex idx = _ui->directories->indexAt(e->pos());
+
+		if (e && e->button() == Qt::LeftButton &&
+			e->pos().x() >= _ui->directories->visualRect(idx).x() + _ui->directories->indentation()) {
+			_ui->directories->setExpanded( idx, !_ui->directories->isExpanded(idx) );
+			return false;
+		}
+	}
+
+	return QWidget::eventFilter(object, event);
 }

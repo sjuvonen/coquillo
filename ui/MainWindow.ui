@@ -493,7 +493,7 @@
       <number>2</number>
      </property>
      <item>
-      <widget class="DirectorySelectorWidget2" name="widgetLocation" native="true">
+      <widget class="DirectorySelectorWidget" name="widgetLocation" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -530,15 +530,6 @@
    <addaction name="separator"/>
    <addaction name="actionProcessor"/>
    <addaction name="actionCDDB"/>
-  </widget>
-  <widget class="QDockWidget" name="dockLocation">
-   <property name="windowTitle">
-    <string>Path</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="DirectorySelectorWidget" name="widgetLocationOld"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -750,12 +741,6 @@
    <class>DirectorySelectorWidget</class>
    <extends>QWidget</extends>
    <header>DirectorySelectorWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>DirectorySelectorWidget2</class>
-   <extends>QWidget</extends>
-   <header>DirectorySelectorWidget2.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
