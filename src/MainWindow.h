@@ -23,6 +23,8 @@
 
 #include "def_MetaData.h"
 
+#include <QDebug>
+
 class QItemSelection;
 class QThread;
 
@@ -32,6 +34,7 @@ class MetaDataModel;
 class MetaDataWriter;
 class ModelDataInspector;
 class ProcessorWidget;
+class SortFilterProxyModelMod;
 
 namespace Ui {
 	class MainWindow;
@@ -60,7 +63,7 @@ class MainWindow : public QMainWindow {
 		void selectedRowsChanged(const QModelIndexList &);
 
 	private slots:
-		void check();
+		void check() { qDebug() << "~()"; }
 
 		void abortScan();
 		void toggleCddbSearchDialog(bool open=false);
@@ -83,6 +86,9 @@ class MainWindow : public QMainWindow {
 		void loadSettings();
 		void saveSettings();
 
+		void setupOldInterface();
+		void setupNewInterface();
+
 		QThread * _scannerThread;
 
 		CddbSearchDialog * _cddbDialog;
@@ -93,6 +99,7 @@ class MainWindow : public QMainWindow {
 		ProcessorWidget * _processor;
 
 		Ui::MainWindow * _ui;
+
 };
 
 #endif

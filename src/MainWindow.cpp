@@ -18,6 +18,8 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QDesktopServices>
+#include <QDir>
+#include <QFileSystemModel>
 #include <QLabel>
 #include <QMenuBar>
 #include <QProgressBar>
@@ -32,6 +34,7 @@
 #include "CddbSearchDialog.h"
 #include "DirectorySelectorWidget.h"
 #include "EditorWidget.h"
+#include "FileSystemProxyModel.h"
 #include "ImageCache.h"
 #include "MainWindow.h"
 #include "MetaDataModel.h"
@@ -85,6 +88,7 @@ MainWindow::MainWindow(QWidget * parent)
 
 	_ui->widgetEditor->setModel(m);
 	_ui->tableItems->setModel(m);
+
 	_processor->setModel(m);
 
 	QProgressBar * scanProgress = new QProgressBar(this);
@@ -99,13 +103,20 @@ MainWindow::MainWindow(QWidget * parent)
 	statusBar()->insertWidget(0, scanProgress);
 	statusBar()->addPermanentWidget(statusMessage, 1);
 
-	// Handles toggling the Processor button in toolbar
+	// Handles toggling the Processor button in toolbarr(this);
+	menuBar()->installEventFilter(this);
 	_processor->installEventFilter(this);
+	_ui->mainToolBar->installEventFilter(this);
+
 
 	// Add this action to MainWindow so that the shortcut works even when menubar is hidden.
 	addAction( _ui->actionMenubar );
 	addAction( _ui->actionQuit );
 	addAction( _ui->actionConfigure );
+	addAction( _ui->actionLock_interface );
+
+	setupOldInterface();
+	setupNewInterface();
 
 	_ui->tableItems->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -121,10 +132,7 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(_scanner, SIGNAL(itemsDone(int)), scanProgress, SLOT(setValue(int)));
 	connect(_scanner, SIGNAL(maxItemsChanged(int)), scanProgress, SLOT(setMaximum(int)));
 
-	connect(_ui->actionReload, SIGNAL(triggered()), _scanner, SLOT(scan()));
-
 	connect(_ui->actionAbout, SIGNAL(triggered()), SLOT(showAboutDialog()));
-	connect(_ui->actionAbort, SIGNAL(triggered()), SLOT(abortScan()));
 	connect(_ui->actionConfigure, SIGNAL(triggered()), SLOT(openSettingsDialog()));
 	connect(_ui->actionRecursive_scan, SIGNAL(toggled(bool)), SLOT(setRecursiveScan(bool)));
 
@@ -142,34 +150,10 @@ MainWindow::MainWindow(QWidget * parent)
 
 	connect(_processor, SIGNAL(closeButtonPressed()), _processor, SLOT(close()));
 
-	connect(_ui->actionProcessor, SIGNAL(toggled(bool)), _processor, SLOT(setVisible(bool)));
-
 	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)), _scanner, SLOT(scanPath(const QString &)));
 	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)), _dataModel, SLOT(setRootDirectory(const QString &)));
 
-	connect(_ui->mainToolBar, SIGNAL(customContextMenuRequested(const QPoint &)), SLOT(showToolBarContextMenu(const QPoint &)));
-	connect(_ui->actionSave, SIGNAL(triggered()), SLOT(saveMetaData()));
-	connect(_ui->actionReset, SIGNAL(triggered()), _dataModel, SLOT(undoChanges()));
-
-	connect(_ui->actionCDDB, SIGNAL(toggled(bool)), SLOT(toggleCddbSearchDialog(bool)));
-
-	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->actionSave, SLOT(setEnabled(bool)));
-	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->actionReset, SLOT(setEnabled(bool)));
-
-	connect(
-		_ui->actionInverse, SIGNAL(triggered()),
-		SLOT(slotSelectInverse())
-	);
-
-	connect(
-		_ui->actionNext, SIGNAL(triggered()),
-		_ui->widgetEditor->dataMapper(), SLOT(toNext())
-	);
-
-	connect(
-		_ui->actionPrevious, SIGNAL(triggered()),
-		_ui->widgetEditor->dataMapper(), SLOT(toPrevious())
-	);
+	//connect(_ui->mainToolBar, SIGNAL(customContextMenuRequested(const QPoint &)), SLOT(showToolBarContextMenu(const QPoint &)));
 
 	connect(
 		_ui->widgetEditor->dataMapper(), SIGNAL(currentIndexChanged(int)),
@@ -186,15 +170,8 @@ MainWindow::MainWindow(QWidget * parent)
 
 	loadSettings();
 
-	_ui->actionPrevious->setIcon(style()->standardIcon(QStyle::SP_ArrowLeft));
-	_ui->actionNext->setIcon(style()->standardIcon(QStyle::SP_ArrowRight));
-	_ui->actionReset->setIcon(style()->standardIcon(QStyle::SP_DialogResetButton));
-	_ui->actionSave->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-	_ui->actionAbort->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
-	_ui->actionReload->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 
-	_ui->actionCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
-	_ui->actionProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
+	//_ui->dirUp->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
 
 	_ui->tableItems->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
@@ -235,14 +212,10 @@ void MainWindow::slotSelectInverse() {
 
 QMenu * MainWindow::createPopupMenu() {
 	QMenu * m = new QMenu;
-	m->setAttribute(Qt::WA_DeleteOnClose, true);
 
 	const QList<QToolBar *> bars = findChildren<QToolBar*>();
 
-	QAction * lock = m->addAction(tr("Lock interface"));
-	lock->setCheckable(true);
-	lock->setChecked(!bars.isEmpty() ? !bars.at(0)->isMovable() : false);
-
+	m->addAction( _ui->actionLock_interface );
 	m->addSeparator();
 	m->addAction(_ui->actionMenubar);
 
@@ -268,19 +241,15 @@ QMenu * MainWindow::createPopupMenu() {
 		connect(a, SIGNAL(triggered(bool)), this, SLOT(setInterfaceObjectVisible(bool)));
 	}
 
-	connect(lock, SIGNAL(triggered(bool)), this, SLOT(setInterfaceLocked(bool)));
-	//connect(m, SIGNAL(aboutToHide()), m, SLOT(deleteLater()));
-
-	connect(m, SIGNAL(aboutToHide()), m, SLOT(deleteLater()));
-	//connect(m, SIGNAL(destroyed()), this, SLOT(check()));
-
 	return m;
 }
 
 #include <QTimer>
 
 void MainWindow::openDirectory(const QString & path) {
+	_ui->widgetLocation->setRootPath(path);
 	_ui->widgetLocation->setPath(path);
+
 	_scanner->setPath(path);
 	_dataModel->setRootDirectory(path);
 
@@ -308,6 +277,7 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
 			s.setValue("Processor/DialogSize", _processor->size());
 
 			_ui->actionProcessor->setChecked(false);
+			_ui->buttonProcessor->setChecked(false);
 
 		}
 		else if (event->type() == QEvent::Show) {
@@ -322,6 +292,33 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
 
 			_ui->actionProcessor->setChecked(true);
 		}
+	} else if (object == menuBar()) {
+		switch(event->type()) {
+			case QEvent::Hide:
+				_ui->buttonMenu->show();
+				return false;
+
+			case QEvent::Show:
+				_ui->buttonMenu->hide();
+				return false;
+
+			default:
+				return false;
+		}
+	} else if (object == _ui->mainToolBar) {
+		switch(event->type()) {
+			case QEvent::Hide:
+				_ui->widgetToolbar->show();
+				return false;
+
+			case QEvent::Show:
+				_ui->widgetToolbar->hide();
+				return false;
+
+			default:
+				return false;
+		}
+
 	}
 
 	return QMainWindow::eventFilter(object, event);
@@ -347,6 +344,7 @@ void MainWindow::toggleCddbSearchDialog(bool state) {
 		_cddbDialog->show();
 
 		_ui->actionCDDB->setChecked(true);
+		_ui->buttonCDDB->setChecked(true);
 
 		connect(this, SIGNAL(selectedRowsChanged(const QModelIndexList &)),
 			_cddbDialog, SLOT(setIndexes(const QModelIndexList &)));
@@ -377,18 +375,51 @@ void MainWindow::openSettingsDialog() {
 
 void MainWindow::scanStarted() {
 	findChild<QProgressBar*>("ScanProgressBar")->setVisible(true);
-	findChild<QAction*>("actionAbort")->setEnabled(true);
+
+	// Old interface
+	_ui->actionReloadOrAbort->setText(tr("Abort"));
+	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
+	_ui->actionReloadOrAbort->setShortcut(tr("Esc"));
+
+	disconnect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
+	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), SLOT(abortScan()));
+
+	// New interface
+	_ui->buttonReloadOrAbort->setText(tr("Abort"));
+	_ui->buttonReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
+	_ui->buttonReloadOrAbort->setShortcut(tr("Esc"));
+
+	disconnect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
+	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), SLOT(abortScan()));
 
 	ImageCache::clear();
 }
 
 void MainWindow::scanFinished() {
 	findChild<QProgressBar*>("ScanProgressBar")->setVisible(false);
-	findChild<QAction*>("actionAbort")->setEnabled(false);
 	findChild<QLabel*>("StatusMessage")->setText( QString("%1 tracks").arg(_dataModel->rowCount()) );
+
+	// Old interface
+	_ui->actionReloadOrAbort->setText(tr("Reload"));
+	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+	_ui->actionReloadOrAbort->setShortcut(tr("Ctrl+R"));
+
+	disconnect(_ui->actionReloadOrAbort, SIGNAL(triggered()), this, SLOT(abortScan()));
+	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
+
+	// New interface
+	_ui->buttonReloadOrAbort->setText(tr("Reload"));
+	_ui->buttonReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+	_ui->buttonReloadOrAbort->setShortcut(tr("Ctrl+R"));
+
+	disconnect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), this, SLOT(abortScan()));
+	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
 }
 
 void MainWindow::setInterfaceLocked(bool setLocked) {
+
+	_ui->actionLock_interface->setChecked(setLocked);
+
 	foreach (QToolBar * o, findChildren<QToolBar*>())
 		o->setMovable(!setLocked);
 
@@ -459,7 +490,9 @@ void MainWindow::loadSettings() {
 		b->setToolButtonStyle(style);
 	}
 
+	_ui->widgetLocation->setRootPath(scannerHome);
 	_ui->widgetLocation->setPath(scannerHome);
+
 	_ui->actionMenubar->setChecked( settings.value("MainWindow/MenubarVisible", true).toBool() );
 	_ui->tableItems->horizontalHeader()->restoreState( settings.value("MainWindow/TableHeader").toByteArray() );
 	_ui->actionProcessor->setChecked(settings.value("Processor/DockVisible", false).toBool());
@@ -500,8 +533,10 @@ void MainWindow::saveSettings() {
 }
 
 void MainWindow::showAboutDialog() {
-	AboutDialog d(this);
-	d.exec();
+	AboutDialog *d = new AboutDialog;
+
+	d->exec();
+	d->deleteLater();
 }
 
 
@@ -514,16 +549,25 @@ void MainWindow::showAboutDialog() {
 
 void MainWindow::setToolBarIconSize(int size) {
 	const QList<QToolBar*> bars = findChildren<QToolBar*>();
+	const QList<QToolButton*> buttons = _ui->widgetToolbar->findChildren<QToolButton*>();
 
 	foreach (QToolBar * tb, bars)
 		tb->setIconSize(QSize(size,size));
+
+	foreach (QToolButton * b, buttons)
+		b->setIconSize(QSize(size, size));
+
 }
 
 void MainWindow::setToolBarButtonStyle(int style) {
 	const QList<QToolBar*> bars = findChildren<QToolBar*>();
+	const QList<QToolButton*> buttons = _ui->widgetToolbar->findChildren<QToolButton*>();
 
 	foreach (QToolBar * tb, bars)
-		tb->setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style)	);
+		tb->setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style));
+
+	foreach (QToolButton * b, buttons)
+		b->setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style));
 }
 
 void MainWindow::showToolBarContextMenu(const QPoint & pos) {
@@ -589,14 +633,14 @@ void MainWindow::showToolBarContextMenu(const QPoint & pos) {
 			s1->setChecked(true);
 	}
 
-	QActionGroup sizeGroup(this);
+	QActionGroup sizeGroup(&menu);
 	sizeGroup.setExclusive(true);
 	sizeGroup.addAction(s);
 	sizeGroup.addAction(m);
 	sizeGroup.addAction(l);
 	sizeGroup.addAction(h);
 
-	QActionGroup styleGroup(this);
+	QActionGroup styleGroup(&menu);
 	styleGroup.setExclusive(true);
 	styleGroup.addAction(s1);
 	styleGroup.addAction(s2);
@@ -621,13 +665,13 @@ void MainWindow::showToolBarContextMenu(const QPoint & pos) {
 	popup->addMenu(sizeMenu);
 	popup->addMenu(styleMenu);
 
-	QSignalMapper sizeMapper(this);
+	QSignalMapper sizeMapper(&menu);
 	sizeMapper.setMapping(s, 16);
 	sizeMapper.setMapping(m, 22);
 	sizeMapper.setMapping(l, 32);
 	sizeMapper.setMapping(h, 48);
 
-	QSignalMapper styleMapper(this);
+	QSignalMapper styleMapper(&menu);
 	styleMapper.setMapping(s1, Qt::ToolButtonIconOnly);
 	styleMapper.setMapping(s2, Qt::ToolButtonTextOnly);
 	styleMapper.setMapping(s3, Qt::ToolButtonTextBesideIcon);
@@ -648,6 +692,7 @@ void MainWindow::showToolBarContextMenu(const QPoint & pos) {
 
 	popup->exec(qobject_cast<QWidget*>(sender())->mapToGlobal(pos));
 
+	popup->deleteLater();
 }
 
 void MainWindow::showHeaderContextMenu(const QPoint & point) {
@@ -687,11 +732,6 @@ void MainWindow::showHeaderContextMenu(const QPoint & point) {
 }
 
 
-void MainWindow::check() {
-	qDebug() << "~()";
-}
-
-
 
 
 void MainWindow::saveMetaData() {
@@ -714,6 +754,98 @@ void MainWindow::closeCddbDialog() {
 	_cddbDialog->deleteLater();
 	_cddbDialog = 0;
 
-	if (_ui->actionCDDB->isChecked())
-		_ui->actionCDDB->setChecked(false);
+	_ui->actionCDDB->setChecked(false);
+	_ui->buttonCDDB->setChecked(false);
+}
+
+
+
+void MainWindow::setupNewInterface() {
+
+	_ui->buttonPrevious->setIcon(style()->standardIcon(QStyle::SP_ArrowLeft));
+	_ui->buttonNext->setIcon(style()->standardIcon(QStyle::SP_ArrowRight));
+	_ui->buttonReset->setIcon(style()->standardIcon(QStyle::SP_DialogResetButton));
+	_ui->buttonSave->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+	_ui->buttonReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+
+	//_ui->buttonMenu->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
+
+	_ui->buttonCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
+	_ui->buttonProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
+
+	connect(_ui->buttonSave, SIGNAL(clicked()), SLOT(saveMetaData()));
+	connect(_ui->buttonReset, SIGNAL(clicked()), _dataModel, SLOT(undoChanges()));
+	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
+
+	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->buttonSave, SLOT(setEnabled(bool)));
+	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->buttonReset, SLOT(setEnabled(bool)));
+
+	connect(
+		_ui->buttonInverse, SIGNAL(clicked()),
+		SLOT(slotSelectInverse())
+	);
+
+	connect(
+		_ui->buttonNext, SIGNAL(clicked()),
+		_ui->widgetEditor->dataMapper(), SLOT(toNext())
+	);
+
+	connect(
+		_ui->buttonPrevious, SIGNAL(clicked()),
+		_ui->widgetEditor->dataMapper(), SLOT(toPrevious())
+	);
+
+	connect(_ui->buttonCDDB, SIGNAL(toggled(bool)), SLOT(toggleCddbSearchDialog(bool)));
+	connect(_ui->buttonProcessor, SIGNAL(toggled(bool)), _processor, SLOT(setVisible(bool)));
+
+	QMenu * menu = new QMenu;
+	menu->addAction(_ui->actionMenubar);
+	menu->addAction(_ui->actionLock_interface);
+	menu->addSeparator();
+	menu->addAction(_ui->actionRecursive_scan);
+	menu->addSeparator();
+	menu->addAction(_ui->actionConfigure);
+	menu->addAction(_ui->actionAbout);
+	menu->addAction(_ui->actionQuit);
+
+	_ui->buttonMenu->setMenu(menu);
+}
+
+
+void MainWindow::setupOldInterface() {
+
+	connect(_ui->actionSave, SIGNAL(triggered()), SLOT(saveMetaData()));
+	connect(_ui->actionReset, SIGNAL(triggered()), _dataModel, SLOT(undoChanges()));
+	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
+
+	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->actionSave, SLOT(setEnabled(bool)));
+	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->actionReset, SLOT(setEnabled(bool)));
+
+	connect(
+		_ui->actionInverse, SIGNAL(triggered()),
+		SLOT(slotSelectInverse())
+	);
+
+	connect(
+		_ui->actionNext, SIGNAL(triggered()),
+		_ui->widgetEditor->dataMapper(), SLOT(toNext())
+	);
+
+	connect(
+		_ui->actionPrevious, SIGNAL(triggered()),
+		_ui->widgetEditor->dataMapper(), SLOT(toPrevious())
+	);
+
+	connect(_ui->actionCDDB, SIGNAL(toggled(bool)), SLOT(toggleCddbSearchDialog(bool)));
+	connect(_ui->actionProcessor, SIGNAL(toggled(bool)), _processor, SLOT(setVisible(bool)));
+
+	_ui->actionPrevious->setIcon(style()->standardIcon(QStyle::SP_ArrowLeft));
+	_ui->actionNext->setIcon(style()->standardIcon(QStyle::SP_ArrowRight));
+	_ui->actionReset->setIcon(style()->standardIcon(QStyle::SP_DialogResetButton));
+	_ui->actionSave->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+
+	_ui->actionCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
+	_ui->actionProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
+
 }

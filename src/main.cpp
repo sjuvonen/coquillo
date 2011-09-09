@@ -18,19 +18,21 @@
 #include <iostream>
 
 #include <QApplication>
+#include <QMainWindow>
 #include <QSettings>
 #include <QTextCodec>
 
 #include <QDebug>
 
-#include "MainWindow.h"
 #include "globals.h"
+
+#include "MainWindow.h"
 
 #include <QByteArray>
 #include <QDataStream>
 
 const QString Coquillo::releaseDate = "2011-09-07";
-const QString Coquillo::appVersion = "1.7";
+const QString Coquillo::appVersion = "1.8";
 
 QMap<QString, QString> extractArgs(int & argc, char ** args);
 void migrateSettings();
@@ -96,11 +98,11 @@ int main(int argc, char ** args) {
 		return 0;
 	}
 
-	MainWindow mw;
-	mw.show();
+	MainWindow * mw = new MainWindow;
+	mw->show();
 
 	if (arguments.contains("--dir"))
-		mw.openDirectory(arguments["--dir"]);
+		mw->openDirectory(arguments["--dir"]);
 
 	return app.exec();
 }

@@ -1,3 +1,9 @@
+1.8
+- Docks and menubar now use the same context menu as the toolbar does.
+- Added an option to the Settings menu to lock the interface.
+- Combined reload and stop scan buttons.
+- Added a 'minimal' UI that can be enabled by hiding the main toolbar.
+
 1.7
 - Enabled reordering and enabling/disabling of columns in the main view.
 - Text fields now scroll to the begin when changing editable track.
