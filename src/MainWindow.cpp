@@ -103,8 +103,8 @@ MainWindow::MainWindow(QWidget * parent)
 	statusBar()->insertWidget(0, scanProgress);
 	statusBar()->addPermanentWidget(statusMessage, 1);
 
-	// Handles toggling the Processor button in toolbarr(this);
 	menuBar()->installEventFilter(this);
+	statusBar()->installEventFilter(this);
 	_processor->installEventFilter(this);
 	_ui->mainToolBar->installEventFilter(this);
 
@@ -319,6 +319,19 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
 				return false;
 		}
 
+	} else if (object == statusBar()) {
+		switch(event->type()) {
+			case QEvent::Hide:
+				_ui->actionStatus_bar->setChecked(false);
+				return false;
+
+			case QEvent::Show:
+				_ui->actionStatus_bar->setChecked(true);
+				return false;
+
+			default:
+				return false;
+		}
 	}
 
 	return QMainWindow::eventFilter(object, event);
@@ -768,8 +781,6 @@ void MainWindow::setupNewInterface() {
 	_ui->buttonSave->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
 	_ui->buttonReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 
-	//_ui->buttonMenu->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
-
 	_ui->buttonCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
 	_ui->buttonProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
 
@@ -800,6 +811,7 @@ void MainWindow::setupNewInterface() {
 
 	QMenu * menu = new QMenu;
 	menu->addAction(_ui->actionMenubar);
+	menu->addAction(_ui->actionStatus_bar);
 	menu->addAction(_ui->actionLock_interface);
 	menu->addSeparator();
 	menu->addAction(_ui->actionRecursive_scan);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1027</width>
-    <height>575</height>
+    <width>1007</width>
+    <height>607</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -101,6 +101,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="buttonReloadOrAbort">
+         <property name="text">
+          <string>Reload</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>22</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QToolButton" name="buttonSave">
          <property name="enabled">
           <bool>false</bool>
@@ -126,22 +142,6 @@
          </property>
          <property name="text">
           <string>Reset</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>22</width>
-           <height>22</height>
-          </size>
-         </property>
-         <property name="autoRaise">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="buttonReloadOrAbort">
-         <property name="text">
-          <string>Reload</string>
          </property>
          <property name="iconSize">
           <size>
@@ -358,7 +358,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1027</width>
+     <width>1007</width>
      <height>18</height>
     </rect>
    </property>
@@ -376,6 +376,7 @@
      <string>Settings</string>
     </property>
     <addaction name="actionMenubar"/>
+    <addaction name="actionStatus_bar"/>
     <addaction name="actionLock_interface"/>
     <addaction name="separator"/>
     <addaction name="actionRecursive_scan"/>
@@ -729,6 +730,14 @@
     <string>Ctrl+L</string>
    </property>
   </action>
+  <action name="actionStatus_bar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Status bar</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -905,6 +914,22 @@
     <hint type="destinationlabel">
      <x>513</x>
      <y>287</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStatus_bar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>statusbar</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>503</x>
+     <y>596</y>
     </hint>
    </hints>
   </connection>
