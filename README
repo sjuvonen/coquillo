@@ -1,0 +1,32 @@
+Here are short instructions for Coquillo.
+
+Keyboard shortcuts:
+	Esc - Cancel scan operation
+	PgDown - Select previous track
+	PgUp - Select next track
+
+	Ctrl+Q - Quit
+	Ctrl+R - Reload current directory
+	Ctrl+S - Save changed files
+	Ctrl+A - Select all tracks
+	Ctrl+Shit+A - Invert selection
+
+	Ctrl+B - Toggle Processor dialog
+	Ctrl+M - Toggle menubar
+	Ctrl+P - Open preferences dialog
+
+Using CDDB search:
+	1. Put the tracks in album order and select them all.
+	2. Open CDDB search dialog.
+	3. Run either automatic or manual search.
+	4. Select correct album from the left-side list.
+	5. Verify results in the right-side list.
+	6. Apply tags by clicking 'Apply'.
+
+
+Using patterns to resolve tags or generate filenames:
+	1. Select tracks to process.
+	2. Open Processor dialog.
+	3. Choose action and enter pattern. (See pattern symbols below.)
+	4. Apply tags by clicking 'Apply'.
+

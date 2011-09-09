@@ -1,0 +1,145 @@
+/***********************************************************************
+* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+************************************************************************/
+
+#include <QAbstractItemModel>
+#include <QFileInfo>
+#include <QRegExp>
+#include <QSettings>
+#include <QStringList>
+
+#include "ModelDataInspector.h"
+#include "def_MetaData.h"
+#include "globals.h"
+
+#include <QDebug>
+
+ModelDataInspector::ModelDataInspector(QObject * parent=0)
+	: QObject(parent), _model(0) {
+
+}
+
+void ModelDataInspector::setModel(QAbstractItemModel * model) {
+
+	if (_model)  {
+		disconnect(_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+			this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+
+		disconnect(_model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+			this, SLOT(modelRowsInserted(const QModelIndex &, int, int)));
+	}
+
+	connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+		SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+
+	connect(model, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+		SLOT(modelRowsInserted(const QModelIndex &, int, int)));
+
+	_model = model;
+}
+
+void ModelDataInspector::modelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight) {
+	checkData(topLeft.row(), bottomRight.row(), topLeft.parent());
+}
+
+void ModelDataInspector::modelRowsInserted(const QModelIndex & parent, int start, int end) {
+	checkData(start, end, parent);
+}
+
+void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex & parent) {
+	disconnect(_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+		this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+
+	for (int i = firstRow; i <= lastRow; i++) {
+		const QModelIndex idx = _model->index(i, 0, parent);
+		QMap<int, QString> fields = g_fieldNames;
+
+		fields.remove( g_fieldNames.key("Disc") );
+		fields.remove( g_fieldNames.key("Number") );
+		fields.remove( g_fieldNames.key("MaxNumber") );
+		fields.remove( g_fieldNames.key("Path") );
+		fields.remove( g_fieldNames.key("Year") );
+		fields.remove( g_fieldNames.key("Pictures") );
+
+		if (Coquillo::safeFileNames) {
+			const QModelIndex idx = _model->index(i, g_fieldNames.key("Path"));
+			const QRegExp chars("[\"*:<>\?\\|]");
+
+			QString path = idx.data(Qt::EditRole).toString();
+			const QString dir = path.section('/', 0, -2);
+			const QString name = path.section('/', -1).remove(chars);
+
+			path = QString("%1/%2").arg(dir, name);
+
+			_model->setData( _model->index(i, g_fieldNames.key("Path")), path );
+		}
+
+		if (Coquillo::fileExtensionCase) {
+			const QModelIndex idx = _model->index(i, g_fieldNames.key("Path"));
+			QString path = idx.data(Qt::EditRole).toString();
+			const QString suffix = path.section('.', -1);
+
+			path.chop(suffix.length());
+
+			if (Coquillo::fileExtensionCase == 1)
+				path.append(suffix.toLower());
+			else
+				path.append(suffix.toUpper());
+
+			_model->setData(idx, path);
+		}
+
+		if (Coquillo::removeDiscFromAlbumName) {
+			const QModelIndex idx = _model->index(i, g_fieldNames.key("Album"));
+			QRegExp r("\\s*[\\[\\(](?:disc|cd)\\s*(\\d+)[\\]\\)]\\s*$");
+
+			r.setCaseSensitivity(Qt::CaseInsensitive);
+
+			QString albumName = idx.data(Qt::EditRole).toString();
+
+			if (r.indexIn(albumName) != -1) {
+				int disc = r.cap(1).toInt();
+				albumName.remove(r);
+
+				_model->setData(idx, albumName);
+				_model->setData(idx.sibling(idx.row(), g_fieldNames.key("Disc")), disc);
+			}
+
+
+
+		}
+
+		foreach (int col, fields.keys()) {
+			/**
+			 * Fields that begin with an underscore are internal informaation fields
+			 * and must not not be altered.
+			 **/
+
+			const QModelIndex idx = _model->index(i, col);
+			QString value = idx.data(Qt::EditRole).toString();
+
+			if (Coquillo::trimWhiteSpace)
+				value = value.trimmed().replace(QRegExp("\\s+"), QString(' '));
+
+			_model->setData(idx, value);
+
+		}
+
+	}
+
+	connect(_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+		this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+}

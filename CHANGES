@@ -1,0 +1,48 @@
+1.7
+- Enabled reordering and enabling/disabling of columns in the main view.
+- Text fields now scroll to the begin when changing editable track.
+- Fixed a regression with renaming files and directories.
+- Field processor dialog now remembers its size.
+- Fixed "dimming background for subdirectories" sometimes being inaccurate.
+
+1.6
+- Fixed encoding setting being corrupted on startup.
+- Hopefully fixed encoding problems with special (eg. Cyrillic) characters.
+- Ogg Vorbis tags now use the official format for cover art.
+	- Retained read only support for legacy ("EasyTag") covers. (A bit troublesome.)
+- Remember to enable "convert legacy cover art" from the settings!
+	- Disabled by default to not cause unpleasant surprises (legacy MP3 players or so?).
+
+1.5
+- Revised some code.
+- CDDB track info can now be edited.
+- Fixed bug that prevented applying CDDB data on tracks.
+
+1.4
+- Fixed selection problems in files list.
+- Numeric fields (spinboxes) now clear their value if selected track doesn't have that value set.
+- Subdirectory highlighting now uses translucent colors.
+
+1.3
+- Hid 'Length' column in files list.
+- Files list now doesn't clear the selection when clicking on empty space.
+- Enabled sorting in the files list.
+- Added option to dim background color for rows of subdirectories.
+- 'Path' column now displays relative path instead of absolute.
+- Ctrl+P now works when menubar hidden.
+- Support for embedded FLAC pictures.
+- Generic support for MusePack, MP4, ASF, AIFF, WAV, TrueAudio, WavPack, Ogg FLAC and Speex.
+- Support for defining startup directory via command line parameter
+- Fixed miscellaneous bugs.
+
+1.2
+- Fixed a number of bugs in field processor.
+- Fixed missing window icon
+
+1.1
+- CDDB read support over HTTP.
+- Integrated FreeDB web search.
+- Fixed some bugs.
+
+1.0 RC1
+- Initial release
