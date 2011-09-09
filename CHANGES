@@ -1,4 +1,4 @@
-1.8
+Git
 - Docks and menubar now use the same context menu as the toolbar does.
 - Added an option to the Settings menu to lock the interface.
 - Combined reload and stop scan buttons.
