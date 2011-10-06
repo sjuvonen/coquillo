@@ -5,6 +5,7 @@ Git
 - Added a 'minimal' UI that can be enabled by hiding the main toolbar.
 - Added option to hide the statusbar.
 - It's now possible to set a root directory in the directory tree.
+- Added bookmarks.
 
 1.7
 - Enabled reordering and enabling/disabling of columns in the main view.
