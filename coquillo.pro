@@ -18,16 +18,24 @@ win32 {
 }
 
 unix {
+
+	isEmpty(PREFIX) {
+		PREFIX = /usr
+	}
+
+	DATADIR = $$PREFIX/share
+	BINDIR = $$PREFIX/bin
+
 	ICON = extra/coquillo.png
 	LIBS += -ltag
 
-	executable.path = /usr/bin
+	executable.path = $$BINDIR
 	executable.files = coquillo
 
-	icons.path = /usr/share/pixmaps
+	icons.path = $$DATADIR/pixmaps
 	icons.files = extra/coquillo.png
 
-	launcher.path = /usr/share/applications
+	launcher.path = $$DATADIR/applications
 	launcher.files = extra/coquillo.desktop
 
 	INSTALLS += executable icons launcher
