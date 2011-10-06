@@ -22,6 +22,8 @@
 
 #include "def_MetaData.h"
 
+#include <QFutureWatcher>
+
 class MediaScanner : public QObject {
 	Q_OBJECT
 
@@ -41,9 +43,17 @@ class MediaScanner : public QObject {
 		void maxItemsChanged(int max);
 		void started();
 
+		void rangeChanged(int min, int max);
+
 	public slots:
 		void scan();
 		void scanPath(const QString & path);
+
+	/*
+	 private slots:
+		void slotResultReady(int i);
+		void slotResultsReady(int i, int j);
+	*/
 
 	private:
 		QStringList validFileTypes() const;
@@ -51,8 +61,12 @@ class MediaScanner : public QObject {
 
 		void processMedia(const QStringList & paths);
 
+		static void process(const QString & filePath);
+
 		bool _recursive;
 		QString _path;
+
+		QFutureWatcher<MetaData> * _watcher;
 
 
 };

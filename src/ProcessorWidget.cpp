@@ -25,7 +25,7 @@
 #include "ProcessorWidget.h"
 #include "MetaDataModel.h"
 
-#include "uih/ui_Processor.h"
+#include "ui_Processor.h"
 
 #include "globals.h"
 

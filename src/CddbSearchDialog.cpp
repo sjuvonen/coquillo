@@ -28,7 +28,7 @@
 
 #include "globals.h"
 
-#include "uih/ui_CddbSearchDialog.h"
+#include "ui_CddbSearchDialog.h"
 
 #include <QDebug>
 
@@ -182,14 +182,8 @@ void CddbSearchDialog::accept() {
 		if (setAll || setYear)
 			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Year")), info.year);
 
-		//qDebug() << idx.sibling(idx.row(), g_fieldNames.key("Title")).data().toString() << title;
-
-		qDebug() << idx.model() << _dataModel;
-
 		dataIdx = dataIdx.sibling(dataIdx.row()+1, dataIdx.column());
 	}
-
-	// QDialog::accept();
 }
 
 void CddbSearchDialog::clearCddbData() {
@@ -405,8 +399,6 @@ void CddbSearchDialog::toggleSearchFieldButtonExclusion(QAbstractButton * button
 
 
 void CddbSearchDialog::closeEvent(QCloseEvent * event) {
-	qDebug() << "close";
-
 	QSettings s;
 	s.setValue("CDDB/DialogSize", size());
 	s.setValue("CDDB/DialogPosition", pos());

@@ -23,7 +23,7 @@
 #include "globals.h"
 #include "AboutDialog.h"
 
-#include "uih/ui_AboutApp.h"
+#include "ui_AboutApp.h"
 
 AboutDialog::AboutDialog(QWidget * parent) : QDialog(parent) {
 	_ui = new Ui::AboutApp;

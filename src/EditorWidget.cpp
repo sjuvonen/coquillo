@@ -13,7 +13,7 @@
 #include "MetaDataModel.h"
 #include "MetaDataReader.h"
 
-#include "uih/ui_TagEditorBasics.h"
+#include "ui_TagEditorBasics.h"
 
 #include <QDebug>
 

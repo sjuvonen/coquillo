@@ -26,7 +26,7 @@
 #include "PictureListDelegate.h"
 #include "PicturesTab.h"
 
-#include "uih/ui_TagEditorPictures.h"
+#include "ui_TagEditorPictures.h"
 
 #include <QDebug>
 

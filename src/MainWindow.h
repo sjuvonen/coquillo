@@ -26,8 +26,11 @@
 #include <QDebug>
 
 class QItemSelection;
+class QSignalMapper;
+class QSortFilterProxyModel;
 class QThread;
 
+class BookmarkModel;
 class CddbSearchDialog;
 class MediaScanner;
 class MetaDataModel;
@@ -51,16 +54,16 @@ class MainWindow : public QMainWindow {
 
 		void openDirectory(const QString & path);
 
-	protected:
-		void closeEvent(QCloseEvent *);
-		bool eventFilter(QObject *, QEvent *);
-
 	public slots:
 		void setToolBarIconSize(int size);
 		void setToolBarButtonStyle(int style);
 
 	signals:
 		void selectedRowsChanged(const QModelIndexList &);
+
+	protected:
+		void closeEvent(QCloseEvent *);
+		bool eventFilter(QObject *, QEvent *);
 
 	private slots:
 		void check() { qDebug() << "~()"; }
@@ -77,6 +80,9 @@ class MainWindow : public QMainWindow {
 		void showAboutDialog();
 		void showToolBarContextMenu(const QPoint &);
 		void showHeaderContextMenu(const QPoint &);
+
+		void setupBookmarksMenu();
+		void openBookmarkDialog();
 
 		void slotSelectionChanged(const QItemSelection &);
 		void slotSelectInverse();
@@ -100,6 +106,9 @@ class MainWindow : public QMainWindow {
 
 		Ui::MainWindow * _ui;
 
+		BookmarkModel * _bookmarks;
+		QSortFilterProxyModel * _bookmarkProxy;
+		QSignalMapper * _bookmarkMapper;
 };
 
 #endif

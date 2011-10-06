@@ -22,9 +22,11 @@ class DirectorySelectorWidget : public QWidget {
 		QString path() const;
 
 	signals:
+		void bookmarked(const QString &);
 		void pathSelected(const QString &);
 
 	public slots:
+		void goDirectoryUp();
 		void setPath(const QString &);
 		void setRootPath(const QString &);
 		void setRootIndex(const QModelIndex &);
@@ -32,7 +34,6 @@ class DirectorySelectorWidget : public QWidget {
 	private slots:
 		void changePath(const QModelIndex &);
 		void changeToTypedPath();
-		void goDirectoryUp();
 
 		void showTreeContextMenu(const QPoint &);
 

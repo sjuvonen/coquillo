@@ -1,12 +1,12 @@
 
 TEMPLATE = app
 TARGET =
-DEPENDPATH += . src src/uih
+DEPENDPATH += . src uih
 INCLUDEPATH += . src
 
 MOC_DIR = moc
 OBJECTS_DIR = obj
-UI_HEADERS_DIR = src/uih
+UI_HEADERS_DIR = uih
 
 QT += network
 
@@ -46,6 +46,7 @@ FORMS +=   ui/AboutApp.ui \
            ui/TagEditorBasics.ui \
            ui/TagEditorPictures.ui \
            ui/DirectorySelector.ui \
+           ui/BookmarkDialog.ui \
 
 HEADERS += src/cddb/Cddb.h src/cddb/CddbPrivate.h
 SOURCES += src/cddb/Cddb.cpp src/cddb/CddbPrivate.cpp
@@ -96,3 +97,5 @@ SOURCES += src/globals.cpp \
            src/TableViewMod.cpp \
            src/SortFilterProxyModelMod.cpp \
 
+HEADERS += src/BookmarkModel.h src/BookmarkDialog.h
+SOURCES += src/BookmarkModel.cpp src/BookmarkDialog.cpp

@@ -22,10 +22,10 @@
 
 #include "SettingsDialogPage.h"
 
-#include "uih/ui_SettingsPage1.h"
-#include "uih/ui_SettingsPage2.h"
-#include "uih/ui_SettingsPage3.h"
-#include "uih/ui_SettingsPage4.h"
+#include "ui_SettingsPage1.h"
+#include "ui_SettingsPage2.h"
+#include "ui_SettingsPage3.h"
+#include "ui_SettingsPage4.h"
 
 #include "globals.h"
 

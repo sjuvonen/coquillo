@@ -28,9 +28,12 @@
 #include <QSortFilterProxyModel>
 #include <QStatusBar>
 #include <QThread>
+#include <QTimer>
 #include <QToolBar>
 
 #include "AboutDialog.h"
+#include "BookmarkModel.h"
+#include "BookmarkDialog.h"
 #include "CddbSearchDialog.h"
 #include "DirectorySelectorWidget.h"
 #include "EditorWidget.h"
@@ -50,7 +53,7 @@
 
 #include "globals.h"
 
-#include "uih/ui_MainWindow.h"
+#include "ui_MainWindow.h"
 
 #include <QDebug>
 
@@ -63,6 +66,14 @@ MainWindow::MainWindow(QWidget * parent)
 
 	_ui = new Ui::MainWindow;
 	_ui->setupUi(this);
+
+	_bookmarkMapper = new QSignalMapper(this);
+	_bookmarks = new BookmarkModel(this);
+	
+	_bookmarkProxy = new QSortFilterProxyModel(this);
+	_bookmarkProxy->setSourceModel(_bookmarks);
+	_bookmarkProxy->setDynamicSortFilter(true);
+	_bookmarkProxy->sort(0);
 
 	_dataModel = new MetaDataModel(this);
 
@@ -120,6 +131,13 @@ MainWindow::MainWindow(QWidget * parent)
 
 	_ui->tableItems->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
+
+	connect(_bookmarkProxy, SIGNAL(rowsInserted(QModelIndex, int, int)),
+		SLOT(setupBookmarksMenu()));
+	
+	connect(_bookmarkProxy, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+		SLOT(setupBookmarksMenu()));
+
 	connect(_ui->tableItems->horizontalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)),
 		SLOT(showHeaderContextMenu(const QPoint &)));
 
@@ -131,6 +149,7 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(_scanner, SIGNAL(itemFound(const MetaData &)), _dataModel, SLOT(addMetaData(const MetaData &)));
 	connect(_scanner, SIGNAL(itemsDone(int)), scanProgress, SLOT(setValue(int)));
 	connect(_scanner, SIGNAL(maxItemsChanged(int)), scanProgress, SLOT(setMaximum(int)));
+	//connect(_scanner, SIGNAL(rangeChanged(int, int)), scanProgress, SLOT(setRange(int, int)));
 
 	connect(_ui->actionAbout, SIGNAL(triggered()), SLOT(showAboutDialog()));
 	connect(_ui->actionConfigure, SIGNAL(triggered()), SLOT(openSettingsDialog()));
@@ -150,15 +169,22 @@ MainWindow::MainWindow(QWidget * parent)
 
 	connect(_processor, SIGNAL(closeButtonPressed()), _processor, SLOT(close()));
 
-	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)), _scanner, SLOT(scanPath(const QString &)));
-	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)), _dataModel, SLOT(setRootDirectory(const QString &)));
+	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)),
+		_scanner, SLOT(scanPath(const QString &)));
+	
+	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)),
+		_dataModel, SLOT(setRootDirectory(const QString &)));
 
-	//connect(_ui->mainToolBar, SIGNAL(customContextMenuRequested(const QPoint &)), SLOT(showToolBarContextMenu(const QPoint &)));
+	connect(_ui->widgetLocation, SIGNAL(bookmarked(const QString &)),
+		_bookmarks, SLOT(addPath(const QString &)));
 
 	connect(
 		_ui->widgetEditor->dataMapper(), SIGNAL(currentIndexChanged(int)),
 		_ui->tableItems, SLOT(selectRow(int))
 	);
+
+	connect(_bookmarkMapper, SIGNAL(mapped(const QString &)),
+		_ui->widgetLocation, SLOT(setPath(const QString &)));
 
 	for (int i = 0; i < g_fieldNames.count(); i++)
 		if (i != modelColumn("Title") && i != modelColumn("Path") && i != modelColumn("Number"))
@@ -170,10 +196,17 @@ MainWindow::MainWindow(QWidget * parent)
 
 	loadSettings();
 
+	setupBookmarksMenu();
+}
 
-	//_ui->dirUp->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
 
-	_ui->tableItems->setSelectionBehavior(QAbstractItemView::SelectRows);
+void MainWindow::openBookmarkDialog() {
+	qDebug() << "Hey";
+	
+	BookmarkDialog d(this);
+	d.setModel(_bookmarks);
+
+	d.exec();
 }
 
 MainWindow::~MainWindow() {
@@ -183,20 +216,6 @@ MainWindow::~MainWindow() {
 
 void MainWindow::slotSelectionChanged(const QItemSelection &) {
 	emit selectedRowsChanged( _ui->tableItems->selectionModel()->selectedRows() );
-
-	/*
-	 *
-	QList<QModelIndex> idxs = _ui->tableItems->selectionModel()->selectedRows();
-	QSortFilterProxyModel * m = qobject_cast<QSortFilterProxyModel*>(_ui->tableItems->model());
-
-	for (int i = 0; i < idxs.count(); i++) {
-		idxs[i] = m->mapToSource(idxs[i]);
-
-		qDebug() << idxs[i].model();
-	}
-
-	emit selectedRowsChanged( idxs );
-	*/
 }
 
 void MainWindow::slotSelectInverse() {
@@ -244,8 +263,6 @@ QMenu * MainWindow::createPopupMenu() {
 	return m;
 }
 
-#include <QTimer>
-
 void MainWindow::openDirectory(const QString & path) {
 	_ui->widgetLocation->setRootPath(path);
 	_ui->widgetLocation->setPath(path);
@@ -257,85 +274,24 @@ void MainWindow::openDirectory(const QString & path) {
 }
 
 
+void MainWindow::setupBookmarksMenu() {
+	_ui->menuBookmarks->clear();
+	_ui->menuBookmarks->addAction(_ui->actionManage_bookmarks);
+	_ui->menuBookmarks->addSeparator();
 
 
-void MainWindow::closeEvent(QCloseEvent *) {
-	abortScan();
-	saveSettings();
-	_scannerThread->quit();
+	for (int i = 0; i < _bookmarkProxy->rowCount(); i++) {
+		const QModelIndex idx = _bookmarkProxy->index(i, 0);
+		
+		QAction * a = _ui->menuBookmarks->addAction(idx.data().toString());
+		_bookmarkMapper->setMapping(a, idx.data(BookmarkModel::FilePathRole).toString());
 
-	closeCddbDialog();
-}
-
-bool MainWindow::eventFilter(QObject * object, QEvent * event) {
-
-	if (object == _processor) {
-		QSettings s;
-
-		if (event->type() == QEvent::Close || event->type() == QEvent::Hide) {
-			s.setValue("Processor/DialogPosition", _processor->pos());
-			s.setValue("Processor/DialogSize", _processor->size());
-
-			_ui->actionProcessor->setChecked(false);
-			_ui->buttonProcessor->setChecked(false);
-
-		}
-		else if (event->type() == QEvent::Show) {
-			const QPoint pos = s.value("Processor/DialogPosition").toPoint();
-			const QSize size = s.value("Processor/DialogSize").toSize();
-
-			if (!pos.isNull())
-				_processor->move(pos);
-
-			if (!size.isNull())
-				_processor->resize(size);
-
-			_ui->actionProcessor->setChecked(true);
-		}
-	} else if (object == menuBar()) {
-		switch(event->type()) {
-			case QEvent::Hide:
-				_ui->buttonMenu->show();
-				return false;
-
-			case QEvent::Show:
-				_ui->buttonMenu->hide();
-				return false;
-
-			default:
-				return false;
-		}
-	} else if (object == _ui->mainToolBar) {
-		switch(event->type()) {
-			case QEvent::Hide:
-				_ui->widgetToolbar->show();
-				return false;
-
-			case QEvent::Show:
-				_ui->widgetToolbar->hide();
-				return false;
-
-			default:
-				return false;
-		}
-
-	} else if (object == statusBar()) {
-		switch(event->type()) {
-			case QEvent::Hide:
-				_ui->actionStatus_bar->setChecked(false);
-				return false;
-
-			case QEvent::Show:
-				_ui->actionStatus_bar->setChecked(true);
-				return false;
-
-			default:
-				return false;
-		}
+		connect(a, SIGNAL(triggered()), _bookmarkMapper, SLOT(map()));
 	}
-
-	return QMainWindow::eventFilter(object, event);
 }
+
+
+
 
 
 void MainWindow::abortScan() {
@@ -462,11 +418,97 @@ void MainWindow::setInterfaceObjectVisible(bool setVisible) {
 void MainWindow::setRecursiveScan(bool state) {
 	_scanner->setRecursive(state);
 	_ui->actionRecursive_scan->setChecked(state);
+}
 
-	/*
-	QSettings s;
-	s.setValue("Scanning/ScanRecursive", state);
-	*/
+
+
+
+
+void MainWindow::closeEvent(QCloseEvent * e) {
+	abortScan();
+	saveSettings();
+	_scannerThread->quit();
+
+	closeCddbDialog();
+
+	QMainWindow::closeEvent(e);
+}
+
+bool MainWindow::eventFilter(QObject * object, QEvent * event) {
+
+	if (object == _processor) {
+		QSettings s;
+
+		switch (event->type()) {
+			case QEvent::Close:
+			case QEvent::Hide:
+				s.setValue("Processor/DialogPosition", _processor->pos());
+				s.setValue("Processor/DialogSize", _processor->size());
+
+				_ui->actionProcessor->setChecked(false);
+				_ui->buttonProcessor->setChecked(false);
+				return false;
+
+			case QEvent::Show: {
+				const QPoint pos = s.value("Processor/DialogPosition").toPoint();
+				const QSize size = s.value("Processor/DialogSize").toSize();
+
+				if (!pos.isNull())
+					_processor->move(pos);
+
+				if (!size.isNull())
+					_processor->resize(size);
+
+				_ui->actionProcessor->setChecked(true);
+				return false;
+			}
+
+			default:
+				return false;
+		}
+	} else if (object == menuBar()) {
+		switch(event->type()) {
+			case QEvent::Hide:
+				_ui->buttonMenu->show();
+				return false;
+
+			case QEvent::Show:
+				_ui->buttonMenu->hide();
+				return false;
+
+			default:
+				return false;
+		}
+	} else if (object == _ui->mainToolBar) {
+		switch(event->type()) {
+			case QEvent::Hide:
+				_ui->widgetToolbar->show();
+				return false;
+
+			case QEvent::Show:
+				_ui->widgetToolbar->hide();
+				return false;
+
+			default:
+				return false;
+		}
+
+	} else if (object == statusBar()) {
+		switch(event->type()) {
+			case QEvent::Hide:
+				_ui->actionStatus_bar->setChecked(false);
+				return false;
+
+			case QEvent::Show:
+				_ui->actionStatus_bar->setChecked(true);
+				return false;
+
+			default:
+				return false;
+		}
+	}
+
+	return QMainWindow::eventFilter(object, event);
 }
 
 
@@ -489,6 +531,7 @@ void MainWindow::loadSettings() {
 	restoreState( settings.value("MainWindow/State").toByteArray() );
 
 	menuBar()->setVisible( settings.value("MainWindow/MenubarVisible", true).toBool() );
+	statusBar()->setVisible( settings.value("MainWindow/StatusbarVisible", true).toBool() );
 
 	const QList<QToolBar*> bars = findChildren<QToolBar*>();
 
@@ -529,6 +572,7 @@ void MainWindow::saveSettings() {
 	settings.setValue("State", saveState());
 	settings.setValue("TableHeader", _ui->tableItems->horizontalHeader()->saveState());
 	settings.setValue("MenubarVisible", menuBar()->isVisible());
+	settings.setValue("StatusbarVisible", statusBar()->isVisible());
 
 	if (QToolBar * b = findChildren<QToolBar*>().value(0)) {
 		settings.setValue("InterfaceLocked", !b->isMovable());
@@ -780,6 +824,7 @@ void MainWindow::setupNewInterface() {
 	_ui->buttonReset->setIcon(style()->standardIcon(QStyle::SP_DialogResetButton));
 	_ui->buttonSave->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
 	_ui->buttonReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+	_ui->buttonDirectory_up->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
 
 	_ui->buttonCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
 	_ui->buttonProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
@@ -806,8 +851,14 @@ void MainWindow::setupNewInterface() {
 		_ui->widgetEditor->dataMapper(), SLOT(toPrevious())
 	);
 
-	connect(_ui->buttonCDDB, SIGNAL(toggled(bool)), SLOT(toggleCddbSearchDialog(bool)));
-	connect(_ui->buttonProcessor, SIGNAL(toggled(bool)), _processor, SLOT(setVisible(bool)));
+	connect(_ui->buttonCDDB, SIGNAL(toggled(bool)),
+		SLOT(toggleCddbSearchDialog(bool)));
+
+	connect(_ui->buttonProcessor, SIGNAL(toggled(bool)),
+		_processor, SLOT(setVisible(bool)));
+
+	connect(_ui->buttonDirectory_up, SIGNAL(clicked()),
+		_ui->widgetLocation, SLOT(goDirectoryUp()));
 
 	QMenu * menu = new QMenu;
 	menu->addAction(_ui->actionMenubar);
@@ -851,11 +902,15 @@ void MainWindow::setupOldInterface() {
 	connect(_ui->actionCDDB, SIGNAL(toggled(bool)), SLOT(toggleCddbSearchDialog(bool)));
 	connect(_ui->actionProcessor, SIGNAL(toggled(bool)), _processor, SLOT(setVisible(bool)));
 
+	connect(_ui->actionDirectory_up, SIGNAL(triggered()),
+		_ui->widgetLocation, SLOT(goDirectoryUp()));
+
 	_ui->actionPrevious->setIcon(style()->standardIcon(QStyle::SP_ArrowLeft));
 	_ui->actionNext->setIcon(style()->standardIcon(QStyle::SP_ArrowRight));
 	_ui->actionReset->setIcon(style()->standardIcon(QStyle::SP_DialogResetButton));
 	_ui->actionSave->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
 	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+	_ui->actionDirectory_up->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
 
 	_ui->actionCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
 	_ui->actionProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));

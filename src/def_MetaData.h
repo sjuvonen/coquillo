@@ -18,10 +18,8 @@
 #ifndef DEF_METADATA_H
 #define DEF_METADATA_H
 
-#include <QMap>
-#include <QString>
-#include <QVariant>
+#include <QVariantMap>
 
-typedef QMap<QString, QVariant> MetaData;
+typedef QVariantMap MetaData;
 
 #endif
