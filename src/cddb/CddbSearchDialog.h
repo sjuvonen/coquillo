@@ -21,7 +21,7 @@
 #include <QDialog>
 #include <QModelIndex>
 
-#include "cddb/Cddb.h"
+#include "Cddb.h"
 
 namespace Ui {
 	class CddbSearchDialog;

@@ -22,10 +22,6 @@
 
 #include "CddbSearchDialog.h"
 
-#include "cddb/Cddb.h"
-
-#include "def_MetaData.h"
-
 #include "globals.h"
 
 #include "ui_CddbSearchDialog.h"

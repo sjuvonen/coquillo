@@ -1,6 +1,6 @@
 
 TEMPLATE = app
-TARGET =
+TARGET = coquillo-bin
 DEPENDPATH += . src uih
 INCLUDEPATH += . src
 
@@ -10,6 +10,8 @@ UI_HEADERS_DIR = uih
 
 QT += network
 
+LIBS += -Llib -lcoq_cddb -lcoq_bookmarks
+
 win32 {
 	INCLUDEPATH += resources/win/taglib/include
 	LIBS += resources/windows/taglib/taglib.dll
@@ -18,7 +20,6 @@ win32 {
 }
 
 unix {
-
 	isEmpty(PREFIX) {
 		PREFIX = /usr
 	}
@@ -44,7 +45,7 @@ unix {
 RESOURCES += coquillo.qrc
 
 FORMS +=   ui/AboutApp.ui \
-           ui/CddbSearchDialog.ui \
+           ui/DirectorySelector.ui \
            ui/MainWindow.ui \
            ui/Processor.ui \
            ui/SettingsPage1.ui \
@@ -53,16 +54,10 @@ FORMS +=   ui/AboutApp.ui \
            ui/SettingsPage4.ui \
            ui/TagEditorBasics.ui \
            ui/TagEditorPictures.ui \
-           ui/DirectorySelector.ui \
-           ui/BookmarkDialog.ui \
-
-HEADERS += src/cddb/Cddb.h src/cddb/CddbPrivate.h
-SOURCES += src/cddb/Cddb.cpp src/cddb/CddbPrivate.cpp
 
 HEADERS += src/globals.h \
            src/def_MetaData.h \
            src/AboutDialog.h \
-           src/CddbSearchDialog.h \
            src/DirectorySelectorWidget.h \
            src/EditorWidget.h \
            src/FileSystemProxyModel.h \
@@ -84,7 +79,6 @@ HEADERS += src/globals.h \
 
 SOURCES += src/globals.cpp \
            src/AboutDialog.cpp \
-           src/CddbSearchDialog.cpp \
            src/DirectorySelectorWidget.cpp \
            src/EditorWidget.cpp \
            src/FileSystemProxyModel.cpp \
@@ -104,6 +98,3 @@ SOURCES += src/globals.cpp \
            src/SettingsDialogPage.cpp \
            src/TableViewMod.cpp \
            src/SortFilterProxyModelMod.cpp \
-
-HEADERS += src/BookmarkModel.h src/BookmarkDialog.h
-SOURCES += src/BookmarkModel.cpp src/BookmarkDialog.cpp
