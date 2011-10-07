@@ -74,7 +74,6 @@ HEADERS += src/globals.h \
            src/ProcessorWidget.h \
            src/SettingsDialog.h \
            src/SettingsDialogPage.h \
-           src/TableViewMod.h \
            src/SortFilterProxyModelMod.h \
 
 SOURCES += src/globals.cpp \
@@ -96,5 +95,4 @@ SOURCES += src/globals.cpp \
            src/ProcessorWidget.cpp \
            src/SettingsDialog.cpp \
            src/SettingsDialogPage.cpp \
-           src/TableViewMod.cpp \
            src/SortFilterProxyModelMod.cpp \
