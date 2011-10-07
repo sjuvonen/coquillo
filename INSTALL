@@ -3,3 +3,4 @@ To compile and install Coquillo, do the following:
 qmake
 make
 sudo make install
+

@@ -6,6 +6,7 @@ Git
 - Added option to hide the statusbar.
 - It's now possible to set a root directory in the directory tree.
 - Added bookmarks.
+- Modularised the app's codebase.
 
 1.7
 - Enabled reordering and enabling/disabling of columns in the main view.
