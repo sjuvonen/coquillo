@@ -116,7 +116,7 @@ QList<MetaDataImage> MetaDataReader::getImages(const QString & path) {
 		}
 	} else if (type == "flac") {
 
-		#if TAGLIB_MINOR_VERSION >= 7
+		#if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
 
 		TagLib::FLAC::File file( path.toUtf8().constData() );
 		TagLib::List<TagLib::FLAC::Picture*> list = file.pictureList();
