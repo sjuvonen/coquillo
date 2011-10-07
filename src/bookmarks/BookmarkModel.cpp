@@ -37,6 +37,8 @@ bool BookmarkModel::addPath(const QString & path, const QString & name) {
 
 	appendRow(item);
 	saveBookmarks();
+
+	return true;
 }
 
 bool BookmarkModel::removePath(const QString & path) {
@@ -57,7 +59,7 @@ bool BookmarkModel::setName(const QString & name, int row) {
 	if (row == -1)
 		return false;
 
-	setData(index(row, 0), name, DisplayNameRole);
+	return setData(index(row, 0), name, DisplayNameRole);
 }
 
 QVariant BookmarkModel::data(const QModelIndex & idx, int role) const {

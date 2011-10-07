@@ -1,28 +1,12 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
 
 #include <QErrorMessage>
 #include <QSettings>
 #include <QStandardItemModel>
 #include <QTreeView>
 
-#include "CddbSearchDialog.h"
-
 #include "globals.h"
+
+#include "CddbSearchDialog.h"
 
 #include "ui_CddbSearchDialog.h"
 
@@ -66,26 +50,28 @@ CddbSearchDialog::CddbSearchDialog(QWidget * parent)
 	_ui->tableSearchResults->setModel(_cddbModel);
 	_ui->tableSearchResults->horizontalHeader()->resizeSection(0, 250);
 	_ui->tableSearchResults->horizontalHeader()->hideSection(2);
-
-	// _ui->tableTrackListing->setHorizontalHeaderLabels(QStringList() << "#" << tr("Title"));
-	_ui->tableTrackListing->setModel(_cddbModel);
-	_ui->tableTrackListing->horizontalHeader()->resizeSection(3, 30);
-
 	_ui->tableSearchResults->horizontalHeader()->hideSection(3);
 	_ui->tableSearchResults->horizontalHeader()->hideSection(4);
 
+	_ui->tableTrackListing->setModel(_cddbModel);
+	_ui->tableTrackListing->horizontalHeader()->resizeSection(3, 30);
 	_ui->tableTrackListing->horizontalHeader()->hideSection(0);
 	_ui->tableTrackListing->horizontalHeader()->hideSection(1);
 	_ui->tableTrackListing->horizontalHeader()->hideSection(2);
 
 	_ui->progressBar->setVisible(false);
 
-	connect(_ui->buttonSearchA, SIGNAL(clicked()), SLOT(search()));
-	connect(_ui->buttonSearchM, SIGNAL(clicked()), SLOT(search()));
+	connect(_ui->buttonSearchA, SIGNAL(clicked()),
+		SLOT(search()));
 
-	connect(_ui->lineSearchString, SIGNAL(returnPressed()), SLOT(search()));
+	connect(_ui->buttonSearchM, SIGNAL(clicked()),
+		SLOT(search()));
 
-	connect(_ui->tableSearchResults, SIGNAL(clicked(const QModelIndex&)), SLOT(getAlbumData(const QModelIndex&)));
+	connect(_ui->lineSearchString, SIGNAL(returnPressed()),
+		SLOT(search()));
+
+	connect(_ui->tableSearchResults, SIGNAL(clicked(const QModelIndex&)),
+		SLOT(getAlbumData(const QModelIndex&)));
 
 	connect(_cddb, SIGNAL(albumSearchFinished(const CddbAlbumInfoList &, int, int)),
 		SLOT(showMatches(const CddbAlbumInfoList &, int, int)));
@@ -99,9 +85,11 @@ CddbSearchDialog::CddbSearchDialog(QWidget * parent)
 	connect(_ui->groupSearchFieldButtons, SIGNAL(buttonClicked(QAbstractButton*)),
 		SLOT(toggleSearchFieldButtonExclusion(QAbstractButton*)));
 
-	connect(_ui->buttonsDialog->button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(accept()));
+	connect(_ui->buttonsDialog->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
+		SLOT(accept()));
 
-	connect(_cddb, SIGNAL(queryError(int, const QString&)), SLOT(showError(int, const QString&)));
+	connect(_cddb, SIGNAL(queryError(int, const QString&)),
+		SLOT(showError(int, const QString&)));
 }
 
 CddbSearchDialog::~CddbSearchDialog() {
@@ -138,11 +126,8 @@ void CddbSearchDialog::accept() {
 
 	QModelIndex dataIdx = cur.sibling(cur.row(), 2).child(0, 4);
 
-	if (!dataIdx.isValid()) {
-		qDebug() << "Invalid data index" << _cddbModel->rowCount(cur);
-		qDebug() << discId;
+	if (!dataIdx.isValid())
 		return;
-	}
 
 	for (int i = 0; i < _indexes.count(); i++) {
 		const QModelIndex idx = _indexes[i];

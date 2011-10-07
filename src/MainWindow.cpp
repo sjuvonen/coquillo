@@ -1,19 +1,3 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
 
 #include <QAction>
 #include <QActionGroup>
@@ -32,11 +16,7 @@
 #include <QToolBar>
 
 #include "AboutDialog.h"
-#include "BookmarkModel.h"
-#include "BookmarkDialog.h"
-#include "CddbSearchDialog.h"
 #include "DirectorySelectorWidget.h"
-#include "EditorWidget.h"
 #include "FileSystemProxyModel.h"
 #include "ImageCache.h"
 #include "MainWindow.h"
@@ -45,13 +25,17 @@
 #include "ModelDataInspector.h"
 #include "MediaScanner.h"
 #include "ProcessorWidget.h"
-#include "SettingsDialog.h"
-#include "SettingsDialogPage.h"
-#include "TableViewMod.h"
 
 #include "SortFilterProxyModelMod.h"
 
 #include "globals.h"
+
+#include <cddb/CddbSearchDialog.h>
+#include <bookmarks/BookmarkModel.h>
+#include <bookmarks/BookmarkDialog.h>
+#include <editor/EditorWidget.h>
+#include <settings/SettingsDialog.h>
+#include <settings/SettingsDialogPage.h>
 
 #include "ui_MainWindow.h"
 
@@ -304,7 +288,7 @@ void MainWindow::toggleCddbSearchDialog(bool state) {
 		if (_cddbDialog)
 			return;
 
-		_cddbDialog = new CddbSearchDialog;
+		_cddbDialog = new CddbSearchDialog(this);
 
 		_cddbDialog->setModel( _ui->tableItems->model() );
 		_cddbDialog->setIndexes( _ui->tableItems->selectionModel()->selectedRows() );

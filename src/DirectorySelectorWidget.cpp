@@ -129,7 +129,7 @@ void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 	QMenu menu(this);
 	
 	QAction * setRoot = menu.addAction(tr("Set as root"));
-	QAction * addBookmark = menu.addAction(tr("Add bookmark"));
+	QAction * addBookmark = menu.addAction(tr("Add to bookmarks"));
 	
 	QAction * selected = menu.exec( _ui->directories->mapToGlobal(point + QPoint(5, 5)) );
 
