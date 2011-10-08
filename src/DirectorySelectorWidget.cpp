@@ -130,7 +130,17 @@ void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 	
 	QAction * setRoot = menu.addAction(tr("Set as root"));
 	QAction * addBookmark = menu.addAction(tr("Add to bookmarks"));
-	
+
+	QModelIndex idx = _ui->directories->indexAt(point);
+
+	if (idx.isValid()) {
+		const QString path = idx.data(QFileSystemModel::FilePathRole).toString();
+
+		if (QDir(path).entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot).isEmpty())
+			setRoot->setDisabled(true);
+		
+	}
+
 	QAction * selected = menu.exec( _ui->directories->mapToGlobal(point + QPoint(5, 5)) );
 
 	if (selected == setRoot)
@@ -150,7 +160,6 @@ void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 
 
 bool DirectorySelectorWidget::eventFilter(QObject * object, QEvent * event) {
-
 	if (object == _ui->directories->viewport() && event->type() == QEvent::MouseButtonRelease) {
 		QMouseEvent * e = dynamic_cast<QMouseEvent*>(event);
 		const QModelIndex idx = _ui->directories->indexAt(e->pos());

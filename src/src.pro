@@ -18,7 +18,7 @@ win32 {
 unix {
 	LIBS += -ltag
 
-	# Set the LD_LIBRARY_PATH
+	# Imports the lib path into the binary
 	QMAKE_RPATHDIR += $$PREFIX/lib/coquillo
 
 	target.path = $$PREFIX/bin
