@@ -68,6 +68,9 @@ QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
 }
 
 bool MetaDataModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
+
+	//  qDebug() << "set" << idx.data(Qt::EditRole).toString() << value.toString();
+	
 	if (role == Qt::EditRole && idx.column() != g_fieldNames.key("Pictures")
 		&& idx.data(role).toString() == value.toString())
 		return false;
@@ -121,6 +124,9 @@ QList<MetaData> MetaDataModel::modifiedMetaData(bool withPictures) const {
 
 		if (!pathIdx.data(Coquillo::OriginalDataRole).isNull())
 			item.insert("_OldPath", pathIdx.data(Coquillo::OriginalDataRole));
+
+		if (item.contains("MaxNumber"))
+			item.insert("Number", index(row, g_fieldNames.key("Number")).data());
 
 		data << item;
 	}

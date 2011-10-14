@@ -4,14 +4,14 @@ include(../common.pri)
 TEMPLATE = app
 TARGET = ../coquillo
 
-MOC_DIC = ../build
+MOC_DIR = ../build
 OBJECTS_DIR = ../build
 UI_DIR = ../build
 
 LIBS += -L../lib -lcoq_cddb -lcoq_bookmarks -lcoq_editor -lcoq_settings
 
 win32 {
-	INCLUDEPATH += ../resources/win/taglib/include
+	INCLUDEPATH += ../resources/windows/taglib/include
 	LIBS += ../resources/windows/taglib/taglib.dll
 }
 

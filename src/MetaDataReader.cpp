@@ -351,6 +351,10 @@ bool MetaDataReader::readID3v2Tag(TagLib::ID3v2::Tag * tag, MetaData * metaData)
 		const QString trck = qtstr("TRCK", toUnicode);
 		const QStringList numbers = trck.split('/');
 
+		qDebug() << trck;
+		qDebug() << numbers;
+		qDebug();
+
 		metaData->insert("Number", numbers[0].toInt());
 
 		if (numbers.count() >= 2)

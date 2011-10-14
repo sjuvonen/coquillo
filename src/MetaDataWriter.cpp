@@ -292,19 +292,31 @@ void MetaDataWriter::writeID3v2(TagLib::ID3v2::Tag * tag, const MetaData & metaD
 	 */
 
 	if (metaData.contains("Number")) {
-		tag->removeFrames("TRCK");
-
 		QString n = metaData.value("Number").toString();
 
 		if (metaData.contains("MaxNumber") && metaData.value("MaxNumber").toInt() > 0)
 			n.append(QString("/%1").arg(metaData.value("MaxNumber").toString()));
 
+		tag->removeFrames("TRCK");
+		
 		if (!n.isEmpty()) {
 			TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TRCK");
 			frame->setText(n.toUtf8().constData());
-
 			tag->addFrame(frame);
 		}
+	}
+
+	if (metaData.contains("Disc")) {
+		int nr = metaData.value("Disc").toInt();
+
+		tag->removeFrames("TPOS");
+
+		if (nr > 0) {
+			TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame("TPOS");
+			frame->setText(metaData.value("Disc").toString().toUtf8().constData());
+			tag->addFrame(frame);	
+		}
+		
 	}
 }
 
