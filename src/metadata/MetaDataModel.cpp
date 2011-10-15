@@ -19,6 +19,8 @@ MetaDataModel * MetaDataModel::instance() {
 MetaDataModel::MetaDataModel(QObject * parent)
 : QStandardItemModel(parent), _recurse(false) {
 
+	qRegisterMetaType<MetaData>("MetaData");
+
 	QThread * _utilThread = new QThread;
 	
 	_scanner = new MediaScanner;
@@ -54,7 +56,7 @@ MetaDataModel::MetaDataModel(QObject * parent)
 }
 
 QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
-	const int row = idx.row();
+	//const int row = idx.row();
 	const int col = idx.column();
 	
 	switch (role) {
@@ -71,7 +73,7 @@ QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
 		case Qt::DisplayRole:
 			if (col == column("Path")) {
 				const QVariant v = QStandardItemModel::data(idx, role);
-				const QRegExp rx( QString("^%1").arg( QRegExp::escape(_directory)) );
+				const QRegExp rx( QString("^%1/?").arg( QRegExp::escape(_directory)) );
 
 				if (!v.isNull())
 					return v.toString().remove(rx);

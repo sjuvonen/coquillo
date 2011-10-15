@@ -25,7 +25,6 @@ class MetaDataImage {
 		qint16 id() const;
 
 	private:
-		// QImage _image;
 		qint16 _id;
 		int _type;
 		QString _typeString;

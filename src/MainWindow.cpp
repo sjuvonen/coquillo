@@ -15,15 +15,16 @@
 #include <QTimer>
 #include <QToolBar>
 
+#include <metadata/ImageCache.h>
+#include <metadata/MediaScanner.h>
+#include <metadata/MetaDataModel.h>
+#include <metadata/MetaDataWriter.h>
+
 #include "AboutDialog.h"
 #include "DirectorySelectorWidget.h"
 #include "FileSystemProxyModel.h"
-#include "ImageCache.h"
 #include "MainWindow.h"
-#include "MetaDataModel.h"
-#include "MetaDataWriter.h"
 #include "ModelDataInspector.h"
-#include "MediaScanner.h"
 #include "ProcessorWidget.h"
 
 #include "SortFilterProxyModelMod.h"
@@ -46,8 +47,6 @@ volatile bool forceAbortScan = false;
 
 MainWindow::MainWindow(QWidget * parent)
 : QMainWindow(parent), _cddbDialog(0) {
-
-	qRegisterMetaType<MetaData>("MetaData");
 
 	_ui = new Ui::MainWindow;
 	_ui->setupUi(this);

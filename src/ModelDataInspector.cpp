@@ -22,7 +22,6 @@
 #include <QStringList>
 
 #include "ModelDataInspector.h"
-#include "def_MetaData.h"
 #include "globals.h"
 
 #include <QDebug>

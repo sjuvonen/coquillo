@@ -5,7 +5,7 @@
 #include <QDataWidgetMapper>
 #include <QWidget>
 
-#include "MetaDataImage.h"
+#include <metadata/MetaDataImage.h>
 
 class QAbstractButton;
 class QAbstractItemModel;

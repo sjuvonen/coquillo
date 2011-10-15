@@ -3,17 +3,17 @@
 #include <QFileDialog>
 #include <QModelIndex>
 
-#include "ImageCache.h"
-#include "MetaDataModel.h"
-#include "MetaDataReader.h"
+#include <metadata/ImageCache.h>
+#include <metadata/MetaDataImage.h>
+#include <metadata/MetaDataModel.h>
+#include <metadata/MetaDataReader.h>
+
 #include "PictureListDelegate.h"
 #include "PicturesTab.h"
 
 #include "ui_TagEditorPictures.h"
 
 #include <QDebug>
-
-#include "../MetaDataImage.h"
 
 typedef TagLib::ID3v2::AttachedPictureFrame APFrame;
 

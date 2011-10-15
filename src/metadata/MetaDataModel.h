@@ -1,10 +1,11 @@
 #ifndef METADATAMODEL_H
 #define METADATAMODEL_H
 
-#include "MetaDataImage.h"
 #include <QStandardItemModel>
 
-#include "globals.h"
+#include "MetaDataImage.h"
+
+#include "../globals.h"
 
 class QThread;
 

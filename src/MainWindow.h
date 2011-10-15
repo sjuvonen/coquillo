@@ -21,8 +21,6 @@
 #include <QMainWindow>
 #include <QModelIndexList>
 
-#include "def_MetaData.h"
-
 #include <QDebug>
 
 class QItemSelection;

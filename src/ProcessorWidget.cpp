@@ -22,8 +22,9 @@
 #include <QSettings>
 #include <QStackedWidget>
 
+#include <metadata/MetaDataModel.h>
+
 #include "ProcessorWidget.h"
-#include "MetaDataModel.h"
 
 #include "ui_Processor.h"
 

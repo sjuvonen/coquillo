@@ -4,10 +4,10 @@
 #include <QSortFilterProxyModel>
 #include <QTabWidget>
 
+#include <metadata/MetaDataModel.h>
+#include <metadata/MetaDataReader.h>
+
 #include "EditorWidget.h"
-#include "MetaDataImage.h"
-#include "MetaDataModel.h"
-#include "MetaDataReader.h"
 #include "PicturesTab.h"
 
 #include "ui_TagEditorBasics.h"
