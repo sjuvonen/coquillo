@@ -35,8 +35,7 @@ FORMS +=   ../ui/AboutApp.ui \
            ../ui/TagEditorBasics.ui \
            ../ui/TagEditorPictures.ui \
 
-HEADERS += def_MetaData.h \
-           globals.h \
+HEADERS += globals.h \
            AboutDialog.h \
            DirectorySelectorWidget.h \
            FileSystemProxyModel.h \
