@@ -1,20 +1,3 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
-
 #include <QFileInfo>
 #include <QSettings>
 #include <QString>
@@ -44,8 +27,6 @@
 
 #include "ImageCache.h"
 
-#include "globals.h"
-
 #define T2QString(s, toUtf) toUtf ? QString::fromUtf8(s.toCString(true)) : QString::fromLatin1(s.toCString(false))
 
 MetaData MetaDataReader::getTags(const QString & path) {
@@ -72,7 +53,7 @@ MetaData MetaDataReader::getTags(const QString & path) {
 
 	// This adds missing fields. It's important to do this so that MetaDataModel would accurately
 	// identify modified fields.
-	foreach (const QString field, g_fieldNames.values()) {
+	foreach (const QString field, Coquillo::fieldNames.values()) {
 		if (!item.contains(field))
 			item.insert(field, QString(""));
 	}
@@ -350,10 +331,6 @@ bool MetaDataReader::readID3v2Tag(TagLib::ID3v2::Tag * tag, MetaData * metaData)
 	if (hasField("TRCK")) {
 		const QString trck = qtstr("TRCK", toUnicode);
 		const QStringList numbers = trck.split('/');
-
-		qDebug() << trck;
-		qDebug() << numbers;
-		qDebug();
 
 		metaData->insert("Number", numbers[0].toInt());
 

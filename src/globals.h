@@ -5,6 +5,10 @@
 #include <QStringList>
 #include <QMap>
 
+#include <QVariantMap>
+
+typedef QVariantMap MetaData;
+
 namespace Coquillo {
 	// These two are defined in main.cpp
 	extern const QString releaseDate;
@@ -47,16 +51,15 @@ namespace Coquillo {
 	namespace OggVorbis {
 		extern bool stripLegacyCovers;
 	}
+
+	// Map of field names to columns for the item model.
+	extern QMap<int, QString> fieldNames;
+
+	// List of words to not capitalize when intelligent capitalization enabled.
+	extern QStringList ignoreWords;
 };
 
 QString toQString(const char * str, int encoding=-1);
-
 int modelColumn(const QString & name);
-
-// Map of field names to columns for the item model.
-extern QMap<int, QString> g_fieldNames;
-
-// List of words to not capitalize when intelligent capitalization enabled.
-extern QStringList g_ignoreWords;
 
 #endif

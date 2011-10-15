@@ -1,55 +1,82 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
-
 #ifndef METADATAMODEL_H
 #define METADATAMODEL_H
 
+#include "MetaDataImage.h"
 #include <QStandardItemModel>
 
-#include "def_MetaData.h"
-#include "MetaDataImage.h"
+#include "globals.h"
 
-class MetaDataModel : public QStandardItemModel {
+class QThread;
+
+class MediaScanner;
+
+class MetaDataModel: public QStandardItemModel {
 	Q_OBJECT
 
 	public:
+		static MetaDataModel * instance();
+	
+		enum Roles {
+			OriginalDataRole = Qt::UserRole+1, RowModifiedRole,
+			PictureTypeRole, PictureDescriptionRole
+		};
+		
 		MetaDataModel(QObject * parent=0);
 
+		QString columnName(int i) const { return _columnNames.value(i); }
+		int column(const QString & name) const { return _columnNames.key(name); }
+
 		QVariant data(const QModelIndex & idx, int role=Qt::DisplayRole) const;
-		MetaData metaData(int row, bool withPictures=false) const;
-		MetaData metaData(const QModelIndex & idx, bool withPictures=false) const;
+		bool setData(const QModelIndex & idx,
+			const QVariant & value, int role=Qt::EditRole);
 
-		QList<MetaData> modifiedMetaData(bool withPictures=false) const;
+		int pictureCount(const QModelIndex & idx);
+		
+		QList<MetaDataImage> pictures(const QModelIndex & idx) const;
+		bool addPicture(const QModelIndex & idx, const QVariantMap & data);
+		bool removePicture(const QModelIndex & idx, int pos);
 
-		bool setData(const QModelIndex & idx, const QVariant & value, int role=Qt::EditRole);
+		// Edit picture that is found in idx.
+		bool editPicture(const QModelIndex & idx,
+			const QVariant & value, int role=PictureDescriptionRole);
 
-	public slots:
-		void setRootDirectory(const QString & path);
-		void addMetaData(const MetaData &);
-		void clearContents();
-		void saveChanges();
-		void undoChanges();
+		// Edit picture on row 'pos' of 'parent' (track).
+		bool editPicture(const QModelIndex & parent, int pos,
+			const QVariant & value, int role=PictureDescriptionRole);
 
 	signals:
 		void metaDataStateChanged(bool isModified);
-		void metaDataModified(const QModelIndex & idx);
+		
+	public slots:
+		void setDirectory(const QString & dir) { _directory = dir; }
+		void setRecursive(bool state) { _recurse = state;}
+
+		void scan(const QString & path=QString());
+
+		void saveChanges();
+		void undoChanges();
+
+
+	private slots:
+		void addItem(const MetaData &);
+	
 
 	private:
-		QString _root;
+		static MetaDataModel * s_instance;
+		
+		QMap<int, QString> _columnNames;
+		QList<MetaData> _metaData;
+
+		QString _directory;
+
+		// Recursive scan.
+		bool _recurse;
+
+		// If enabled, will dim bg color for subdirs.
+		bool _showDepth;
+
+		MediaScanner * _scanner;
+		QThread * _utilThread;
 };
 
 #endif

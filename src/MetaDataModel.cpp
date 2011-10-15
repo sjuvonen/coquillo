@@ -1,63 +1,97 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
 
+#include <QThread>
+#include <QTimer>
+
+#include "MediaScanner.h"
 #include "MetaDataModel.h"
-
-#include "globals.h"
 
 #include <QDebug>
 
-MetaDataModel::MetaDataModel(QObject * parent) : QStandardItemModel(parent) {
+MetaDataModel * MetaDataModel::s_instance = 0;
 
-	insertColumns(0, g_fieldNames.count());
+MetaDataModel * MetaDataModel::instance() {
+	if (!s_instance)
+		s_instance = new MetaDataModel;
 
-	QStringList labels = g_fieldNames.values();
-	labels.replace(modelColumn("Number"), "#");
+	return s_instance;
+}
+
+MetaDataModel::MetaDataModel(QObject * parent)
+: QStandardItemModel(parent), _recurse(false) {
+
+	QThread * _utilThread = new QThread;
+	
+	_scanner = new MediaScanner;
+	_scanner->moveToThread(_utilThread);
+
+	_utilThread->start();
+
+	_columnNames.insert(0, "Title");
+	_columnNames.insert(1, "Artist");
+	_columnNames.insert(2, "Album");
+	_columnNames.insert(3, "Year");
+	_columnNames.insert(4, "Disc");
+	_columnNames.insert(5, "Number");
+	_columnNames.insert(6, "MaxNumber");
+	_columnNames.insert(7, "Genre");
+	_columnNames.insert(8, "Comment");
+	_columnNames.insert(9, "OriginalArtist");
+	_columnNames.insert(10, "Composer");
+	_columnNames.insert(11, "Url");
+	_columnNames.insert(12, "Encoder");
+	_columnNames.insert(13, "Path");
+	_columnNames.insert(14, "Pictures");
+	_columnNames.insert(15, "Length");
+
+	QStringList labels = _columnNames.values();
+	labels.replace(column("Number"), "#");
+
 	setHorizontalHeaderLabels(labels);
+
+	connect(_scanner, SIGNAL(itemFound(MetaData)),
+		SLOT(addItem(MetaData)));
+	
 }
 
 QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
+	const int row = idx.row();
+	const int col = idx.column();
+	
 	switch (role) {
 		case Qt::BackgroundRole: {
-			if (!Coquillo::dimSubdirectoriesBackground)
+			if (!_showDepth)
 				return QStandardItemModel::data(idx, role);
 
 			static QColor c(Qt::white);
 			c.setAlpha(128);
 
-			return c.darker( 100 + 20 * idx.sibling(idx.row(), modelColumn("Path")).data().toString().count('/') );
+			return c.darker( 100 + 20 * idx.sibling(idx.row(), column("Path")).data().toString().count('/') );
 		}
 
 		case Qt::DisplayRole:
-			if (idx.column() == modelColumn("Path")) {
+			if (col == column("Path")) {
 				const QVariant v = QStandardItemModel::data(idx, role);
-				const QRegExp rx( QString("^%1").arg( QRegExp::escape(_root)) );
+				const QRegExp rx( QString("^%1").arg( QRegExp::escape(_directory)) );
 
 				if (!v.isNull())
 					return v.toString().remove(rx);
-			} else
+			} else if (col == column("Pictures")) {
+
+				return "n/a";
+				
+				if (!idx.parent().isValid())
+					return QString(tr("%1 pictures")).arg(rowCount(idx));
+
+				return "-";
+			}
 				return QStandardItemModel::data(idx, role);
 
 		case Qt::ForegroundRole:
-			if (!idx.sibling(idx.row(), 0).data(Coquillo::RowModifiedRole).isNull())
+			if (!idx.sibling(idx.row(), 0).data(RowModifiedRole).isNull())
 				return Qt::red;
 
 		case Qt::TextAlignmentRole:
-			if (idx.column() == modelColumn("Number"))
+			if (idx.column() == column("Number"))
 				return Qt::AlignCenter;
 			else
 				return QStandardItemModel::data(idx, role);
@@ -69,15 +103,13 @@ QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
 
 bool MetaDataModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
 
-	//  qDebug() << "set" << idx.data(Qt::EditRole).toString() << value.toString();
-	
-	if (role == Qt::EditRole && idx.column() != g_fieldNames.key("Pictures")
+	if (role == Qt::EditRole && idx.column() != _columnNames.key("Pictures")
 		&& idx.data(role).toString() == value.toString())
 		return false;
 
-	if (role == Qt::EditRole && !idx.data(Qt::EditRole).isNull() && idx.data(Coquillo::OriginalDataRole).isNull()) {
-		QStandardItemModel::setData(idx, idx.data(Qt::EditRole), Coquillo::OriginalDataRole);
-		QStandardItemModel::setData(idx.sibling(idx.row(), 0), true, Coquillo::RowModifiedRole);
+	if (role == Qt::EditRole && !idx.data(Qt::EditRole).isNull() && idx.data(OriginalDataRole).isNull()) {
+		QStandardItemModel::setData(idx, idx.data(Qt::EditRole), OriginalDataRole);
+		QStandardItemModel::setData(idx.sibling(idx.row(), 0), true, RowModifiedRole);
 
 		emit metaDataStateChanged(true);
 	}
@@ -85,76 +117,118 @@ bool MetaDataModel::setData(const QModelIndex & idx, const QVariant & value, int
 	return QStandardItemModel::setData(idx, value, role);
 }
 
-MetaData MetaDataModel::metaData(int row, bool withPictures) const {
-	Q_UNUSED(withPictures)
-
-	MetaData data;
-
-	for (int i = 0; i < columnCount(); i++)
-		data.insert( g_fieldNames.value(i), index(row, i).data(Qt::EditRole) );
-
-	return data;
+int MetaDataModel::pictureCount(const QModelIndex & idx) {
+	QStandardItem * parent = item(idx.row(), column("Pictures"));
+	return parent ? parent->rowCount() : 0;
 }
 
-MetaData MetaDataModel::metaData(const QModelIndex & idx, bool withPictures) const {
-	return metaData(idx.row(), withPictures);
+QList<MetaDataImage> MetaDataModel::pictures(const QModelIndex & idx) const {
+	QList<MetaDataImage> pics;
+
+	QStandardItem * parent = item(idx.row(), column("Pictures"));
+
+	for (int i = 0; i < parent->rowCount(); i++)
+		pics << parent->child(i)->data(Qt::DisplayRole).value<MetaDataImage>();
+
+	return pics;
 }
 
-QList<MetaData> MetaDataModel::modifiedMetaData(bool withPictures) const {
-	Q_UNUSED(withPictures)
+bool MetaDataModel::addPicture(const QModelIndex & idx, const QVariantMap & data) {
+	Q_UNUSED(idx)
+	Q_UNUSED(data)
 
-	QList<MetaData> data;
+	QStandardItem * parent = item(idx.row(), column("Pictures"));
 
-	for (int row = 0; row < rowCount(); row++) {
-		if (index(row, 0).data(Coquillo::RowModifiedRole).isNull())
-			continue;
+	if (!parent)
+		return false;
 
-		MetaData item;
+	MetaDataImage pic(
+		data.value("PICTURE").value<QImage>(),
+		data.value("TYPE").toInt(),
+		data.value("DESCRIPTION").toString()
+	);
 
-		for (int col = 0; col < columnCount(); col++) {
-			const QModelIndex idx = index(row, col);
+	QStandardItem * picitem = new QStandardItem;
+	picitem->setData(QVariant::fromValue<MetaDataImage>(pic));
 
-			if (!idx.data(Coquillo::OriginalDataRole).isNull())
-				item.insert( g_fieldNames.value(col), idx.data(Qt::EditRole) );
-		}
+	parent->appendRow(picitem);
 
-		const QModelIndex pathIdx = index(row, g_fieldNames.key("Path"));
+	return true;
+}
 
-		item.insert("Path", pathIdx.data(Qt::EditRole));
+bool MetaDataModel::removePicture(const QModelIndex & idx, int pos) {
+	Q_UNUSED(idx)
+	Q_UNUSED(pos)
 
-		if (!pathIdx.data(Coquillo::OriginalDataRole).isNull())
-			item.insert("_OldPath", pathIdx.data(Coquillo::OriginalDataRole));
+	QStandardItem * parent = item(idx.row(), column("Pictures"));
 
-		if (item.contains("MaxNumber"))
-			item.insert("Number", index(row, g_fieldNames.key("Number")).data());
+	if (!parent)
+		return false;
 
-		data << item;
-	}
+	parent->removeRow(pos);
 
-	return data;
+	return true;
+}
+
+bool MetaDataModel::editPicture(const QModelIndex & idx, const QVariant & value, int role) {
+	return setData(idx, value, role);
+}
+
+bool MetaDataModel::editPicture(const QModelIndex & parent, int pos,
+	const QVariant & value, int role) {
+
+	const QModelIndex idx = parent.child(pos, 0);
+
+	if (!idx.isValid())
+		return false;
+
+	return editPicture(idx, value, role);
 }
 
 
 
 
 
-void MetaDataModel::setRootDirectory(const QString & path) {
-	if (_root == path)
+void MetaDataModel::scan(const QString & dir) {
+	if (_directory.isEmpty() && dir.isEmpty())
 		return;
 
-	_root = path;
+	removeRows(0, rowCount());
+	_metaData.clear();
 
-	if (!_root.isEmpty() && _root.right(1) != "/")
-		_root.append('/');
+	qDebug() << "scan";
+	
+	if (!dir.isEmpty())
+		_directory = dir;
 
-	emit dataChanged(index(0, 0), index(rowCount()-1, columnCount()-1));
+	_scanner->setRecursive(_recurse);
+	_scanner->setPath(dir);
+
+	QTimer::singleShot(10, _scanner, SLOT(scan()));
 }
 
-void MetaDataModel::addMetaData(const MetaData & data) {
+void MetaDataModel::saveChanges() {
+	
+	emit metaDataStateChanged(false);
+}
+
+void MetaDataModel::undoChanges() {
+
+	emit metaDataStateChanged(false);
+}
+
+
+
+/**
+ * PRIVATE SLOTS
+**/
+
+
+void MetaDataModel::addItem(const MetaData & data) {
 	QList<QStandardItem*> items;
 
-	foreach (int key, g_fieldNames.keys()) {
-		const QString field = g_fieldNames.value(key);
+	foreach (int key, Coquillo::fieldNames.keys()) {
+		const QString field = Coquillo::fieldNames.value(key);
 
 		QStandardItem * item = new QStandardItem;
 		item->setDropEnabled(false);
@@ -168,49 +242,7 @@ void MetaDataModel::addMetaData(const MetaData & data) {
 	}
 
 	appendRow(items);
-}
-
-void MetaDataModel::clearContents() {
-	removeRows(0, rowCount());
-}
-
-void MetaDataModel::saveChanges() {
-	for (int row = 0; row < rowCount(); row++) {
-		if (index(row, 0).data(Coquillo::RowModifiedRole).isNull())
-			continue;
-
-		for (int col = 0; col < columnCount(); col++)
-			setData(index(row, col), QVariant(), Coquillo::OriginalDataRole);
-
-		setData(index(row, 0), QVariant(), Coquillo::RowModifiedRole);
-	}
-
-	emit metaDataStateChanged(false);
-}
-
-void MetaDataModel::undoChanges() {
-	for (int row = 0; row < rowCount(); row++) {
-		if (index(row, 0).data(Coquillo::RowModifiedRole).isNull())
-			continue;
-
-		for (int col = 0; col < columnCount(); col++) {
-			const QModelIndex idx = index(row, col);
-
-			if (!idx.data(Coquillo::OriginalDataRole).isNull()) {
-				setData(idx, idx.data(Coquillo::OriginalDataRole), Qt::EditRole);
-				setData(idx, QVariant(), Coquillo::OriginalDataRole);
-			}
-
-		}
-
-		setData(index(row, 0), QVariant(), Coquillo::RowModifiedRole);
-
-
-		// This signal needs to be emitted because we might not change data for each cell,
-		// yet they are all marked as changed (red text) in the item view.
-		emit dataChanged(index(row, 1), index(row, columnCount()-1));
-	}
-
-	emit metaDataStateChanged(false);
+	
+	
 }
 

@@ -20,9 +20,7 @@
 
 #include <QObject>
 
-#include "def_MetaData.h"
-
-#include <QFutureWatcher>
+#include "globals.h"
 
 class MediaScanner : public QObject {
 	Q_OBJECT
@@ -65,10 +63,6 @@ class MediaScanner : public QObject {
 
 		bool _recursive;
 		QString _path;
-
-		QFutureWatcher<MetaData> * _watcher;
-
-
 };
 
 #endif

@@ -1,20 +1,3 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
-
 #include <taglib/attachedpictureframe.h>
 
 #include <QFileDialog>
@@ -29,6 +12,8 @@
 #include "ui_TagEditorPictures.h"
 
 #include <QDebug>
+
+#include "../MetaDataImage.h"
 
 typedef TagLib::ID3v2::AttachedPictureFrame APFrame;
 
@@ -249,7 +234,6 @@ void PicturesTab::deleteCurrentPicture() {
 }
 
 void PicturesTab::selectedPictureChanged(const QModelIndex & idx) {
-	const int customType = -1;
 	int type = idx.data(PictureTypeRole).toInt();
 	int row = _ui->PictureTypeSelector->findData(type);
 

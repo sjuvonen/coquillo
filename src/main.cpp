@@ -29,24 +29,25 @@ void printHelp();
 int versionStringToInt(const QString &);
 
 int main(int argc, char ** args) {
-	g_fieldNames.insert(0, "Title");
-	g_fieldNames.insert(1, "Artist");
-	g_fieldNames.insert(2, "Album");
-	g_fieldNames.insert(3, "Year");
-	g_fieldNames.insert(4, "Disc");
-	g_fieldNames.insert(5, "Number");
-	g_fieldNames.insert(6, "MaxNumber");
-	g_fieldNames.insert(7, "Genre");
-	g_fieldNames.insert(8, "Comment");
-	g_fieldNames.insert(9, "OriginalArtist");
-	g_fieldNames.insert(10, "Composer");
-	g_fieldNames.insert(11, "Url");
-	g_fieldNames.insert(12, "Encoder");
-	g_fieldNames.insert(13, "Path");
-	g_fieldNames.insert(14, "Pictures");
-	g_fieldNames.insert(15, "Length");
-
 	QApplication app(argc, args);
+
+
+	Coquillo::fieldNames.insert(0, "Title");
+	Coquillo::fieldNames.insert(1, "Artist");
+	Coquillo::fieldNames.insert(2, "Album");
+	Coquillo::fieldNames.insert(3, "Year");
+	Coquillo::fieldNames.insert(4, "Disc");
+	Coquillo::fieldNames.insert(5, "Number");
+	Coquillo::fieldNames.insert(6, "MaxNumber");
+	Coquillo::fieldNames.insert(7, "Genre");
+	Coquillo::fieldNames.insert(8, "Comment");
+	Coquillo::fieldNames.insert(9, "OriginalArtist");
+	Coquillo::fieldNames.insert(10, "Composer");
+	Coquillo::fieldNames.insert(11, "Url");
+	Coquillo::fieldNames.insert(12, "Encoder");
+	Coquillo::fieldNames.insert(13, "Path");
+	Coquillo::fieldNames.insert(14, "Pictures");
+	Coquillo::fieldNames.insert(15, "Length");
 
 	QCoreApplication::setApplicationName("Coquillo");
 	QCoreApplication::setOrganizationName("Smusoft");

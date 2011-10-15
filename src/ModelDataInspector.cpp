@@ -65,17 +65,17 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 
 	for (int i = firstRow; i <= lastRow; i++) {
 		const QModelIndex idx = _model->index(i, 0, parent);
-		QMap<int, QString> fields = g_fieldNames;
+		QMap<int, QString> fields = Coquillo::fieldNames;
 
-		fields.remove( g_fieldNames.key("Disc") );
-		fields.remove( g_fieldNames.key("Number") );
-		fields.remove( g_fieldNames.key("MaxNumber") );
-		fields.remove( g_fieldNames.key("Path") );
-		fields.remove( g_fieldNames.key("Year") );
-		fields.remove( g_fieldNames.key("Pictures") );
+		fields.remove( Coquillo::fieldNames.key("Disc") );
+		fields.remove( Coquillo::fieldNames.key("Number") );
+		fields.remove( Coquillo::fieldNames.key("MaxNumber") );
+		fields.remove( Coquillo::fieldNames.key("Path") );
+		fields.remove( Coquillo::fieldNames.key("Year") );
+		fields.remove( Coquillo::fieldNames.key("Pictures") );
 
 		if (Coquillo::safeFileNames) {
-			const QModelIndex idx = _model->index(i, g_fieldNames.key("Path"));
+			const QModelIndex idx = _model->index(i, Coquillo::fieldNames.key("Path"));
 			const QRegExp chars("[\"*:<>\?\\|]");
 
 			QString path = idx.data(Qt::EditRole).toString();
@@ -84,11 +84,11 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 
 			path = QString("%1/%2").arg(dir, name);
 
-			_model->setData( _model->index(i, g_fieldNames.key("Path")), path );
+			_model->setData( _model->index(i, Coquillo::fieldNames.key("Path")), path );
 		}
 
 		if (Coquillo::fileExtensionCase) {
-			const QModelIndex idx = _model->index(i, g_fieldNames.key("Path"));
+			const QModelIndex idx = _model->index(i, Coquillo::fieldNames.key("Path"));
 			QString path = idx.data(Qt::EditRole).toString();
 			const QString suffix = path.section('.', -1);
 
@@ -103,7 +103,7 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 		}
 
 		if (Coquillo::removeDiscFromAlbumName) {
-			const QModelIndex idx = _model->index(i, g_fieldNames.key("Album"));
+			const QModelIndex idx = _model->index(i, Coquillo::fieldNames.key("Album"));
 			QRegExp r("\\s*[\\[\\(](?:disc|cd)\\s*(\\d+)[\\]\\)]\\s*$");
 
 			r.setCaseSensitivity(Qt::CaseInsensitive);
@@ -115,7 +115,7 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 				albumName.remove(r);
 
 				_model->setData(idx, albumName);
-				_model->setData(idx.sibling(idx.row(), g_fieldNames.key("Disc")), disc);
+				_model->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Disc")), disc);
 			}
 
 

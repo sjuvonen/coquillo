@@ -143,25 +143,25 @@ void CddbSearchDialog::accept() {
 		}
 
 		if (setAll || setArtist)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Artist")), artist);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Artist")), artist);
 
 		if (setAll || setAlbum)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Album")), album);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Album")), album);
 
 		if (setAll || setGenre)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Genre")), info.genre);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Genre")), info.genre);
 
 		if (setAll || setNumber)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Number")), i+1);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Number")), i+1);
 
 		if (setAll || setMaxNumber)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("MaxNumber")), maxNum);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("MaxNumber")), maxNum);
 
 		if (setAll || setTitle)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Title")), title);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Title")), title);
 
 		if (setAll || setYear)
-			_dataModel->setData(idx.sibling(idx.row(), g_fieldNames.key("Year")), info.year);
+			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Year")), info.year);
 
 		dataIdx = dataIdx.sibling(dataIdx.row()+1, dataIdx.column());
 	}
@@ -195,7 +195,7 @@ void CddbSearchDialog::setIndexes(const QList<QModelIndex> & indexes) {
 	QString hex;
 
 	for (int i = 0; i < indexes.count(); i++) {
-		const QPersistentModelIndex idx = indexes[i].sibling(indexes[i].row(), g_fieldNames.key("Length"));
+		const QPersistentModelIndex idx = indexes[i].sibling(indexes[i].row(), Coquillo::fieldNames.key("Length"));
 		quint32 length = idx.data(Qt::EditRole).toULongLong();
 
 		if (i == 0)

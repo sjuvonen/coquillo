@@ -1,20 +1,3 @@
-/***********************************************************************
-* Copyright (c) 2011 Samu Juvonen <samu.juvonen@gmail.com>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-************************************************************************/
-
 #include <taglib/fileref.h>
 
 #include <taglib/flacfile.h>
@@ -61,16 +44,12 @@ void MetaDataWriter::write() {
 	while (!_metaData.isEmpty()) {
 		MetaData metaData = _metaData.takeFirst();
 
-		qDebug() << metaData;
-
 		if (metaData.contains("_OldPath") && metaData["_OldPath"] != metaData["Path"]) {
 			QFileInfo fi(metaData.value("Path").toString());
 			QDir dir = fi.dir();
 
 			if (!dir.exists())
 				dir.mkpath(".");
-
-			qDebug() << "Test dir:" << dir.exists();
 
 			QFile file(metaData.value("_OldPath").toString());
 			file.rename(metaData.value("Path").toString());
@@ -96,7 +75,8 @@ void MetaDataWriter::write() {
 				if (TagLib::FLAC::File * f = dynamic_cast<TagLib::FLAC::File*>(file.file())) {
 					writeXiph(f->xiphComment(true), metaData);
 
-					#if TAGLIB_MINOR_VERSION >= 7
+					#if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+					
 					if (metaData.contains("Pictures")) {
 						f->removePictures();
 
@@ -121,6 +101,7 @@ void MetaDataWriter::write() {
 							delete d;
 						}
 					}
+					
 					#endif
 
 
@@ -208,9 +189,9 @@ void MetaDataWriter::writeID3v2(TagLib::ID3v2::Tag * tag, const MetaData & metaD
 
 	for (std::map<std::string, std::string>::iterator i = m.begin(); i != m.end(); i++) {
 		if (metaData.contains(i->first.c_str())) {
-			tag->removeFrames(i->second.c_str());
-
 			const QString s = metaData.value(i->first.c_str()).toString();
+
+			tag->removeFrames(i->second.c_str());
 
 			if (!s.isEmpty()) {
 				TagLib::ID3v2::TextIdentificationFrame * frame = new TagLib::ID3v2::TextIdentificationFrame(i->second.c_str());
@@ -223,9 +204,9 @@ void MetaDataWriter::writeID3v2(TagLib::ID3v2::Tag * tag, const MetaData & metaD
 	}
 
 	if (metaData.contains("Url")) {
-		tag->removeFrames("WXXX");
-
 		const QString url = metaData.value("Url").toString();
+
+		tag->removeFrames("WXXX");
 
 		if (!url.isEmpty()) {
 			TagLib::ID3v2::UserUrlLinkFrame * frame = new TagLib::ID3v2::UserUrlLinkFrame;

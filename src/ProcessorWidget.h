@@ -21,7 +21,7 @@
 #include <QPersistentModelIndex>
 #include <QWidget>
 
-#include "def_MetaData.h"
+#include "globals.h"
 
 class QAbstractItemModel;
 

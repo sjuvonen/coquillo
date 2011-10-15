@@ -20,6 +20,6 @@
 
 #include <QVariantMap>
 
-typedef QVariantMap MetaData;
+//typedef QVariantMap MetaData;
 
 #endif

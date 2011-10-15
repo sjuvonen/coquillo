@@ -179,11 +179,11 @@ void ProcessorWidget::apply() {
 		switch (action) {
 			case ResolveTagsFromFilenames: {
 				const QString pattern = _ui->comboResolvePattern->currentText();
-				const QString filename = idx.sibling(idx.row(), g_fieldNames.key("Path")).data(Qt::EditRole).toString();
+				const QString filename = idx.sibling(idx.row(), Coquillo::fieldNames.key("Path")).data(Qt::EditRole).toString();
 				const MetaData newData = tagsFromFileName(pattern, filename);
 
 				foreach (const QString k, newData.keys()) {
-					int col = g_fieldNames.key(k, -1);
+					int col = Coquillo::fieldNames.key(k, -1);
 
 					if (col == -1)
 						continue;
@@ -209,7 +209,7 @@ void ProcessorWidget::apply() {
 
 
 
-				_model->setData( idx.sibling(idx.row(), g_fieldNames.key("Path")), fileName, Qt::EditRole );
+				_model->setData( idx.sibling(idx.row(), Coquillo::fieldNames.key("Path")), fileName, Qt::EditRole );
 
 				// Move the selected pattern to top of the list and save patterns.
 				if (!pattern.isEmpty()) {
@@ -247,8 +247,8 @@ void ProcessorWidget::updateRenamePreview() {
 MetaData ProcessorWidget::metaData(const QModelIndex & idx) const {
 	MetaData data;
 
-	for (int i = 0; i < g_fieldNames.count(); i++) {
-		data.insert( g_fieldNames.value(i), idx.sibling(idx.row(), i).data(Qt::EditRole) );
+	for (int i = 0; i < Coquillo::fieldNames.count(); i++) {
+		data.insert( Coquillo::fieldNames.value(i), idx.sibling(idx.row(), i).data(Qt::EditRole) );
 	}
 
 	return data;
@@ -261,7 +261,7 @@ void ProcessorWidget::updateResolvePreview() {
 	}
 
 	const QString pattern = _ui->comboResolvePattern->currentText();
-	const QString path = _indexes[0].sibling(_indexes[0].row(), g_fieldNames.key("Path")).data(Qt::EditRole).toString();
+	const QString path = _indexes[0].sibling(_indexes[0].row(), Coquillo::fieldNames.key("Path")).data(Qt::EditRole).toString();
 	const QStringList syms = extractSymbols(pattern);
 	const MetaData data = tagsFromFileName(pattern, path);
 
@@ -390,7 +390,7 @@ void ProcessorWidget::processFields() const {
 					for (QStringList::iterator i = words.begin(); i != words.end(); i++) {
 						// Capitalize only if intelligent disabled OR word not in ignore list OR
 						// word length > 1 and word is not 'I'.
-						if ((Coquillo::intelligentCapitalization && g_ignoreWords.contains(*i)) ||
+						if ((Coquillo::intelligentCapitalization && Coquillo::ignoreWords.contains(*i)) ||
 							(i->length() == 1 && i->toLower() != "i"))
 							continue;
 
@@ -439,7 +439,7 @@ void ProcessorWidget::processFields() const {
 				}
 			}
 
-			_model->setData( idx.sibling(idx.row(), g_fieldNames.key(field)), value );
+			_model->setData( idx.sibling(idx.row(), Coquillo::fieldNames.key(field)), value );
 		}
 	}
 }

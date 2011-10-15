@@ -19,7 +19,7 @@ unix {
 	LIBS += -ltag
 
 	# Imports the lib path into the binary
-	QMAKE_RPATHDIR += $$PREFIX/lib/coquillo
+	# QMAKE_RPATHDIR += $$PREFIX/lib/coquillo
 
 	target.path = $$PREFIX/bin
 
@@ -44,7 +44,7 @@ HEADERS += def_MetaData.h \
            MainWindow.h \
            MediaScanner.h \
            MetaDataImage.h \
-           MetaDataModel.h \
+					 MetaDataModel.h \
            MetaDataReader.h \
            MetaDataWriter.h \
            ModelDataInspector.h \
@@ -60,7 +60,7 @@ SOURCES += main.cpp \
            MainWindow.cpp \
            MediaScanner.cpp \
            MetaDataImage.cpp \
-           MetaDataModel.cpp \
+					 MetaDataModel.cpp \
            MetaDataReader.cpp \
            MetaDataWriter.cpp \
            ModelDataInspector.cpp \

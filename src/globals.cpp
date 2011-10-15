@@ -13,7 +13,7 @@ QString toQString(const char * str, int encoding) {
 }
 
 int modelColumn(const QString & name) {
-	return g_fieldNames.key(name, -1);
+	return Coquillo::fieldNames.key(name, -1);
 }
 
 int Coquillo::encoding = Coquillo::UTF_8;
@@ -31,5 +31,5 @@ bool Coquillo::Flac::id3v2 = false;
 bool Coquillo::Mpeg::id3v1 = false;
 bool Coquillo::OggVorbis::stripLegacyCovers = false;
 
-QMap<int, QString> g_fieldNames;
-QStringList g_ignoreWords = QStringList() << "in" << "the" << "at" << "of";
+QMap<int, QString> Coquillo::fieldNames;
+QStringList Coquillo::ignoreWords = QStringList() << "in" << "the" << "at" << "of";

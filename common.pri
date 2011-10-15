@@ -1,4 +1,6 @@
 
-isEmpty(PREFIX) {
-	PREFIX = /usr
+unix {
+	isEmpty(PREFIX) {
+		PREFIX = /usr
+	}
 }

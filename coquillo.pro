@@ -9,19 +9,19 @@ SUBDIRS += src
 
 win32 {
 	CONFIG += windows
-	ICON = ../extra/coquillo.png
+	RC_FILE = coquillo.rc
 }
 
 unix {
-	ICON = ../extra/coquillo.png
+	ICON = extra/coquillo.png
 
 	DATADIR = $$PREFIX/share
 	
 	icons.path = $$DATADIR/pixmaps
-	icons.files = ../extra/coquillo.png
+	icons.files = extra/coquillo.png
 
 	launcher.path = $$DATADIR/applications
-	launcher.files = ../extra/coquillo.desktop
+	launcher.files = extra/coquillo.desktop
 
 	INSTALLS += icons launcher	
 }

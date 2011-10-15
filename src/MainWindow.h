@@ -71,7 +71,6 @@ class MainWindow : public QMainWindow {
 		void abortScan();
 		void toggleCddbSearchDialog(bool open=false);
 		void openSettingsDialog();
-		void saveMetaData();
 		void scanStarted();
 		void scanFinished();
 		void setInterfaceLocked(bool);
@@ -98,9 +97,7 @@ class MainWindow : public QMainWindow {
 		QThread * _scannerThread;
 
 		CddbSearchDialog * _cddbDialog;
-		MetaDataModel * _dataModel;
 		ModelDataInspector * _inspector;
-		MediaScanner * _scanner;
 		MetaDataWriter * _writer;
 		ProcessorWidget * _processor;
 

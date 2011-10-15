@@ -14,3 +14,9 @@ VERSION = 1.0
 target.path = $$PREFIX/lib/coquillo
 INSTALLS += target
 
+win32 {
+	INCLUDEPATH += $$ROOT/resources/windows/taglib/include
+	LIBS += $$ROOT/resources/windows/taglib/taglib.dll
+
+	CONFIG += windows dll
+}

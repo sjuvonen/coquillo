@@ -39,6 +39,7 @@
 
 #include "ui_MainWindow.h"
 
+
 #include <QDebug>
 
 volatile bool forceAbortScan = false;
@@ -59,18 +60,14 @@ MainWindow::MainWindow(QWidget * parent)
 	_bookmarkProxy->setDynamicSortFilter(true);
 	_bookmarkProxy->sort(0);
 
-	_dataModel = new MetaDataModel(this);
-
 	_processor = new ProcessorWidget(this);
 	_processor->setWindowFlags( Qt::Window | Qt::Dialog | Qt::Popup );
 
 	_inspector = new ModelDataInspector(this);
-	_inspector->setModel(_dataModel);
+
+	_inspector->setModel( MetaDataModel::instance() );
 
 	_scannerThread = new QThread(this);
-
-	_scanner = new MediaScanner;
-	_scanner->moveToThread(_scannerThread);
 
 	_writer = new MetaDataWriter;
 	_writer->moveToThread(_scannerThread);
@@ -79,7 +76,7 @@ MainWindow::MainWindow(QWidget * parent)
 
 	QSortFilterProxyModel * m = new SortFilterProxyModelMod;
 	m->setDynamicSortFilter(true);
-	m->setSourceModel(_dataModel);
+	m->setSourceModel( MetaDataModel::instance() );
 
 	_ui->widgetEditor->setModel(m);
 	_ui->tableItems->setModel(m);
@@ -122,18 +119,11 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(_bookmarkProxy, SIGNAL(rowsRemoved(QModelIndex, int, int)),
 		SLOT(setupBookmarksMenu()));
 
-	connect(_ui->tableItems->horizontalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)),
-		SLOT(showHeaderContextMenu(const QPoint &)));
+	connect(_ui->tableItems->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
+		SLOT(showHeaderContextMenu(QPoint)));
 
-	connect(_scanner, SIGNAL(started()), statusMessage, SLOT(clear()));
-	connect(_scanner, SIGNAL(started()), _dataModel, SLOT(clearContents()));
-	connect(_scanner, SIGNAL(started()), SLOT(scanStarted()));
-	connect(_scanner, SIGNAL(finished()), SLOT(scanFinished()));
-
-	connect(_scanner, SIGNAL(itemFound(const MetaData &)), _dataModel, SLOT(addMetaData(const MetaData &)));
-	connect(_scanner, SIGNAL(itemsDone(int)), scanProgress, SLOT(setValue(int)));
-	connect(_scanner, SIGNAL(maxItemsChanged(int)), scanProgress, SLOT(setMaximum(int)));
-	//connect(_scanner, SIGNAL(rangeChanged(int, int)), scanProgress, SLOT(setRange(int, int)));
+	connect(_ui->widgetLocation, SIGNAL(pathSelected(QString)),
+		MetaDataModel::instance(), SLOT(scan(QString)));
 
 	connect(_ui->actionAbout, SIGNAL(triggered()), SLOT(showAboutDialog()));
 	connect(_ui->actionConfigure, SIGNAL(triggered()), SLOT(openSettingsDialog()));
@@ -142,35 +132,29 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(
 		_ui->tableItems->selectionModel(),
 		SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-		SLOT(slotSelectionChanged(const QItemSelection &))
+  SLOT(slotSelectionChanged(QItemSelection))
 	);
 
-	connect(this, SIGNAL(selectedRowsChanged(const QModelIndexList &)),
-		_ui->widgetEditor, SLOT(setDataIndexes(const QModelIndexList &)));
+	connect(this, SIGNAL(selectedRowsChanged(QModelIndexList)),
+		_ui->widgetEditor, SLOT(setDataIndexes(QModelIndexList)));
 
-	connect(this, SIGNAL(selectedRowsChanged(const QModelIndexList &)),
-		_processor, SLOT(setDataIndexes(const QModelIndexList &)));
+	connect(this, SIGNAL(selectedRowsChanged(QModelIndexList)),
+		_processor, SLOT(setDataIndexes(const QModelIndexList)));
 
 	connect(_processor, SIGNAL(closeButtonPressed()), _processor, SLOT(close()));
 
-	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)),
-		_scanner, SLOT(scanPath(const QString &)));
-	
-	connect(_ui->widgetLocation, SIGNAL(pathSelected(const QString &)),
-		_dataModel, SLOT(setRootDirectory(const QString &)));
-
-	connect(_ui->widgetLocation, SIGNAL(bookmarked(const QString &)),
-		_bookmarks, SLOT(addPath(const QString &)));
+	connect(_ui->widgetLocation, SIGNAL(bookmarked(QString)),
+		_bookmarks, SLOT(addPath(QString)));
 
 	connect(
 		_ui->widgetEditor->dataMapper(), SIGNAL(currentIndexChanged(int)),
 		_ui->tableItems, SLOT(selectRow(int))
 	);
 
-	connect(_bookmarkMapper, SIGNAL(mapped(const QString &)),
-		_ui->widgetLocation, SLOT(setPath(const QString &)));
+	connect(_bookmarkMapper, SIGNAL(mapped(QString)),
+		_ui->widgetLocation, SLOT(setPath(QString)));
 
-	for (int i = 0; i < g_fieldNames.count(); i++)
+	for (int i = 0; i < Coquillo::fieldNames.count(); i++)
 		if (i != modelColumn("Title") && i != modelColumn("Path") && i != modelColumn("Number"))
 		_ui->tableItems->horizontalHeader()->hideSection(i);
 
@@ -184,12 +168,9 @@ MainWindow::MainWindow(QWidget * parent)
 }
 
 
-void MainWindow::openBookmarkDialog() {
-	qDebug() << "Hey";
-	
+void MainWindow::openBookmarkDialog() {	
 	BookmarkDialog d(this);
 	d.setModel(_bookmarks);
-
 	d.exec();
 }
 
@@ -251,10 +232,7 @@ void MainWindow::openDirectory(const QString & path) {
 	_ui->widgetLocation->setRootPath(path);
 	_ui->widgetLocation->setPath(path);
 
-	_scanner->setPath(path);
-	_dataModel->setRootDirectory(path);
-
-	QTimer::singleShot(500, _scanner, SLOT(scan()));
+	MetaDataModel::instance()->setDirectory(path);
 }
 
 
@@ -262,7 +240,6 @@ void MainWindow::setupBookmarksMenu() {
 	_ui->menuBookmarks->clear();
 	_ui->menuBookmarks->addAction(_ui->actionManage_bookmarks);
 	_ui->menuBookmarks->addSeparator();
-
 
 	for (int i = 0; i < _bookmarkProxy->rowCount(); i++) {
 		const QModelIndex idx = _bookmarkProxy->index(i, 0);
@@ -299,8 +276,8 @@ void MainWindow::toggleCddbSearchDialog(bool state) {
 		_ui->actionCDDB->setChecked(true);
 		_ui->buttonCDDB->setChecked(true);
 
-		connect(this, SIGNAL(selectedRowsChanged(const QModelIndexList &)),
-			_cddbDialog, SLOT(setIndexes(const QModelIndexList &)));
+		connect(this, SIGNAL(selectedRowsChanged(QModelIndexList)),
+			_cddbDialog, SLOT(setIndexes(QModelIndexList)));
 
 		connect(_cddbDialog, SIGNAL(finished(int)), SLOT(toggleCddbSearchDialog()));
 
@@ -322,6 +299,8 @@ void MainWindow::openSettingsDialog() {
 
 	if (d.exec() == QDialog::Accepted) {
 		QMap<QString, QVariant> data = d.settingsData();
+
+		qDebug() << "Check if scanner follows recursion rule!";
 		//_scanner->setRecursive(data.value("Scanning/ScanRecursive").toBool());
 	}
 }
@@ -334,7 +313,7 @@ void MainWindow::scanStarted() {
 	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
 	_ui->actionReloadOrAbort->setShortcut(tr("Esc"));
 
-	disconnect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
+	//disconnect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
 	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), SLOT(abortScan()));
 
 	// New interface
@@ -342,7 +321,7 @@ void MainWindow::scanStarted() {
 	_ui->buttonReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
 	_ui->buttonReloadOrAbort->setShortcut(tr("Esc"));
 
-	disconnect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
+	//disconnect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
 	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), SLOT(abortScan()));
 
 	ImageCache::clear();
@@ -350,7 +329,10 @@ void MainWindow::scanStarted() {
 
 void MainWindow::scanFinished() {
 	findChild<QProgressBar*>("ScanProgressBar")->setVisible(false);
-	findChild<QLabel*>("StatusMessage")->setText( QString("%1 tracks").arg(_dataModel->rowCount()) );
+
+	findChild<QLabel*>("StatusMessage")->setText(
+		QString("%1 tracks").arg(MetaDataModel::instance()->rowCount())
+	);
 
 	// Old interface
 	_ui->actionReloadOrAbort->setText(tr("Reload"));
@@ -358,7 +340,7 @@ void MainWindow::scanFinished() {
 	_ui->actionReloadOrAbort->setShortcut(tr("Ctrl+R"));
 
 	disconnect(_ui->actionReloadOrAbort, SIGNAL(triggered()), this, SLOT(abortScan()));
-	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
+	//connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
 
 	// New interface
 	_ui->buttonReloadOrAbort->setText(tr("Reload"));
@@ -366,7 +348,7 @@ void MainWindow::scanFinished() {
 	_ui->buttonReloadOrAbort->setShortcut(tr("Ctrl+R"));
 
 	disconnect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), this, SLOT(abortScan()));
-	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
+	//connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
 }
 
 void MainWindow::setInterfaceLocked(bool setLocked) {
@@ -400,8 +382,8 @@ void MainWindow::setInterfaceObjectVisible(bool setVisible) {
 }
 
 void MainWindow::setRecursiveScan(bool state) {
-	_scanner->setRecursive(state);
 	_ui->actionRecursive_scan->setChecked(state);
+	MetaDataModel::instance()->setRecursive(state);
 }
 
 
@@ -411,7 +393,6 @@ void MainWindow::setRecursiveScan(bool state) {
 void MainWindow::closeEvent(QCloseEvent * e) {
 	abortScan();
 	saveSettings();
-	_scannerThread->quit();
 
 	closeCddbDialog();
 
@@ -506,10 +487,9 @@ void MainWindow::loadSettings() {
 	const QString scannerHome = settings.value("Scanning/HomeDirectory", defaultHome).toString();
 	bool recursive = settings.value("Scanning/ScanRecursive").toBool();
 
-	_scanner->setRecursive(recursive);
-	_scanner->setPath(scannerHome);
+	MetaDataModel::instance()->setRecursive(recursive);
 
-	_dataModel->setRootDirectory(scannerHome);
+	//MetaDataModel::instance()->setDirectory(scannerHome);
 
 	resize( settings.value("MainWindow/Size", QSize(800, 400)).toSize() );
 	restoreState( settings.value("MainWindow/State").toByteArray() );
@@ -530,8 +510,10 @@ void MainWindow::loadSettings() {
 		b->setToolButtonStyle(style);
 	}
 
+	_ui->widgetLocation->blockSignals(true);
 	_ui->widgetLocation->setRootPath(scannerHome);
 	_ui->widgetLocation->setPath(scannerHome);
+	_ui->widgetLocation->blockSignals(false);
 
 	_ui->actionMenubar->setChecked( settings.value("MainWindow/MenubarVisible", true).toBool() );
 	_ui->tableItems->horizontalHeader()->restoreState( settings.value("MainWindow/TableHeader").toByteArray() );
@@ -748,9 +730,14 @@ void MainWindow::showHeaderContextMenu(const QPoint & point) {
 	for (int i = 0; i < header->count(); i++) {
 		QString label = header->model()->headerData(i, header->orientation()).toString();
 
+		/*
 		if (label == "Pictures")
 			continue;
-		else if (label == "MaxNumber")
+		
+		else
+		*/
+
+		if (label == "MaxNumber")
 			label = "Max Number";
 		else if (label == "OriginalArtist")
 			label = "Original Artist";
@@ -770,19 +757,6 @@ void MainWindow::showHeaderContextMenu(const QPoint & point) {
 		int i = actions.indexOf(action);
 		header->setSectionHidden(i, !action->isChecked());
 	}
-}
-
-
-
-
-void MainWindow::saveMetaData() {
-	QList<MetaData> metaData = _dataModel->modifiedMetaData(true);
-
-	_writer->queue(metaData);
-	_writer->write();
-
-	_dataModel->saveChanges();
-
 }
 
 void MainWindow::closeCddbDialog() {
@@ -813,12 +787,14 @@ void MainWindow::setupNewInterface() {
 	_ui->buttonCDDB->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
 	_ui->buttonProcessor->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon));
 
-	connect(_ui->buttonSave, SIGNAL(clicked()), SLOT(saveMetaData()));
-	connect(_ui->buttonReset, SIGNAL(clicked()), _dataModel, SLOT(undoChanges()));
-	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), _scanner, SLOT(scan()));
+	MetaDataModel * mdm = MetaDataModel::instance();
 
-	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->buttonSave, SLOT(setEnabled(bool)));
-	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->buttonReset, SLOT(setEnabled(bool)));
+	connect(_ui->buttonSave, SIGNAL(clicked()), mdm, SLOT(saveChanges()));
+	connect(_ui->buttonReset, SIGNAL(clicked()), mdm, SLOT(undoChanges()));
+	connect(_ui->buttonReloadOrAbort, SIGNAL(clicked()), mdm, SLOT(scan()));
+
+	connect(mdm, SIGNAL(metaDataStateChanged(bool)), _ui->buttonSave, SLOT(setEnabled(bool)));
+	connect(mdm, SIGNAL(metaDataStateChanged(bool)), _ui->buttonReset, SLOT(setEnabled(bool)));
 
 	connect(
 		_ui->buttonInverse, SIGNAL(clicked()),
@@ -861,12 +837,14 @@ void MainWindow::setupNewInterface() {
 
 void MainWindow::setupOldInterface() {
 
-	connect(_ui->actionSave, SIGNAL(triggered()), SLOT(saveMetaData()));
-	connect(_ui->actionReset, SIGNAL(triggered()), _dataModel, SLOT(undoChanges()));
-	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), _scanner, SLOT(scan()));
+	MetaDataModel * mdm = MetaDataModel::instance();
 
-	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->actionSave, SLOT(setEnabled(bool)));
-	connect(_dataModel, SIGNAL(metaDataStateChanged(bool)), _ui->actionReset, SLOT(setEnabled(bool)));
+	connect(_ui->actionSave, SIGNAL(triggered()), mdm, SLOT(saveChanges()));
+	connect(_ui->actionReset, SIGNAL(triggered()), mdm, SLOT(undoChanges()));
+	connect(_ui->actionReloadOrAbort, SIGNAL(triggered()), mdm, SLOT(scan()));
+
+	connect(mdm, SIGNAL(metaDataStateChanged(bool)), _ui->actionSave, SLOT(setEnabled(bool)));
+	connect(mdm, SIGNAL(metaDataStateChanged(bool)), _ui->actionReset, SLOT(setEnabled(bool)));
 
 	connect(
 		_ui->actionInverse, SIGNAL(triggered()),
