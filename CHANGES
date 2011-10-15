@@ -1,3 +1,7 @@
+git
+- Restructuring code for better modularisation.
+	- Secondary goal is to fix compiling on Windows and OS/2.
+
 1.9
 - Fixed displaying tags.
 - Fixed saving disc number and track total.
