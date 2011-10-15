@@ -1,10 +1,5 @@
-#include <QFileInfo>
-#include <QSettings>
-#include <QString>
-#include <QStringList>
 
 #include <taglib/taglib.h>
-
 #include <taglib/fileref.h>
 
 #include <taglib/attachedpictureframe.h>
@@ -18,14 +13,19 @@
 #include <taglib/xiphcomment.h>
 #include <taglib/xingheader.h>
 
-#include "MetaDataImage.h"
-#include "MetaDataReader.h"
-
 #include <QDataStream>
+#include <QFileInfo>
 #include <QTextCodec>
-#include <QDebug>
+#include <QSettings>
+#include <QString>
+#include <QStringList>
 
 #include "ImageCache.h"
+#include "MetaDataImage.h"
+#include "MetaDataModel.h"
+#include "MetaDataReader.h"
+
+#include <QDebug>
 
 #define T2QString(s, toUtf) toUtf ? QString::fromUtf8(s.toCString(true)) : QString::fromLatin1(s.toCString(false))
 
@@ -53,7 +53,9 @@ MetaData MetaDataReader::getTags(const QString & path) {
 
 	// This adds missing fields. It's important to do this so that MetaDataModel would accurately
 	// identify modified fields.
-	foreach (const QString field, Coquillo::fieldNames.values()) {
+	for (int i = 0; i < MetaDataModel::instance()->columnCount(); i++) {
+		const QString field = MetaDataModel::instance()->columnName(i);
+		
 		if (!item.contains(field))
 			item.insert(field, QString(""));
 	}

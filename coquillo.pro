@@ -4,7 +4,8 @@ include(common.pri)
 TEMPLATE = subdirs
 CONFIG += ordered incremental qt link_prl
 
-SUBDIRS += src/bookmarks src/cddb src/editor src/settings
+SUBDIRS += src/bookmarks src/metadata
+SUBDIRS += src/cddb src/editor src/settings
 SUBDIRS += src
 
 win32 {

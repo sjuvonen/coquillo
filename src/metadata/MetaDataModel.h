@@ -11,6 +11,8 @@ class QThread;
 
 class MediaScanner;
 
+int modelColumn(const QString & name);
+
 class MetaDataModel: public QStandardItemModel {
 	Q_OBJECT
 
@@ -28,6 +30,7 @@ class MetaDataModel: public QStandardItemModel {
 		int column(const QString & name) const { return _columnNames.key(name); }
 
 		QVariant data(const QModelIndex & idx, int role=Qt::DisplayRole) const;
+
 		bool setData(const QModelIndex & idx,
 			const QVariant & value, int role=Qt::EditRole);
 

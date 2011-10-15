@@ -31,24 +31,6 @@ int versionStringToInt(const QString &);
 int main(int argc, char ** args) {
 	QApplication app(argc, args);
 
-
-	Coquillo::fieldNames.insert(0, "Title");
-	Coquillo::fieldNames.insert(1, "Artist");
-	Coquillo::fieldNames.insert(2, "Album");
-	Coquillo::fieldNames.insert(3, "Year");
-	Coquillo::fieldNames.insert(4, "Disc");
-	Coquillo::fieldNames.insert(5, "Number");
-	Coquillo::fieldNames.insert(6, "MaxNumber");
-	Coquillo::fieldNames.insert(7, "Genre");
-	Coquillo::fieldNames.insert(8, "Comment");
-	Coquillo::fieldNames.insert(9, "OriginalArtist");
-	Coquillo::fieldNames.insert(10, "Composer");
-	Coquillo::fieldNames.insert(11, "Url");
-	Coquillo::fieldNames.insert(12, "Encoder");
-	Coquillo::fieldNames.insert(13, "Path");
-	Coquillo::fieldNames.insert(14, "Pictures");
-	Coquillo::fieldNames.insert(15, "Length");
-
 	QCoreApplication::setApplicationName("Coquillo");
 	QCoreApplication::setOrganizationName("Smusoft");
 	QCoreApplication::setOrganizationDomain("univerge.no-ip.org");

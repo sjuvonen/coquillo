@@ -1,9 +1,9 @@
 
+#include <metadata/MetaDataModel.h>
+
 #include "SortFilterProxyModelMod.h"
 
 #include <QDebug>
-
-#include "globals.h"
 
 bool SortFilterProxyModelMod::lessThan(const QModelIndex & left, const QModelIndex & right) const {
 	// Paths that have less depth, ie. less characters /, are 'less than'.

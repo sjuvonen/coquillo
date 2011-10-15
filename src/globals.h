@@ -52,14 +52,10 @@ namespace Coquillo {
 		extern bool stripLegacyCovers;
 	}
 
-	// Map of field names to columns for the item model.
-	extern QMap<int, QString> fieldNames;
-
 	// List of words to not capitalize when intelligent capitalization enabled.
 	extern QStringList ignoreWords;
 };
 
 QString toQString(const char * str, int encoding=-1);
-int modelColumn(const QString & name);
 
 #endif

@@ -153,7 +153,7 @@ MainWindow::MainWindow(QWidget * parent)
 	connect(_bookmarkMapper, SIGNAL(mapped(QString)),
 		_ui->widgetLocation, SLOT(setPath(QString)));
 
-	for (int i = 0; i < Coquillo::fieldNames.count(); i++)
+	for (int i = 0; i < MetaDataModel::instance()->columnCount(); i++)
 		if (i != modelColumn("Title") && i != modelColumn("Path") && i != modelColumn("Number"))
 		_ui->tableItems->horizontalHeader()->hideSection(i);
 

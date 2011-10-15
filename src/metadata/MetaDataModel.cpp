@@ -7,6 +7,10 @@
 
 #include <QDebug>
 
+int modelColumn(const QString & name) {
+	return MetaDataModel::instance()->column(name);
+}
+
 MetaDataModel * MetaDataModel::s_instance = 0;
 
 MetaDataModel * MetaDataModel::instance() {
@@ -229,8 +233,8 @@ void MetaDataModel::undoChanges() {
 void MetaDataModel::addItem(const MetaData & data) {
 	QList<QStandardItem*> items;
 
-	foreach (int key, Coquillo::fieldNames.keys()) {
-		const QString field = Coquillo::fieldNames.value(key);
+	foreach (int key, _columnNames.keys()) {
+		const QString field = _columnNames.value(key);
 
 		QStandardItem * item = new QStandardItem;
 		item->setDropEnabled(false);

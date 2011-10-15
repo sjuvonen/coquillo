@@ -17,10 +17,6 @@
 // Should get rid of this somehow.
 #include "globals.h"
 
-namespace Coquillo {
-	extern QMap<int, QString> fieldNames;
-}
-
 EditorWidget::EditorWidget(QWidget * parent)
 : QWidget(parent), _model(0) {
 
@@ -65,7 +61,7 @@ void EditorWidget::slotApplyPicturesToAll() {
 	if (_indexes.count() < 2)
 		return;
 
-	int col = Coquillo::fieldNames.key("Pictures");
+	int col = modelColumn("Pictures");
 	const QVariant pics = _indexes[0].sibling(_indexes[0].row(), col).data(Qt::EditRole);
 
 	for (int i = 1; i < _indexes.count(); i++) {
@@ -120,12 +116,12 @@ void EditorWidget::setDataIndexes(const QModelIndexList & indexes) {
 	scrollTextFields();
 	_mapper->blockSignals(false);
 
-	int col = Coquillo::fieldNames.key("Pictures");
+	int col = modelColumn("Pictures");
 
 	QList<MetaDataImage> pics;
 
 	if (idx.sibling(idx.row(), col).data(Qt::EditRole).isNull()) {
-		const QModelIndex pathIdx = idx.sibling(idx.row(), Coquillo::fieldNames.key("Path"));
+		const QModelIndex pathIdx = idx.sibling(idx.row(), modelColumn("Path"));
 		QString path = pathIdx.data(Coquillo::OriginalDataRole).toString();
 
 		if (path.isEmpty())
@@ -139,8 +135,8 @@ void EditorWidget::setDataIndexes(const QModelIndexList & indexes) {
 
 	// The data model considers every setdata(Qt::EditRole) call after the first one as modifying original data,
 	// so we don't want to call this multiple times.
-	if (!pics.isEmpty() && idx.sibling(idx.row(), Coquillo::fieldNames.key("Pictures")).data(Qt::EditRole).isNull())
-		_model->setData(_model->index(idx.row(), Coquillo::fieldNames.key("Pictures")), picturesToVariants(pics), Qt::EditRole);
+	if (!pics.isEmpty() && idx.sibling(idx.row(), modelColumn("Pictures")).data(Qt::EditRole).isNull())
+		_model->setData(_model->index(idx.row(), modelColumn("Pictures")), picturesToVariants(pics), Qt::EditRole);
 
 }
 
@@ -154,7 +150,7 @@ void EditorWidget::updatePictures() {
 	if (_indexes.isEmpty())
 		return;
 
-	const QModelIndex idx = _indexes[0].sibling(_indexes[0].row(), Coquillo::fieldNames.key("Pictures"));
+	const QModelIndex idx = _indexes[0].sibling(_indexes[0].row(), modelColumn("Pictures"));
 	const QList<MetaDataImage> pics = _picturesTab->pictures();
 
 	if (idx.isValid())

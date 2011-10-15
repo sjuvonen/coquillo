@@ -180,11 +180,11 @@ void ProcessorWidget::apply() {
 		switch (action) {
 			case ResolveTagsFromFilenames: {
 				const QString pattern = _ui->comboResolvePattern->currentText();
-				const QString filename = idx.sibling(idx.row(), Coquillo::fieldNames.key("Path")).data(Qt::EditRole).toString();
+				const QString filename = idx.sibling(idx.row(), modelColumn("Path")).data(Qt::EditRole).toString();
 				const MetaData newData = tagsFromFileName(pattern, filename);
 
 				foreach (const QString k, newData.keys()) {
-					int col = Coquillo::fieldNames.key(k, -1);
+					int col = modelColumn(k);
 
 					if (col == -1)
 						continue;
@@ -210,7 +210,7 @@ void ProcessorWidget::apply() {
 
 
 
-				_model->setData( idx.sibling(idx.row(), Coquillo::fieldNames.key("Path")), fileName, Qt::EditRole );
+				_model->setData( idx.sibling(idx.row(), modelColumn("Path")), fileName, Qt::EditRole );
 
 				// Move the selected pattern to top of the list and save patterns.
 				if (!pattern.isEmpty()) {
@@ -247,9 +247,10 @@ void ProcessorWidget::updateRenamePreview() {
 
 MetaData ProcessorWidget::metaData(const QModelIndex & idx) const {
 	MetaData data;
+	MetaDataModel * mdm = MetaDataModel::instance();
 
-	for (int i = 0; i < Coquillo::fieldNames.count(); i++) {
-		data.insert( Coquillo::fieldNames.value(i), idx.sibling(idx.row(), i).data(Qt::EditRole) );
+	for (int i = 0; i < mdm->columnCount(); i++) {
+		data.insert( mdm->columnName(i), idx.sibling(idx.row(), i).data(Qt::EditRole) );
 	}
 
 	return data;
@@ -262,7 +263,7 @@ void ProcessorWidget::updateResolvePreview() {
 	}
 
 	const QString pattern = _ui->comboResolvePattern->currentText();
-	const QString path = _indexes[0].sibling(_indexes[0].row(), Coquillo::fieldNames.key("Path")).data(Qt::EditRole).toString();
+	const QString path = _indexes[0].sibling(_indexes[0].row(), modelColumn("Path")).data(Qt::EditRole).toString();
 	const QStringList syms = extractSymbols(pattern);
 	const MetaData data = tagsFromFileName(pattern, path);
 
@@ -440,7 +441,7 @@ void ProcessorWidget::processFields() const {
 				}
 			}
 
-			_model->setData( idx.sibling(idx.row(), Coquillo::fieldNames.key(field)), value );
+			_model->setData( idx.sibling(idx.row(), modelColumn(field)), value );
 		}
 	}
 }

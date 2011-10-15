@@ -6,6 +6,8 @@
 
 #include "globals.h"
 
+#include <metadata/MetaDataModel.h>
+
 #include "CddbSearchDialog.h"
 
 #include "ui_CddbSearchDialog.h"
@@ -143,25 +145,25 @@ void CddbSearchDialog::accept() {
 		}
 
 		if (setAll || setArtist)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Artist")), artist);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("Artist")), artist);
 
 		if (setAll || setAlbum)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Album")), album);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("Album")), album);
 
 		if (setAll || setGenre)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Genre")), info.genre);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("Genre")), info.genre);
 
 		if (setAll || setNumber)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Number")), i+1);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("Number")), i+1);
 
 		if (setAll || setMaxNumber)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("MaxNumber")), maxNum);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("MaxNumber")), maxNum);
 
 		if (setAll || setTitle)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Title")), title);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("Title")), title);
 
 		if (setAll || setYear)
-			_dataModel->setData(idx.sibling(idx.row(), Coquillo::fieldNames.key("Year")), info.year);
+			_dataModel->setData(idx.sibling(idx.row(), modelColumn("Year")), info.year);
 
 		dataIdx = dataIdx.sibling(dataIdx.row()+1, dataIdx.column());
 	}
@@ -195,7 +197,7 @@ void CddbSearchDialog::setIndexes(const QList<QModelIndex> & indexes) {
 	QString hex;
 
 	for (int i = 0; i < indexes.count(); i++) {
-		const QPersistentModelIndex idx = indexes[i].sibling(indexes[i].row(), Coquillo::fieldNames.key("Length"));
+		const QPersistentModelIndex idx = indexes[i].sibling(indexes[i].row(), modelColumn("Length"));
 		quint32 length = idx.data(Qt::EditRole).toULongLong();
 
 		if (i == 0)
