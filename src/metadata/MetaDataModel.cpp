@@ -117,6 +117,8 @@ bool MetaDataModel::setData(const QModelIndex & idx, const QVariant & value, int
 		QStandardItemModel::setData(idx, idx.data(Qt::EditRole), OriginalDataRole);
 		QStandardItemModel::setData(idx.sibling(idx.row(), 0), true, RowModifiedRole);
 
+		const QVariant data = idx.data(Qt::EditRole);
+
 		emit metaDataStateChanged(true);
 	}
 

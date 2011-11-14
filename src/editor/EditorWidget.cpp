@@ -21,6 +21,7 @@ EditorWidget::EditorWidget(QWidget * parent)
 : QWidget(parent), _model(0) {
 
 	_mapper = new QDataWidgetMapper;
+	_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
 	QWidget * tagsTab = new QWidget(this);
 	_picturesTab = new PicturesTab(this);
@@ -46,8 +47,14 @@ EditorWidget::EditorWidget(QWidget * parent)
 	connect(_picturesTab, SIGNAL(pictureRemoved(qint16)), SLOT(updatePictures()));
 	connect(_picturesTab, SIGNAL(applyPicturesToAll()), SLOT(slotApplyPicturesToAll()));
 
+	QList<QLineEdit*> lines = tagsTab->findChildren<QLineEdit*>();
+
+	foreach (QLineEdit * line, lines)
+		connect(line, SIGNAL(textEdited(QString)),
+			_mapper, SLOT(submit()));
+
 	// This connection doesn't work because we have to block signals for the mapper
-	// to prevent another bug.
+	// to prevent another bug. WHAT BUG!?
 // 	connect(_mapper, SIGNAL(currentIndexChanged(int)),
 // 		SLOT(scrollTextFields()));
 
@@ -65,7 +72,7 @@ void EditorWidget::slotApplyPicturesToAll() {
 	const QVariant pics = _indexes[0].sibling(_indexes[0].row(), col).data(Qt::EditRole);
 
 	for (int i = 1; i < _indexes.count(); i++) {
-		// Call setdata(Qt::EditRole) twice to ensure that the rows are marked as changed
+		// Call setData(Qt::EditRole) twice to ensure that the rows are marked as changed
 
 		const QModelIndex idx = _indexes[i].sibling(_indexes[i].row(), col);
 		_model->setData(idx, QVariant(0), Qt::EditRole);
