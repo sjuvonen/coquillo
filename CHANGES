@@ -1,5 +1,5 @@
 git
-- Restructuring and rewriting code for easier maintaining and development.
+- Most of the code has been rewritten for easier maintaining and development.
 	- Secondary goal is to fix compiling on Windows and OS/2.
 - Changed the order of Processor dialog pages.
 - Editing only a single field and saving changes instantly now works.
