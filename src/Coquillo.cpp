@@ -35,7 +35,20 @@ Coquillo::~Coquillo() {
 }
 
 void Coquillo::migrateSettings() {
-	
+	QSettings settings;
+
+	const int version = settings.value("Settings/Version").toInt();
+
+	// Reset settings for Coquillo versions < 1.10
+	// We don't bother trying to migrate older versions due to exhaustive
+	// amount of breakage
+	if (version < 10) {
+		foreach (const QString key, settings.allKeys())
+			settings.remove(key);
+	}
+
+	// Version 10 since Coquillo 1.10
+	settings.setValue("Settings/Version", 10);
 }
 
 void Coquillo::writeDefaults() {
@@ -54,21 +67,13 @@ void Coquillo::writeDefaults() {
 
 	defaults.insert("CapitalizeNumerals", true);
 	defaults.insert("Widgets/MainWindowSize", QSize(940, 600));
-	
-	QSettings settings;
 
-	// Reset settings for Coquillo versions < 1.10
-	if (settings.value("Settings/Version").toInt() != 10) {
-		foreach (const QString key, settings.allKeys())
-			settings.remove(key);
-	}
+	QSettings settings;
 	
 	foreach (QString key, defaults.keys()) {
 		if (!settings.contains(key))
 			settings.setValue(key, defaults.value(key));
 	}
-
-	// Version 10 since Coquillo 1.10
-	settings.setValue("Settings/Version", 10);
+	
 	settings.sync();
 }
