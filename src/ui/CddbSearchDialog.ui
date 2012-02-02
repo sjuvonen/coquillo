@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>493</height>
+    <width>734</width>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -731,9 +731,50 @@
     </layout>
    </item>
   </layout>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonsDialog</sender>
+   <signal>rejected()</signal>
+   <receiver>CddbSearchDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>405</x>
+     <y>494</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>CddbSearchDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>366</x>
+     <y>258</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <buttongroups>
   <buttongroup name="groupSearchFieldButtons"/>
   <buttongroup name="groupTagButtons"/>

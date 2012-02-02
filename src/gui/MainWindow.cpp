@@ -14,6 +14,7 @@
 #include "CddbSearchDialog.h"
 #include "MainWindow.h"
 #include "ProcessorWidget.h"
+#include "SettingsDialog.h"
 
 #include "ui_MainWindow.h"
 
@@ -300,6 +301,14 @@ void MainWindow::showAboutDialog() {
 void MainWindow::showBookmarkDialog() {
 	BookmarkDialog d(this);
 	d.setModel(_bookmarks);
+	d.exec();
+}
+
+void MainWindow::showSettingsDialog() {
+	QSettings s;
+	
+	SettingsDialog d(this);
+	d.setBackend(&s);
 	d.exec();
 }
 

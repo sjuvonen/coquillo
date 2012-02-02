@@ -8,6 +8,7 @@
 
 #include <QDebug>
 
+volatile bool abortAction = false;
 
 MetaDataModel2::MetaDataModel2(QObject * parent)
 : QAbstractItemModel(parent), _recursive(false), _locked(false) {
@@ -35,6 +36,10 @@ MetaDataModel2::MetaDataModel2(QObject * parent)
 	connect(this, SIGNAL(actionFinished()), SLOT(unlock()));
 }
 
+MetaData MetaDataModel2::metaData(int row) const {
+	return _data.value(row);
+}
+
 bool MetaDataModel2::addImage(int row, const MetaDataImage & image) {
 	if (row < 0 || row >= rowCount())
 		return false;
@@ -54,6 +59,17 @@ bool MetaDataModel2::addImage(int row, const MetaDataImage & image) {
 
 bool MetaDataModel2::addImage(const QModelIndex & idx, const MetaDataImage & image) {
 	return addImage(idx.row(), image);
+}
+
+void MetaDataModel2::setImages(const QModelIndex & idx, const QList<MetaDataImage> & images) {
+	const QModelIndex real = idx.sibling(idx.row(), MetaData::PicturesField);
+	
+	removeRows(0, rowCount(real), real);
+
+	foreach (const MetaDataImage image, images) {
+		addImage(idx.row(), image);
+	}
+	
 }
 
 QVariant MetaDataModel2::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -80,7 +96,7 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 				return _data[idx.parent().row()].image(r).description();
 
 			case Qt::DecorationRole:
-				return _data[idx.parent().row()].image(r).image();
+				return _data[idx.parent().row()].image(r).small();
 
 			case MetaDataImage::MetaTypeRole:
 				qDebug() << _data[idx.parent().row()].image(r).type();
@@ -206,18 +222,18 @@ bool MetaDataModel2::removeRows(int start, int count, const QModelIndex & parent
 	const int pRow = parent.row();
 
 	beginRemoveRows(parent, start, start+count-1);
-	
+
 	while (count-- > 0) {
 		if (parent.isValid()) {
 			backup(pRow);
-			
+
 			_data[pRow].removeImage(start);
 		} else {
 			_data.removeAt(start);
 			_original.removeAt(start);
 		}
 	}
-	
+
 	endRemoveRows();
 
 	return true;

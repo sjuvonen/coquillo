@@ -123,15 +123,28 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 	DataWidget::setSelection(selection);
 
 	const QModelIndex idx = rows().value(0);
+	QString tabText = _ui->tabs->tabText(1).remove(QRegExp(" \\(\\d+\\)"));
 
 	_mapper->setCurrentModelIndex(idx);
 
 	_ui->images->setRootIndex(idx.sibling(idx.row(), MetaData::PicturesField));
 	
-	setDisabled(rows().isEmpty());
-
 	foreach (QLineEdit * line, findChildren<QLineEdit*>())
 		line->setCursorPosition(0);
+
+	_importPath.clear();
+
+	setDisabled(rows().isEmpty());
+
+	if (rows().isEmpty()) {
+		_ui->tabs->setCurrentIndex(0);
+	} else {
+		tabText += QString(" (%1)").arg(
+			model()->rowCount(idx.sibling(idx.row(), MetaData::PicturesField)));
+	}
+	
+	_ui->tabs->setTabText(1, tabText);
+
 }
 
 
@@ -149,25 +162,30 @@ void EditorWidget::copyField(int field) {
 	QList<QPersistentModelIndex> r = rows();
 	const QModelIndex src = r[0].sibling(r[0].row(), field);
 
+	if (field == MetaData::PicturesField) {
+		QSortFilterProxyModel * proxy = qobject_cast<QSortFilterProxyModel*>(model());
+		const QModelIndex src2 = proxy->mapToSource(src);
+
+		if (!proxy)
+			return;
+
+		MetaDataModel * source = qobject_cast<MetaDataModel*>(proxy->sourceModel());
+
+		if (!source)
+			return;
+		
+		const QList<MetaDataImage> images = source->metaData(src2.row()).images();
+
+		foreach (const QModelIndex idx, r) {
+			source->setImages(idx, images);
+		}
+
+		return;
+	}
+
 	for (int i = 1; i < r.count(); i++) {
 		const QModelIndex dst = r[i].sibling(r[i].row(), field);
-
-		if (field == MetaData::PicturesField) {
-			int row = model()->rowCount(dst);
-			
-			for (int j = 0; j < model()->rowCount(src); j++) {
-				model()->insertRow(row+j, dst);
-				model()->setData(dst.child(row+j, 0), src.child(row+j, 0).data());
-				model()->setData(dst.child(row+j, 1), src.child(row+j, 1).data());
-
-				// Have to set data twice so that the model would mark the row as changed...
-				model()->setData(dst.child(row+j, 2), src.child(row+j, 2).data());
-				model()->setData(dst.child(row+j, 2), src.child(row+j, 2).data());
-			}
-			
-		} else {
-			model()->setData(dst, src.data());
-		}
+		model()->setData(dst, src.data());
 	}
 }
 
@@ -200,15 +218,28 @@ void EditorWidget::setImageType(const QString & typeString) {
 }
 
 void EditorWidget::addImage() {
+	if (rows().count() == 0)
+		return;
+	
+
+	if (_importPath.isEmpty() || !QFileInfo(_importPath).exists()) {
+		const QModelIndex idx = rows().at(0);
+
+		_importPath = QFileInfo(idx.sibling(idx.row(),
+		MetaData::PathField).data(Qt::EditRole).toString()).filePath();
+	}
+	
 	const QStringList files = QFileDialog::getOpenFileNames(
 		this,
-		QString(),
-		QString(),
+		tr("Import images"),
+		_importPath,
 		"Pictures (*.jpg *.jpeg *.png *.bmp)"
 	);
 
 	if (files.isEmpty())
 		return;
+
+	_importPath = QFileInfo(files[0]).filePath();
 
 	const QModelIndex root = _ui->images->rootIndex();
 
@@ -228,8 +259,6 @@ void EditorWidget::addImage() {
 
 	foreach (const QString fileName, files) {
 		const QImage image(fileName);
-
-		qDebug() << QFileInfo(fileName).baseName();
 		
 		if (!image.isNull()) {
 			MetaDataImage mdi(image);

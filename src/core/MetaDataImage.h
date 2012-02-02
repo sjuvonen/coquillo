@@ -24,6 +24,7 @@ class MetaDataImage {
 
 		void setImage(const QImage & image);
 		QImage image() const;
+		QImage small() const;
 
 		void setDescription(const QString & descr) { _description = descr; }
 		QString description() const { return _description; }
@@ -38,6 +39,7 @@ class MetaDataImage {
 		qint16 _id;
 
 		static QHash<qint16, QImage> s_cache;
+		static QHash<qint16, QImage> s_small;
 };
 
 #endif

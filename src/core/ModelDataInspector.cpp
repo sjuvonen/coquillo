@@ -5,13 +5,14 @@
 #include <QSettings>
 #include <QStringList>
 
-#include <MetaDataModel.h>
-
+#include "MetaDataModel2.h"
 #include "ModelDataInspector.h"
 
 #include "globals.h"
 
 #include <QDebug>
+
+typedef MetaDataModel2 MetaDataModel;
 
 ModelDataInspector::ModelDataInspector(QObject * parent=0)
 	: QObject(parent), _model(0) {
@@ -52,12 +53,13 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 	disconnect(_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
 		this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
 
-	bool convertExtensionCase = true;
-	bool lowerCaseExtension = true;
+	QSettings s;
+
+	bool lowerCaseExtension = s.value("LowerCaseExtension").toBool();
 	
-	bool safeFileNames = true;
-	bool discNumberFromAlbum = true;
-	bool trimWhiteSpace = true;
+	bool safeFileNames = s.value("safeFileNames").toBool();
+	bool discNumberFromAlbum = s.value("ParseDiscNumber").toBool();
+	bool trimWhiteSpace = s.value("TrimWhiteSpace").toBool();
 	
 	for (int i = firstRow; i <= lastRow; i++) {
 
@@ -81,13 +83,12 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 		}
 		
 		// Convert filetype extension to user-defined casing.
-		if (convertExtensionCase) {
+		if (lowerCaseExtension) {
 			const QModelIndex idx = _model->index(i, MetaData::PathField);
 			QString fileName = idx.data(Qt::EditRole).toString();
 			QString suffix = QFileInfo(fileName).suffix();
 
-			fileName.replace(fileName.length()-suffix.length(), suffix.length(),
-				lowerCaseExtension ? suffix.toLower() : suffix.toUpper());
+			fileName.replace(fileName.length()-suffix.length(), suffix.length(), suffix.toLower());
 
 			_model->setData(idx, fileName);
 		}

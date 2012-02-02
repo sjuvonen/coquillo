@@ -19,6 +19,7 @@ FORMS +=   ../ui/MainWindow.ui \
            ../ui/DirectorySelector.ui \
            ../ui/EditorWidget.ui \
            ../ui/ProcessorWidget.ui \
+					 ../ui/SettingsDialog.ui \
 
 HEADERS += DirectorySelectorWidget.h \
            DataWidget.h \
@@ -48,6 +49,9 @@ SOURCES += cddb/Cddb.cpp \
            cddb/CddbPrivate.cpp \
            cddb/CddbSearchDialog.cpp \
 
-HEADERS += AboutDialog.h
-SOURCES += AboutDialog.cpp
+HEADERS += AboutDialog.h \
+           SettingsDialog.h \
+
+SOURCES += AboutDialog.cpp \
+           SettingsDialog.cpp \
 

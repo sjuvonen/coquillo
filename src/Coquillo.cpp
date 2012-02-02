@@ -19,8 +19,8 @@ Coquillo::Coquillo(QObject * parent)
 
 	_window = new MainWindow(m);
 
-// 	ModelDataInspector * inspector = new ModelDataInspector(this);
-//	inspector->setModel(_model);
+	ModelDataInspector * inspector = new ModelDataInspector(this);
+	inspector->setModel(m);
 
 	_window->show();
 
@@ -35,6 +35,7 @@ Coquillo::~Coquillo() {
 }
 
 void Coquillo::migrateSettings() {
+	
 }
 
 void Coquillo::writeDefaults() {
@@ -47,26 +48,27 @@ void Coquillo::writeDefaults() {
 		QDesktopServices::storageLocation(QDesktopServices::MusicLocation)
 	);
 
-	// If this option is enabled, legacy covers will be converted to the new format.
-	// If turned off, legacy covers will not be read at all!
-	defaults.insert("Compat/ConvertLegacyXiphPictures", true);
+	defaults.insert("CapitalizeNever", QString("%1%2")
+		.arg("a, an, the, and, but, or, nor, at, by, for, from, in, into, of, ")
+		.arg("off, on, onto, out, over, to, up, with, as"));
 
-	// Pad numbers in filenames to this length when using pad-enabled formatting
-	// characters in ProcessorWidget
-	defaults.insert("Rules/NumberPadWidth", 2);
-
-	// Don't write useless ID3v1 tags by default
-	defaults.insert("Media/MPEG_ID3v1_Enabled", false);
+	defaults.insert("CapitalizeNumerals", true);
+	defaults.insert("Widgets/MainWindowSize", QSize(940, 600));
 	
-	// Default encoding for ID3v2 tags
-	defaults.insert("Media/ID3v2_Encoding", "UTF-8");
-
 	QSettings settings;
+
+	// Reset settings for Coquillo versions < 1.10
+	if (settings.value("Settings/Version").toInt() != 10) {
+		foreach (const QString key, settings.allKeys())
+			settings.remove(key);
+	}
 	
 	foreach (QString key, defaults.keys()) {
 		if (!settings.contains(key))
 			settings.setValue(key, defaults.value(key));
 	}
 
+	// Version 10 since Coquillo 1.10
+	settings.setValue("Settings/Version", 10);
 	settings.sync();
 }

@@ -18,7 +18,7 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -522,7 +522,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>tabs</tabstop>
   <tabstop>title</tabstop>
   <tabstop>applyTitle</tabstop>
   <tabstop>artist</tabstop>

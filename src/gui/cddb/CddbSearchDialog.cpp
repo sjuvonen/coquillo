@@ -4,7 +4,7 @@
 #include <QStandardItemModel>
 #include <QTreeView>
 
-#include <core/MetaDataModel.h>
+#include <core/MetaDataModel2.h>
 
 #include "CddbSearchDialog.h"
 
@@ -12,12 +12,16 @@
 
 #include <QDebug>
 
+typedef MetaDataModel2 MetaDataModel;
+
 CddbSearchDialog::CddbSearchDialog(QWidget * parent)
 : DataWidget(parent), _totalTime(0) {
 
 	_ui = new Ui::CddbSearchDialog;
 	_ui->setupUi(this);
 
+	addAction(_ui->actionClose);
+	
 	QSettings s;
 
 	const QString fullCddb = s.value("CDDB/URL", "http://freedb.freedb.org/~cddb/cddb.cgi").toString();

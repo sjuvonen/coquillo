@@ -315,7 +315,7 @@ void MetaDataWriter::writeTag(TagLib::Ogg::XiphComment * tag, const MetaData & m
 	}
 
 	// From now on legacy covers will be stripped with no further questions.
-	if (QSettings().value("Compat/ConvertLegacyXiphPictures").toBool()) {
+	if (QSettings().value("ConvertVorbisLegacyCovers").toBool() && metaData.imageCount()) {
 		tag->removeField("COVERART");
 		tag->removeField("COVERARTDESCRIPTION");
 		tag->removeField("COVERARTMIME");

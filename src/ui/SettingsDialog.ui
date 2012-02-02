@@ -6,532 +6,511 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>609</width>
-    <height>411</height>
+    <width>497</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Settings</string>
+   <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
-     <item>
-      <widget class="QListWidget" name="listPages">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>130</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="baseSize">
-        <size>
-         <width>130</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>32</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="gridSize">
-        <size>
-         <width>124</width>
-         <height>64</height>
-        </size>
-       </property>
-       <property name="viewMode">
-        <enum>QListView::IconMode</enum>
-       </property>
-       <property name="uniformItemSizes">
-        <bool>true</bool>
-       </property>
-       <property name="currentRow">
-        <number>-1</number>
+    <widget class="QTabWidget" name="tabs">
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <property name="spacing">
+        <number>2</number>
        </property>
        <item>
-        <property name="text">
-         <string>General</string>
-        </property>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Stuff</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Startup directory</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="defaultLocation"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="scanSubDirs">
+            <property name="text">
+             <string>Scan subdirectories by default</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="dimSubDirs">
+            <property name="text">
+             <string>Dim background of files in subdirectories</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
-        <property name="text">
-         <string>Processor</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Filetypes</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QStackedWidget" name="stackPages">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="page">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QGroupBox" name="groupBox_3">
-           <property name="title">
-            <string>Scanner</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Filenames</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="safeFileNames">
+            <property name="toolTip">
+             <string>Removes illegal characters from filenames. Useful for portable media players etc.</string>
+            </property>
+            <property name="text">
+             <string>Use FAT-compatible filenames</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="lowerCaseExtension">
+            <property name="toolTip">
+             <string>Convert filename extensions to either lower-case or upper-case</string>
+            </property>
+            <property name="text">
+             <string>Lower-case filetype extensions</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <property name="leftMargin">
+             <number>25</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="label">
-                <property name="text">
-                 <string>Default directory</string>
-                </property>
-                <property name="indent">
-                 <number>5</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="DefaultDirectory"/>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="RecursiveScanning">
-              <property name="toolTip">
-               <string>Search subdirectories also</string>
-              </property>
+             <widget class="QLabel" name="label_7">
               <property name="text">
-               <string>Scan subdirectories by default</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox">
-           <property name="title">
-            <string>Writing Metadata &amp;&amp; Filenames</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <widget class="QCheckBox" name="TrimWhiteSpace">
-              <property name="toolTip">
-               <string>Removes spaces before first and after last word</string>
-              </property>
-              <property name="text">
-               <string>Trim whitespace</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
+               <string>Pad numbers in filenames to width</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="ClassicFileNames">
-              <property name="toolTip">
-               <string>Removes illegal characters from filenames. Useful for portable media players etc.</string>
+             <widget class="QSpinBox" name="padFileNumbers">
+              <property name="enabled">
+               <bool>true</bool>
               </property>
-              <property name="text">
-               <string>Use FAT-compatible filenames</string>
+              <property name="minimum">
+               <number>1</number>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="ConvertExtensions">
-              <property name="toolTip">
-               <string>Convert filename extensions to either lower-case or upper-case</string>
+              <property name="maximum">
+               <number>4</number>
               </property>
-              <property name="text">
-               <string>Convert filename extensions to</string>
+              <property name="value">
+               <number>2</number>
               </property>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="ExtensionsLowerCase">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Lower-case</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="ExtensionsUpperCase">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Upper-case</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>130</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="page_2">
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <item>
-          <widget class="QGroupBox" name="groupBox_2">
-           <property name="title">
-            <string>Numbers</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <property name="leftMargin">
-               <number>25</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="label_3">
-                <property name="text">
-                 <string>Pad numbers to width</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="PadWidth">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>4</number>
-                </property>
-                <property name="value">
-                 <number>2</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="font">
-               <font>
-                <pointsize>8</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Affects capital symbols: %D, %M, %N</string>
-              </property>
-              <property name="indent">
-               <number>35</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_4">
-           <property name="title">
-            <string>Capitalization</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_7">
-            <item>
-             <widget class="QCheckBox" name="IntelligentCapitalization">
-              <property name="toolTip">
-               <string>Follow English writing conventions</string>
-              </property>
-              <property name="text">
-               <string>Don't capitalize certain words (the, in, and, ...)</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="page_3">
-        <layout class="QVBoxLayout" name="verticalLayout_11">
-         <item>
-          <widget class="QGroupBox" name="groupBox_7">
-           <property name="title">
-            <string>General</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_10">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <item>
-               <widget class="QCheckBox" name="ScalePictures">
-                <property name="text">
-                 <string>Scale pictures to</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="ScalePicturesW">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>50</number>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_4">
-                <property name="text">
-                 <string>x</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="ScalePicturesH">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="frame">
-                 <bool>true</bool>
-                </property>
-                <property name="minimum">
-                 <number>50</number>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_5">
-                <property name="text">
-                 <string>px</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_4">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
-              <property name="leftMargin">
-               <number>25</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="label_6">
-                <property name="text">
-                 <string>Encoding for tags</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="EncodingCombo">
-                <property name="currentIndex">
-                 <number>1</number>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>ISO-8859-15</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>UTF-8</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_5">
-           <property name="title">
-            <string>MPEG</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <item>
-             <widget class="QCheckBox" name="MpegV1">
-              <property name="text">
-               <string>Write ID3v1 tags</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="MpegV2">
-              <property name="text">
-               <string>Write ID3v2 tags</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_6">
-           <property name="title">
-            <string>FLAC</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_9">
-            <item>
-             <widget class="QCheckBox" name="FlacV2">
-              <property name="text">
-               <string>Write ID3v2 tags in addition to FLAC tags</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_3">
+             <spacer name="horizontalSpacer_9">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>20</width>
-                <height>40</height>
+                <width>40</width>
+                <height>20</height>
                </size>
               </property>
              </spacer>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Affects capital symbols: %D, %M, %N</string>
+            </property>
+            <property name="indent">
+             <number>35</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Tags</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>MPEG</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QCheckBox" name="mpegId3v1">
+            <property name="text">
+             <string>Write ID3v1 tags in addition to ID3v2</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <property name="leftMargin">
+             <number>25</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Encoding for ID3v2 tags</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="Id3v2Encoding">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>UTF-8</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>ISO-8859-1</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>FLAC</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QCheckBox" name="flacId3v2">
+            <property name="text">
+             <string>Write ID3v2 tags in addition to FLAC tags</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_6">
+         <property name="title">
+          <string>Ogg Vorbis</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <item>
+           <widget class="QCheckBox" name="convertVorbisLegacyCovers">
+            <property name="text">
+             <string>Convert legacy coverart to official format</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Automations</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_13">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <item>
+          <widget class="QCheckBox" name="scaleCovers">
+           <property name="text">
+            <string>Scale pictures to</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="scaleWidth">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <number>50</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>x</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="scaleHeight">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="frame">
+            <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>50</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>px</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_10">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="convertUnderScores">
+         <property name="text">
+          <string>Convert underscores to spaces in filenames</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="trimWhiteSpace">
+         <property name="text">
+          <string>Trim consecutive whitespace in tags and filenames</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="deleteOrphans">
+         <property name="toolTip">
+          <string>Directories that are left empty after moving files will be deleted</string>
+         </property>
+         <property name="text">
+          <string>Remove directories left empty by file operations</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="parseDiscNumber">
+         <property name="text">
+          <string>Remove disc number from album tag</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_12">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Searches for &quot;(Disc %d)&quot; and &quot;(CD %d)&quot;</string>
+         </property>
+         <property name="indent">
+          <number>35</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Capitalization</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Capitalization rules will be applied to title, artist and album fields</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Always</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Never</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QTextEdit" name="capitalizeAlways">
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QTextEdit" name="capitalizeNever">
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;a, an, the, and, but, or, nor, at, by, for, from, in, into, of, off, on, onto, out, over, to, up, with, as&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
           </widget>
          </item>
         </layout>
-       </widget>
-      </widget>
-     </item>
-    </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="capitalizeNumerals">
+         <property name="text">
+          <string>Capitalize Roman numerals</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -545,6 +524,30 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabs</tabstop>
+  <tabstop>defaultLocation</tabstop>
+  <tabstop>scanSubDirs</tabstop>
+  <tabstop>dimSubDirs</tabstop>
+  <tabstop>safeFileNames</tabstop>
+  <tabstop>lowerCaseExtension</tabstop>
+  <tabstop>padFileNumbers</tabstop>
+  <tabstop>buttonBox</tabstop>
+  <tabstop>mpegId3v1</tabstop>
+  <tabstop>Id3v2Encoding</tabstop>
+  <tabstop>flacId3v2</tabstop>
+  <tabstop>convertVorbisLegacyCovers</tabstop>
+  <tabstop>scaleCovers</tabstop>
+  <tabstop>scaleWidth</tabstop>
+  <tabstop>scaleHeight</tabstop>
+  <tabstop>convertUnderScores</tabstop>
+  <tabstop>trimWhiteSpace</tabstop>
+  <tabstop>deleteOrphans</tabstop>
+  <tabstop>parseDiscNumber</tabstop>
+  <tabstop>capitalizeAlways</tabstop>
+  <tabstop>capitalizeNever</tabstop>
+  <tabstop>capitalizeNumerals</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -580,18 +583,34 @@
    </hints>
   </connection>
   <connection>
-   <sender>listPages</sender>
-   <signal>currentRowChanged(int)</signal>
-   <receiver>stackPages</receiver>
-   <slot>setCurrentIndex(int)</slot>
+   <sender>scaleCovers</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>scaleHeight</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>201</y>
+     <x>85</x>
+     <y>64</y>
     </hint>
     <hint type="destinationlabel">
-     <x>370</x>
-     <y>201</y>
+     <x>265</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scaleCovers</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>scaleWidth</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>64</y>
     </hint>
    </hints>
   </connection>

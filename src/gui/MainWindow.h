@@ -58,7 +58,8 @@ class MainWindow : public QMainWindow {
 
 		void showAboutDialog();
 		void showBookmarkDialog();
-
+		void showSettingsDialog();
+		
 		void showHeaderContextMenu(const QPoint & pos);
 
 		/**

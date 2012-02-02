@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>860</width>
-    <height>559</height>
+    <width>951</width>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -90,7 +90,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>860</width>
+     <width>951</width>
      <height>26</height>
     </rect>
    </property>
@@ -714,6 +714,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionConfigure</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showSettingsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>79</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>279</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setInterfaceLocked(bool)</slot>
@@ -723,5 +739,6 @@
   <slot>selectNextIndex()</slot>
   <slot>selectPreviousIndex()</slot>
   <slot>selectInverse()</slot>
+  <slot>showSettingsDialog()</slot>
  </slots>
 </ui>

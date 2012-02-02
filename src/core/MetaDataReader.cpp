@@ -21,8 +21,8 @@
 #include <QStringList>
 
 //#include "ImageCache.h"
+#include "MetaData.h"
 #include "MetaDataImage.h"
-#include "MetaDataModel.h"
 #include "MetaDataReader.h"
 
 #include "globals.h"
@@ -133,35 +133,29 @@ QList<MetaDataImage> MetaDataReader::getImages(const QString & path) {
 QList<MetaDataImage> MetaDataReader::readLegacyXiphPictures(TagLib::Ogg::XiphComment * tag) {
 	QList<MetaDataImage> pics;
 
-	/*
+	if (QSettings().value("ConvertVorbisLegacyCovers").toBool()) {
+		if (tag->contains("COVERART")) {
+			TagLib::Ogg::FieldListMap fields = tag->fieldListMap();
+			TagLib::StringList data, descr, mime, type;
 
-	if (tag->has("COVERART")) {
-		TagLib::Ogg::FieldListMap fields = tag->fieldListMap();
-		TagLib::StringList data, descr, mime, type;
+			data = fields["COVERART"];
 
-		data = fields["COVERART"];
+			if (fields.contains("COVERARTDESCRIPTION"))
+				descr = fields["COVERARTDESCRIPTION"];
 
-		if (fields.contains("COVERARTDESCRIPTION"))
-			descr = fields["COVERARTDESCRIPTION"];
+			if (fields.contains("COVERARTMIME"))
+				mime = fields["COVERARTMIME"];
 
-		if (fields.contains("COVERARTMIME"))
-			mime = fields["COVERARTMIME"];
+			for (uint i = 0; i < data.size(); i++) {
+				TagLib::String d = data[i];
+				const QByteArray raw = QByteArray::fromRawData((char*)(d.toCString()), d.size());
+				const QImage img = QImage::fromData( QByteArray::fromBase64(raw) );
+				const QString dsc = descr.size() > i ? descr[i].toCString(true) : QString();
 
-		if (fields.contains("COVERARTTYPE"))
-			type = fields["COVERARTTYPE"];
-
-		for (uint i = 0; i < data.size(); i++) {
-			TagLib::String d = data[i];
-			const QByteArray raw = QByteArray::fromRawData((char*)(d.toCString()), d.size());
-			const QImage img = QImage::fromData( QByteArray::fromBase64(raw) );
-			const QString dsc = descr.size() > i ? descr[i].toCString(true) : QString();
-			const QString t = QString();
-
-			pics << MetaDataImage(img, t, dsc);
+				pics << MetaDataImage(img, 0, dsc);
+			}
 		}
 	}
-
-	*/
 
 	return pics;
 }

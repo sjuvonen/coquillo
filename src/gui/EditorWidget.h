@@ -40,6 +40,7 @@ class EditorWidget : public DataWidget {
 		QDataWidgetMapper * _mapper;
 		
 		QHash<int, QString> _typeStrings;
+		QString _importPath;
 };
 
 #endif
