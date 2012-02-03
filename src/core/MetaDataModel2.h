@@ -23,7 +23,6 @@ class MetaDataModel2 : public QAbstractItemModel {
 		bool addImage(int row, const MetaDataImage & image);
 		bool addImage(const QModelIndex & idx, const MetaDataImage & image);
 		void setImages(const QModelIndex & idx, const QList<MetaDataImage> & images);
-		
 
 		QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
 

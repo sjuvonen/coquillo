@@ -68,7 +68,7 @@ void MetaDataWriter::write() {
 
 				writeTag(file->xiphComment(true), metaData);
 
-				if (QSettings().value("Media/FLAC_ID3v2_Enabled").toBool())
+				if (QSettings().value("FlacId3v2").toBool())
 					writeTag(file->ID3v2Tag(true), metaData);
 
 				file->removePictures();
@@ -108,7 +108,7 @@ void MetaDataWriter::write() {
 				if (!file)
 					break;
 				
-				if (QSettings().value("Media/MPEG_ID3v1_Enabled").toBool())
+				if (QSettings().value("MpegId3v1").toBool())
 					writeGeneric(file->ID3v1Tag(true), metaData);
 				else
 					file->strip(TagLib::MPEG::File::ID3v1);
@@ -133,8 +133,12 @@ void MetaDataWriter::write() {
 			
 			QFile(path).rename(newFile.absoluteFilePath());
 
+			// Check that deleting empty directories is allowed
+			if (!QSettings().value("DeleteOrphans").toBool())
+				continue;
+			
 			QDir oldDir = QFileInfo(path).dir();
-
+			
 			// Remove directories that are left empty
 			while (oldDir.entryList(QStringList(), QDir::AllEntries | QDir::NoDotAndDotDot).isEmpty()) {
 				const QString dirName = oldDir.dirName();
@@ -183,7 +187,8 @@ void MetaDataWriter::writeGeneric(TagLib::Tag * tag, const MetaData & metaData) 
 	bool id3_latin = false;
 
 	if (dynamic_cast<TagLib::ID3v2::Tag*>(tag)) {
-		if (QSettings().value("Media/ID3v2_Encoding") == "ISO-8859-15")
+		// 0 = UTF-8, 1 = ISO-8859-15
+		if (QSettings().value("Id3v2Encoding").toInt() == 1)
 			id3_latin = true;
 	}
 

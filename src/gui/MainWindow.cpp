@@ -51,7 +51,7 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 	_bookmarks = new BookmarkModel(this);
 
 	setMetaDataModel(model);
-	loadSettings();
+// 	loadSettings();
 
 	proxy->sort(
 		_ui->items->horizontalHeader()->sortIndicatorSection(),
@@ -200,6 +200,13 @@ void MainWindow::setInterfaceLocked(bool state) {
 			dock->setTitleBarWidget(0);
 		}
 	}
+}
+
+void MainWindow::setVisible(bool state) {
+
+	loadSettings();
+
+	QMainWindow::setVisible(state);
 }
 
 
@@ -402,7 +409,7 @@ void MainWindow::loadSettings() {
 	QSettings s;
 
 	_ui->location->blockSignals(true);
-	_ui->location->setRootPath(s.value("DefaultLocation").toString());
+	_ui->location->setRootPath(_model->directory());
 	_ui->location->blockSignals(false);
 
 	if (s.contains("Widgets/ItemsTableHeaderState"))

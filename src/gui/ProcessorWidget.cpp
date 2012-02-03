@@ -1,6 +1,5 @@
 
 #include <QCompleter>
-#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QKeyEvent>
@@ -42,6 +41,11 @@ ProcessorWidget::ProcessorWidget(QWidget * parent)
 		resize(s.value("Widgets/ProcessorSize").toSize());
 		move(s.value("Widgets/ProcessorPosition").toPoint());
 	}
+
+	int i = 0;
+	
+	foreach (QAbstractButton * b, _ui->groupCapitalization->buttons())
+		_ui->groupCapitalization->setId(b, i++);
 }
 
 ProcessorWidget::~ProcessorWidget() {
@@ -152,6 +156,7 @@ void ProcessorWidget::apply() {
 			}
 
 			case ProcessFields:
+				processFields();
 
 				break;
 		}
@@ -229,7 +234,7 @@ MetaData ProcessorWidget::tagsForPattern(QString pattern, int row) const {
 	int depth = QDir::fromNativeSeparators(pattern).count('/');
 
 	QFileInfo info(model()->index(row, MetaData::PathField).data(Qt::EditRole).toString());
-	QString fileName = QDir::fromNativeSeparators(info.fileName());
+	QString fileName = QDir::fromNativeSeparators(info.absoluteFilePath());
 
 	fileName = fileName.section('/', -(depth+1));
 	fileName = fileName.left( fileName.length() - info.suffix().length()-1 );
@@ -258,6 +263,103 @@ MetaData ProcessorWidget::tagsForPattern(QString pattern, int row) const {
 	}
 
 	return metaData;
+}
+
+void ProcessorWidget::processFields() const {
+
+	bool convertChars = _ui->convertCharacters->isChecked();
+	bool stringMode = _ui->stringReplaceMode->isChecked();
+	int casing = _ui->groupCapitalization->checkedId();
+
+	const QStringList ignoreWords = QSettings().value("CapitalizeNever").toString().split(QRegExp(",\\s*"));
+	const QStringList forceWords = QSettings().value("CapitalizeAlways").toString().split(QRegExp(",\\s*"));
+
+	QMap<QString, MetaData::Field> fieldMap;
+
+	fieldMap.insert("ButtonTitle", MetaData::TitleField);
+	fieldMap.insert("ButtonArtist", MetaData::ArtistField);
+	fieldMap.insert("ButtonAlbum", MetaData::AlbumField);
+	fieldMap.insert("ButtonGenre", MetaData::GenreField);
+	fieldMap.insert("ButtonComment", MetaData::CommentField);
+// 	fieldMap.insert("ButtonUrl", MetaData::UrlField);
+// 	fieldMap.insert("ButtonDiscNumber", MetaData::DiscNumberField);
+// 	fieldMap.insert("ButtonNumber", MetaData::NumberField);
+// 	fieldMap.insert("ButtonMaxNumber", MetaData::MaxNumberField);
+// 	fieldMap.insert("ButtonYear", MetaData::YearField);
+	fieldMap.insert("ButtonOriginalArtist", MetaData::OriginalArtistField);
+	fieldMap.insert("ButtonComposer", MetaData::ComposerField);
+
+	foreach (const QModelIndex & idx, rows()) {
+
+		foreach (QAbstractButton * b, _ui->groupButtons->buttons()) {
+			if (!b->isChecked())
+				continue;
+
+			if (!fieldMap.contains(b->objectName()))
+				continue;
+			
+			MetaData::Field field = fieldMap.value(b->objectName());
+			QString value = idx.sibling(idx.row(), field).data().toString();
+
+			switch (casing) {
+				// Capitalize each word
+				case 1: {
+					bool hyphenated = _ui->capitalizeHyphenated->isChecked();
+
+					QStringList words = value.split(QRegExp("\\s+"));
+
+					for (QStringList::iterator i = words.begin(); i != words.end(); i++) {
+						if (ignoreWords.contains(*i, Qt::CaseInsensitive))
+							continue;
+
+						i->replace(0, 1, i->at(0).toUpper());
+
+						if (hyphenated) {
+							QStringList words = value.split("-");
+
+							for (QStringList::iterator i = words.begin(); i != words.end(); i++)
+								i->replace(0, 1, i->at(0).toUpper());
+
+							value = words.join("-");
+						}
+					}
+
+					value = words.join(" ");
+
+					break;
+				}
+
+				// Capitalize only the first letter of first word
+				case 2:
+					value = value.toLower();
+					value.replace(0, 1, value[0].toUpper());
+					break;
+
+				// Lower-case everything
+				case 3:
+					value = value.toLower();
+					break;
+			};
+
+			if (convertChars) {
+				QString from = _ui->charactersFrom->text();
+				QString to = _ui->charactersTo->text();
+
+				if (stringMode)
+					value.replace(from, to);
+				else {
+					for (int i = 0; i < from.length(); i++) {
+						if (i < to.length())
+							value.replace(from.at(i), to.at(i));
+						else
+							value.remove(from.at(i));
+					}
+				}
+			}
+
+			model()->setData( idx.sibling(idx.row(), field), value );
+		}
+	}
 }
 
 void ProcessorWidget::readPatternHistory(QStringList * list, int type) const {

@@ -39,6 +39,7 @@ class ProcessorWidget : public DataWidget {
 		QString pathForPattern(const QString & pattern, int row, bool fullPath=true) const;
 		MetaData tagsForPattern(QString pattern, int row) const;
 
+		void processFields() const;
 		void readPatternHistory(QStringList * list, int type) const;
 		void savePatternHistory(const QStringList & list, int type) const;
 		void saveSettings();

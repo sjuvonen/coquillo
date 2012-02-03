@@ -28,13 +28,6 @@ class MetaDataReader {
 	public:
 		static MetaData getTags(const QString & path);
 
-		/**
-		 * Returns a list of pointers to images.
-		 * MetaDataReader doesn't manage the pointers in any way so the data
-		 * must be deleted manually.
-		 **/
-		static QList<MetaDataImage> getImages(const QString & path);
-
 	private:
 		static QString fileType(const QString & path);
 

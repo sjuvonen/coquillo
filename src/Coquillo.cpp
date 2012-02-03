@@ -1,6 +1,8 @@
 
 #include <QApplication>
+#include <QDebug>
 #include <QDesktopServices>
+#include <QFileInfo>
 #include <QSettings>
 
 #include "Coquillo.h"
@@ -21,6 +23,20 @@ Coquillo::Coquillo(QObject * parent)
 
 	ModelDataInspector * inspector = new ModelDataInspector(this);
 	inspector->setModel(m);
+
+	QString location = QSettings().value("DefaultLocation").toString();
+
+	if (QApplication::arguments().count() > 1) {
+		const QFileInfo info(QApplication::arguments().last());
+
+		if (info.exists() && info.isDir()) {
+			location = info.absoluteFilePath();
+		} else {
+			qWarning() << "Error: Path" << info.absoluteFilePath() << "does not exist!";
+		}
+	}
+
+	m->setDirectory(location);
 
 	_window->show();
 

@@ -31,6 +31,7 @@ class MainWindow : public QMainWindow {
 	public slots:
 		void saveSettings();
 		void setInterfaceLocked(bool state);
+		void setVisible(bool state);
 
 	protected:
 		void showEvent(QShowEvent *);
