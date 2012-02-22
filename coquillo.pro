@@ -4,7 +4,7 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += src/core src/gui
-SUBDIRS += src/
+SUBDIRS += src
 
 unix {
 	DATADIR = $$PREFIX/share
