@@ -35,7 +35,7 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="stackPagePage1">
       <attribute name="title">
@@ -107,6 +107,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Name of the artist</string>
+            </property>
             <property name="text">
              <string>%a: artist</string>
             </property>
@@ -121,6 +124,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Name of the album</string>
             </property>
             <property name="text">
              <string>%b: album</string>
@@ -137,6 +143,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Name of the track</string>
+            </property>
             <property name="text">
              <string>%t: title</string>
             </property>
@@ -151,6 +160,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Track number</string>
             </property>
             <property name="text">
              <string>%n: track</string>
@@ -167,6 +179,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Disc number</string>
+            </property>
             <property name="text">
              <string>%d: disc</string>
             </property>
@@ -181,6 +196,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Number of tracks in the set</string>
             </property>
             <property name="text">
              <string>%m: tracks</string>
@@ -197,6 +215,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Genre of the track</string>
+            </property>
             <property name="text">
              <string>%g: genre</string>
             </property>
@@ -212,6 +233,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Year of release</string>
+            </property>
             <property name="text">
              <string>%y: year</string>
             </property>
@@ -226,6 +250,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Name of the composer</string>
             </property>
             <property name="text">
              <string>%p: composer</string>
@@ -259,6 +286,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Content of comment field</string>
             </property>
             <property name="text">
              <string>%c: comment</string>
@@ -365,6 +395,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Name of the artist</string>
+            </property>
             <property name="text">
              <string>%a: artist</string>
             </property>
@@ -379,6 +412,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Name of the album</string>
             </property>
             <property name="text">
              <string>%b: album</string>
@@ -395,6 +431,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Name of the track</string>
+            </property>
             <property name="text">
              <string>%t: title</string>
             </property>
@@ -409,6 +448,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Track number</string>
             </property>
             <property name="text">
              <string>%n: track</string>
@@ -425,6 +467,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Disc number</string>
+            </property>
             <property name="text">
              <string>%d: disc</string>
             </property>
@@ -439,6 +484,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Number of tracks in the set</string>
             </property>
             <property name="text">
              <string>%m: tracks</string>
@@ -455,6 +503,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Genre of the track</string>
+            </property>
             <property name="text">
              <string>%g: genre</string>
             </property>
@@ -470,6 +521,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Year of release</string>
+            </property>
             <property name="text">
              <string>%y: year</string>
             </property>
@@ -484,6 +538,9 @@
              <font>
               <family>Monospace</family>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Name of the composer</string>
             </property>
             <property name="text">
              <string>%p: composer</string>
@@ -518,6 +575,9 @@
               <family>Monospace</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Content of comment field</string>
+            </property>
             <property name="text">
              <string>%c: comment</string>
             </property>
@@ -534,7 +594,7 @@
              </font>
             </property>
             <property name="toolTip">
-             <string>Ignore section</string>
+             <string>Ignore part of the filename</string>
             </property>
             <property name="text">
              <string>%i: ignore</string>

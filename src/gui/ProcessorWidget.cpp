@@ -179,7 +179,7 @@ void ProcessorWidget::updatePreviews() {
 
 QStringList ProcessorWidget::extractSymbols(const QString & pattern, bool unique) const {
 	QStringList syms;
-	QRegExp rx("(%[abcdgmnoptyi])");
+	QRegExp rx("(%[abcdgmnoptyi])", Qt::CaseInsensitive);
 
 	int pos = 0;
 
@@ -205,21 +205,26 @@ QString ProcessorWidget::pathForPattern(const QString & pattern, int row, bool f
 
 	QStringList syms = extractSymbols(pattern, true);
 
-	foreach (QString s, syms)
-		fileName.replace(s, model()->index(row, _symbols.value(s)).data(Qt::EditRole).toString());
+	const int padWidth = QSettings().value("PadFileNumbers").toInt();
+	const int substrLength = QSettings().value("SubstringPatternLength").toInt();
 
-	// %N, %D and %M are extended symbols that apply padding to the numbers.
-
-	int pad = QSettings().value("PadFileNumbers").toInt();
-
-	fileName.replace("%N",
-		model()->index(row, MetaData::NumberField).data().toString().rightJustified(pad, '0'));
-
-	fileName.replace("%D",
-		model()->index(row, MetaData::DiscNumberField).data().toString().rightJustified(pad, '0'));
-
-	fileName.replace("%M",
-		model()->index(row, MetaData::MaxNumberField).data().toString().rightJustified(pad, '0'));
+	foreach (QString s, syms) {
+		if (s.at(1).isUpper()) {
+			const int field = _symbols.value(s.toLower());
+			const QString value = model()->index(row, field).data().toString();
+			
+			if (s.contains(QRegExp("[DNM]"))) {
+				// Numbers padded with zeros
+				fileName.replace(s, value.rightJustified(padWidth, '0'));
+			} else {
+				// Substring of string fields
+				fileName.replace(s, value.left(substrLength));
+			}
+		} else {
+			// Simply replace with full field value
+			fileName.replace(s, model()->index(row, _symbols.value(s)).data(Qt::EditRole).toString());
+		}
+	}
 
 	if (fullPath && pattern[0] != '/' && !path.isEmpty())
 		fileName.prepend(path + "/");

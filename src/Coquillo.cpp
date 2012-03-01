@@ -78,6 +78,7 @@ void Coquillo::writeDefaults() {
 
 	defaults.insert("CapitalizeNumerals", true);
 	defaults.insert("Widgets/MainWindowSize", QSize(940, 600));
+	defaults.insert("SubstringPatternLength", 1);
 
 	QSettings settings;
 	
