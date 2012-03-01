@@ -26,6 +26,8 @@ class MetaDataImage {
 		QImage image() const;
 		QImage small() const;
 
+		bool null() const;
+
 		void setDescription(const QString & descr) { _description = descr; }
 		QString description() const { return _description; }
 

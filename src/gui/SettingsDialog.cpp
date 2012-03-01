@@ -34,36 +34,35 @@ void SettingsDialog::loadSettings() {
 	if (!backend())
 		return;
 	
-	foreach (QLineEdit * line, findChildren<QLineEdit*>()) {
-		QString name = line->objectName();
-		name[0] = name[0].toUpper();
-
+	const QRegExp pref("^pref");
+	
+	foreach (QLineEdit * line, findChildren<QLineEdit*>(pref)) {
+		QString name = line->objectName().remove(pref);
 		line->setText(_settings->value(name).toString());
 	}
 
-	foreach (QAbstractButton * button, findChildren<QAbstractButton*>()) {
+	foreach (QAbstractButton * button, findChildren<QAbstractButton*>(pref)) {
 		if (!button->inherits("QRadioButton") && !button->inherits("QCheckBox")) {
 			continue;
 		}
 
-		QString name = button->objectName();
-		name[0] = name[0].toUpper();
-
+		QString name = button->objectName().remove(pref);
 		button->setChecked(_settings->value(name).toBool());
 	}
 
-	foreach (QTextEdit * edit, findChildren<QTextEdit*>()) {
-		QString name = edit->objectName();
-		name[0] = name[0].toUpper();
-
+	foreach (QTextEdit * edit, findChildren<QTextEdit*>(pref)) {
+		QString name = edit->objectName().remove(pref);
 		edit->setPlainText(_settings->value(name).toString());
 	}
 
-	foreach (QComboBox * combo, findChildren<QComboBox*>()) {
-		QString name = combo->objectName();
-		name[0] = name[0].toUpper();
-
+	foreach (QComboBox * combo, findChildren<QComboBox*>(pref)) {
+		QString name = combo->objectName().remove(pref);
 		combo->setCurrentIndex(_settings->value(name).toInt());
+	}
+
+	foreach (QSpinBox * box, findChildren<QSpinBox*>(pref)) {
+		QString name = box->objectName().remove(pref);
+		box->setValue(_settings->value(name).toInt());
 	}
 }
 
@@ -71,35 +70,34 @@ void SettingsDialog::saveSettings() {
 	if (!backend())
 		return;
 
-	foreach (QLineEdit * line, findChildren<QLineEdit*>()) {
-		QString name = line->objectName();
-		name[0] = name[0].toUpper();
+	const QRegExp pref("^pref");
 
+	foreach (QLineEdit * line, findChildren<QLineEdit*>(pref)) {
+		QString name = line->objectName().remove(pref);
 		_settings->setValue(name, line->text());
 	}
 
-	foreach (QAbstractButton * button, findChildren<QAbstractButton*>()) {
+	foreach (QAbstractButton * button, findChildren<QAbstractButton*>(pref)) {
 		if (!button->inherits("QRadioButton") && !button->inherits("QCheckBox")) {
 			continue;
 		}
 
-		QString name = button->objectName();
-		name[0] = name[0].toUpper();
-
+		QString name = button->objectName().remove(pref);
 		_settings->setValue(name, button->isChecked());
 	}
 
-	foreach (QTextEdit * edit, findChildren<QTextEdit*>()) {
-		QString name = edit->objectName();
-		name[0] = name[0].toUpper();
-
+	foreach (QTextEdit * edit, findChildren<QTextEdit*>(pref)) {
+		QString name = edit->objectName().remove(pref);
 		_settings->setValue(name, edit->toPlainText());
 	}
 
-	foreach (QComboBox * combo, findChildren<QComboBox*>()) {
-		QString name = combo->objectName();
-		name[0] = name[0].toUpper();
-
+	foreach (QComboBox * combo, findChildren<QComboBox*>(pref)) {
+		QString name = combo->objectName().remove(pref);
 		_settings->setValue(name, combo->currentIndex());
+	}
+
+	foreach (QSpinBox * box, findChildren<QSpinBox*>(pref)) {
+		QString name = box->objectName().remove(pref);
+		_settings->setValue(name, box->value());
 	}
 }

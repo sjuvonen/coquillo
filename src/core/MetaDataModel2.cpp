@@ -1,6 +1,8 @@
 
 #include <QFileInfo>
+#include <QMimeData>
 #include <QThread>
+#include <QUrl>
 
 #include "MediaScanner.h"
 #include "MetaDataModel2.h"
@@ -41,7 +43,7 @@ MetaData MetaDataModel2::metaData(int row) const {
 }
 
 bool MetaDataModel2::addImage(int row, const MetaDataImage & image) {
-	if (row < 0 || row >= rowCount())
+	if (image.null() || row < 0 || row >= rowCount())
 		return false;
 
 	const QModelIndex idx = index(row, MetaData::PicturesField);
@@ -62,6 +64,16 @@ bool MetaDataModel2::addImage(const QModelIndex & idx, const MetaDataImage & ima
 }
 
 void MetaDataModel2::setImages(const QModelIndex & idx, const QList<MetaDataImage> & images) {
+	if (idx.model() != this) {
+		qWarning() << "MetaDataModel2::setImages(): Invalid model!";
+
+		qDebug() << "----------";
+		qDebug() << idx.model();
+		qDebug() << this;
+		qDebug() << "----------";
+		return;
+	}
+	
 	const QModelIndex real = idx.sibling(idx.row(), MetaData::PicturesField);
 	
 	removeRows(0, rowCount(real), real);
@@ -69,7 +81,6 @@ void MetaDataModel2::setImages(const QModelIndex & idx, const QList<MetaDataImag
 	foreach (const MetaDataImage image, images) {
 		addImage(idx.row(), image);
 	}
-	
 }
 
 QVariant MetaDataModel2::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -93,14 +104,13 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 		
 		switch (role) {
 			case Qt::DisplayRole:
-				return _data[idx.parent().row()].image(r).description();
+				return _data.at(idx.parent().row()).image(r).description();
 
 			case Qt::DecorationRole:
-				return _data[idx.parent().row()].image(r).small();
+				return _data.at(idx.parent().row()).image(r).small();
 
 			case MetaDataImage::MetaTypeRole:
-				qDebug() << _data[idx.parent().row()].image(r).type();
-				return _data[idx.parent().row()].image(r).type();
+				return _data.at(idx.parent().row()).image(r).type();
 
 			default:
 				return QVariant();
@@ -109,10 +119,10 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 
 	switch (role) {
 		case Qt::EditRole:
-			return _data[r].get((MetaData::Field)c);
+			return _data.at(r).get((MetaData::Field)c);
 			
 		case Qt::DisplayRole: {
-			const QVariant value = _data[r].get((MetaData::Field)c);
+			const QVariant value = _data.at(r).get((MetaData::Field)c);
 
 			switch (c) {
 				case MetaData::PathField:
@@ -122,12 +132,12 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 					return value.toList().count();
 
 				default:
-					return _data[r].get((MetaData::Field)c);
+					return _data.at(r).get((MetaData::Field)c);
 			}
 		}
 
 		case Qt::ForegroundRole:
-			if (!_original[r].null())
+			if (!_original.at(r).null())
 				return Qt::red;
 			
 			return QVariant();
@@ -164,7 +174,7 @@ bool MetaDataModel2::setData(const QModelIndex & idx, const QVariant & value, in
 		const int pRow = idx.parent().row();
 		const int row = idx.row();
 	
-		QList<MetaDataImage> images = _data[pRow].images();
+		QList<MetaDataImage> images = _data.at(pRow).images();
 		
 		switch (role) {
 			// Changing the QImage is not supported
@@ -196,15 +206,13 @@ bool MetaDataModel2::setData(const QModelIndex & idx, const QVariant & value, in
 	const int r = idx.row();
 	MetaData::Field c = (MetaData::Field)idx.column();
 
-	if (_data[r].get(c).toString() == value.toString())
+	if (_data.at(r).get(c).toString() == value.toString())
 		return true;
 	
 	// This rule also filters out the situation when existing value is null and the new
 	// value is 0.
 	if (idx.data(FieldTypeRole).toInt() == QVariant::Int && idx.data().toInt() == value.toInt())
 		return true;
-
-	qDebug() << QString("Change: %1 => %2").arg(idx.data().toString(), value.toString());
 
 	backup(r);
 
@@ -240,22 +248,19 @@ bool MetaDataModel2::removeRows(int start, int count, const QModelIndex & parent
 }
 
 int MetaDataModel2::columnCount(const QModelIndex & parent) const {
-	if (parent.isValid())
-		return 1;
-
 	return MetaData::PicturesField + 1;
 }
 
 int MetaDataModel2::rowCount(const QModelIndex & parent) const {
 	if (parent.isValid())
-		return _data[parent.row()].imageCount();
+		return _data.at(parent.row()).imageCount();
 
 	return _data.count();
 }
 
 QModelIndex MetaDataModel2::index(int row, int column, const QModelIndex & parent) const {
 	if (parent.isValid())
-		return createIndex(row, column, parent.row() * 100 + parent.column());
+		return createIndex(row, column, parent.row() * 10000 + parent.column());
 	
 	return createIndex(row, column, 0);
 }
@@ -266,10 +271,58 @@ QModelIndex MetaDataModel2::parent(const QModelIndex & idx) const {
 	if (id <= 0)
 		return QModelIndex();
 
-	int row = id / 100;
+	int row = id / 10000;
 	int column = id % 100;
 
 	return index(row, column);
+}
+
+Qt::ItemFlags MetaDataModel2::flags(const QModelIndex & idx) const {
+
+	// Allow drops on invalid indices too so that we can drop items on empty
+	// views aswell.
+	if (!idx.parent().isValid() || idx.column() == MetaData::PicturesField) {
+		return QAbstractItemModel::flags(idx) | Qt::ItemIsDropEnabled;
+	}
+
+	return QAbstractItemModel::flags(idx);
+}
+
+QStringList MetaDataModel2::mimeTypes() const {	
+	return QStringList() << "text/uri-list" << "image/png" << "image/jpeg"
+		<< "image/gif";
+}
+
+bool MetaDataModel2::dropMimeData(const QMimeData * data, Qt::DropAction,
+	int, int, const QModelIndex & parent) {
+
+	// Should later add support for dropping a directory!
+
+	if (parent.isValid() && parent.column() == MetaData::PicturesField) {
+		if (data->hasUrls()) {
+			foreach (const QUrl url, data->urls()) {
+				if (url.scheme() == "file") {
+					const QImage image = QImage(url.path());
+
+					addImage(parent, MetaDataImage(
+						QImage(url.path()), 0,
+						QFileInfo(url.path()).baseName()
+					));
+				}
+			}
+
+			return true;
+		} else if (data->hasImage()) {
+			const QImage image = qvariant_cast<QImage>(data->imageData());
+
+			addImage(parent, MetaDataImage(image));
+
+			return true;
+		}
+	}
+	
+
+	return false;
 }
 
 
@@ -348,10 +401,10 @@ void MetaDataModel2::save() {
 	QMap<QString, MetaData> changed;
 
 	for (int i = 0; i < rowCount(); i++) {
-		if (_original[i].null())
+		if (_original.at(i).null())
 			continue;
 
-		changed.insert(_original[i].get(MetaData::PathField).toString(), _data[i]);
+		changed.insert(_original.at(i).get(MetaData::PathField).toString(), _data.at(i));
 		_original.replace(i, MetaData());
 	}
 
@@ -382,10 +435,10 @@ void MetaDataModel2::backup(int row) {
 	if (row < 0 || row >= rowCount())
 		return;
 
-	if (!_original[row].null())
+	if (!_original.at(row).null())
 		return;
 
-	_original.replace(row, _data[row]);
+	_original.replace(row, _data.at(row));
 
 	emit metaDataStateChanged(true);
 }

@@ -139,7 +139,7 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 	DataWidget::setSelection(selection);
 
 	const QModelIndex idx = rows().value(0);
-
+	
 	_mapper->setCurrentModelIndex(idx);
 	_ui->images->setRootIndex(idx.sibling(idx.row(), MetaData::PicturesField));
 	
@@ -154,9 +154,6 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 	// This cannot simply be connected to _mapper's signal currentIndexChanged(),
 	// because that won't be emitted when selection is cleared.
 	updateImagesTabText();
-
-	qDebug() << idx.model()->rowCount(idx.sibling(idx.row(), MetaData::PicturesField));
-	qDebug() << "editor:" << idx.sibling(idx.row(), MetaData::PicturesField);
 }
 
 
@@ -182,8 +179,6 @@ void EditorWidget::copyField(int field) {
 			return;
 
 		MetaDataModel * source = qobject_cast<MetaDataModel*>(proxy->sourceModel());
-
-		qDebug() << "test model" << proxy->sourceModel();
 
 		if (!source)
 			return;

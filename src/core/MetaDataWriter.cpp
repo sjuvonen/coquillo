@@ -226,6 +226,26 @@ void MetaDataWriter::writeTag(TagLib::ID3v2::Tag * tag, const MetaData & metaDat
 	
 	writeGeneric(tag, metaData);
 
+	QMap<MetaData::Field, const char *> extraFields;
+
+	extraFields[MetaData::OriginalArtistField] = "TOPE";
+	extraFields[MetaData::ComposerField] = "TCOM";
+	extraFields[MetaData::EncoderField] = "TENC";
+	extraFields[MetaData::DiscNumberField] = "TPOS";
+
+	foreach (MetaData::Field field, extraFields.keys()) {
+
+		if (metaData.has(field)) {
+			TagLib::ID3v2::TextIdentificationFrame * frame =
+				new TagLib::ID3v2::TextIdentificationFrame(extraFields[field]);
+
+				frame->setText(metaData.get(field).toString().toStdString());
+
+			tag->removeFrames(extraFields[field]);
+			tag->addFrame(frame);
+		}
+	}
+
 	if (metaData.has(MetaData::UrlField)) {
 		tag->removeFrames("WXXX");
 
@@ -256,18 +276,6 @@ void MetaDataWriter::writeTag(TagLib::ID3v2::Tag * tag, const MetaData & metaDat
 		frame->setText(num);
 
 		tag->removeFrames("TRCK");
-		tag->addFrame(frame);
-	}
-
-	if (metaData.has(MetaData::DiscNumberField)) {		
-		TagLib::String disc = metaData.get(MetaData::DiscNumberField).toString().toStdString();
-
-		TagLib::ID3v2::TextIdentificationFrame * frame =
-			new TagLib::ID3v2::TextIdentificationFrame("TPOS");
-
-			frame->setText(metaData.get(MetaData::DiscNumberField).toString().toStdString());
-
-		tag->removeFrames("TPOS");
 		tag->addFrame(frame);
 	}
 

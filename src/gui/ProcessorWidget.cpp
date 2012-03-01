@@ -210,7 +210,7 @@ QString ProcessorWidget::pathForPattern(const QString & pattern, int row, bool f
 
 	// %N, %D and %M are extended symbols that apply padding to the numbers.
 
-	int pad = QSettings().value("Rules/NumberPadWidth").toInt();
+	int pad = QSettings().value("PadFileNumbers").toInt();
 
 	fileName.replace("%N",
 		model()->index(row, MetaData::NumberField).data().toString().rightJustified(pad, '0'));

@@ -1,4 +1,5 @@
 
+#include <QDebug>
 #include <QSettings>
 
 #include "MetaDataImage.h"
@@ -23,8 +24,13 @@ MetaDataImage::MetaDataImage(const QImage & image, int type, const QString & des
 }
 
 void MetaDataImage::setImage(const QImage & image) {
-	const char * bits = (const char *)(image.bits());
-	_id = qChecksum(bits, strlen(bits));
+	if (image.isNull())
+		return;
+	
+	_id = qChecksum((const char *)(image.constBits()), image.byteCount());
+
+	if (_id == 0)
+		return;
 
 	if (s_cache.contains(_id))
 		return;
@@ -45,6 +51,9 @@ void MetaDataImage::setImage(const QImage & image) {
 }
 
 QImage MetaDataImage::image() const {
+	if (_id == 0)
+		return QImage();
+	
 	return s_cache.contains(_id) ? s_cache[_id] : QImage();
 }
 
@@ -58,3 +67,6 @@ QImage MetaDataImage::small() const {
 	return QImage();
 }
 
+bool MetaDataImage::null() const {
+	return image().isNull();
+}

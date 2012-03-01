@@ -38,7 +38,7 @@ class MetaData {
 		QList<MetaDataImage> images() const { return _images; }
 		
 		void addImage(const MetaDataImage & image);
-		void setImages(const QList<MetaDataImage> & images) { _images = images; }
+		void setImages(const QList<MetaDataImage> & images) { _images.clear(); _images = images; }
 
 		void removeImage(int index);
 

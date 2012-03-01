@@ -127,6 +127,133 @@ QMenu * MainWindow::createPopupMenu() {
 		
 		connect(a, SIGNAL(triggered(bool)), dock, SLOT(setVisible(bool)));
 	}
+	QMenu * sizeMenu = new QMenu(tr("Icon size"), menu);
+	QMenu * styleMenu = new QMenu(tr("Text position"), menu);
+
+	QAction * s = new QAction(tr("16x16"), sizeMenu);
+	QAction * m = new QAction(tr("22x22"), sizeMenu);
+	QAction * l = new QAction(tr("32x32"), sizeMenu);
+	QAction * h = new QAction(tr("48x48"), sizeMenu);
+
+	QAction * s1 = new QAction(tr("Icons only"), styleMenu);
+	QAction * s2 = new QAction(tr("Text only"), styleMenu);
+	QAction * s3 = new QAction(tr("Text alongside icons"), styleMenu);
+	QAction * s4 = new QAction(tr("Text under icons"), styleMenu);
+
+	s->setCheckable(true);
+	m->setCheckable(true);
+	l->setCheckable(true);
+	h->setCheckable(true);
+
+	s1->setCheckable(true);
+	s2->setCheckable(true);
+	s3->setCheckable(true);
+	s4->setCheckable(true);
+
+	int size = findChildren<QToolBar*>().at(0)->iconSize().height();
+	int style = findChildren<QToolBar*>().at(0)->toolButtonStyle();
+
+	switch (size) {
+		case 16:
+			s->setChecked(true);
+			break;
+
+		case 32:
+			l->setChecked(true);
+			break;
+
+		case 48:
+			h->setChecked(true);
+			break;
+
+		default:
+			m->setChecked(true);
+	}
+
+	switch (style) {
+		case Qt::ToolButtonTextOnly:
+			s2->setChecked(true);
+			break;
+
+		case Qt::ToolButtonTextBesideIcon:
+			s3->setChecked(true);
+			break;
+
+		case Qt::ToolButtonTextUnderIcon:
+			s4->setChecked(true);
+			break;
+
+		default:
+			s1->setChecked(true);
+	}
+
+	QActionGroup * sizeGroup = new QActionGroup(menu);
+	sizeGroup->setExclusive(true);
+	sizeGroup->addAction(s);
+	sizeGroup->addAction(m);
+	sizeGroup->addAction(l);
+	sizeGroup->addAction(h);
+
+	QActionGroup * styleGroup = new QActionGroup(menu);
+	styleGroup->setExclusive(true);
+	styleGroup->addAction(s1);
+	styleGroup->addAction(s2);
+	styleGroup->addAction(s3);
+	styleGroup->addAction(s4);
+
+	sizeMenu->addAction(s);
+	sizeMenu->addAction(m);
+	sizeMenu->addAction(l);
+	sizeMenu->addAction(h);
+
+	styleMenu->addAction(s1);
+	styleMenu->addAction(s2);
+	styleMenu->addAction(s3);
+	styleMenu->addAction(s4);
+
+	menu->addSeparator();
+	menu->addMenu(sizeMenu);
+	menu->addMenu(styleMenu);
+	menu->addSeparator();
+
+	QSignalMapper * sizeMapper = new QSignalMapper(menu);
+	sizeMapper->setMapping(s, 16);
+	sizeMapper->setMapping(m, 22);
+	sizeMapper->setMapping(l, 32);
+	sizeMapper->setMapping(h, 48);
+
+	QSignalMapper * styleMapper = new QSignalMapper(menu);
+	styleMapper->setMapping(s1, Qt::ToolButtonIconOnly);
+	styleMapper->setMapping(s2, Qt::ToolButtonTextOnly);
+	styleMapper->setMapping(s3, Qt::ToolButtonTextBesideIcon);
+	styleMapper->setMapping(s4, Qt::ToolButtonTextUnderIcon);
+
+	connect(s, SIGNAL(triggered()), sizeMapper, SLOT(map()));
+	connect(m, SIGNAL(triggered()), sizeMapper, SLOT(map()));
+	connect(l, SIGNAL(triggered()), sizeMapper, SLOT(map()));
+	connect(h, SIGNAL(triggered()), sizeMapper, SLOT(map()));
+
+	connect(s1, SIGNAL(triggered()), styleMapper, SLOT(map()));
+	connect(s2, SIGNAL(triggered()), styleMapper, SLOT(map()));
+	connect(s3, SIGNAL(triggered()), styleMapper, SLOT(map()));
+	connect(s4, SIGNAL(triggered()), styleMapper, SLOT(map()));
+
+	connect(sizeMapper, SIGNAL(mapped(int)),
+		SLOT(setToolBarIconSize(int)));
+
+	connect(styleMapper, SIGNAL(mapped(int)),
+		SLOT(setToolBarButtonStyle(int)));
+
+
+
+
+
+
+
+
+
+
+	
 	
 	connect(mainMenu, SIGNAL(triggered(bool)),
 		menuBar(), SLOT(setVisible(bool)));
@@ -174,7 +301,7 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
  * PUBLIC SLOTS
  **/
 
-void MainWindow::saveSettings() {
+void MainWindow::closeEvent(QCloseEvent *) {	
 	QSettings s;
 
 	s.beginGroup("Widgets");
@@ -184,6 +311,12 @@ void MainWindow::saveSettings() {
 	s.setValue("MainWindowSize", size());
 	s.setValue("MenuBarHidden", menuBar()->isHidden());
 	s.setValue("StatusBarHidden", statusBar()->isHidden());
+	
+	if (QToolBar * b = toolBars().value(0)) {
+		s.setValue("MainWindowLocked", !b->isMovable());
+		s.setValue("ToolBarButtonStyle", b->toolButtonStyle());
+		s.setValue("ToolBarIconSize", b->iconSize().height());
+	}
 }
 
 void MainWindow::setInterfaceLocked(bool state) {
@@ -202,11 +335,27 @@ void MainWindow::setInterfaceLocked(bool state) {
 	}
 }
 
-void MainWindow::setVisible(bool state) {
+void MainWindow::setToolBarIconSize(int size) {
+	const QList<QToolBar*> bars = findChildren<QToolBar*>();
+	const QList<QToolButton*> buttons = _ui->mainToolBar->findChildren<QToolButton*>();
 
-	loadSettings();
+	foreach (QToolBar * tb, bars)
+		tb->setIconSize(QSize(size,size));
 
-	QMainWindow::setVisible(state);
+	foreach (QToolButton * b, buttons)
+		b->setIconSize(QSize(size, size));
+
+}
+
+void MainWindow::setToolBarButtonStyle(int style) {
+	const QList<QToolBar*> bars = findChildren<QToolBar*>();
+	const QList<QToolButton*> buttons = _ui->mainToolBar->findChildren<QToolButton*>();
+
+	foreach (QToolBar * tb, bars)
+		tb->setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style));
+
+	foreach (QToolButton * b, buttons)
+		b->setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style));
 }
 
 
@@ -218,8 +367,9 @@ void MainWindow::setVisible(bool state) {
  **/
 
 void MainWindow::showEvent(QShowEvent * event) {
-	QMainWindow::showEvent(event);
+	loadSettings();
 	
+	QMainWindow::showEvent(event);
 	QSettings s;
 
 	_ui->actionToggleLocationDock->setChecked(_ui->dockLocation->isVisible());
@@ -350,6 +500,7 @@ void MainWindow::showHeaderContextMenu(const QPoint & pos) {
 
 void MainWindow::afterModelAction() {
 	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+	_ui->actionReloadOrAbort->setText(tr("Reload"));
 
 	/*
 	if (QSortFilterProxyModel * p = qobject_cast<QSortFilterProxyModel*>(_ui->items->model()))
@@ -372,6 +523,7 @@ void MainWindow::beforeModelAction() {
 	statusBar()->addWidget(bar);
 
 	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserStop));
+	_ui->actionReloadOrAbort->setText(tr("Abort"));
 
 	/*
 	if (QSortFilterProxyModel * p = qobject_cast<QSortFilterProxyModel*>(_ui->items->model()))
@@ -427,6 +579,10 @@ void MainWindow::loadSettings() {
 	} else
 		resize(QSize(600, 480));
 
+	setToolBarIconSize(s.value("Widgets/ToolBarIconSize").toInt());
+	setToolBarButtonStyle(s.value("Widgets/ToolBarButtonStyle").toInt());
+	setInterfaceLocked(s.value("Widgets/MainWindowLocked").toBool());
+	
 	menuBar()->setHidden(s.value("Widgets/MenuBarHidden").toBool());
 	statusBar()->setHidden(s.value("Widgets/StatusBarHidden").toBool());
 }
@@ -483,4 +639,17 @@ void MainWindow::setupToolBar() {
 
 	connect(_ui->actionLevel_up, SIGNAL(triggered()),
 		_ui->location, SLOT(goDirectoryUp()));
+
+	_ui->actionSave->setShortcut(QKeySequence::Save);
+	_ui->actionSelect_all->setShortcut(QKeySequence::SelectAll);
+	_ui->actionReloadOrAbort->setShortcut(QKeySequence::Refresh);
+	_ui->actionNext->setShortcut(QKeySequence::MoveToNextPage);
+	_ui->actionPrevious->setShortcut(QKeySequence::MoveToPreviousPage);
+	_ui->actionQuit->setShortcut(QKeySequence::Quit);
+
+	// This mapping seems to be empty at least on Linux.
+	// Fallback value is Ctrl+P which is bound in the QtDesigner .ui file.
+	if (!QKeySequence::keyBindings(QKeySequence::Preferences).isEmpty())
+		_ui->actionConfigure->setShortcut(QKeySequence::Preferences);
+	
 }

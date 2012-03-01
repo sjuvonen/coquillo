@@ -29,11 +29,12 @@ class MainWindow : public QMainWindow {
 		bool eventFilter(QObject * object, QEvent * event);
 		
 	public slots:
-		void saveSettings();
 		void setInterfaceLocked(bool state);
-		void setVisible(bool state);
+		void setToolBarIconSize(int size);
+		void setToolBarButtonStyle(int style);
 
 	protected:
+		void closeEvent(QCloseEvent *);
 		void showEvent(QShowEvent *);
 
 	private slots:

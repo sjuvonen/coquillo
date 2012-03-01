@@ -214,7 +214,7 @@ void CddbSearchDialog::setSelection(const QItemSelection & selection) {
 		_indexes << idx;
 	}
 
-	hex.setNum((_totalTime-firstLen)%255, 16);
+	hex.setNum((_totalTime-firstLen) % 255, 16);
 	_discId.append( hex.rightJustified(2, '0') );
 
 	hex.setNum(_totalTime, 16);

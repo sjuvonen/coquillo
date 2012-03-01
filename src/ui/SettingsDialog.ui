@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -46,19 +46,19 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="defaultLocation"/>
+             <widget class="QLineEdit" name="prefDefaultLocation"/>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="scanSubDirs">
+           <widget class="QCheckBox" name="prefScanSubDirs">
             <property name="text">
              <string>Scan subdirectories by default</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="dimSubDirs">
+           <widget class="QCheckBox" name="prefDimSubDirs">
             <property name="text">
              <string>Dim background of files in subdirectories</string>
             </property>
@@ -74,7 +74,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QCheckBox" name="safeFileNames">
+           <widget class="QCheckBox" name="prefSafeFileNames">
             <property name="toolTip">
              <string>Removes illegal characters from filenames. Useful for portable media players etc.</string>
             </property>
@@ -84,7 +84,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="lowerCaseExtension">
+           <widget class="QCheckBox" name="prefLowerCaseExtension">
             <property name="toolTip">
              <string>Convert filename extensions to either lower-case or upper-case</string>
             </property>
@@ -115,7 +115,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="padFileNumbers">
+             <widget class="QSpinBox" name="prefPadFileNumbers">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -193,7 +193,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QCheckBox" name="mpegId3v1">
+           <widget class="QCheckBox" name="prefMpegId3v1">
             <property name="text">
              <string>Write ID3v1 tags in addition to ID3v2</string>
             </property>
@@ -215,7 +215,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="Id3v2Encoding">
+             <widget class="QComboBox" name="prefId3v2Encoding">
               <property name="currentIndex">
                <number>0</number>
               </property>
@@ -243,7 +243,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_9">
           <item>
-           <widget class="QCheckBox" name="flacId3v2">
+           <widget class="QCheckBox" name="prefFlacId3v2">
             <property name="text">
              <string>Write ID3v2 tags in addition to FLAC tags</string>
             </property>
@@ -259,7 +259,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_11">
           <item>
-           <widget class="QCheckBox" name="convertVorbisLegacyCovers">
+           <widget class="QCheckBox" name="prefConvertVorbisLegacyCovers">
             <property name="text">
              <string>Convert legacy coverart to official format</string>
             </property>
@@ -294,14 +294,14 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
-          <widget class="QCheckBox" name="scaleCovers">
+          <widget class="QCheckBox" name="prefScaleCovers">
            <property name="text">
             <string>Scale pictures to</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="scaleWidth">
+          <widget class="QSpinBox" name="prefScaleWidth">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -327,7 +327,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="scaleHeight">
+          <widget class="QSpinBox" name="prefScaleHeight">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -371,7 +371,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="convertUnderScores">
+        <widget class="QCheckBox" name="prefConvertUnderScores">
          <property name="text">
           <string>Convert underscores to spaces in filenames</string>
          </property>
@@ -381,7 +381,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="trimWhiteSpace">
+        <widget class="QCheckBox" name="prefTrimWhiteSpace">
          <property name="text">
           <string>Trim consecutive whitespace in tags and filenames</string>
          </property>
@@ -391,7 +391,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="deleteOrphans">
+        <widget class="QCheckBox" name="prefDeleteOrphans">
          <property name="toolTip">
           <string>Directories that are left empty after moving files will be deleted</string>
          </property>
@@ -401,7 +401,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="parseDiscNumber">
+        <widget class="QCheckBox" name="prefParseDiscNumber">
          <property name="text">
           <string>Remove disc number from album tag</string>
          </property>
@@ -478,7 +478,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QTextEdit" name="capitalizeAlways">
+          <widget class="QTextEdit" name="prefCapitalizeAlways">
            <property name="html">
             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -489,7 +489,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QTextEdit" name="capitalizeNever">
+          <widget class="QTextEdit" name="prefCapitalizeNever">
            <property name="html">
             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -502,7 +502,7 @@ p, li { white-space: pre-wrap; }
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="capitalizeNumerals">
+        <widget class="QCheckBox" name="prefCapitalizeNumerals">
          <property name="text">
           <string>Capitalize Roman numerals</string>
          </property>
@@ -526,27 +526,27 @@ p, li { white-space: pre-wrap; }
  </widget>
  <tabstops>
   <tabstop>tabs</tabstop>
-  <tabstop>defaultLocation</tabstop>
-  <tabstop>scanSubDirs</tabstop>
-  <tabstop>dimSubDirs</tabstop>
-  <tabstop>safeFileNames</tabstop>
-  <tabstop>lowerCaseExtension</tabstop>
-  <tabstop>padFileNumbers</tabstop>
+  <tabstop>prefDefaultLocation</tabstop>
+  <tabstop>prefScanSubDirs</tabstop>
+  <tabstop>prefDimSubDirs</tabstop>
+  <tabstop>prefSafeFileNames</tabstop>
+  <tabstop>prefLowerCaseExtension</tabstop>
+  <tabstop>prefPadFileNumbers</tabstop>
   <tabstop>buttonBox</tabstop>
-  <tabstop>mpegId3v1</tabstop>
-  <tabstop>Id3v2Encoding</tabstop>
-  <tabstop>flacId3v2</tabstop>
-  <tabstop>convertVorbisLegacyCovers</tabstop>
-  <tabstop>scaleCovers</tabstop>
-  <tabstop>scaleWidth</tabstop>
-  <tabstop>scaleHeight</tabstop>
-  <tabstop>convertUnderScores</tabstop>
-  <tabstop>trimWhiteSpace</tabstop>
-  <tabstop>deleteOrphans</tabstop>
-  <tabstop>parseDiscNumber</tabstop>
-  <tabstop>capitalizeAlways</tabstop>
-  <tabstop>capitalizeNever</tabstop>
-  <tabstop>capitalizeNumerals</tabstop>
+  <tabstop>prefMpegId3v1</tabstop>
+  <tabstop>prefId3v2Encoding</tabstop>
+  <tabstop>prefFlacId3v2</tabstop>
+  <tabstop>prefConvertVorbisLegacyCovers</tabstop>
+  <tabstop>prefScaleCovers</tabstop>
+  <tabstop>prefScaleWidth</tabstop>
+  <tabstop>prefScaleHeight</tabstop>
+  <tabstop>prefConvertUnderScores</tabstop>
+  <tabstop>prefTrimWhiteSpace</tabstop>
+  <tabstop>prefDeleteOrphans</tabstop>
+  <tabstop>prefParseDiscNumber</tabstop>
+  <tabstop>prefCapitalizeAlways</tabstop>
+  <tabstop>prefCapitalizeNever</tabstop>
+  <tabstop>prefCapitalizeNumerals</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -583,9 +583,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>scaleCovers</sender>
+   <sender>prefScaleCovers</sender>
    <signal>toggled(bool)</signal>
-   <receiver>scaleHeight</receiver>
+   <receiver>prefScaleHeight</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -599,9 +599,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>scaleCovers</sender>
+   <sender>prefScaleCovers</sender>
    <signal>toggled(bool)</signal>
-   <receiver>scaleWidth</receiver>
+   <receiver>prefScaleWidth</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">

@@ -35,12 +35,15 @@ class EditorWidget : public DataWidget {
 		void exportCurrentImage();
 		void removeCurrentImage();
 
+		void updateImagesTabText();
+
 	private:
 		Ui::EditorWidget * _ui;
 		QDataWidgetMapper * _mapper;
 		
 		QHash<int, QString> _typeStrings;
 		QString _importPath;
+		QString _exportPath;
 };
 
 #endif

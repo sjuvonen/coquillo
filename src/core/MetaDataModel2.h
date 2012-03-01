@@ -2,8 +2,11 @@
 #define METADATAMODEL2_H
 
 #include <QAbstractItemModel>
+#include <QStringList>
 
 #include "MetaData.h"
+
+class QMimeData;
 
 extern volatile bool abortAction;
 
@@ -36,6 +39,13 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 		int columnCount(const QModelIndex & p=QModelIndex()) const;
 		int rowCount(const QModelIndex & p=QModelIndex()) const;
+
+		Qt::ItemFlags flags(const QModelIndex & idx) const;
+
+		QStringList mimeTypes() const;
+		
+		bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row,
+			int column, const QModelIndex & parent);
 
 	signals:
 		// These are emitted during a media scan or tag writing.

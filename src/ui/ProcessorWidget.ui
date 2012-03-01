@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
-    <height>386</height>
+    <width>332</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -930,7 +930,7 @@
           <item>
            <widget class="QRadioButton" name="capitalizeAll">
             <property name="text">
-             <string>Capitalize first letter of each word</string>
+             <string>First letter of each word</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">groupCapitalization</string>
@@ -973,20 +973,10 @@
           <item>
            <widget class="QRadioButton" name="capitalizeFirst">
             <property name="text">
-             <string>Capitalize only the first letter of first word</string>
+             <string>Only the first letter of first word</string>
             </property>
             <property name="checked">
              <bool>false</bool>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">groupCapitalization</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="lowerCaseAll">
-            <property name="text">
-             <string>Lower-case everything</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">groupCapitalization</string>

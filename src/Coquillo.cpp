@@ -39,11 +39,6 @@ Coquillo::Coquillo(QObject * parent)
 	m->setDirectory(location);
 
 	_window->show();
-
-	QApplication * app = qobject_cast<QApplication *>(QApplication::instance());
-
-	connect(app, SIGNAL(lastWindowClosed()),
-		_window, SLOT(saveSettings()));
 }
 
 Coquillo::~Coquillo() {
