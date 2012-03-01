@@ -6,6 +6,7 @@
 #include <QDataWidgetMapper>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
 #include <QSignalMapper>
 #include <QSortFilterProxyModel>
 
@@ -25,6 +26,8 @@ EditorWidget::EditorWidget(QWidget * parent)
 	_ui = new Ui::EditorWidget();
 	_ui->setupUi(this);
 
+	_ui->exportImage->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+
 	_mapper = new QDataWidgetMapper(this);
 	_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
@@ -40,19 +43,9 @@ EditorWidget::EditorWidget(QWidget * parent)
 	radioMapper->setMapping(_ui->applyMaxNumber, MetaData::MaxNumberField);
 	radioMapper->setMapping(_ui->applyYear, MetaData::YearField);
 	radioMapper->setMapping(_ui->applyImages, MetaData::PicturesField);
-	
-	foreach (QRadioButton * button, findChildren<QRadioButton*>())
-		connect(button, SIGNAL(clicked()), radioMapper, SLOT(map()));
-
-	foreach (QLineEdit * input, findChildren<QLineEdit*>())
-		connect(input, SIGNAL(textEdited(QString)), _mapper, SLOT(submit()));
-
-	foreach (QSpinBox * input, findChildren<QSpinBox*>())
-		connect(input, SIGNAL(valueChanged(int)), _mapper, SLOT(submit()));
-
-	connect(radioMapper, SIGNAL(mapped(int)), SLOT(copyField(int)));
-
-	setDisabled(true);
+	radioMapper->setMapping(_ui->applyOriginalArtist, MetaData::OriginalArtistField);
+	radioMapper->setMapping(_ui->applyEncoder, MetaData::EncoderField);
+	radioMapper->setMapping(_ui->applyComposer, MetaData::ComposerField);
 
 	_typeStrings.insert(0, tr("Other"));
 	_typeStrings.insert(APFrame::FrontCover, tr("Front cover"));
@@ -75,10 +68,24 @@ EditorWidget::EditorWidget(QWidget * parent)
 	QStringList strings = _typeStrings.values();
 	strings.sort();
 
+	setDisabled(true);
+
 	foreach (const QString s, strings)
 		_ui->imageType->addItem(s, _typeStrings.key(s));
 
-	_ui->exportImage->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+	foreach (QRadioButton * button, findChildren<QRadioButton*>())
+		connect(button, SIGNAL(clicked()), radioMapper, SLOT(map()));
+
+	foreach (QLineEdit * input, findChildren<QLineEdit*>())
+		connect(input, SIGNAL(textEdited(QString)), _mapper, SLOT(submit()));
+
+	foreach (QSpinBox * input, findChildren<QSpinBox*>())
+		connect(input, SIGNAL(valueChanged(int)), _mapper, SLOT(submit()));
+
+	connect(radioMapper, SIGNAL(mapped(int)), SLOT(copyField(int)));
+
+	// Hide the Extra tab because needed functionality is not yet implemented.
+ 	_ui->tabs->removeTab(2);
 	
 }
 
@@ -101,14 +108,23 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 	_mapper->addMapping(_ui->number, MetaData::NumberField);
 	_mapper->addMapping(_ui->maxnumber, MetaData::MaxNumberField);
 	_mapper->addMapping(_ui->year, MetaData::YearField);
+	_mapper->addMapping(_ui->originalArtist, MetaData::OriginalArtistField);
+	_mapper->addMapping(_ui->composer, MetaData::ComposerField);
+	_mapper->addMapping(_ui->encoder, MetaData::EncoderField);
 
 	QItemSelectionModel * m = _ui->images->selectionModel();
 	_ui->images->setModel(model);
 
+	delete m;
+
 	connect(_ui->images->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
 		SLOT(displayImageProperties(QModelIndex)));
 
-	delete m;
+	connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)),
+		SLOT(updateImagesTabText()));
+
+	connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+		SLOT(updateImagesTabText()));
 }
 
 
@@ -123,28 +139,24 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 	DataWidget::setSelection(selection);
 
 	const QModelIndex idx = rows().value(0);
-	QString tabText = _ui->tabs->tabText(1).remove(QRegExp(" \\(\\d+\\)"));
 
 	_mapper->setCurrentModelIndex(idx);
-
 	_ui->images->setRootIndex(idx.sibling(idx.row(), MetaData::PicturesField));
 	
 	foreach (QLineEdit * line, findChildren<QLineEdit*>())
 		line->setCursorPosition(0);
 
 	_importPath.clear();
+	_exportPath.clear();
 
 	setDisabled(rows().isEmpty());
 
-	if (rows().isEmpty()) {
-		_ui->tabs->setCurrentIndex(0);
-	} else {
-		tabText += QString(" (%1)").arg(
-			model()->rowCount(idx.sibling(idx.row(), MetaData::PicturesField)));
-	}
-	
-	_ui->tabs->setTabText(1, tabText);
+	// This cannot simply be connected to _mapper's signal currentIndexChanged(),
+	// because that won't be emitted when selection is cleared.
+	updateImagesTabText();
 
+	qDebug() << idx.model()->rowCount(idx.sibling(idx.row(), MetaData::PicturesField));
+	qDebug() << "editor:" << idx.sibling(idx.row(), MetaData::PicturesField);
 }
 
 
@@ -171,20 +183,22 @@ void EditorWidget::copyField(int field) {
 
 		MetaDataModel * source = qobject_cast<MetaDataModel*>(proxy->sourceModel());
 
+		qDebug() << "test model" << proxy->sourceModel();
+
 		if (!source)
 			return;
 		
 		const QList<MetaDataImage> images = source->metaData(src2.row()).images();
 
-		foreach (const QModelIndex idx, r) {
-			source->setImages(idx, images);
+		for (int i = 1; i < r.count(); i++) {
+			source->setImages(proxy->mapToSource(r.at(i)), images);
 		}
 
 		return;
 	}
 
 	for (int i = 1; i < r.count(); i++) {
-		const QModelIndex dst = r[i].sibling(r[i].row(), field);
+		const QModelIndex dst = r.at(i).sibling(r.at(i).row(), field);
 		model()->setData(dst, src.data());
 	}
 }
@@ -220,18 +234,17 @@ void EditorWidget::setImageType(const QString & typeString) {
 void EditorWidget::addImage() {
 	if (rows().count() == 0)
 		return;
-	
 
 	if (_importPath.isEmpty() || !QFileInfo(_importPath).exists()) {
 		const QModelIndex idx = rows().at(0);
 
 		_importPath = QFileInfo(idx.sibling(idx.row(),
-		MetaData::PathField).data(Qt::EditRole).toString()).filePath();
+		MetaData::PathField).data(Qt::EditRole).toString()).path();
 	}
 	
 	const QStringList files = QFileDialog::getOpenFileNames(
 		this,
-		tr("Import images"),
+		tr("Import images..."),
 		_importPath,
 		"Pictures (*.jpg *.jpeg *.png *.bmp)"
 	);
@@ -239,7 +252,7 @@ void EditorWidget::addImage() {
 	if (files.isEmpty())
 		return;
 
-	_importPath = QFileInfo(files[0]).filePath();
+	_importPath = QFileInfo(files[0]).path();
 
 	const QModelIndex root = _ui->images->rootIndex();
 
@@ -272,16 +285,45 @@ void EditorWidget::addImage() {
 void EditorWidget::exportCurrentImage() {
 	const QImage image = _ui->images->currentIndex().data(MetaDataImage::ImageRole).value<QImage>();
 
-	const QString fileName = QFileDialog::getSaveFileName(
-		this, QString(), QString(), tr("Picture(*.jpg *.png *.bmp)")
-	);
+	if (_exportPath.isEmpty() || !QFileInfo(_exportPath).exists()) {
+		const QModelIndex idx = rows().at(0);
 
-	if (!fileName.isEmpty())
-		image.save(fileName);
+		_exportPath = QFileInfo(idx.sibling(idx.row(),
+		MetaData::PathField).data(Qt::EditRole).toString()).path();
+	}
+
+	const QString fileName = QFileDialog::getSaveFileName(
+		this, tr("Export image..."), _exportPath);
+
+	if (!fileName.isEmpty()) {
+		bool ok = image.save(fileName);
+		_exportPath = QFileInfo(fileName).path();
+
+		if (!ok) {
+			QMessageBox::critical(this, tr("Export failed"), tr("Could not save image"));
+		}
+	}
 }
 
 void EditorWidget::removeCurrentImage() {
 	const QModelIndex idx = _ui->images->currentIndex();
 
 	_ui->images->model()->removeRow(idx.row(), idx.parent());
+}
+
+void EditorWidget::updateImagesTabText() {
+	QString tabText = _ui->tabs->tabText(1).remove(QRegExp(" \\(\\d+\\)"));
+
+	if (rows().isEmpty()) {
+		_ui->tabs->setCurrentIndex(0);
+	} else {
+		const QModelIndex idx = rows()[0];
+		int rowCount = model()->rowCount(idx.sibling(idx.row(), MetaData::PicturesField));
+
+		if (rowCount) {
+			tabText += QString(" (%1)").arg(rowCount);
+		}
+	}
+
+	_ui->tabs->setTabText(1, tabText);
 }
