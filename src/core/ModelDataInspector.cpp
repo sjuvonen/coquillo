@@ -60,6 +60,7 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 	bool safeFileNames = s.value("safeFileNames").toBool();
 	bool discNumberFromAlbum = s.value("ParseDiscNumber").toBool();
 	bool trimWhiteSpace = s.value("TrimWhiteSpace").toBool();
+	bool capitalizeRoman = s.value("CapitalizeRomanNumerals").toBool();
 	
 	for (int i = firstRow; i <= lastRow; i++) {
 

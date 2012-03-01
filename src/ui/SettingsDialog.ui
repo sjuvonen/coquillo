@@ -478,7 +478,7 @@ p, li { white-space: pre-wrap; }
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="prefCapitalizeNumerals">
+        <widget class="QCheckBox" name="prefCapitalizeRomanNumerals">
          <property name="text">
           <string>Capitalize Roman numerals</string>
          </property>
@@ -521,7 +521,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>prefDeleteOrphans</tabstop>
   <tabstop>prefParseDiscNumber</tabstop>
   <tabstop>prefCapitalizeNever</tabstop>
-  <tabstop>prefCapitalizeNumerals</tabstop>
+  <tabstop>prefCapitalizeRomanNumerals</tabstop>
  </tabstops>
  <resources/>
  <connections>

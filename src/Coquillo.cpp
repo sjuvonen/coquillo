@@ -76,7 +76,7 @@ void Coquillo::writeDefaults() {
 		.arg("a, an, the, and, but, or, nor, at, by, for, from, in, into, of, ")
 		.arg("off, on, onto, out, over, to, up, with, as"));
 
-	defaults.insert("CapitalizeNumerals", true);
+	defaults.insert("CapitalizeRomanNumerals", true);
 	defaults.insert("Widgets/MainWindowSize", QSize(940, 600));
 	defaults.insert("SubstringPatternLength", 1);
 
