@@ -35,6 +35,8 @@ class MainWindow : public QMainWindow {
 		void setToolBarIconSize(int size);
 		void setToolBarButtonStyle(int style);
 
+		void showError(const QString & error);
+
 	protected:
 		void closeEvent(QCloseEvent *);
 		void showEvent(QShowEvent *);

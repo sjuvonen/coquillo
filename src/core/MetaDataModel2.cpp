@@ -316,12 +316,16 @@ bool MetaDataModel2::dropMimeData(const QMimeData * data, Qt::DropAction,
 				
 				if (url.scheme() == "file") {
 					image = QImage(url.path());
+
+					if (image.isNull()) {
+						emit actionError(tr("Invalid image"));
+					}
 				} else {
 					image = downloadImage(url);
 				}
 
 				if (image.isNull()) {
-					qDebug() << "Invalid image";
+					return false;
 				}
 
 				const QString description = QFileInfo(url.path()).baseName();
@@ -473,6 +477,11 @@ QImage MetaDataModel2::downloadImage(const QUrl & url) {
 
 	while (!reply->isFinished()) {
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 500);
+
+		if (::abortAction) {
+			reply->abort();
+			return QImage();
+		}
 	}
 
 	const QImage image = QImage::fromData(reply->readAll());
@@ -481,6 +490,10 @@ QImage MetaDataModel2::downloadImage(const QUrl & url) {
 
 	if (reply->error() != QNetworkReply::NoError) {
 		emit actionError(tr("Network error (code %1)").arg(reply->error()));
+	}
+
+	if (image.isNull()) {
+		emit actionError(tr("Invalid image"));
 	}
 
 	return image;

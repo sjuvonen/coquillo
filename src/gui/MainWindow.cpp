@@ -1,6 +1,7 @@
 
 #include <QDebug>
 
+#include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QProgressBar>
 #include <QSettings>
@@ -361,6 +362,11 @@ void MainWindow::setToolBarButtonStyle(int style) {
 		b->setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style));
 }
 
+void MainWindow::showError(const QString & error) {
+
+	QMessageBox::critical(this, tr("Error"), error);
+}
+
 
 
 
@@ -592,6 +598,10 @@ void MainWindow::loadSettings() {
 
 void MainWindow::setMetaDataModel(MetaDataModel * model) {
 	if (model) {
+
+		connect(model, SIGNAL(actionError(QString)),
+			SLOT(showError(QString)));
+		
 		connect(_ui->actionSave, SIGNAL(triggered()),
 			model, SLOT(save()));
 
