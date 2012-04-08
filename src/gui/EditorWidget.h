@@ -7,6 +7,7 @@
 
 class QAbstractItemModel;
 class QDataWidgetMapper;
+class QNetworkAccessManager;
 class QItemSelection;
 
 namespace Ui {
@@ -21,6 +22,7 @@ class EditorWidget : public DataWidget {
 		~EditorWidget();
 
 		void setModel(QAbstractItemModel * model);
+		void setNetworkManager(QNetworkAccessManager * manager);
 
 	public slots:
 		void setSelection(const QItemSelection & selection);
@@ -40,6 +42,7 @@ class EditorWidget : public DataWidget {
 	private:
 		Ui::EditorWidget * _ui;
 		QDataWidgetMapper * _mapper;
+		QNetworkAccessManager * _networkManager;
 		
 		QHash<int, QString> _typeStrings;
 		QString _importPath;

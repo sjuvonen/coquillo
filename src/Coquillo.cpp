@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QFileInfo>
+#include <QNetworkAccessManager>
 #include <QSettings>
 
 #include "Coquillo.h"
@@ -14,10 +15,13 @@
 Coquillo::Coquillo(QObject * parent)
 : QObject(parent) {
 
+	_networkManager = new QNetworkAccessManager(this);
+
 	migrateSettings();
 	writeDefaults();
 
 	MetaDataModel2 * m = new MetaDataModel2(this);
+	m->setNetworkManager(_networkManager);
 
 	_window = new MainWindow(m);
 
@@ -76,8 +80,12 @@ void Coquillo::writeDefaults() {
 		.arg("a, an, the, and, but, or, nor, at, by, for, from, in, into, of, ")
 		.arg("off, on, onto, out, over, to, up, with, as"));
 
-	defaults.insert("CapitalizeRomanNumerals", true);
 	defaults.insert("Widgets/MainWindowSize", QSize(940, 600));
+
+	// Whether or not make Roman numerals always capitalized
+	defaults.insert("CapitalizeRomanNumerals", true);
+
+	// Substring length to use with substr patterns (%A, %B, %T, %G) in processor
 	defaults.insert("SubstringPatternLength", 1);
 
 	QSettings settings;

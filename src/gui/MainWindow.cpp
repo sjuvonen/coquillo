@@ -1,6 +1,7 @@
 
 #include <QDebug>
 
+#include <QNetworkAccessManager>
 #include <QProgressBar>
 #include <QSettings>
 #include <QSignalMapper>
@@ -21,6 +22,8 @@
 MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 : QMainWindow(parent), _model(0) {
 
+	_networkManager = new QNetworkAccessManager(this);
+
 	_ui = new Ui::MainWindow();
 	_ui->setupUi(this);
 
@@ -28,8 +31,8 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 	proxy->setDynamicSortFilter(true);
 	
 	_ui->editor->setModel(proxy);
+	
 	_ui->items->setModel(proxy);
-
 	_ui->items->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	_cddbSearch = new CddbSearchDialog(this);

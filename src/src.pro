@@ -4,6 +4,8 @@ include(../common.pri)
 TEMPLATE = app
 TARGET = ../coquillo
 
+QT += network
+
 DEPENDPATH += . core gui ui
 INCLUDEPATH += . core gui
 

@@ -6,6 +6,8 @@
 
 #include "MetaData.h"
 
+class QImage;
+class QNetworkAccessManager;
 class QMimeData;
 
 extern volatile bool abortAction;
@@ -17,6 +19,8 @@ class MetaDataModel2 : public QAbstractItemModel {
 		enum DataRole { FieldTypeRole = Qt::UserRole };
 		
 		MetaDataModel2(QObject * parent=0);
+
+		void setNetworkManager(QNetworkAccessManager * manager);
 
 		bool recursive() const { return _recursive; }
 		QString directory() const { return _directory; }
@@ -49,9 +53,10 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 	signals:
 		// These are emitted during a media scan or tag writing.
+		void actionError(const QString & message);
 		void actionFinished();
-		void actionMaximumChanged(int);
-		void actionProgress(int);
+		void actionMaximumChanged(int total);
+		void actionProgress(int progress);
 		void actionStarted();
 
 		/**
@@ -77,17 +82,27 @@ class MetaDataModel2 : public QAbstractItemModel {
 		void lock() { _locked = true; }
 		void unlock() { _locked = false; }
 
+		void networkActionProgressChanged(qint64 progress, qint64 total) {
+			emit actionProgress(int(progress / 1000));
+			emit actionMaximumChanged(int(total / 1000));
+		}
+
 	private:
 		void backup(int row);
+
+		QImage downloadImage(const QUrl & url);
 		
 		QList<MetaData> _data;
 		QList<MetaData> _original;
 		QMap<int, QString> _fields;
 
+		QNetworkAccessManager * _networkManager;
 		QString _directory;
 
 		bool _recursive;
 		bool _locked;
+
+		volatile bool _abortAction;
 };
 
 #endif

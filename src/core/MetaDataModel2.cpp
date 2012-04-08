@@ -1,6 +1,10 @@
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QMimeData>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QThread>
 #include <QUrl>
 
@@ -13,7 +17,7 @@
 volatile bool abortAction = false;
 
 MetaDataModel2::MetaDataModel2(QObject * parent)
-: QAbstractItemModel(parent), _recursive(false), _locked(false) {
+: QAbstractItemModel(parent), _networkManager(0), _recursive(false), _locked(false) {
 
 	_fields.insert(MetaData::TitleField, tr("Title"));
 	_fields.insert(MetaData::ArtistField, tr("Artist"));
@@ -38,6 +42,10 @@ MetaDataModel2::MetaDataModel2(QObject * parent)
 	connect(this, SIGNAL(actionFinished()), SLOT(unlock()));
 }
 
+void MetaDataModel2::setNetworkManager(QNetworkAccessManager * manager) {
+	_networkManager = manager;
+}
+
 MetaData MetaDataModel2::metaData(int row) const {
 	return _data.value(row);
 }
@@ -55,6 +63,8 @@ bool MetaDataModel2::addImage(int row, const MetaDataImage & image) {
 	_data[row].addImage(image);
 
 	endInsertRows();
+
+	qDebug() << "Image inserted" << _data[row].imageCount();
 
 	return true;
 }
@@ -301,14 +311,22 @@ bool MetaDataModel2::dropMimeData(const QMimeData * data, Qt::DropAction,
 	if (parent.isValid() && parent.column() == MetaData::PicturesField) {
 		if (data->hasUrls()) {
 			foreach (const QUrl url, data->urls()) {
-				if (url.scheme() == "file") {
-					const QImage image = QImage(url.path());
 
-					addImage(parent, MetaDataImage(
-						QImage(url.path()), 0,
-						QFileInfo(url.path()).baseName()
-					));
+				QImage image;
+				
+				if (url.scheme() == "file") {
+					image = QImage(url.path());
+				} else {
+					image = downloadImage(url);
 				}
+
+				if (image.isNull()) {
+					qDebug() << "Invalid image";
+				}
+
+				const QString description = QFileInfo(url.path()).baseName();
+
+				addImage(parent, MetaDataImage(image, 0, description));
 			}
 
 			return true;
@@ -441,4 +459,29 @@ void MetaDataModel2::backup(int row) {
 	_original.replace(row, _data.at(row));
 
 	emit metaDataStateChanged(true);
+}
+
+QImage MetaDataModel2::downloadImage(const QUrl & url) {
+	QNetworkReply * reply = _networkManager->get(QNetworkRequest(url));
+
+	emit actionStarted();
+
+	connect(reply, SIGNAL(finished()), SIGNAL(actionFinished()));
+	
+	connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
+		SLOT(networkActionProgressChanged(qint64, qint64)));
+
+	while (!reply->isFinished()) {
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 500);
+	}
+
+	const QImage image = QImage::fromData(reply->readAll());
+
+	reply->deleteLater();
+
+	if (reply->error() != QNetworkReply::NoError) {
+		emit actionError(tr("Network error (code %1)").arg(reply->error()));
+	}
+
+	return image;
 }

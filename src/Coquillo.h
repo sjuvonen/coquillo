@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class QNetworkAccessManager;
+
 class MainWindow;
 
 class Coquillo : public QObject {
@@ -16,6 +18,8 @@ class Coquillo : public QObject {
 		void migrateSettings();
 		void writeDefaults();
 
+		QNetworkAccessManager * _networkManager;
+		
 		MainWindow * _window;
 };
 

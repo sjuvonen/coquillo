@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class QNetworkAccessManager;
+
 class BookmarkModel;
 class CddbSearchDialog;
 class ProcessorWidget;
@@ -76,6 +78,8 @@ class MainWindow : public QMainWindow {
 		void setupToolBar();
 		
 		Ui::MainWindow * _ui;
+
+		QNetworkAccessManager * _networkManager;
 
 		BookmarkModel * _bookmarks;
 		MetaDataModel * _model;

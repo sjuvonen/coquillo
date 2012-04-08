@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
 #include <QSignalMapper>
 #include <QSortFilterProxyModel>
 
@@ -127,13 +128,17 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 		SLOT(updateImagesTabText()));
 }
 
+void EditorWidget::setNetworkManager(QNetworkAccessManager * manager) {
+	_networkManager = manager;
+}
 
 
 
 
-/**
+
+/*
  * PUBLIC SLOTS
- **/
+ */
 
 void EditorWidget::setSelection(const QItemSelection & selection) {
 	DataWidget::setSelection(selection);

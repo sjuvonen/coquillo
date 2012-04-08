@@ -5,6 +5,8 @@ TARGET = $$ROOT/lib/coquillo_core
 DEPENDPATH += .
 INCLUDEPATH += .
 
+QT += network
+
 LIBS += -ltag
 
 # Input
