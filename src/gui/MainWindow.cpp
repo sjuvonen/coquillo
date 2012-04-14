@@ -588,8 +588,14 @@ void MainWindow::loadSettings() {
 	} else
 		resize(QSize(600, 480));
 
-	setToolBarIconSize(s.value("Widgets/ToolBarIconSize").toInt());
-	setToolBarButtonStyle(s.value("Widgets/ToolBarButtonStyle").toInt());
+	if (int buttonSize = s.value("Widgets/ToolBarIconSize", 22).toInt()) {
+		setToolBarIconSize(buttonSize);
+	}
+
+	if (int buttonStyle = s.value("Widgets/ToolBarButtonStyle").toInt()) {
+		setToolBarButtonStyle(buttonStyle);
+	}
+	
 	setInterfaceLocked(s.value("Widgets/MainWindowLocked").toBool());
 	
 	menuBar()->setHidden(s.value("Widgets/MenuBarHidden").toBool());
