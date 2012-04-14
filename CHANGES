@@ -1,3 +1,8 @@
+1.11
+- Fixed toolbar button default size and style.
+- Fixed expanding directories in dir tree.
+- Changed compilation of app into a static build: everything is now in a single binary.
+
 1.10
 - Most of the code has been rewritten for easier maintaining and development.
 	- Secondary goal is to fix compiling on Windows and OS/2.
