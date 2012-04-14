@@ -10,6 +10,8 @@ class QImage;
 class QNetworkAccessManager;
 class QMimeData;
 
+class MediaScanner;
+
 extern volatile bool abortAction;
 
 class MetaDataModel2 : public QAbstractItemModel {
@@ -98,6 +100,8 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 		QNetworkAccessManager * _networkManager;
 		QString _directory;
+
+		MediaScanner * _scanner;
 
 		bool _recursive;
 		bool _locked;

@@ -15,7 +15,8 @@
 
 #include <QDebug>
 
-DirectorySelectorWidget::DirectorySelectorWidget(QWidget * parent) : QWidget(parent) {
+DirectorySelectorWidget::DirectorySelectorWidget(QWidget * parent)
+: QWidget(parent) {
 	_model = new QFileSystemModel(this);
 	_model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 
@@ -38,6 +39,29 @@ QString DirectorySelectorWidget::path() const {
 	
 	return path.isEmpty() ? _ui->location->text() : path;
 }
+
+bool DirectorySelectorWidget::eventFilter(QObject * object, QEvent * event) {
+// 	return false;
+	
+	if (object == _ui->directories->viewport() && event->type() == QEvent::MouseButtonPress) {
+		QMouseEvent * e = dynamic_cast<QMouseEvent*>(event);
+		const QModelIndex idx = _ui->directories->indexAt(e->pos());
+
+		if (e && e->button() == Qt::LeftButton &&
+			e->pos().x() >= _ui->directories->visualRect(idx).x() + _ui->directories->indentation()) {
+			_ui->directories->setExpanded( idx, !_ui->directories->isExpanded(idx) );
+			return false;
+		}
+	}
+
+	return QWidget::eventFilter(object, event);
+}
+
+
+
+
+
+/* PUBLIC SLOTS */
 
 void DirectorySelectorWidget::setPath(const QString & path) {
 	const QString curPath = _ui->location->text();
@@ -86,6 +110,11 @@ void DirectorySelectorWidget::setRootIndex(const QModelIndex & idx) {
 
 void DirectorySelectorWidget::changePath(const QModelIndex & idx) {
 	const QString path = _model->filePath( _proxy->mapToSource(idx) );
+
+	if (path == _ui->location->text()) {
+		return;
+	}
+	
 	_ui->location->setText(path);
 
 	emit pathChanged(path);
@@ -140,23 +169,4 @@ void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 		if (!path.isEmpty())
 			emit bookmarked(path);
 	}
-}
-
-
-
-
-
-bool DirectorySelectorWidget::eventFilter(QObject * object, QEvent * event) {
-	if (object == _ui->directories->viewport() && event->type() == QEvent::MouseButtonRelease) {
-		QMouseEvent * e = dynamic_cast<QMouseEvent*>(event);
-		const QModelIndex idx = _ui->directories->indexAt(e->pos());
-
-		if (e && e->button() == Qt::LeftButton &&
-			e->pos().x() >= _ui->directories->visualRect(idx).x() + _ui->directories->indentation()) {
-			_ui->directories->setExpanded( idx, !_ui->directories->isExpanded(idx) );
-			return false;
-		}
-	}
-
-	return QWidget::eventFilter(object, event);
 }

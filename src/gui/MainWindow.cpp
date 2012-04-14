@@ -588,7 +588,7 @@ void MainWindow::loadSettings() {
 	} else
 		resize(QSize(600, 480));
 
-	if (int buttonSize = s.value("Widgets/ToolBarIconSize", 22).toInt()) {
+	if (int buttonSize = s.value("Widgets/ToolBarIconSize").toInt()) {
 		setToolBarIconSize(buttonSize);
 	}
 

@@ -12,7 +12,8 @@
 
 extern volatile bool abortAction;
 
-MediaScanner::MediaScanner(QObject * parent) : QObject(parent), _recursive(false) {
+MediaScanner::MediaScanner(QObject * parent)
+: QObject(parent), _recursive(false) {
 
 }
 

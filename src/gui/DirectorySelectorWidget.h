@@ -21,6 +21,8 @@ class DirectorySelectorWidget : public QWidget {
 		DirectorySelectorWidget(QWidget * parent=0);
 		QString path() const;
 
+		bool eventFilter(QObject * object, QEvent * event);
+
 	signals:
 		void bookmarked(const QString &);
 		void pathChanged(const QString &);
@@ -60,9 +62,6 @@ class DirectorySelectorWidget : public QWidget {
 		void changeToTypedPath();
 
 		void showTreeContextMenu(const QPoint &);
-
-	protected:
-		bool eventFilter(QObject * object, QEvent * event);
 
 	private:
 		Ui::DirectorySelector * _ui;
