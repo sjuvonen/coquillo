@@ -3,6 +3,7 @@ include(../common.pri)
 
 TEMPLATE = app
 TARGET = ../coquillo
+CONFIG += link_prl
 
 QT += network
 
@@ -13,22 +14,19 @@ MOC_DIR = ../build
 OBJECTS_DIR = ../build
 UI_DIR = ../build
 
+LIBS += -L../lib -lcoquillo_core -lcoquillo_gui
+
 unix {
-
-	# Imports the lib path into the binary
-	# QMAKE_RPATHDIR += $$PREFIX/lib/coquillo
-
 	target.path = $$PREFIX/bin
 
 	INSTALLS += target
 }
 
 win32 {
+	CONFIG += windows
 	INCLUDEPATH += ../resources/windows/taglib/include
 	LIBS += ../resources/windows/taglib/taglib.dll
 }
-
-LIBS += -L../lib -lcoquillo_core -lcoquillo_gui
 
 FORMS += ui/DirectorySelector.ui ui/MainWindow.ui
 

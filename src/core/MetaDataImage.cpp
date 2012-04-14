@@ -27,7 +27,7 @@ void MetaDataImage::setImage(const QImage & image) {
 	if (image.isNull())
 		return;
 	
-	_id = qChecksum((const char *)(image.constBits()), image.byteCount());
+	_id = qChecksum((const char *)(image.bits()), image.byteCount());
 
 	if (_id == 0)
 		return;

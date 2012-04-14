@@ -33,11 +33,7 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QLineEdit" name="location">
-     <property name="placeholderText">
-      <string>Path</string>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="location"/>
    </item>
    <item>
     <widget class="QTreeView" name="directories">

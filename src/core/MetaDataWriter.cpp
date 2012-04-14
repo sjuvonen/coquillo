@@ -60,6 +60,7 @@ void MetaDataWriter::write() {
 		
 		switch (type) {
 
+			#if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
 			case FlacFile: {
 				TagLib::FLAC::File * file = dynamic_cast<TagLib::FLAC::File*>(fileref.file());
 
@@ -90,6 +91,7 @@ void MetaDataWriter::write() {
 
 				break;
 			}
+			#endif
 
 			case OggVorbisFile: {
 				TagLib::Vorbis::File * file = dynamic_cast<TagLib::Vorbis::File*>(fileref.file());

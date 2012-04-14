@@ -257,7 +257,7 @@ bool MetaDataModel2::removeRows(int start, int count, const QModelIndex & parent
 	return true;
 }
 
-int MetaDataModel2::columnCount(const QModelIndex & parent) const {
+int MetaDataModel2::columnCount(const QModelIndex &) const {
 	return MetaData::PicturesField + 1;
 }
 

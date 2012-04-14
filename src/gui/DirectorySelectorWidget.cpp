@@ -27,6 +27,10 @@ DirectorySelectorWidget::DirectorySelectorWidget(QWidget * parent) : QWidget(par
 
 	_ui->directories->setModel(_proxy);
 	_ui->directories->viewport()->installEventFilter(this);
+
+	#if QT_MINOR_VERSION >= 7 || QT_MAJOR_VERSION > 4
+	_ui->location->setPlaceholderText(tr("Path"));
+	#endif
 }
 
 QString DirectorySelectorWidget::path() const {

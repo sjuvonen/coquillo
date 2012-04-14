@@ -4,4 +4,3 @@ unix {
 		PREFIX = /usr
 	}
 }
-

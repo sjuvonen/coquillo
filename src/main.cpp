@@ -12,8 +12,8 @@
 
 void printHelp();
 
-const char * releaseDate = "n/a";
-const char * applicationVersion = "git";
+const char * releaseDate = RELEASE_DATE;
+const char * applicationVersion = APPLICATION_VERSION;
 
 int main(int argc, char ** argv) {
 	QApplication app(argc, argv);
