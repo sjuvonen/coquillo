@@ -33,8 +33,8 @@ unix {
 }
 
 win32 {
-	INCLUDEPATH += ../resources/windows/taglib/include
-	LIBS += ../resources/windows/taglib/taglib.dll
+	INCLUDEPATH += resources/windows/taglib/include
+	LIBS += resources/windows/taglib/taglib.dll
 	
 	CONFIG += windows
 	RC_FILE = coquillo.rc
