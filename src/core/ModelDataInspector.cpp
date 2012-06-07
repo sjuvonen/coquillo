@@ -74,8 +74,12 @@ void ModelDataInspector::checkData(int firstRow, int lastRow, const QModelIndex 
 			foreach (int field, fields) {
 				const QModelIndex idx = _model->index(i, field);
 				
-				QString value = idx.data().toString();
-				value = value.replace(QRegExp("\\s+"), " ").trimmed();
+				const QString original = idx.data().toString();
+				QString value = original.simplified();
+
+				if (original.at(original.length() - 1) == ' ') {
+					value += ' ';
+				}
 
 				_model->setData(idx, value);
 			}
