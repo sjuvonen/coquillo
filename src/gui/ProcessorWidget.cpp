@@ -244,7 +244,8 @@ MetaData ProcessorWidget::tagsForPattern(QString pattern, int row) const {
 	fileName = fileName.section('/', -(depth+1));
 	fileName = fileName.left( fileName.length() - info.suffix().length()-1 );
 
-	const QList<int> nums = QList<int>() << MetaData::DiscNumberField << MetaData::MaxNumberField
+	const QList<int> nums = QList<int>()
+		<< MetaData::DiscNumberField << MetaData::MaxNumberField
 		<< MetaData::NumberField << MetaData::YearField;
 		
 	const QStringList syms = extractSymbols(pattern);
@@ -277,6 +278,7 @@ void ProcessorWidget::processFields() const {
 	int casing = _ui->groupCapitalization->checkedId();
 
 	const QStringList ignoreWords = QSettings().value("CapitalizeNever").toString().split(QRegExp(",\\s*"));
+	
 	const QStringList forceWords = QSettings().value("CapitalizeAlways").toString().split(QRegExp(",\\s*"));
 
 	QMap<QString, MetaData::Field> fieldMap;
@@ -378,8 +380,9 @@ void ProcessorWidget::readPatternHistory(QStringList * list, int type) const {
 	const QStringList keys = s.childKeys();
 
 	if (!keys.isEmpty()) {
-		foreach (const QString k, keys)
+		foreach (const QString k, keys) {
 			list->append(s.value(k).toString());
+		}
 	} else {
 		if (type == ResolveHistory) {
 			list->append("%a - %t");

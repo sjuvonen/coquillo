@@ -15,6 +15,8 @@ INCLUDEPATH += src/
 RESOURCES += coquillo.qrc
 
 unix {
+	LIBS += -ltag
+	
 	DATADIR = $$PREFIX/share
 	ICON = extra/coquillo.png
 
@@ -28,8 +30,6 @@ unix {
 
 	INSTALLS += target
 	INSTALLS += icons launcher
-
-	LIBS += -ltag
 }
 
 win32 {

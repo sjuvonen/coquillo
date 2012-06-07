@@ -239,7 +239,7 @@ void EditorWidget::addImage() {
 		const QModelIndex idx = rows().at(0);
 
 		_importPath = QFileInfo(idx.sibling(idx.row(),
-		MetaData::PathField).data(Qt::EditRole).toString()).path();
+			MetaData::PathField).data(Qt::EditRole).toString()).path();
 	}
 	
 	const QStringList files = QFileDialog::getOpenFileNames(
