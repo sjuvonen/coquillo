@@ -39,20 +39,21 @@ MetaDataWriter::MetaDataWriter(QObject * parent)
  **/
 
 void MetaDataWriter::write() {
-	QMap<QString, MetaData>::const_iterator i = _items.constBegin();
-
 	// Signal started() should be emitted before maximumChanged()!
 	emit started();
 	emit maximumChanged(_items.count());
 
 	int prg = 0;
 	
-	while (i != _items.constEnd()) {
+	QStringList keys = _items.keys();
+	
+// 	while (i != _items.constEnd()) {
+	while (!keys.isEmpty()) {
 		if (abortAction)
 			return;
 		
-		const QString path = i.key();
-		const MetaData metaData = i.value();
+		const QString path = keys.takeFirst();
+		const MetaData metaData = _items[path];
 
 		TagLib::FileRef fileref(path.toUtf8().constData());
 
@@ -150,7 +151,6 @@ void MetaDataWriter::write() {
 			}
 		}
 
-		i++;
 		prg++;
 		
 		emit progress(prg);
