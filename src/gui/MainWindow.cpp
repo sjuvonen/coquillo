@@ -37,14 +37,14 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 	_ui->items->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	_cddbSearch = new CddbSearchDialog(this);
-	_cddbSearch->setWindowFlags(Qt::Tool);
+	_cddbSearch->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 	_cddbSearch->hide();
 
 	_cddbSearch->installEventFilter(this);
 	_cddbSearch->setModel(proxy);
 	
 	_processor = new ProcessorWidget(this);
-	_processor->setWindowFlags(Qt::Tool);
+	_processor->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 	_processor->hide();
 
 	_processor->installEventFilter(this);
@@ -476,6 +476,8 @@ void MainWindow::showSettingsDialog() {
 	SettingsDialog d(this);
 	d.setBackend(&s);
 	d.exec();
+
+	_model->setInlineEdit(QSettings().value("EditTagsInline").toBool());
 }
 
 void MainWindow::showHeaderContextMenu(const QPoint & pos) {
