@@ -17,7 +17,8 @@
 volatile bool abortAction = false;
 
 MetaDataModel2::MetaDataModel2(QObject * parent)
-: QAbstractItemModel(parent), _networkManager(0), _recursive(false), _locked(false) {
+: QAbstractItemModel(parent), _networkManager(0), _recursive(false), _locked(false),
+  _editInline(false) {
 
 	_fields.insert(MetaData::TitleField, tr("Title"));
 	_fields.insert(MetaData::ArtistField, tr("Artist"));
@@ -168,6 +169,17 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 					return (int)QVariant::String;
 			}
 
+		case FieldChangedRole: {
+			MetaData::Field mr = MetaData::Field(r);
+			MetaData::Field mc = MetaData::Field(c);
+
+			if (_original.at(mr).null()) {
+				return false;
+			}
+			
+			return _original.at(mr).get(mc).toString() != _data.at(mr).get(mc).toString();
+		}
+
 		default:
 			return QVariant();
 	}
@@ -289,13 +301,19 @@ QModelIndex MetaDataModel2::parent(const QModelIndex & idx) const {
 
 Qt::ItemFlags MetaDataModel2::flags(const QModelIndex & idx) const {
 
+	Qt::ItemFlags flags = QAbstractItemModel::flags(idx);
+
 	// Allow drops on invalid indices too so that we can drop items on empty
 	// views aswell.
 	if (!idx.parent().isValid() || idx.column() == MetaData::PicturesField) {
-		return QAbstractItemModel::flags(idx) | Qt::ItemIsDropEnabled;
+		flags |= Qt::ItemIsDropEnabled;
 	}
 
-	return QAbstractItemModel::flags(idx);
+	if (_editInline && !idx.parent().isValid() && idx.column() != MetaData::PicturesField) {
+		flags |= Qt::ItemIsEditable;
+	}
+
+	return flags;
 }
 
 QStringList MetaDataModel2::mimeTypes() const {	

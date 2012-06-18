@@ -54,7 +54,7 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="labelAlbum">
          <property name="text">
           <string>Album</string>
          </property>
@@ -64,7 +64,7 @@
         </widget>
        </item>
        <item row="5" column="0">
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="labelGenre">
          <property name="text">
           <string>Genre</string>
          </property>
@@ -87,7 +87,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="labelYear">
          <property name="text">
           <string>Year</string>
          </property>
@@ -97,7 +97,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="labelNumber">
          <property name="text">
           <string>Number</string>
          </property>
@@ -117,7 +117,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="labelArtist">
          <property name="text">
           <string>Artist</string>
          </property>
@@ -162,7 +162,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="labelDisc">
            <property name="text">
             <string>Disc</string>
            </property>
@@ -248,7 +248,7 @@
         </widget>
        </item>
        <item row="6" column="0">
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="labelComment">
          <property name="text">
           <string>Comment</string>
          </property>
@@ -274,7 +274,7 @@
         <widget class="QLineEdit" name="title"/>
        </item>
        <item row="7" column="0">
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="labelUrl">
          <property name="text">
           <string>URL</string>
          </property>
@@ -297,7 +297,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="labelTitle">
          <property name="text">
           <string>Title</string>
          </property>
@@ -313,21 +313,21 @@
         <widget class="QLineEdit" name="encoder"/>
        </item>
        <item row="8" column="0">
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="labelOriginalArtist">
          <property name="text">
           <string>Orig. artist</string>
          </property>
         </widget>
        </item>
        <item row="9" column="0">
-        <widget class="QLabel" name="label_12">
+        <widget class="QLabel" name="labelComposer">
          <property name="text">
           <string>Composer</string>
          </property>
         </widget>
        </item>
        <item row="10" column="0">
-        <widget class="QLabel" name="label_15">
+        <widget class="QLabel" name="labelEncoder">
          <property name="text">
           <string>Encoder</string>
          </property>

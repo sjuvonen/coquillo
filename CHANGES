@@ -1,3 +1,12 @@
+git
+- Allow renaming directories in the directory tree.
+- Allow to resize the main window to be very small.
+- Fix random infinite loop when saving changes to files.
+- Highlight changed fields in tag editor.
+- Tool windows have always-on-top flag set.
+- Conditionally enable inline editing of tags.
+- Fixed an issue with the caret jumping to the end when editing a value from the middle.
+
 1.11
 - Fixed toolbar button default size and style.
 - Fixed expanding directories in dir tree.

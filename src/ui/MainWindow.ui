@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>892</width>
-    <height>564</height>
+    <width>781</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -68,7 +68,7 @@
            <enum>QFrame::Sunken</enum>
           </property>
           <property name="editTriggers">
-           <set>QAbstractItemView::NoEditTriggers</set>
+           <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
           </property>
           <property name="showDropIndicator" stdset="0">
            <bool>false</bool>
@@ -520,8 +520,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>892</width>
-     <height>22</height>
+     <width>781</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCoquillo">
@@ -645,6 +645,8 @@
    <addaction name="separator"/>
    <addaction name="actionSelect_all"/>
    <addaction name="actionSelect_inverse"/>
+   <addaction name="separator"/>
+   <addaction name="actionDeleteFile"/>
    <addaction name="separator"/>
    <addaction name="actionToggleProcessor"/>
    <addaction name="actionToggleCddb"/>
@@ -882,6 +884,14 @@
    </property>
    <property name="text">
     <string>Toolbar</string>
+   </property>
+  </action>
+  <action name="actionDeleteFile">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete file from disk</string>
    </property>
   </action>
  </widget>

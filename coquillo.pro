@@ -77,6 +77,7 @@ HEADERS += src/gui/DirectorySelectorWidget.h \
            src/gui/EditorWidget.h \
            src/gui/FileSystemProxyModel.h \
            src/gui/MainWindow.h \
+           src/gui/MetaDataChangeIndicatorDelegate.h \
            src/gui/ProcessorWidget.h \
 
 SOURCES += src/gui/DirectorySelectorWidget.cpp \
@@ -84,6 +85,7 @@ SOURCES += src/gui/DirectorySelectorWidget.cpp \
            src/gui/EditorWidget.cpp \
            src/gui/FileSystemProxyModel.cpp \
            src/gui/MainWindow.cpp \
+           src/gui/MetaDataChangeIndicatorDelegate.cpp \
            src/gui/ProcessorWidget.cpp \
 
 HEADERS += src/gui/bookmarks/BookmarkDialog.h \

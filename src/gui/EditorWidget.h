@@ -37,11 +37,15 @@ class EditorWidget : public DataWidget {
 		void exportCurrentImage();
 		void removeCurrentImage();
 
+		void submitChanges();
+
 		void updateImagesTabText();
+		void updateMetaDataChangeIndicators();
 
 	private:
 		Ui::EditorWidget * _ui;
 		QDataWidgetMapper * _mapper;
+		QDataWidgetMapper * _mapper2;
 		QNetworkAccessManager * _networkManager;
 		
 		QHash<int, QString> _typeStrings;

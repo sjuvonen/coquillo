@@ -16,6 +16,7 @@
 #include <core/MetaDataModel2.h>
 
 #include "EditorWidget.h"
+#include "MetaDataChangeIndicatorDelegate.h"
 #include "ui_EditorWidget.h"
 
 typedef MetaDataModel2 MetaDataModel;
@@ -31,6 +32,10 @@ EditorWidget::EditorWidget(QWidget * parent)
 
 	_mapper = new QDataWidgetMapper(this);
 	_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+
+	_mapper2 = new QDataWidgetMapper(this);
+	_mapper2->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+	_mapper2->setItemDelegate(new MetaDataChangeIndicatorDelegate());
 
 	QSignalMapper * radioMapper = new QSignalMapper(this);
 
@@ -77,8 +82,11 @@ EditorWidget::EditorWidget(QWidget * parent)
 	foreach (QRadioButton * button, findChildren<QRadioButton*>())
 		connect(button, SIGNAL(clicked()), radioMapper, SLOT(map()));
 
+// 	foreach (QLineEdit * input, findChildren<QLineEdit*>())
+// 		connect(input, SIGNAL(textEdited(QString)), _mapper, SLOT(submit()));
+
 	foreach (QLineEdit * input, findChildren<QLineEdit*>())
-		connect(input, SIGNAL(textEdited(QString)), _mapper, SLOT(submit()));
+		connect(input, SIGNAL(textEdited(QString)), this, SLOT(submitChanges()));
 
 	foreach (QSpinBox * input, findChildren<QSpinBox*>())
 		connect(input, SIGNAL(valueChanged(int)), _mapper, SLOT(submit()));
@@ -98,6 +106,7 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 	DataWidget::setModel(model);
 	
 	_mapper->setModel(model);
+	_mapper2->setModel(model);
 
 	_mapper->addMapping(_ui->title, MetaData::TitleField);
 	_mapper->addMapping(_ui->artist, MetaData::ArtistField);
@@ -112,6 +121,19 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 	_mapper->addMapping(_ui->originalArtist, MetaData::OriginalArtistField);
 	_mapper->addMapping(_ui->composer, MetaData::ComposerField);
 	_mapper->addMapping(_ui->encoder, MetaData::EncoderField);
+
+	_mapper2->addMapping(_ui->labelTitle, MetaData::TitleField);
+	_mapper2->addMapping(_ui->labelArtist, MetaData::ArtistField);
+	_mapper2->addMapping(_ui->labelAlbum, MetaData::AlbumField);
+	_mapper2->addMapping(_ui->labelGenre, MetaData::GenreField);
+	_mapper2->addMapping(_ui->labelComment, MetaData::CommentField);
+	_mapper2->addMapping(_ui->labelUrl, MetaData::UrlField);
+	_mapper2->addMapping(_ui->labelDisc, MetaData::DiscNumberField);
+	_mapper2->addMapping(_ui->labelNumber, MetaData::NumberField);
+	_mapper2->addMapping(_ui->labelYear, MetaData::YearField);
+	_mapper2->addMapping(_ui->labelOriginalArtist, MetaData::OriginalArtistField);
+	_mapper2->addMapping(_ui->labelComposer, MetaData::ComposerField);
+	_mapper2->addMapping(_ui->labelEncoder, MetaData::EncoderField);
 
 	QItemSelectionModel * m = _ui->images->selectionModel();
 	_ui->images->setModel(model);
@@ -146,6 +168,7 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 	const QModelIndex idx = rows().value(0);
 	
 	_mapper->setCurrentModelIndex(idx);
+	_mapper2->setCurrentModelIndex(idx);
 	_ui->images->setRootIndex(idx.sibling(idx.row(), MetaData::PicturesField));
 	
 	foreach (QLineEdit * line, findChildren<QLineEdit*>())
@@ -311,6 +334,30 @@ void EditorWidget::removeCurrentImage() {
 	_ui->images->model()->removeRow(idx.row(), idx.parent());
 }
 
+void EditorWidget::submitChanges() {	
+	if (!sender()) {
+		return;
+	}
+
+	if (!sender()->inherits("QLineEdit")) {
+		_mapper->submit();
+	}
+
+	/*
+	 * This is to fix an issue with QLineEdits and submitting the changes on
+	 * every key press. The default behaviour is that the caret is moved to the end
+	 * of the value every time QDataWidgetMapper::submit() is called and it re-reads
+	 * the value from the model.
+	 */
+
+	QLineEdit * lineEdit = qobject_cast<QLineEdit*>(sender());
+	int pos = lineEdit->cursorPosition();
+
+	_mapper->submit();
+
+	lineEdit->setCursorPosition(pos);
+}
+
 void EditorWidget::updateImagesTabText() {
 	QString tabText = _ui->tabs->tabText(1).remove(QRegExp(" \\(\\d+\\)"));
 
@@ -326,4 +373,8 @@ void EditorWidget::updateImagesTabText() {
 	}
 
 	_ui->tabs->setTabText(1, tabText);
+}
+
+void EditorWidget::updateMetaDataChangeIndicators() {
+	qDebug() << "update";
 }

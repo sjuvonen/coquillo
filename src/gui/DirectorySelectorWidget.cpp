@@ -1,5 +1,8 @@
+
+#include <QFileInfo>
 #include <QFileSystemModel>
 #include <QHeaderView>
+#include <QInputDialog>
 #include <QLineEdit>
 #include <QMenu>
 #include <QModelIndex>
@@ -19,9 +22,11 @@ DirectorySelectorWidget::DirectorySelectorWidget(QWidget * parent)
 : QWidget(parent) {
 	_model = new QFileSystemModel(this);
 	_model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+	_model->setReadOnly(false);
 
 	_proxy = new FileSystemProxyModel(this);
 	_proxy->setSourceModel(_model);
+// 	_proxy->setDynamicSortFilter(true);
 
 	_ui = new Ui::DirectorySelector;
 	_ui->setupUi(this);
@@ -147,6 +152,7 @@ void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 	
 	QAction * setRoot = menu.addAction(tr("Set as root"));
 	QAction * addBookmark = menu.addAction(tr("Add to bookmarks"));
+	QAction * renameDir = menu.addAction(tr("Rename..."));
 
 	QModelIndex idx = _ui->directories->indexAt(point);
 
@@ -168,5 +174,7 @@ void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 
 		if (!path.isEmpty())
 			emit bookmarked(path);
+	} else if (selected == renameDir) {
+		_ui->directories->edit(_ui->directories->currentIndex());
 	}
 }
