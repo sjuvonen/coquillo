@@ -5,6 +5,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QSettings>
+#include <QSignalMapper>
 #include <QThread>
 #include <QUrl>
 
@@ -17,8 +19,7 @@
 volatile bool abortAction = false;
 
 MetaDataModel2::MetaDataModel2(QObject * parent)
-: QAbstractItemModel(parent), _networkManager(0), _recursive(false), _locked(false),
-  _editInline(false) {
+: QAbstractItemModel(parent), _networkManager(0), _recursive(false), _locked(false) {
 
 	_fields.insert(MetaData::TitleField, tr("Title"));
 	_fields.insert(MetaData::ArtistField, tr("Artist"));
@@ -302,6 +303,7 @@ QModelIndex MetaDataModel2::parent(const QModelIndex & idx) const {
 Qt::ItemFlags MetaDataModel2::flags(const QModelIndex & idx) const {
 
 	Qt::ItemFlags flags = QAbstractItemModel::flags(idx);
+	bool editInline = QSettings().value("EditTagsInline").toBool();
 
 	// Allow drops on invalid indices too so that we can drop items on empty
 	// views aswell.
@@ -309,7 +311,7 @@ Qt::ItemFlags MetaDataModel2::flags(const QModelIndex & idx) const {
 		flags |= Qt::ItemIsDropEnabled;
 	}
 
-	if (_editInline && !idx.parent().isValid() && idx.column() != MetaData::PicturesField) {
+	if (editInline && !idx.parent().isValid() && idx.column() != MetaData::PicturesField) {
 		flags |= Qt::ItemIsEditable;
 	}
 
@@ -406,16 +408,18 @@ void MetaDataModel2::readDirectory(const QString & dir) {
 	QThread * thread = new QThread(this);
 	scanner->moveToThread(thread);
 
+// 	connectMappers(scanner, FindMediaAction);
+
 	connect(scanner, SIGNAL(itemFound(MetaData)), SLOT(add(MetaData)));
 
-	connect(scanner, SIGNAL(finished()), SIGNAL(actionFinished()));
 	connect(scanner, SIGNAL(started()), SIGNAL(actionStarted()));
+	connect(scanner, SIGNAL(finished()), SIGNAL(actionFinished()));
 	connect(scanner, SIGNAL(progress(int)), SIGNAL(actionProgress(int)));
 	connect(scanner, SIGNAL(maximumChanged(int)), SIGNAL(actionMaximumChanged(int)));
 
 	connect(scanner, SIGNAL(finished()), scanner, SLOT(deleteLater()));
 	connect(scanner, SIGNAL(finished()), thread, SLOT(quit()));
-	connect(scanner, SIGNAL(finished()), thread, SLOT(deleteLater()));
+	connect(scanner, SIGNAL(destroyed()), thread, SLOT(deleteLater()));
 
 	connect(thread, SIGNAL(started()), scanner, SLOT(scan()));
 
@@ -427,7 +431,15 @@ void MetaDataModel2::reload() {
 }
 
 void MetaDataModel2::restore() {
-	
+
+	for (int i = 0; i < rowCount(); i++) {
+		if (_original.at(i).null() == false) {
+			_data.replace(i, _original.at(i));
+			_original.replace(i, MetaData());
+		}
+	}
+
+	emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
 void MetaDataModel2::save() {
@@ -457,6 +469,8 @@ void MetaDataModel2::save() {
 	writer->moveToThread(thread);
 	writer->setQueue(changed);
 
+// 	connectMappers(writer, WriteTagsAction);
+
 	connect(writer, SIGNAL(started()), SIGNAL(actionStarted()));
 	connect(writer, SIGNAL(finished()), SIGNAL(actionFinished()));
 	connect(writer, SIGNAL(progress(int)), SIGNAL(actionProgress(int)));
@@ -483,12 +497,29 @@ void MetaDataModel2::backup(int row) {
 	emit metaDataStateChanged(true);
 }
 
+void MetaDataModel2::connectMappers(QObject * object, int actionType) {
+	QSignalMapper * startMapper = new QSignalMapper();
+	startMapper->setMapping(object, actionType);
+
+	QSignalMapper * finishMapper = new QSignalMapper();
+	finishMapper->setMapping(object, actionType);
+
+// 	connect(startMapper, SIGNAL(mapped(int)), SIGNAL(actionStarted(int)));
+// 	connect(finishMapper, SIGNAL(mapped(int)), SIGNAL(actionFinished(int)));
+
+	connect(object, SIGNAL(started()), startMapper, SLOT(map()));
+	connect(object, SIGNAL(finished()), finishMapper, SLOT(map()));
+
+	connect(object, SIGNAL(finished()), startMapper, SLOT(deleteLater()));
+	connect(object, SIGNAL(finished()), finishMapper, SLOT(deleteLater()));
+}
+
 QImage MetaDataModel2::downloadImage(const QUrl & url) {
 	QNetworkReply * reply = _networkManager->get(QNetworkRequest(url));
 
-	emit actionStarted();
+// 	emit actionStarted();
 
-	connect(reply, SIGNAL(finished()), SIGNAL(actionFinished()));
+// 	connect(reply, SIGNAL(finished()), SIGNAL(actionFinished()));
 	
 	connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
 		SLOT(networkActionProgressChanged(qint64, qint64)));

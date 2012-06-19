@@ -646,7 +646,6 @@
    <addaction name="actionSelect_all"/>
    <addaction name="actionSelect_inverse"/>
    <addaction name="separator"/>
-   <addaction name="actionDeleteFile"/>
    <addaction name="separator"/>
    <addaction name="actionToggleProcessor"/>
    <addaction name="actionToggleCddb"/>
@@ -705,6 +704,9 @@
    </property>
    <property name="toolTip">
     <string>Select all tracks</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionSelect_inverse">

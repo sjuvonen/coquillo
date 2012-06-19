@@ -28,6 +28,7 @@ class EditorWidget : public DataWidget {
 		void setSelection(const QItemSelection & selection);
 
 	private slots:
+		void automaticNumbering();
 		void copyField(int field);
 		void displayImageProperties(const QModelIndex & idx);
 		void setImageDescription(const QString & text);

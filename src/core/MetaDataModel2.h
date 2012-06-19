@@ -19,6 +19,7 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 	public:
 		enum DataRole { FieldTypeRole = Qt::UserRole + 1, FieldChangedRole = Qt::UserRole + 2 };
+		enum ActionType { FindMediaAction, WriteTagsAction };
 		
 		MetaDataModel2(QObject * parent=0);
 
@@ -26,9 +27,6 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 		bool recursive() const { return _recursive; }
 		QString directory() const { return _directory; }
-
-		void setInlineEdit(bool state) { _editInline = state; }
-		bool inlineEdit() const { return _editInline; }
 
 		MetaData metaData(int row) const;
 		
@@ -94,6 +92,7 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 	private:
 		void backup(int row);
+		void connectMappers(QObject * object, int actionType);
 
 		QImage downloadImage(const QUrl & url);
 		
@@ -108,7 +107,6 @@ class MetaDataModel2 : public QAbstractItemModel {
 
 		bool _recursive;
 		bool _locked;
-		bool _editInline;
 
 		volatile bool _abortAction;
 };

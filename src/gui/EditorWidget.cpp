@@ -30,6 +30,11 @@ EditorWidget::EditorWidget(QWidget * parent)
 
 	_ui->exportImage->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
 
+	_ui->autoNumbers->setIcon(QIcon::fromTheme(
+		"view-sort-ascending",
+		style()->standardPixmap(QStyle::SP_ArrowDown)
+	));
+
 	_mapper = new QDataWidgetMapper(this);
 	_mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
@@ -82,9 +87,6 @@ EditorWidget::EditorWidget(QWidget * parent)
 	foreach (QRadioButton * button, findChildren<QRadioButton*>())
 		connect(button, SIGNAL(clicked()), radioMapper, SLOT(map()));
 
-// 	foreach (QLineEdit * input, findChildren<QLineEdit*>())
-// 		connect(input, SIGNAL(textEdited(QString)), _mapper, SLOT(submit()));
-
 	foreach (QLineEdit * input, findChildren<QLineEdit*>())
 		connect(input, SIGNAL(textEdited(QString)), this, SLOT(submitChanges()));
 
@@ -130,6 +132,7 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 	_mapper2->addMapping(_ui->labelUrl, MetaData::UrlField);
 	_mapper2->addMapping(_ui->labelDisc, MetaData::DiscNumberField);
 	_mapper2->addMapping(_ui->labelNumber, MetaData::NumberField);
+	_mapper2->addMapping(_ui->labelMaxNumber, MetaData::MaxNumberField);
 	_mapper2->addMapping(_ui->labelYear, MetaData::YearField);
 	_mapper2->addMapping(_ui->labelOriginalArtist, MetaData::OriginalArtistField);
 	_mapper2->addMapping(_ui->labelComposer, MetaData::ComposerField);
@@ -191,6 +194,18 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 /**
  * PRIVATE SLOTS
  **/
+
+void EditorWidget::automaticNumbering() {
+	int total = model()->rowCount();
+
+	for (int i = 0; i < total; i++) {
+		const QModelIndex numberIdx = model()->index(i, MetaData::NumberField);
+		const QModelIndex maxNumberIdx = model()->index(i, MetaData::MaxNumberField);
+
+		model()->setData(numberIdx, i+1);
+		model()->setData(maxNumberIdx, total);
+	}
+}
 
 void EditorWidget::copyField(int field) {
 	if (!model() || rows().isEmpty() || rows().value(0).isValid() == false)

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class QLabel;
 class QNetworkAccessManager;
 
 class BookmarkModel;
@@ -81,6 +82,7 @@ class MainWindow : public QMainWindow {
 		
 		Ui::MainWindow * _ui;
 
+		QLabel * _statusMessage;
 		QNetworkAccessManager * _networkManager;
 
 		BookmarkModel * _bookmarks;

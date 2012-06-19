@@ -1,4 +1,4 @@
-git
+1.12
 - Allow renaming directories in the directory tree.
 - Allow to resize the main window to be very small.
 - Fix random infinite loop when saving changes to files.
@@ -6,6 +6,12 @@ git
 - Tool windows have always-on-top flag set.
 - Conditionally enable inline editing of tags.
 - Fixed an issue with the caret jumping to the end when editing a value from the middle.
+- Added tooltips on apply-to-all buttons.
+- Restored Ctrl+A shortcut for "select all tracks" button.
+- "Select all" and "invert selection" buttons now use icons from the desktop's icon theme.
+- Ability to automaticly generate track numbers for files.
+- Statusbar now displays the number of found files.
+- Fixed "Revert changes" button.
 
 1.11
 - Fixed toolbar button default size and style.

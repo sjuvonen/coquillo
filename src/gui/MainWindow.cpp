@@ -28,6 +28,17 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 	_ui = new Ui::MainWindow();
 	_ui->setupUi(this);
 
+	const QIcon selectAll = QIcon::fromTheme("edit-select-all");
+	const QIcon invertSelection = QIcon::fromTheme("object-rotate-left");
+
+	if (!selectAll.isNull()) {
+		_ui->actionSelect_all->setIcon(selectAll);
+	}
+
+	if (!invertSelection.isNull()) {
+		_ui->actionSelect_inverse->setIcon(invertSelection);
+	}
+
 	QSortFilterProxyModel * proxy = new QSortFilterProxyModel(this);
 	proxy->setDynamicSortFilter(true);
 	
@@ -61,6 +72,11 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 		_ui->items->horizontalHeader()->sortIndicatorSection(),
 		_ui->items->horizontalHeader()->sortIndicatorOrder()
 	);
+
+	_statusMessage = new QLabel(this);
+	_statusMessage->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+	_statusMessage->setMaximumWidth(200);
+	statusBar()->addPermanentWidget(_statusMessage, 1);
 
 	setupBookmarkMenu();
 	setupToolBar();
@@ -476,8 +492,6 @@ void MainWindow::showSettingsDialog() {
 	SettingsDialog d(this);
 	d.setBackend(&s);
 	d.exec();
-
-	_model->setInlineEdit(QSettings().value("EditTagsInline").toBool());
 }
 
 void MainWindow::showHeaderContextMenu(const QPoint & pos) {
@@ -512,6 +526,8 @@ void MainWindow::showHeaderContextMenu(const QPoint & pos) {
 void MainWindow::afterModelAction() {
 	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 	_ui->actionReloadOrAbort->setText(tr("Reload"));
+
+	_statusMessage->setText(tr("%1 files").arg(_model->rowCount()));
 
 	/*
 	if (QSortFilterProxyModel * p = qobject_cast<QSortFilterProxyModel*>(_ui->items->model()))
@@ -615,6 +631,7 @@ void MainWindow::setMetaDataModel(MetaDataModel * model) {
 
 		connect(_ui->actionReset, SIGNAL(triggered()),
 			model, SLOT(restore()));
+		
 		connect(_ui->actionReloadOrAbort, SIGNAL(triggered()),
 			model, SLOT(reload()));
 
