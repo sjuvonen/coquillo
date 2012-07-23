@@ -288,17 +288,6 @@ QMenu * MainWindow::createPopupMenu() {
 	connect(styleMapper, SIGNAL(mapped(int)),
 		SLOT(setToolBarButtonStyle(int)));
 
-
-
-
-
-
-
-
-
-
-
-
 	connect(mainMenu, SIGNAL(triggered(bool)),
 		menuBar(), SLOT(setVisible(bool)));
 
@@ -341,9 +330,9 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
 
 
 
-/**
+/*
  * PUBLIC SLOTS
- **/
+ */
 
 void MainWindow::closeEvent(QCloseEvent *) {
 	QSettings s;
@@ -411,9 +400,9 @@ void MainWindow::showError(const QString & error) {
 
 
 
-/**
+/*
  * PROTECTED
- **/
+ */
 
 void MainWindow::showEvent(QShowEvent * event) {
 	loadSettings();
@@ -434,9 +423,9 @@ void MainWindow::showEvent(QShowEvent * event) {
 
 
 
-/**
+/*
  * PRIVATE SLOTS
- **/
+ */
 
 void MainWindow::proxyTableSelection() {
 	_ui->editor->setSelection(_ui->items->selectionModel()->selection());
@@ -664,30 +653,32 @@ void MainWindow::beforeModelAction() {
 
 
 
-/**
+/*
  * PRIVATE METHODS
- **/
+ */
 
 void MainWindow::loadSettings() {
-	/**
+	/*
 	 * Note that some of the settings are restored in showEvent() due to
 	 * the fact that widgets return false from isVisible() before the main window
 	 * has been made visible!
-	 **/
+	 */
+
 	QSettings s;
 
 	_ui->location->blockSignals(true);
 	_ui->location->setRootPath(_model->directory());
 	_ui->location->blockSignals(false);
 
-	if (s.contains("Widgets/ItemsTableHeaderState"))
+	if (s.contains("Widgets/ItemsTableHeaderState")) {
 		_ui->items->horizontalHeader()->restoreState(s.value("Widgets/ItemsTableHeaderState").toByteArray());
-	else {
+    } else {
 		for (int i = MetaData::TitleField; i <= MetaData::PicturesField; i++) {
 			if (i != MetaData::PathField)
 				_ui->items->horizontalHeader()->setSectionHidden(i, true);
 		}
 	}
+
 	_ui->items->horizontalHeader()->setMovable(true);
 
 	if (s.contains("Widgets/MainWindowSize")) {
