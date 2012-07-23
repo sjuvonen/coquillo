@@ -45,6 +45,7 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 	_ui->editor->setModel(proxy);
 	
 	_ui->items->setModel(proxy);
+	_ui->items->horizontalHeader()->setMovable(true);
 	_ui->items->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	_cddbSearch = new CddbSearchDialog(this);
@@ -591,8 +592,10 @@ void MainWindow::loadSettings() {
 	_ui->location->setRootPath(_model->directory());
 	_ui->location->blockSignals(false);
 
-	if (s.contains("Widgets/ItemsTableHeaderState"))
+	if (s.contains("Widgets/ItemsTableHeaderState")) {
 		_ui->items->horizontalHeader()->restoreState(s.value("Widgets/ItemsTableHeaderState").toByteArray());
+		_ui->items->horizontalHeader()->setMovable(true);
+	}
 	else {
 		for (int i = MetaData::TitleField; i <= MetaData::PicturesField; i++) {
 			if (i != MetaData::PathField)
