@@ -43,6 +43,7 @@ Coquillo::Coquillo(QObject * parent)
 	m->setDirectory(location);
 
 	_window->show();
+	_window->togglePlayerWidget(false);
 }
 
 Coquillo::~Coquillo() {
@@ -89,11 +90,11 @@ void Coquillo::writeDefaults() {
 	defaults.insert("SubstringPatternLength", 1);
 
 	QSettings settings;
-	
+
 	foreach (QString key, defaults.keys()) {
 		if (!settings.contains(key))
 			settings.setValue(key, defaults.value(key));
 	}
-	
+
 	settings.sync();
 }

@@ -4,10 +4,12 @@
 #include <QMainWindow>
 
 class QLabel;
+class QModelIndex;
 class QNetworkAccessManager;
 
 class BookmarkModel;
 class CddbSearchDialog;
+class MiniPlayer;
 class ProcessorWidget;
 
 class MetaDataModel2;
@@ -28,9 +30,9 @@ class MainWindow : public QMainWindow {
 
 		QList<QToolBar*> toolBars() const;
 		QList<QDockWidget*> dockWidgets() const;
-		
+
 		bool eventFilter(QObject * object, QEvent * event);
-		
+
 	public slots:
 		void setInterfaceLocked(bool state);
 		void setToolBarIconSize(int size);
@@ -38,12 +40,14 @@ class MainWindow : public QMainWindow {
 
 		void showError(const QString & error);
 
+		void togglePlayerWidget(bool);
+
 	protected:
 		void closeEvent(QCloseEvent *);
 		void showEvent(QShowEvent *);
 
 	private slots:
-		
+
 		/**
 		 * Fixes the reported selection of QItemSelectionModel's selectionChanged()
 		 *
@@ -53,11 +57,16 @@ class MainWindow : public QMainWindow {
 		 **/
 		void proxyTableSelection();
 
+		void playCurrentTrack();
+		void playNextTrack();
+		void playPreviousTrack();
+		void playTrack(const QModelIndex & idx);
+
 		/**
 		 * Invert selection in the track list.
 		 **/
 		void selectInverse();
-		
+
 		void selectNextIndex();
 		void selectPreviousIndex();
 
@@ -66,7 +75,7 @@ class MainWindow : public QMainWindow {
 		void showAboutDialog();
 		void showBookmarkDialog();
 		void showSettingsDialog();
-		
+
 		void showHeaderContextMenu(const QPoint & pos);
 
 		/**
@@ -79,7 +88,7 @@ class MainWindow : public QMainWindow {
 		void loadSettings();
 		void setMetaDataModel(MetaDataModel * model);
 		void setupToolBar();
-		
+
 		Ui::MainWindow * _ui;
 
 		QLabel * _statusMessage;
@@ -87,8 +96,10 @@ class MainWindow : public QMainWindow {
 
 		BookmarkModel * _bookmarks;
 		MetaDataModel * _model;
+
 		CddbSearchDialog * _cddbSearch;
 		ProcessorWidget * _processor;
+		MiniPlayer * _player;
 
 };
 

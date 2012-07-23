@@ -8,7 +8,7 @@ class MetaDataChangeIndicatorDelegate : public QStyledItemDelegate {
 
 	public:
 		MetaDataChangeIndicatorDelegate(QObject * parent = 0);
-		
+
 		void setEditorData(QWidget * editor, const QModelIndex & idx) const;
 };
 

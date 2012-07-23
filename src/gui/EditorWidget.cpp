@@ -97,7 +97,7 @@ EditorWidget::EditorWidget(QWidget * parent)
 
 	// Hide the Extra tab because needed functionality is not yet implemented.
  	_ui->tabs->removeTab(2);
-	
+
 }
 
 EditorWidget::~EditorWidget() {
@@ -106,7 +106,7 @@ EditorWidget::~EditorWidget() {
 
 void EditorWidget::setModel(QAbstractItemModel * model) {
 	DataWidget::setModel(model);
-	
+
 	_mapper->setModel(model);
 	_mapper2->setModel(model);
 
@@ -169,11 +169,11 @@ void EditorWidget::setSelection(const QItemSelection & selection) {
 	DataWidget::setSelection(selection);
 
 	const QModelIndex idx = rows().value(0);
-	
+
 	_mapper->setCurrentModelIndex(idx);
 	_mapper2->setCurrentModelIndex(idx);
 	_ui->images->setRootIndex(idx.sibling(idx.row(), MetaData::PicturesField));
-	
+
 	foreach (QLineEdit * line, findChildren<QLineEdit*>())
 		line->setCursorPosition(0);
 
@@ -225,7 +225,7 @@ void EditorWidget::copyField(int field) {
 
 		if (!source)
 			return;
-		
+
 		const QList<MetaDataImage> images = source->metaData(src2.row()).images();
 
 		for (int i = 1; i < r.count(); i++) {
@@ -246,26 +246,26 @@ void EditorWidget::displayImageProperties(const QModelIndex & idx) {
 
 	_ui->imageDescription->blockSignals(true);
 	_ui->imageType->blockSignals(true);
-	
+
 	_ui->imageDescription->setText(idx.data(MetaDataImage::DescriptionRole).toString());
 	_ui->imageType->setCurrentIndex(_ui->imageType->findText(_typeStrings.value(type)));
 
 	_ui->imageDescription->blockSignals(false);
 	_ui->imageType->blockSignals(false);
-	
+
 }
 
-void EditorWidget::setImageDescription(const QString & text) {	
+void EditorWidget::setImageDescription(const QString & text) {
 	_ui->images->model()->setData(_ui->images->currentIndex(), text, MetaDataImage::DescriptionRole);
 }
 
 void EditorWidget::setImageType(const QString & typeString) {
 	if (!_ui->images->model())
 		return;
-	
+
 	if (_typeStrings.key(typeString, -1) == -1)
 		return;
-	
+
 	_ui->images->model()->setData(_ui->images->currentIndex(), _typeStrings.key(typeString), MetaDataImage::MetaTypeRole);
 }
 
@@ -279,7 +279,7 @@ void EditorWidget::addImage() {
 		_importPath = QFileInfo(idx.sibling(idx.row(),
 			MetaData::PathField).data(Qt::EditRole).toString()).path();
 	}
-	
+
 	const QStringList files = QFileDialog::getOpenFileNames(
 		this,
 		tr("Import images..."),
@@ -310,7 +310,7 @@ void EditorWidget::addImage() {
 
 	foreach (const QString fileName, files) {
 		const QImage image(fileName);
-		
+
 		if (!image.isNull()) {
 			MetaDataImage mdi(image);
 			mdi.setDescription(QFileInfo(fileName).baseName());
@@ -349,7 +349,7 @@ void EditorWidget::removeCurrentImage() {
 	_ui->images->model()->removeRow(idx.row(), idx.parent());
 }
 
-void EditorWidget::submitChanges() {	
+void EditorWidget::submitChanges() {
 	if (!sender()) {
 		return;
 	}

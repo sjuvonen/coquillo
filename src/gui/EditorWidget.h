@@ -48,7 +48,7 @@ class EditorWidget : public DataWidget {
 		QDataWidgetMapper * _mapper;
 		QDataWidgetMapper * _mapper2;
 		QNetworkAccessManager * _networkManager;
-		
+
 		QHash<int, QString> _typeStrings;
 		QString _importPath;
 		QString _exportPath;

@@ -36,7 +36,7 @@ class MetaData {
 
 		MetaDataImage image(int index) const { return _images.value(index); }
 		QList<MetaDataImage> images() const { return _images; }
-		
+
 		void addImage(const MetaDataImage & image);
 		void setImages(const QList<MetaDataImage> & images) { _images.clear(); _images = images; }
 
@@ -45,7 +45,7 @@ class MetaData {
 	private:
 		QHash<Field, QVariant> _data;
 		QList<MetaDataImage> _images;
-		
+
 		int _pictureCount;
 };
 

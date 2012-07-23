@@ -20,6 +20,8 @@
 
 #include "ui_MainWindow.h"
 
+#include "MiniPlayer.h"
+
 MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 : QMainWindow(parent), _model(0) {
 
@@ -41,9 +43,9 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 
 	QSortFilterProxyModel * proxy = new QSortFilterProxyModel(this);
 	proxy->setDynamicSortFilter(true);
-	
+
 	_ui->editor->setModel(proxy);
-	
+
 	_ui->items->setModel(proxy);
 	_ui->items->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -53,7 +55,7 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 
 	_cddbSearch->installEventFilter(this);
 	_cddbSearch->setModel(proxy);
-	
+
 	_processor = new ProcessorWidget(this);
 	_processor->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
 	_processor->hide();
@@ -112,6 +114,28 @@ MainWindow::MainWindow(MetaDataModel * model, QWidget * parent)
 
 	foreach (QDockWidget * dock, dockWidgets())
 		dock->installEventFilter(this);
+
+	_player = new MiniPlayer(this);
+
+	_ui->actionPlayCurrent->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+
+	connect(_player, SIGNAL(visibilityChanged(bool)),
+		_ui->actionPlayCurrent, SLOT(setChecked(bool)));
+
+	connect(_player, SIGNAL(nextButtonClicked()),
+		SLOT(playNextTrack()));
+
+	connect(_player, SIGNAL(prevButtonClicked()),
+		SLOT(playPreviousTrack()));
+
+	connect(_player, SIGNAL(playButtonClicked()),
+		SLOT(playCurrentTrack()));
+
+	QBoxLayout * centralLayout = qobject_cast<QBoxLayout*>(_ui->centralWidget->layout());
+
+	if (centralLayout) {
+		centralLayout->insertWidget(0, _player);
+	}
 }
 
 MainWindow::~MainWindow() {
@@ -144,7 +168,7 @@ QMenu * MainWindow::createPopupMenu() {
 		QAction * a = menu->addAction(dock->windowTitle());
 		a->setCheckable(true);
 		a->setChecked(dock->isVisible());
-		
+
 		connect(a, SIGNAL(triggered(bool)), dock, SLOT(setVisible(bool)));
 	}
 	QMenu * sizeMenu = new QMenu(tr("Icon size"), menu);
@@ -273,11 +297,11 @@ QMenu * MainWindow::createPopupMenu() {
 
 
 
-	
-	
+
+
 	connect(mainMenu, SIGNAL(triggered(bool)),
 		menuBar(), SLOT(setVisible(bool)));
-	
+
 	connect(lock, SIGNAL(triggered(bool)),
 		SLOT(setInterfaceLocked(bool)));
 
@@ -321,17 +345,17 @@ bool MainWindow::eventFilter(QObject * object, QEvent * event) {
  * PUBLIC SLOTS
  **/
 
-void MainWindow::closeEvent(QCloseEvent *) {	
+void MainWindow::closeEvent(QCloseEvent *) {
 	QSettings s;
 
 	s.beginGroup("Widgets");
-	
+
 	s.setValue("ItemsTableHeaderState", _ui->items->horizontalHeader()->saveState());
 	s.setValue("MainWindowState", saveState());
 	s.setValue("MainWindowSize", size());
 	s.setValue("MenuBarHidden", menuBar()->isHidden());
 	s.setValue("StatusBarHidden", statusBar()->isHidden());
-	
+
 	if (QToolBar * b = toolBars().value(0)) {
 		s.setValue("MainWindowLocked", !b->isMovable());
 		s.setValue("ToolBarButtonStyle", b->toolButtonStyle());
@@ -393,7 +417,7 @@ void MainWindow::showError(const QString & error) {
 
 void MainWindow::showEvent(QShowEvent * event) {
 	loadSettings();
-	
+
 	QMainWindow::showEvent(event);
 	QSettings s;
 
@@ -418,6 +442,71 @@ void MainWindow::proxyTableSelection() {
 	_ui->editor->setSelection(_ui->items->selectionModel()->selection());
 	_cddbSearch->setSelection(_ui->items->selectionModel()->selection());
 	_processor->setSelection(_ui->items->selectionModel()->selection());
+
+	int totalCount = _ui->items->model()->rowCount();
+	int selectedCount = _ui->items->selectionModel()->selectedRows().count();
+
+	QString message;
+
+	if (selectedCount > 0) {
+		message = QString("%1 tracks in total, %2 selected").arg(totalCount).arg(selectedCount);
+	} else {
+		 message = QString("%1 tracks").arg(totalCount);
+	}
+
+	_statusMessage->setText(message);
+}
+
+void MainWindow::playCurrentTrack() {
+	playTrack(_ui->items->currentIndex());
+}
+
+void MainWindow::playNextTrack() {
+	const QModelIndex idx = _ui->items->currentIndex();
+	int rowCount = _ui->items->model()->rowCount();
+
+	if (idx.row() < rowCount - 1) {
+		playTrack(idx.sibling(idx.row() + 1, 0));
+	} else {
+		playTrack(_ui->items->model()->index(0, 0));
+	}
+}
+
+void MainWindow::playPreviousTrack() {
+	const QModelIndex idx = _ui->items->currentIndex();
+	int rowCount = _ui->items->model()->rowCount();
+
+	if (idx.row() > 0) {
+		playTrack(idx.sibling(idx.row() - 1, 0));
+	} else {
+		playTrack(_ui->items->model()->index(rowCount - 1, 0));
+	}
+}
+
+void MainWindow::playTrack(const QModelIndex & idx) {
+	togglePlayerWidget(true);
+
+	if (!idx.isValid()) {
+		return;
+	}
+
+	const QString path = idx.sibling(idx.row(),
+		MetaData::PathField).data(MetaDataModel::OriginalDataRole).toString();
+
+	_player->playPath(path);
+}
+
+void MainWindow::togglePlayerWidget(bool state) {
+	bool oldState = _player->isVisible();
+	_player->setVisible(state);
+
+	if (state && !oldState) {
+		playCurrentTrack();
+	}
+
+	if (_ui->actionPlayCurrent->isChecked() != state) {
+		_ui->actionPlayCurrent->setChecked(state);
+	}
 }
 
 void MainWindow::selectInverse() {
@@ -442,7 +531,7 @@ void MainWindow::selectPreviousIndex() {
 
 	if (idx.row() > 0)
 		_ui->items->setCurrentIndex(idx.sibling(idx.row()-1, 0));
-	
+
 }
 
 void MainWindow::setupBookmarkMenu() {
@@ -488,7 +577,7 @@ void MainWindow::showBookmarkDialog() {
 
 void MainWindow::showSettingsDialog() {
 	QSettings s;
-	
+
 	SettingsDialog d(this);
 	d.setBackend(&s);
 	d.exec();
@@ -500,7 +589,7 @@ void MainWindow::showHeaderContextMenu(const QPoint & pos) {
 
 	if (!header)
 		return;
-	
+
 	QMenu menu(header);
 	QMap<QString, int> columns;
 
@@ -509,7 +598,7 @@ void MainWindow::showHeaderContextMenu(const QPoint & pos) {
 
 	foreach (const QString label, columns.keys()) {
 		int i = columns[label];
-		
+
 		QAction * a = menu.addAction(label);
 		a->setCheckable(true);
 		a->setChecked(!header->isSectionHidden(i));
@@ -546,7 +635,7 @@ void MainWindow::beforeModelAction() {
 
 	bar->setMaximumWidth(120);
 	bar->setMaximumHeight(statusBar()->size().height() - 5);
-	
+
 	statusBar()->addWidget(bar);
 
 	_ui->actionReloadOrAbort->setIcon(style()->standardIcon(QStyle::SP_BrowserStop));
@@ -613,9 +702,9 @@ void MainWindow::loadSettings() {
 	if (int buttonStyle = s.value("Widgets/ToolBarButtonStyle").toInt()) {
 		setToolBarButtonStyle(buttonStyle);
 	}
-	
+
 	setInterfaceLocked(s.value("Widgets/MainWindowLocked").toBool());
-	
+
 	menuBar()->setHidden(s.value("Widgets/MenuBarHidden").toBool());
 	statusBar()->setHidden(s.value("Widgets/StatusBarHidden").toBool());
 }
@@ -625,13 +714,13 @@ void MainWindow::setMetaDataModel(MetaDataModel * model) {
 
 		connect(model, SIGNAL(actionError(QString)),
 			SLOT(showError(QString)));
-		
+
 		connect(_ui->actionSave, SIGNAL(triggered()),
 			model, SLOT(save()));
 
 		connect(_ui->actionReset, SIGNAL(triggered()),
 			model, SLOT(restore()));
-		
+
 		connect(_ui->actionReloadOrAbort, SIGNAL(triggered()),
 			model, SLOT(reload()));
 
@@ -689,5 +778,5 @@ void MainWindow::setupToolBar() {
 	// Fallback value is Ctrl+P which is bound in the QtDesigner .ui file.
 	if (!QKeySequence::keyBindings(QKeySequence::Preferences).isEmpty())
 		_ui->actionConfigure->setShortcut(QKeySequence::Preferences);
-	
+
 }

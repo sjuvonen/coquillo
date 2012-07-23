@@ -85,9 +85,9 @@ void MetaDataModel2::setImages(const QModelIndex & idx, const QList<MetaDataImag
 		qDebug() << "----------";
 		return;
 	}
-	
+
 	const QModelIndex real = idx.sibling(idx.row(), MetaData::PicturesField);
-	
+
 	removeRows(0, rowCount(real), real);
 
 	foreach (const MetaDataImage image, images) {
@@ -98,7 +98,7 @@ void MetaDataModel2::setImages(const QModelIndex & idx, const QList<MetaDataImag
 QVariant MetaDataModel2::headerData(int section, Qt::Orientation orientation, int role) const {
 	if (orientation != Qt::Horizontal)
 		return QVariant();
-	
+
 	if (role != Qt::DisplayRole)
 		return QVariant();
 
@@ -113,7 +113,7 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 	const int c = idx.column();
 
 	if (idx.parent().isValid()) {
-		
+
 		switch (role) {
 			case Qt::DisplayRole:
 				return _data.at(idx.parent().row()).image(r).description();
@@ -132,7 +132,18 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 	switch (role) {
 		case Qt::EditRole:
 			return _data.at(r).get((MetaData::Field)c);
-			
+
+		case OriginalDataRole: {
+			const QVariant data = _original.at(r).get((MetaData::Field)c);
+
+			if (data.isNull()) {
+				return this->data(idx, int(Qt::EditRole));
+			} else {
+				return data;
+			}
+		}
+
+
 		case Qt::DisplayRole: {
 			const QVariant value = _data.at(r).get((MetaData::Field)c);
 
@@ -151,10 +162,10 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 		case Qt::ForegroundRole:
 			if (!_original.at(r).null())
 				return Qt::red;
-			
+
 			return QVariant();
 
-		case FieldTypeRole:	
+		case FieldTypeRole:
 			switch (c) {
 				case MetaData::DiscNumberField:
 				case MetaData::LengthField:
@@ -177,7 +188,7 @@ QVariant MetaDataModel2::data(const QModelIndex & idx, int role) const {
 			if (_original.at(mr).null()) {
 				return false;
 			}
-			
+
 			return _original.at(mr).get(mc).toString() != _data.at(mr).get(mc).toString();
 		}
 
@@ -196,13 +207,13 @@ bool MetaDataModel2::setData(const QModelIndex & idx, const QVariant & value, in
 	if (idx.parent().isValid()) {
 		const int pRow = idx.parent().row();
 		const int row = idx.row();
-	
+
 		QList<MetaDataImage> images = _data.at(pRow).images();
-		
+
 		switch (role) {
 			// Changing the QImage is not supported
 			// Instead have to remove a row and insert a new one via addImage().
-			
+
 			case Qt::DisplayRole:
 				images[row].setDescription(value.toString());
 				break;
@@ -231,7 +242,7 @@ bool MetaDataModel2::setData(const QModelIndex & idx, const QVariant & value, in
 
 	if (_data.at(r).get(c).toString() == value.toString())
 		return true;
-	
+
 	// This rule also filters out the situation when existing value is null and the new
 	// value is 0.
 	if (idx.data(FieldTypeRole).toInt() == QVariant::Int && idx.data().toInt() == value.toInt())
@@ -284,13 +295,13 @@ int MetaDataModel2::rowCount(const QModelIndex & parent) const {
 QModelIndex MetaDataModel2::index(int row, int column, const QModelIndex & parent) const {
 	if (parent.isValid())
 		return createIndex(row, column, parent.row() * 10000 + parent.column());
-	
+
 	return createIndex(row, column, 0);
 }
 
 QModelIndex MetaDataModel2::parent(const QModelIndex & idx) const {
 	qint16 id = idx.internalId();
-	
+
 	if (id <= 0)
 		return QModelIndex();
 
@@ -318,7 +329,7 @@ Qt::ItemFlags MetaDataModel2::flags(const QModelIndex & idx) const {
 	return flags;
 }
 
-QStringList MetaDataModel2::mimeTypes() const {	
+QStringList MetaDataModel2::mimeTypes() const {
 	return QStringList() << "text/uri-list" << "image/png" << "image/jpeg"
 		<< "image/gif";
 }
@@ -333,7 +344,7 @@ bool MetaDataModel2::dropMimeData(const QMimeData * data, Qt::DropAction,
 			foreach (const QUrl url, data->urls()) {
 
 				QImage image;
-				
+
 				if (url.scheme() == "file") {
 					image = QImage(url.path());
 
@@ -362,7 +373,7 @@ bool MetaDataModel2::dropMimeData(const QMimeData * data, Qt::DropAction,
 			return true;
 		}
 	}
-	
+
 
 	return false;
 }
@@ -464,7 +475,7 @@ void MetaDataModel2::save() {
 	emit metaDataStateChanged(false);
 
 	QThread * thread = new QThread(this);
-	
+
 	MetaDataWriter * writer = new MetaDataWriter();
 	writer->moveToThread(thread);
 	writer->setQueue(changed);
@@ -481,7 +492,7 @@ void MetaDataModel2::save() {
 	connect(writer, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
 	connect(thread, SIGNAL(started()), writer, SLOT(write()));
-	
+
 	thread->start();
 }
 
@@ -520,7 +531,7 @@ QImage MetaDataModel2::downloadImage(const QUrl & url) {
 // 	emit actionStarted();
 
 // 	connect(reply, SIGNAL(finished()), SIGNAL(actionFinished()));
-	
+
 	connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
 		SLOT(networkActionProgressChanged(qint64, qint64)));
 

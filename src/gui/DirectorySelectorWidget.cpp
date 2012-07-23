@@ -41,13 +41,13 @@ DirectorySelectorWidget::DirectorySelectorWidget(QWidget * parent)
 
 QString DirectorySelectorWidget::path() const {
 	QString path = _model->filePath(_ui->directories->currentIndex());
-	
+
 	return path.isEmpty() ? _ui->location->text() : path;
 }
 
 bool DirectorySelectorWidget::eventFilter(QObject * object, QEvent * event) {
 // 	return false;
-	
+
 	if (object == _ui->directories->viewport() && event->type() == QEvent::MouseButtonPress) {
 		QMouseEvent * e = dynamic_cast<QMouseEvent*>(event);
 		const QModelIndex idx = _ui->directories->indexAt(e->pos());
@@ -70,10 +70,10 @@ bool DirectorySelectorWidget::eventFilter(QObject * object, QEvent * event) {
 
 void DirectorySelectorWidget::setPath(const QString & path) {
 	const QString curPath = _ui->location->text();
-	
+
 	if (curPath == path)
 		return;
-	
+
 	const QModelIndex srcIdx = _model->index(path);
 	const QModelIndex idx = _proxy->mapFromSource(srcIdx);
 
@@ -89,7 +89,7 @@ void DirectorySelectorWidget::setPath(const QString & path) {
 }
 
 void DirectorySelectorWidget::setRootPath(const QString & path) {
-	
+
 	_model->setRootPath(path);
 
 	const QModelIndex idx = _proxy->mapFromSource( _model->index(path) );
@@ -106,10 +106,10 @@ void DirectorySelectorWidget::setRootIndex(const QModelIndex & idx) {
 		return;
 
 	const QString path = idx.data(QFileSystemModel::FilePathRole).toString();
-	
+
 	if (QDir(path).entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot).isEmpty())
 		return;
-	
+
 	setRootPath( path );
 }
 
@@ -119,7 +119,7 @@ void DirectorySelectorWidget::changePath(const QModelIndex & idx) {
 	if (path == _ui->location->text()) {
 		return;
 	}
-	
+
 	_ui->location->setText(path);
 
 	emit pathChanged(path);
@@ -149,7 +149,7 @@ void DirectorySelectorWidget::goDirectoryUp() {
 
 void DirectorySelectorWidget::showTreeContextMenu(const QPoint & point) {
 	QMenu menu(this);
-	
+
 	QAction * setRoot = menu.addAction(tr("Set as root"));
 	QAction * addBookmark = menu.addAction(tr("Add to bookmarks"));
 	QAction * renameDir = menu.addAction(tr("Rename..."));

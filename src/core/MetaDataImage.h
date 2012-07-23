@@ -15,7 +15,7 @@ class MetaDataImage {
 		};
 
 		enum Fields { ImageField, DescriptionField, TypeField };
-		
+
 		MetaDataImage();
 		MetaDataImage(const QImage & image);
 		MetaDataImage(const QImage & image, int type, const QString & description=QString());

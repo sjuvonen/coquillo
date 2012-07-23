@@ -23,7 +23,7 @@
   <property name="dockNestingEnabled">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>10</horstretch>
@@ -649,6 +649,7 @@
    <addaction name="separator"/>
    <addaction name="actionToggleProcessor"/>
    <addaction name="actionToggleCddb"/>
+   <addaction name="actionPlayCurrent"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuit">
@@ -896,6 +897,17 @@
     <string>Delete file from disk</string>
    </property>
   </action>
+  <action name="actionPlayCurrent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Play</string>
+   </property>
+   <property name="toolTip">
+    <string>Play selected track</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1063,22 +1075,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionAbout</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showAboutDialog()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>517</x>
-     <y>324</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionNext</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -1142,6 +1138,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionPlayCurrent</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>playCurrentTrack()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setInterfaceLocked(bool)</slot>
@@ -1152,5 +1164,7 @@
   <slot>selectPreviousIndex()</slot>
   <slot>selectInverse()</slot>
   <slot>showSettingsDialog()</slot>
+  <slot>togglePlayerWidget(bool)</slot>
+  <slot>playCurrentTrack()</slot>
  </slots>
 </ui>

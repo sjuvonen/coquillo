@@ -3,6 +3,7 @@ include(common.pri)
 TEMPLATE = app
 
 QT += network
+QT += phonon
 
 MOC_DIR = build
 OBJECTS_DIR = build
@@ -16,7 +17,7 @@ RESOURCES += coquillo.qrc
 
 unix {
 	LIBS += -ltag
-	
+
 	DATADIR = $$PREFIX/share
 	ICON = extra/coquillo.png
 
@@ -35,7 +36,7 @@ unix {
 win32 {
 	INCLUDEPATH += resources/windows/taglib/include
 	LIBS += resources/windows/taglib/taglib.dll
-	
+
 	CONFIG += windows
 	RC_FILE = coquillo.rc
 }
@@ -46,6 +47,7 @@ FORMS +=   src/ui/MainWindow.ui \
            src/ui/CddbSearchDialog.ui \
            src/ui/DirectorySelector.ui \
            src/ui/EditorWidget.ui \
+           src/ui/MiniPlayer.ui \
            src/ui/ProcessorWidget.ui \
 					 src/ui/SettingsDialog.ui \
 
@@ -78,6 +80,7 @@ HEADERS += src/gui/DirectorySelectorWidget.h \
            src/gui/FileSystemProxyModel.h \
            src/gui/MainWindow.h \
            src/gui/MetaDataChangeIndicatorDelegate.h \
+           src/gui/MiniPlayer.h \
            src/gui/ProcessorWidget.h \
 
 SOURCES += src/gui/DirectorySelectorWidget.cpp \
@@ -86,6 +89,7 @@ SOURCES += src/gui/DirectorySelectorWidget.cpp \
            src/gui/FileSystemProxyModel.cpp \
            src/gui/MainWindow.cpp \
            src/gui/MetaDataChangeIndicatorDelegate.cpp \
+           src/gui/MiniPlayer.cpp \
            src/gui/ProcessorWidget.cpp \
 
 HEADERS += src/gui/bookmarks/BookmarkDialog.h \

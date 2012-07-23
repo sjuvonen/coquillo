@@ -18,9 +18,9 @@ class MetaDataModel2 : public QAbstractItemModel {
 	Q_OBJECT
 
 	public:
-		enum DataRole { FieldTypeRole = Qt::UserRole + 1, FieldChangedRole = Qt::UserRole + 2 };
+		enum DataRole { FieldTypeRole = Qt::UserRole + 1, FieldChangedRole, OriginalDataRole };
 		enum ActionType { FindMediaAction, WriteTagsAction };
-		
+
 		MetaDataModel2(QObject * parent=0);
 
 		void setNetworkManager(QNetworkAccessManager * manager);
@@ -29,7 +29,7 @@ class MetaDataModel2 : public QAbstractItemModel {
 		QString directory() const { return _directory; }
 
 		MetaData metaData(int row) const;
-		
+
 		bool addImage(int row, const MetaDataImage & image);
 		bool addImage(const QModelIndex & idx, const MetaDataImage & image);
 		void setImages(const QModelIndex & idx, const QList<MetaDataImage> & images);
@@ -50,7 +50,7 @@ class MetaDataModel2 : public QAbstractItemModel {
 		Qt::ItemFlags flags(const QModelIndex & idx) const;
 
 		QStringList mimeTypes() const;
-		
+
 		bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row,
 			int column, const QModelIndex & parent);
 
@@ -95,7 +95,7 @@ class MetaDataModel2 : public QAbstractItemModel {
 		void connectMappers(QObject * object, int actionType);
 
 		QImage downloadImage(const QUrl & url);
-		
+
 		QList<MetaData> _data;
 		QList<MetaData> _original;
 		QMap<int, QString> _fields;

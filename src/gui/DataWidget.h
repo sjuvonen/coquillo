@@ -21,7 +21,7 @@ class DataWidget : public QWidget {
 
 	public slots:
 		virtual void setSelection(const QItemSelection & selection);
-		
+
 	private:
 		QAbstractItemModel * _model;
 		QList<QPersistentModelIndex> _rows;
