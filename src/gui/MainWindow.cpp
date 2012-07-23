@@ -688,6 +688,7 @@ void MainWindow::loadSettings() {
 				_ui->items->horizontalHeader()->setSectionHidden(i, true);
 		}
 	}
+	_ui->items->horizontalHeader()->setMovable(true);
 
 	if (s.contains("Widgets/MainWindowSize")) {
 		restoreState(s.value("Widgets/MainWindowState").toByteArray());
