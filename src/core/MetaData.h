@@ -18,7 +18,7 @@ class MetaData {
 		enum Field {
 			TitleField, ArtistField, AlbumField, LengthField, YearField, DiscNumberField,
 			NumberField, MaxNumberField, GenreField, CommentField, OriginalArtistField,
-			ComposerField, UrlField, EncoderField, PathField, PicturesField
+			ComposerField, UrlField, EncoderField, PathField, AlbumArtistField, PicturesField
 		};
 
 		MetaData() : _pictureCount(0) { }

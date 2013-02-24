@@ -27,7 +27,7 @@ extern volatile bool abortAction;
 
 MetaDataWriter::MetaDataWriter(QObject * parent)
 : QObject(parent) {
-	
+
 }
 
 
@@ -44,21 +44,21 @@ void MetaDataWriter::write() {
 	emit maximumChanged(_items.count());
 
 	int prg = 0;
-	
+
 	QStringList keys = _items.keys();
-	
+
 // 	while (i != _items.constEnd()) {
 	while (!keys.isEmpty()) {
 		if (abortAction)
 			return;
-		
+
 		const QString path = keys.takeFirst();
 		const MetaData metaData = _items[path];
 
 		TagLib::FileRef fileref(path.toUtf8().constData());
 
 		int type = fileType(path);
-		
+
 		switch (type) {
 
 			#if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
@@ -104,13 +104,13 @@ void MetaDataWriter::write() {
 
 				break;
 			}
-				
+
 			case MpegFile: {
 				TagLib::MPEG::File * file = dynamic_cast<TagLib::MPEG::File*>(fileref.file());
 
 				if (!file)
 					break;
-				
+
 				if (QSettings().value("MpegId3v1").toBool())
 					writeGeneric(file->ID3v1Tag(true), metaData);
 				else
@@ -120,7 +120,7 @@ void MetaDataWriter::write() {
 
 				break;
 			}
-			
+
 			default:
 				;
 		}
@@ -133,26 +133,26 @@ void MetaDataWriter::write() {
 
 			if (!newFile.dir().exists())
 				newFile.dir().mkpath(".");
-			
+
 			QFile(path).rename(newFile.absoluteFilePath());
 
 			// Check that deleting empty directories is allowed
 			if (!QSettings().value("DeleteOrphans").toBool())
 				continue;
-			
+
 			QDir oldDir = QFileInfo(path).dir();
-			
+
 			// Remove directories that are left empty
 			while (oldDir.entryList(QStringList(), QDir::AllEntries | QDir::NoDotAndDotDot).isEmpty()) {
 				const QString dirName = oldDir.dirName();
-				
+
 				oldDir.cdUp();
 				oldDir.rmdir(dirName);
 			}
 		}
 
 		prg++;
-		
+
 		emit progress(prg);
 	}
 
@@ -202,7 +202,7 @@ void MetaDataWriter::writeGeneric(TagLib::Tag * tag, const MetaData & metaData) 
 
 		if (id3_latin)
 			str = TagLib::String(metaData.get(f).toString().toLatin1().constData());
-		
+
 		switch (f) {
 			case MetaData::ArtistField: tag->setArtist(str); break;
 			case MetaData::AlbumField: tag->setAlbum(str); break;
@@ -225,7 +225,7 @@ void MetaDataWriter::writeTag(TagLib::ID3v2::Tag * tag, const MetaData & metaDat
 	/**
 	 * REMEMBER TO ADD MISSING FIELDS!
 	 **/
-	
+
 	writeGeneric(tag, metaData);
 
 	QMap<MetaData::Field, const char *> extraFields;
@@ -248,19 +248,34 @@ void MetaDataWriter::writeTag(TagLib::ID3v2::Tag * tag, const MetaData & metaDat
 		}
 	}
 
-	if (metaData.has(MetaData::UrlField)) {
-		tag->removeFrames("WXXX");
+    if (metaData.has(MetaData::UrlField)) {
+        tag->removeFrames("WXXX");
 
-		TagLib::String url = metaData.get(MetaData::UrlField).toString().toStdString();
-		
-		if (!url.isEmpty()) {
-			TagLib::ID3v2::UserUrlLinkFrame * frame = new TagLib::ID3v2::UserUrlLinkFrame();
-			frame->setText(url);
+        TagLib::String url = metaData.get(MetaData::UrlField).toString().toStdString();
 
-			tag->removeFrames("WXXX");
-			tag->addFrame(frame);
-		}
-	}
+        if (!url.isEmpty()) {
+            TagLib::ID3v2::UserUrlLinkFrame * frame = new TagLib::ID3v2::UserUrlLinkFrame();
+            frame->setText(url);
+
+            tag->removeFrames("WXXX");
+            tag->addFrame(frame);
+        }
+    }
+
+    if (metaData.has(MetaData::AlbumArtistField)) {
+        tag->removeFrames("TPE2");
+
+        TagLib::String artist = metaData.get(MetaData::UrlField).toString().toStdString();
+
+        if (!artist.isEmpty()) {
+            TagLib::ID3v2::TextIdentificationFrame * frame =
+            new TagLib::ID3v2::TextIdentificationFrame("TPE2");
+            frame->setText(artist);
+
+            tag->removeFrames("TPE2");
+            tag->addFrame(frame);
+        }
+    }
 
 	if (metaData.has(MetaData::NumberField)) {
 		TagLib::String num = metaData.get(MetaData::NumberField).toString().toStdString();
@@ -287,26 +302,26 @@ void MetaDataWriter::writeTag(TagLib::ID3v2::Tag * tag, const MetaData & metaDat
 		const MetaDataImage image = metaData.image(i);
 
 		QByteArray * bytes = imageToBytes(image.image());
-		
+
 		TagLib::ID3v2::AttachedPictureFrame * frame = new TagLib::ID3v2::AttachedPictureFrame();
 
 		frame->setMimeType("image/jpeg");
 		frame->setType((TagLib::ID3v2::AttachedPictureFrame::Type)image.type());
 		frame->setDescription(image.description().toStdString());
-		
+
 		frame->setPicture(TagLib::ByteVector(bytes->data(), bytes->size()));
 
 		tag->addFrame(frame);
 
 		delete bytes;
 	}
-	
+
 }
 
 void MetaDataWriter::writeTag(TagLib::Ogg::XiphComment * tag, const MetaData & metaData) const {
 	if (!tag || metaData.null())
 		return;
-	
+
 	writeGeneric(tag, metaData);
 
 	QHash<MetaData::Field, TagLib::String> maps;
@@ -362,7 +377,7 @@ void MetaDataWriter::writeTag(TagLib::Ogg::XiphComment * tag, const MetaData & m
 
 		delete bytes;
 	}
-	
+
 
 }
 

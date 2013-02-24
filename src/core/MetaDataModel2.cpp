@@ -35,7 +35,8 @@ MetaDataModel2::MetaDataModel2(QObject * parent)
 	_fields.insert(MetaData::ComposerField, tr("Composer"));
 	_fields.insert(MetaData::UrlField, tr("URL"));
 	_fields.insert(MetaData::EncoderField, tr("Encoder"));
-	_fields.insert(MetaData::PathField, tr("Path"));
+    _fields.insert(MetaData::PathField, tr("Path"));
+    _fields.insert(MetaData::AlbumArtistField, tr("Album Artist"));
 	_fields.insert(MetaData::PicturesField, tr("Pictures"));
 
 	qRegisterMetaType<MetaData>("MetaData");

@@ -56,7 +56,8 @@ EditorWidget::EditorWidget(QWidget * parent)
 	radioMapper->setMapping(_ui->applyImages, MetaData::PicturesField);
 	radioMapper->setMapping(_ui->applyOriginalArtist, MetaData::OriginalArtistField);
 	radioMapper->setMapping(_ui->applyEncoder, MetaData::EncoderField);
-	radioMapper->setMapping(_ui->applyComposer, MetaData::ComposerField);
+    radioMapper->setMapping(_ui->applyComposer, MetaData::ComposerField);
+    radioMapper->setMapping(_ui->applyAlbumArtist, MetaData::AlbumArtistField);
 
 	_typeStrings.insert(0, tr("Other"));
 	_typeStrings.insert(APFrame::FrontCover, tr("Front cover"));
@@ -122,7 +123,8 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 	_mapper->addMapping(_ui->year, MetaData::YearField);
 	_mapper->addMapping(_ui->originalArtist, MetaData::OriginalArtistField);
 	_mapper->addMapping(_ui->composer, MetaData::ComposerField);
-	_mapper->addMapping(_ui->encoder, MetaData::EncoderField);
+    _mapper->addMapping(_ui->encoder, MetaData::EncoderField);
+    _mapper->addMapping(_ui->albumArtist, MetaData::AlbumArtistField);
 
 	_mapper2->addMapping(_ui->labelTitle, MetaData::TitleField);
 	_mapper2->addMapping(_ui->labelArtist, MetaData::ArtistField);
@@ -136,7 +138,8 @@ void EditorWidget::setModel(QAbstractItemModel * model) {
 	_mapper2->addMapping(_ui->labelYear, MetaData::YearField);
 	_mapper2->addMapping(_ui->labelOriginalArtist, MetaData::OriginalArtistField);
 	_mapper2->addMapping(_ui->labelComposer, MetaData::ComposerField);
-	_mapper2->addMapping(_ui->labelEncoder, MetaData::EncoderField);
+    _mapper2->addMapping(_ui->labelEncoder, MetaData::EncoderField);
+    _mapper2->addMapping(_ui->labelAlbumArtist, MetaData::AlbumArtistField);
 
 	QItemSelectionModel * m = _ui->images->selectionModel();
 	_ui->images->setModel(model);

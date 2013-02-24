@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>313</width>
-    <height>435</height>
+    <width>337</width>
+    <height>541</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -188,6 +188,19 @@
          </item>
         </layout>
        </item>
+       <item row="10" column="2">
+        <widget class="QRadioButton" name="applyComposer">
+         <property name="toolTip">
+          <string>Apply value to all selected items</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
        <item row="4" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
@@ -242,7 +255,7 @@
        <item row="5" column="1">
         <widget class="QLineEdit" name="genre"/>
        </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -333,10 +346,10 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <widget class="QLineEdit" name="composer"/>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <widget class="QLineEdit" name="encoder"/>
        </item>
        <item row="8" column="0">
@@ -346,14 +359,14 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="10" column="0">
         <widget class="QLabel" name="labelComposer">
          <property name="text">
           <string>Composer</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
+       <item row="11" column="0">
         <widget class="QLabel" name="labelEncoder">
          <property name="text">
           <string>Encoder</string>
@@ -373,20 +386,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="2">
-        <widget class="QRadioButton" name="applyComposer">
-         <property name="toolTip">
-          <string>Apply value to all selected items</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="2">
+       <item row="11" column="2">
         <widget class="QRadioButton" name="applyEncoder">
          <property name="toolTip">
           <string>Apply value to all selected items</string>
@@ -404,6 +404,26 @@
          <property name="toolTip">
           <string>Apply value to all selected items</string>
          </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLineEdit" name="albumArtist"/>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="labelAlbumArtist">
+         <property name="text">
+          <string>Album Artist</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="2">
+        <widget class="QRadioButton" name="applyAlbumArtist">
          <property name="text">
           <string/>
          </property>

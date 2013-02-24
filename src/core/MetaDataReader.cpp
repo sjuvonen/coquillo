@@ -57,7 +57,7 @@ MetaData MetaDataReader::getTags(const QString & path) {
 	// identify modified fields.
 	for (int i = 0; i < MetaData::PicturesField; i++) {
 		MetaData::Field f = static_cast<MetaData::Field>(i);
-		
+
 		if (!item.has(f))
 			item.set(f, QVariant(""));
 	}
@@ -220,7 +220,7 @@ void MetaDataReader::readMPEGFile(MetaData * metaData) {
 			}
 		}
 	}
-	
+
 
 	if (Coquillo::Mpeg::id3v1)
 		readID3v1Tag(file.ID3v1Tag(), metaData);
@@ -315,6 +315,10 @@ bool MetaDataReader::readID3v2Tag(TagLib::ID3v2::Tag * tag, MetaData * metaData)
 	if (hasField("TOPE")) {
 		metaData->set(MetaData::OriginalArtistField, qtstr("TOPE", toUnicode));
 	}
+
+	if (hasField("TPE2")) {
+        metaData->set(MetaData::AlbumArtistField, qtstr("TPE2", toUnicode));
+    }
 
 	if (hasField("TPOS")) {
 		metaData->set(MetaData::DiscNumberField, qtstr("TPOS", toUnicode));
