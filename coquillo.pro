@@ -41,15 +41,15 @@ win32 {
 	RC_FILE = coquillo.rc
 }
 
-FORMS +=   src/ui/MainWindow.ui \
-           src/ui/AboutApp.ui \
-           src/ui/BookmarkDialog.ui \
-           src/ui/CddbSearchDialog.ui \
-           src/ui/DirectorySelector.ui \
-           src/ui/EditorWidget.ui \
-           src/ui/MiniPlayer.ui \
-           src/ui/ProcessorWidget.ui \
-					 src/ui/SettingsDialog.ui \
+FORMS +=    src/ui/MainWindow.ui \
+            src/ui/AboutApp.ui \
+            src/ui/BookmarkDialog.ui \
+            src/ui/CddbSearchDialog.ui \
+            src/ui/DirectorySelector.ui \
+            src/ui/EditorWidget.ui \
+            src/ui/MiniPlayer.ui \
+            src/ui/ProcessorWidget.ui \
+            src/ui/SettingsDialog.ui \
 
 HEADERS += src/Coquillo.h \
 
