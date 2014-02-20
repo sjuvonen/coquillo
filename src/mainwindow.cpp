@@ -1,3 +1,5 @@
+#include <QSortFilterProxyModel>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -12,7 +14,10 @@ namespace Coquillo {
         _ui->setupUi(this);
 
         _metaData = new MetaDataModel(this);
-        _ui->metaData->setModel(_metaData);
+
+        QSortFilterProxyModel * sort_proxy = new QSortFilterProxyModel(this);
+        sort_proxy->setSourceModel(_metaData);
+        _ui->metaData->setModel(sort_proxy);
 
         _fileBrowser = new FileBrowser(this);
         _ui->tools->addTab(_fileBrowser, tr("Directories"));
