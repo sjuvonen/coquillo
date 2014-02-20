@@ -27,8 +27,8 @@ namespace Coquillo {
             QModelIndex index(int row, int col, const QModelIndex & parent) const;
             bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
 
-            MetaData metaData(int row) const { return _metaData.value(row); }
-            MetaData metaData(const QModelIndex & idx) const { return metaData(idx.row()); }
+            MetaData metaData(int row, bool original = false) const;
+            MetaData metaData(const QModelIndex & idx, bool original = false) const { return metaData(idx.row(), original); }
 
             inline QModelIndex parent(const QModelIndex &) const {
                 return QModelIndex();

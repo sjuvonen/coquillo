@@ -178,6 +178,15 @@ namespace Coquillo {
         }
     }
 
+    MetaData MetaDataModel::metaData(int row, bool original) const {
+        const MetaData meta = _metaData.value(row);
+        if (original && _original.contains(meta.path())) {
+            return _original[meta.path()];
+        } else {
+            return meta;
+        }
+    }
+
     void MetaDataModel::addDirectory(const QString & dir) {
         _directories << dir;
 //         QThread * worker = createWorker();
