@@ -55,6 +55,11 @@ namespace Coquillo {
             if (model) {
                 _inputMapper->setModel(model);
                 _labelMapper->setModel(model);
+                _ui->tagArtist->setModel(model);
+                _ui->tagAlbum->setModel(model);
+
+                _ui->tagArtist->setModelColumn(2);
+                _ui->tagAlbum->setModelColumn(3);
             }
 
             _inputMapper->addMapping(_ui->tagTitle, 1);
