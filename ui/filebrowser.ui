@@ -55,13 +55,20 @@
     </layout>
    </item>
    <item>
-    <widget class="QLineEdit" name="path"/>
+    <widget class="QLineEdit" name="path">
+     <property name="placeholderText">
+      <string>Change to directory...</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QTreeView" name="directories"/>
    </item>
    <item>
     <widget class="QCheckBox" name="recursive">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this to include all children of selected directories&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Scan subdirectories</string>
      </property>

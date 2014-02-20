@@ -31,7 +31,11 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="tagTitle"/>
+    <widget class="QLineEdit" name="tagTitle">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="labelArtist">
@@ -47,7 +51,11 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLineEdit" name="tagArtist"/>
+    <widget class="QLineEdit" name="tagArtist">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="labelAlbum">
@@ -63,7 +71,11 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="tagAlbum"/>
+    <widget class="QLineEdit" name="tagAlbum">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="labelYear">
@@ -227,7 +239,11 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QLineEdit" name="tagGenre"/>
+    <widget class="QLineEdit" name="tagGenre">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="6" column="0">
     <widget class="QLabel" name="labelComment">
@@ -243,7 +259,11 @@
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QLineEdit" name="tagComment"/>
+    <widget class="QLineEdit" name="tagComment">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="7" column="0">
     <widget class="QLabel" name="labelUrl">
@@ -259,7 +279,11 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QLineEdit" name="tagUrl"/>
+    <widget class="QLineEdit" name="tagUrl">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="labelOriginalArtist">
@@ -275,7 +299,11 @@
     </widget>
    </item>
    <item row="8" column="1">
-    <widget class="QLineEdit" name="tagOriginalArtist"/>
+    <widget class="QLineEdit" name="tagOriginalArtist">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="9" column="0">
     <widget class="QLabel" name="labelAlbumArtist">
@@ -291,7 +319,11 @@
     </widget>
    </item>
    <item row="9" column="1">
-    <widget class="QLineEdit" name="tagAlbumArtist"/>
+    <widget class="QLineEdit" name="tagAlbumArtist">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="10" column="0">
     <widget class="QLabel" name="labelComposer">
@@ -307,7 +339,11 @@
     </widget>
    </item>
    <item row="10" column="1">
-    <widget class="QLineEdit" name="tagComposer"/>
+    <widget class="QLineEdit" name="tagComposer">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="11" column="0">
     <widget class="QLabel" name="labelEncoder">
@@ -323,7 +359,11 @@
     </widget>
    </item>
    <item row="11" column="1">
-    <widget class="QLineEdit" name="tagEncoder"/>
+    <widget class="QLineEdit" name="tagEncoder">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="12" column="1">
     <spacer name="verticalSpacer">
