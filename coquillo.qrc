@@ -1,8 +1,0 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-	<qresource>
-		<file>resources/Coquillo.png</file>
-		<file>resources/icons/select_all_48x48.png</file>
-		<file>resources/icons/select_inverse_48x48.png</file>
-	</qresource>
-</RCC>
