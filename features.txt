@@ -1,0 +1,3 @@
+Tag Editor
+- Use comboboxes instead of line edits for artist and album fields?
+
