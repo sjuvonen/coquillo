@@ -37,10 +37,12 @@ namespace Coquillo {
             inline bool isRecursive() const { return _recursive; }
 
         public slots:
-            void addDirectory(const QString & path);
-            void removeDirectory(const QString & path);
-            void addFiles(const QStringList & files);
             inline void setRecursive(bool state) { _recursive = state; }
+            void addDirectory(const QString & path);
+            void addFiles(const QStringList & files);
+            void removeDirectory(const QString & path);
+            void revert();
+            void revert(const QModelIndex & idx);
 
         private slots:
             void addMetaData(const MetaData & metaData);
@@ -50,9 +52,8 @@ namespace Coquillo {
             void backup(const MetaData & metaData);
             bool isRowChanged(const QModelIndex & idx) const;
             bool isChanged(const QModelIndex & idx) const;
-//             bool rowBelongsToPath(const QModelIndex & idx, const QString & dir) const;
+            void rowChanged(const QModelIndex & idx);
             QString containedDirectoryForRow(int row) const;
-            QStringList scanDirectory(const QString & path);
             MediaCrawler * createCrawler();
             QThread * createWorker();
 

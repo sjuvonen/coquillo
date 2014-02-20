@@ -108,6 +108,9 @@ namespace Coquillo {
                 break;
             }
 
+            case Qt::SizeHintRole:
+                return QSize(100, 24);
+
             case ModifiedRole: {
                 return isChanged(idx);
             }
@@ -117,22 +120,6 @@ namespace Coquillo {
         }
 
         return QVariant();
-    }
-
-    bool MetaDataModel::isRowChanged(const QModelIndex & idx) const {
-        const MetaData data = _metaData[idx.row()];
-        return _original.contains(data.path());
-    }
-
-    bool MetaDataModel::isChanged(const QModelIndex & idx) const {
-        const MetaData data = _metaData[idx.row()];
-        if (_original.contains(data.path())) {
-            const QString key = idx.data(FieldNameRole).toString();
-            const MetaData original = _original[data.path()];
-            return data.value(key) != original.value(key);
-        } else {
-            return false;
-        }
     }
 
     bool MetaDataModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
@@ -155,7 +142,7 @@ namespace Coquillo {
         if (int_changed || str_changed) {
             backup(_metaData[row]);
             _metaData[row].insert(name, value);
-            emit dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), columnCount()-1));
+            rowChanged(idx);
             qDebug() << QString("set %1 to").arg(name) << value;
             return true;
         } else {
@@ -200,15 +187,6 @@ namespace Coquillo {
 //         worker->start();
     }
 
-    void MetaDataModel::removeDirectory(const QString & dir) {
-        for (int i = rowCount() - 1; i >= 0; i--) {
-            if (containedDirectoryForRow(i) == dir) {
-                removeRow(i);
-            }
-        }
-        _directories.removeOne(dir);
-    }
-
     bool MetaDataModel::removeRows(int row, int count, const QModelIndex & parent) {
         if (row < 0 || rowCount() <= row) {
             return false;
@@ -221,17 +199,6 @@ namespace Coquillo {
         }
         endRemoveRows();
         return true;
-    }
-
-    QString MetaDataModel::containedDirectoryForRow(int row) const {
-        QDir dir = QFileInfo(metaData(row).path()).absoluteDir();
-        do {
-            if (_directories.contains(dir.absolutePath())) {
-                return dir.absolutePath();
-            }
-        } while (dir.cdUp());
-
-        return QString();
     }
 
     void MetaDataModel::addFiles(const QStringList & files) {
@@ -248,11 +215,78 @@ namespace Coquillo {
         worker->start();
     }
 
+    void MetaDataModel::removeDirectory(const QString & dir) {
+        for (int i = rowCount() - 1; i >= 0; i--) {
+            if (containedDirectoryForRow(i) == dir) {
+                removeRow(i);
+            }
+        }
+        _directories.removeOne(dir);
+    }
+
+    void MetaDataModel::revert() {
+        qDebug() << "revert";
+        beginResetModel();
+        for (int i = 0; i < rowCount(); i++) {
+            _metaData[i] = metaData(i, true);
+        }
+        _original.clear();
+        endResetModel();
+    }
+
+    void MetaDataModel::revert(const QModelIndex & idx) {
+        if (idx.isValid()) {
+            int row = idx.row();
+            const QString path = metaData(row).path();
+            _metaData[row] = metaData(row, true);
+            _original.remove(path);
+            rowChanged(idx);
+        }
+    }
+
     void MetaDataModel::addMetaData(const MetaData & metaData) {
         int row = rowCount();
         beginInsertRows(QModelIndex(), row, row);
         _metaData << metaData;
         endInsertRows();
+    }
+
+    QStringList MetaDataModel::nameFilters() {
+        TagLib::StringList exts = TagLib::FileRef::defaultFileExtensions();
+        QStringList types = QString::fromUtf8(exts.toString("%%*.").toCString(true)).split("%%");
+        types << QString("*.%1").arg(types.takeFirst());
+        return types;
+    }
+
+    bool MetaDataModel::isRowChanged(const QModelIndex & idx) const {
+        const MetaData data = _metaData[idx.row()];
+        return _original.contains(data.path());
+    }
+
+    bool MetaDataModel::isChanged(const QModelIndex & idx) const {
+        const MetaData data = _metaData[idx.row()];
+        if (_original.contains(data.path())) {
+            const QString key = idx.data(FieldNameRole).toString();
+            const MetaData original = _original[data.path()];
+            return data.value(key) != original.value(key);
+        } else {
+            return false;
+        }
+    }
+
+    void MetaDataModel::rowChanged(const QModelIndex & idx) {
+        emit dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), columnCount() - 1));
+    }
+
+    QString MetaDataModel::containedDirectoryForRow(int row) const {
+        QDir dir = QFileInfo(metaData(row).path()).absoluteDir();
+        do {
+            if (_directories.contains(dir.absolutePath())) {
+                return dir.absolutePath();
+            }
+        } while (dir.cdUp());
+
+        return QString();
     }
 
     MediaCrawler * MetaDataModel::createCrawler() {
@@ -266,12 +300,5 @@ namespace Coquillo {
         QThread * worker = new QThread;
 //         _workers << worker;
         return worker;
-    }
-
-    QStringList MetaDataModel::nameFilters() {
-        TagLib::StringList exts = TagLib::FileRef::defaultFileExtensions();
-        QStringList types = QString::fromUtf8(exts.toString("%%*.").toCString(true)).split("%%");
-        types << QString("*.%1").arg(types.takeFirst());
-        return types;
     }
 }
