@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
+    <width>317</width>
     <height>394</height>
    </rect>
   </property>
@@ -33,16 +33,6 @@
    <item row="0" column="1">
     <widget class="QLineEdit" name="tagTitle"/>
    </item>
-   <item row="0" column="2">
-    <widget class="QRadioButton" name="cloneTitle">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="labelArtist">
      <property name="text">
@@ -59,16 +49,6 @@
    <item row="1" column="1">
     <widget class="QLineEdit" name="tagArtist"/>
    </item>
-   <item row="1" column="2">
-    <widget class="QRadioButton" name="cloneArtist">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="labelAlbum">
      <property name="text">
@@ -84,16 +64,6 @@
    </item>
    <item row="2" column="1">
     <widget class="QLineEdit" name="tagAlbum"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QRadioButton" name="cloneAlbum">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="labelYear">
@@ -118,12 +88,21 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="cloneYear">
+      <widget class="QToolButton" name="cloneYear">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="checkable">
         <bool>false</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+       <property name="arrowType">
+        <enum>Qt::NoArrow</enum>
        </property>
       </widget>
      </item>
@@ -157,16 +136,6 @@
       <widget class="QSpinBox" name="tagDisc"/>
      </item>
     </layout>
-   </item>
-   <item row="3" column="2">
-    <widget class="QRadioButton" name="cloneDisc">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="labelNumber">
@@ -211,12 +180,15 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_2">
+      <widget class="QToolButton" name="autoNumbers">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatic numbering of selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>#</string>
@@ -241,16 +213,6 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="2">
-    <widget class="QRadioButton" name="cloneMaxNumber">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="5" column="0">
     <widget class="QLabel" name="labelGenre">
      <property name="text">
@@ -266,16 +228,6 @@
    </item>
    <item row="5" column="1">
     <widget class="QLineEdit" name="tagGenre"/>
-   </item>
-   <item row="5" column="2">
-    <widget class="QRadioButton" name="cloneGenre">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
    </item>
    <item row="6" column="0">
     <widget class="QLabel" name="labelComment">
@@ -293,16 +245,6 @@
    <item row="6" column="1">
     <widget class="QLineEdit" name="tagComment"/>
    </item>
-   <item row="6" column="2">
-    <widget class="QRadioButton" name="cloneComment">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="7" column="0">
     <widget class="QLabel" name="labelUrl">
      <property name="text">
@@ -318,16 +260,6 @@
    </item>
    <item row="7" column="1">
     <widget class="QLineEdit" name="tagUrl"/>
-   </item>
-   <item row="7" column="2">
-    <widget class="QRadioButton" name="cloneUrl">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="labelOriginalArtist">
@@ -345,16 +277,6 @@
    <item row="8" column="1">
     <widget class="QLineEdit" name="tagOriginalArtist"/>
    </item>
-   <item row="8" column="2">
-    <widget class="QRadioButton" name="cloneOriginalArtist">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="9" column="0">
     <widget class="QLabel" name="labelAlbumArtist">
      <property name="text">
@@ -370,16 +292,6 @@
    </item>
    <item row="9" column="1">
     <widget class="QLineEdit" name="tagAlbumArtist"/>
-   </item>
-   <item row="9" column="2">
-    <widget class="QRadioButton" name="cloneAlbumArtist">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
    </item>
    <item row="10" column="0">
     <widget class="QLabel" name="labelComposer">
@@ -397,16 +309,6 @@
    <item row="10" column="1">
     <widget class="QLineEdit" name="tagComposer"/>
    </item>
-   <item row="10" column="2">
-    <widget class="QRadioButton" name="cloneComposer">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="11" column="0">
     <widget class="QLabel" name="labelEncoder">
      <property name="text">
@@ -423,16 +325,6 @@
    <item row="11" column="1">
     <widget class="QLineEdit" name="tagEncoder"/>
    </item>
-   <item row="11" column="2">
-    <widget class="QRadioButton" name="cloneEncoder">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="12" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -445,6 +337,216 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="2">
+    <widget class="QToolButton" name="cloneTitle">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QToolButton" name="cloneAlbum">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="cloneArtist">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QToolButton" name="cloneDisc">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QToolButton" name="cloneTotal">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QToolButton" name="cloneGenre">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="2">
+    <widget class="QToolButton" name="cloneEncoder">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="2">
+    <widget class="QToolButton" name="cloneComposer">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="2">
+    <widget class="QToolButton" name="cloneAlbumArtist">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QToolButton" name="cloneOriginalArtist">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QToolButton" name="cloneUrl">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QToolButton" name="cloneComment">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

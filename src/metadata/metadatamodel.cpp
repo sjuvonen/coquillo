@@ -155,7 +155,7 @@ namespace Coquillo {
         if (int_changed || str_changed) {
             backup(_metaData[row]);
             _metaData[row].insert(name, value);
-            emit dataChanged(idx, idx);
+            emit dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), columnCount()-1));
             qDebug() << QString("set %1 to").arg(name) << value;
             return true;
         } else {

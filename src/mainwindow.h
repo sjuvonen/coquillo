@@ -22,6 +22,9 @@ namespace Coquillo {
             MainWindow(QWidget * parent=0);
             ~MainWindow();
 
+        private slots:
+            void applyValue(const QVariant & value, int column);
+
         private:
             Ui::MainWindow * _ui;
             FileBrowser * _fileBrowser;

@@ -1,5 +1,6 @@
 
 #include <QAbstractItemModel>
+#include <QButtonGroup>
 #include <QDataWidgetMapper>
 #include <QDebug>
 #include "basictags.h"
@@ -19,15 +20,31 @@ namespace Coquillo {
             _labelMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
             _labelMapper->setItemDelegate(new MetaDataChangeIndicatorDelegate);
 
-            QList<QWidget*> inputs = findChildren<QWidget*>(QRegExp("^tag"));
+            _ui->autoNumbers->setIcon(QIcon::fromTheme("view-sort-ascending",
+                style()->standardPixmap(QStyle::SP_ArrowDown)));
 
-            foreach (QWidget * input, inputs) {
+            QButtonGroup * clone_group = new QButtonGroup(this);
+            setModel(0);
+
+            foreach (QWidget * input, findChildren<QWidget*>(QRegExp("^tag"))) {
                 if (input->inherits("QLineEdit")) {
                     connect(input, SIGNAL(textChanged(QString)), _inputMapper, SLOT(submit()));
                 } else if (input->inherits("QSpinBox")) {
                     connect(input, SIGNAL(valueChanged(int)), _inputMapper, SLOT(submit()));
                 }
             }
+
+            foreach (QToolButton * button, findChildren<QToolButton*>(QRegExp("^clone"))) {
+                button->setIcon(QIcon::fromTheme("edit-copy", QIcon::fromTheme("dialog-ok")));
+            }
+
+            foreach (QAbstractButton * button, findChildren<QAbstractButton*>(QRegExp("^clone"))) {
+                const QString input_name = button->objectName().replace("clone", "tag");
+                int column = _inputMapper->mappedSection(findChild<QWidget*>(input_name));
+                clone_group->addButton(button, column);
+            }
+
+            connect(clone_group, SIGNAL(buttonClicked(int)), SLOT(emitCloneValue(int)));
         }
 
         BasicTags::~BasicTags() {
@@ -35,7 +52,11 @@ namespace Coquillo {
         }
 
         void BasicTags::setModel(QAbstractItemModel * model) {
-            _inputMapper->setModel(model);
+            if (model) {
+                _inputMapper->setModel(model);
+                _labelMapper->setModel(model);
+            }
+
             _inputMapper->addMapping(_ui->tagTitle, 1);
             _inputMapper->addMapping(_ui->tagArtist, 2);
             _inputMapper->addMapping(_ui->tagAlbum, 3);
@@ -51,7 +72,6 @@ namespace Coquillo {
             _inputMapper->addMapping(_ui->tagUrl, 13);
             _inputMapper->addMapping(_ui->tagEncoder, 14);
 
-            _labelMapper->setModel(model);
             _labelMapper->addMapping(_ui->labelTitle, 1);
             _labelMapper->addMapping(_ui->labelArtist, 2);
             _labelMapper->addMapping(_ui->labelAlbum, 3);
@@ -76,6 +96,11 @@ namespace Coquillo {
             _inputMapper->setCurrentModelIndex(idx);
             _labelMapper->setCurrentModelIndex(idx);
             setEnabled(idx.isValid());
+        }
+
+        void BasicTags::emitCloneValue(int column) {
+            const QVariant value = _inputMapper->model()->index(_inputMapper->currentIndex(), column).data();
+            emit cloneValue(value, column);
         }
     }
 }

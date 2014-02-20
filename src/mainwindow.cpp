@@ -38,6 +38,8 @@ namespace Coquillo {
         connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
             _basicTags, SLOT(setCurrentIndex(QModelIndex)));
 
+        connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
+
         _ui->metaData->header()->setSectionResizeMode(0, QHeaderView::Fixed);
         _ui->metaData->header()->resizeSection(0, 20);
         _ui->metaData->header()->setSortIndicator(1, Qt::AscendingOrder);
@@ -45,5 +47,11 @@ namespace Coquillo {
 
     MainWindow::~MainWindow() {
         delete _ui;
+    }
+
+    void MainWindow::applyValue(const QVariant & value, int column) {
+        foreach (QModelIndex idx, _ui->metaData->selectionModel()->selectedRows(column)) {
+            const_cast<QAbstractItemModel*>(idx.model())->setData(idx, value);
+        }
     }
 }

@@ -25,6 +25,12 @@ namespace Coquillo {
             public slots:
                 void setCurrentIndex(const QModelIndex & idx);
 
+            signals:
+                void cloneValue(const QVariant & value, int column);
+
+            private slots:
+                void emitCloneValue(int column);
+
             private:
                 QDataWidgetMapper * _inputMapper;
                 QDataWidgetMapper * _labelMapper;
