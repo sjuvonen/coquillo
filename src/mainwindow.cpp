@@ -1,12 +1,15 @@
 
 #include <QItemSelectionModel>
+#include <QSettings>
 #include <QSortFilterProxyModel>
 
+#include "historymodel.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include "filebrowser/filebrowser.h"
 #include "metadata/metadatamodel.h"
+#include "processor/renamewidget.h"
 #include "tageditor/basictags.h"
 
 namespace Coquillo {
@@ -23,6 +26,13 @@ namespace Coquillo {
 
         _fileBrowser = new FileBrowser(this);
         _ui->tools->addTab(_fileBrowser, tr("Directories"));
+
+        HistoryModel * rename_history = new HistoryModel("rename", this);
+        rename_history->setStorage(new QSettings("history"));
+
+        _fileRenamer = new Processor::RenameWidget(this);
+        _fileRenamer->setHistoryModel(rename_history);
+        _ui->tools->addTab(_fileRenamer, tr("Rename files"));
 
         _basicTags = new TagEditor::BasicTags(this);
         _basicTags->setModel(_ui->metaData->model());

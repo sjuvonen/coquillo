@@ -30,6 +30,25 @@
       </widget>
      </item>
      <item>
+      <widget class="QToolButton" name="toggleBookmark">
+       <property name="toolTip">
+        <string>Bookmark currently selected folder</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset theme="bookmark-new"/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

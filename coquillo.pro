@@ -17,8 +17,10 @@ FORMS += \
     ui/filebrowser.ui \
     ui/basictags.ui \
     ui/mainwindow.ui \
+    ui/renamewidget.ui \
 
 HEADERS += \
+    src/historymodel.h \
     src/mainwindow.h \
     src/filebrowser/directorymodel.h \
     src/filebrowser/filebrowser.h \
@@ -28,11 +30,13 @@ HEADERS += \
     src/metadata/metadata.h \
     src/metadata/metadatamodel.h \
     src/metadata/tagreader.h \
+    src/processor/renamewidget.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
 
 SOURCES += \
     src/main.cpp \
+    src/historymodel.cpp \
     src/mainwindow.cpp \
     src/filebrowser/directorymodel.cpp \
     src/filebrowser/filebrowser.cpp \
@@ -42,5 +46,6 @@ SOURCES += \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
     src/metadata/tagreader.cpp \
+    src/processor/renamewidget.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \

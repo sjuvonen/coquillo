@@ -11,6 +11,10 @@ namespace Coquillo {
     class FileBrowser;
     class MetaDataModel;
 
+    namespace Processor {
+        class RenameWidget;
+    }
+
     namespace TagEditor {
         class BasicTags;
     }
@@ -32,6 +36,7 @@ namespace Coquillo {
             FileBrowser * _fileBrowser;
             MetaDataModel * _metaData;
             TagEditor::BasicTags * _basicTags;
+            Processor::RenameWidget * _fileRenamer;
     };
 }
 
