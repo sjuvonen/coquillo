@@ -21,7 +21,7 @@ namespace Coquillo {
 
         public slots:
             void read();
-            void save();
+            bool submit();
 
         private:
             QSettings * _storage;

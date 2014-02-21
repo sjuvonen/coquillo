@@ -56,10 +56,12 @@ namespace Coquillo {
         settings->endArray();
     }
 
-    void HistoryModel::save() {
+    bool HistoryModel::submit() {
         if (!storage() || key().isNull()) {
-            return;
+            return false;
         }
+
+        qDebug() << "submit";
 
         QSettings * settings = storage();
         settings->beginWriteArray(key());
@@ -72,5 +74,7 @@ namespace Coquillo {
 
         settings->endArray();
         settings->sync();
+
+        return settings->status() == QSettings::NoError;
     }
 }
