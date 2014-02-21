@@ -28,6 +28,7 @@ namespace Coquillo {
 
         public slots:
             void setRecursiveScanEnabled(bool state) { _recursive = state; }
+            void uncheckAll();
 
         private:
             bool isAncestorChecked(const QModelIndex & idx) const;

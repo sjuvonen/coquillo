@@ -17,9 +17,12 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="goUp">
        <property name="text">
         <string>Up</string>
+       </property>
+       <property name="icon">
+        <iconset theme="go-up"/>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -40,7 +43,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_2">
+      <widget class="QToolButton" name="bookmarks">
        <property name="text">
         <string>Bookmarks</string>
        </property>
@@ -77,5 +80,26 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>goUp</sender>
+   <signal>clicked()</signal>
+   <receiver>FileBrowser</receiver>
+   <slot>cdUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>25</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>129</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>cdUp()</slot>
+  <slot>setDirectory(QString)</slot>
+ </slots>
 </ui>

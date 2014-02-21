@@ -29,9 +29,10 @@ namespace Coquillo {
         connect(_directories, SIGNAL(pathChecked(QString, bool)), SIGNAL(pathSelected(QString, bool)));
         connect(_directories, SIGNAL(pathUnchecked(QString, bool)), SIGNAL(pathUnselected(QString, bool)));
         connect(_ui->path, SIGNAL(returnPressed()), SLOT(changeDirectoryFromText()));
+        connect(_ui->directories, SIGNAL(activated(QModelIndex)), SLOT(changeDirectoryFromIndex(QModelIndex)));
     }
 
-    QString FileBrowser::path() const {
+    QString FileBrowser::directory() const {
         return _ui->path->text();
     }
 
@@ -39,8 +40,21 @@ namespace Coquillo {
         return _ui->recursive->isChecked();
     }
 
+    void FileBrowser::cdUp() {
+        QDir dir = QFileInfo(directory()).absoluteDir();
+        if (dir.cdUp()) {
+            setDirectory(dir.absolutePath());
+        }
+    }
+
     void FileBrowser::setDirectory(const QString & path) {
         if (QFileInfo(path).isDir()) {
+            if (!directory().contains(path)) {
+                // If NOT moving upwards in the tree, clear selections
+                // so that there are no 'ghosts' left behind.
+                uncheckAll();
+            }
+
             _ui->path->setText(path);
             _directories->sourceModel()->setRootPath(path);
             _ui->directories->setRootIndex(_directories->index(path));
@@ -49,6 +63,14 @@ namespace Coquillo {
 
     void FileBrowser::setRecursive(bool state) {
         _ui->recursive->setChecked(state);
+    }
+
+    void FileBrowser::uncheckAll() {
+        _directories->uncheckAll();
+    }
+
+    void FileBrowser::changeDirectoryFromIndex(const QModelIndex & idx) {
+        setDirectory(idx.data(QFileSystemModel::FilePathRole).toString());
     }
 
     void FileBrowser::changeDirectoryFromText() {

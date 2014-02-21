@@ -215,6 +215,14 @@ namespace Coquillo {
         worker->start();
     }
 
+    void MetaDataModel::clear() {
+        beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+        _metaData.clear();
+        _original.clear();
+        _directories.clear();
+        endRemoveRows();
+    }
+
     void MetaDataModel::removeDirectory(const QString & dir) {
         for (int i = rowCount() - 1; i >= 0; i--) {
             if (containedDirectoryForRow(i) == dir) {

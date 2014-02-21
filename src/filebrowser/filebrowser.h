@@ -15,7 +15,7 @@ namespace Coquillo {
 
         public:
             FileBrowser(QWidget * parent = 0);
-            QString path() const;
+            QString directory() const;
             bool recursive() const;
 
         signals:
@@ -24,10 +24,13 @@ namespace Coquillo {
             void pathUnselected(const QString & path, bool recursive);
 
         public slots:
+            void cdUp();
             void setDirectory(const QString & path);
             void setRecursive(bool state);
+            void uncheckAll();
 
         private slots:
+            void changeDirectoryFromIndex(const QModelIndex &);
             void changeDirectoryFromText();
 
         private:

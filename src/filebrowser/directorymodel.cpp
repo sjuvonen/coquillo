@@ -70,6 +70,15 @@ namespace Coquillo {
         return QSortFilterProxyModel::setData(idx, value, role);
     }
 
+    void DirectoryModel::uncheckAll() {
+        while (!_checked.isEmpty()) {
+            const QString dir = _checked.takeFirst();
+            const QModelIndex idx = mapFromSource(sourceModel()->index(dir));
+            emit dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), columnCount() - 1));
+            emit pathUnchecked(dir, _recursive);
+        }
+    }
+
     bool DirectoryModel::isAncestorChecked(const QModelIndex & idx) const {
         QModelIndex tmp(idx);
 

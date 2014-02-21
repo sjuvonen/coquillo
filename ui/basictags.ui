@@ -9,55 +9,102 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>317</width>
-    <height>394</height>
+    <width>330</width>
+    <height>466</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>330</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="labelTitle">
-     <property name="text">
-      <string>Title</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>tagTitle</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLineEdit" name="tagTitle">
+   <item row="12" column="1">
+    <widget class="QLineEdit" name="tagComposer">
      <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="labelArtist">
+   <item row="6" column="0">
+    <widget class="QLabel" name="labelGenre">
      <property name="text">
-      <string>Artist</string>
+      <string>Genre</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>tagGenre</cstring>
+     </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="labelAlbum">
+   <item row="10" column="1">
+    <widget class="QLineEdit" name="tagOriginalArtist">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="2">
+    <widget class="QToolButton" name="cloneComposer">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
-      <string>Album</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QLabel" name="labelEncoder">
+     <property name="text">
+      <string>Encoder</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>tagEncoder</cstring>
+     </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="3" column="2">
+    <widget class="QToolButton" name="cloneAlbum">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
     <widget class="QLabel" name="labelYear">
      <property name="text">
       <string>Year</string>
@@ -70,66 +117,66 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QSpinBox" name="tagYear">
-       <property name="maximum">
-        <number>9999</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="cloneYear">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checkable">
-        <bool>false</bool>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-       <property name="arrowType">
-        <enum>Qt::NoArrow</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="labelDisc">
-       <property name="text">
-        <string>Disc</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="buddy">
-        <cstring>tagDisc</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="tagDisc"/>
-     </item>
-    </layout>
+   <item row="11" column="1">
+    <widget class="QLineEdit" name="tagAlbumArtist">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
-   <item row="4" column="0">
+   <item row="11" column="2">
+    <widget class="QToolButton" name="cloneAlbumArtist">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="labelComposer">
+     <property name="text">
+      <string>Composer</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>tagComposer</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Basic</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="tagTitle">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QLabel" name="labelNumber">
      <property name="text">
       <string>Number</string>
@@ -142,7 +189,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QSpinBox" name="tagNumber">
@@ -153,6 +200,12 @@
      </item>
      <item>
       <widget class="QLabel" name="labelTotal">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>/</string>
        </property>
@@ -185,6 +238,9 @@
        <property name="text">
         <string>#</string>
        </property>
+       <property name="icon">
+        <iconset theme="view-sort-ascending"/>
+       </property>
        <property name="autoRaise">
         <bool>true</bool>
        </property>
@@ -205,87 +261,26 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="labelGenre">
+   <item row="10" column="2">
+    <widget class="QToolButton" name="cloneOriginalArtist">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
-      <string>Genre</string>
+      <string/>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
      </property>
-     <property name="buddy">
-      <cstring>tagGenre</cstring>
+     <property name="checkable">
+      <bool>false</bool>
      </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QLineEdit" name="tagGenre">
-     <property name="clearButtonEnabled">
+     <property name="autoRaise">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="labelComment">
-     <property name="text">
-      <string>Comment</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>tagComment</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLineEdit" name="tagComment">
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="labelUrl">
-     <property name="text">
-      <string>URL</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>tagUrl</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QLineEdit" name="tagUrl">
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="labelOriginalArtist">
-     <property name="text">
-      <string>Orig. artist</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>tagOriginalArtist</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QLineEdit" name="tagOriginalArtist">
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
+   <item row="11" column="0">
     <widget class="QLabel" name="labelAlbumArtist">
      <property name="text">
       <string>Album artist</string>
@@ -298,54 +293,33 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
-    <widget class="QLineEdit" name="tagAlbumArtist">
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="labelComposer">
-     <property name="text">
-      <string>Composer</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>tagComposer</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QLineEdit" name="tagComposer">
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <widget class="QLabel" name="labelEncoder">
-     <property name="text">
-      <string>Encoder</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>tagEncoder</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="1">
+   <item row="13" column="1">
     <widget class="QLineEdit" name="tagEncoder">
      <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="13" column="2">
+    <widget class="QToolButton" name="cloneEncoder">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -358,83 +332,20 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="2">
-    <widget class="QToolButton" name="cloneTitle">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
+   <item row="1" column="0">
+    <widget class="QLabel" name="labelTitle">
      <property name="text">
-      <string/>
+      <string>Title</string>
      </property>
-     <property name="checkable">
-      <bool>false</bool>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::NoArrow</enum>
+     <property name="buddy">
+      <cstring>tagTitle</cstring>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QToolButton" name="cloneAlbum">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::NoArrow</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QToolButton" name="cloneArtist">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::NoArrow</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QToolButton" name="cloneDisc">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::NoArrow</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
+   <item row="5" column="2">
     <widget class="QToolButton" name="cloneTotal">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -442,24 +353,8 @@
      <property name="text">
       <string/>
      </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::NoArrow</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QToolButton" name="cloneGenre">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -472,13 +367,36 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="2">
-    <widget class="QToolButton" name="cloneEncoder">
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="tagGenre">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="labelArtist">
+     <property name="text">
+      <string>Artist</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>tagArtist</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="cloneTitle">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -486,57 +404,54 @@
      <property name="autoRaise">
       <bool>true</bool>
      </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
     </widget>
    </item>
-   <item row="10" column="2">
-    <widget class="QToolButton" name="cloneComposer">
+   <item row="3" column="0">
+    <widget class="QLabel" name="labelAlbum">
+     <property name="text">
+      <string>Album</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>tagAlbum</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QToolButton" name="cloneArtist">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
      <property name="checkable">
       <bool>false</bool>
      </property>
      <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QLineEdit" name="tagUrl">
+     <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
    </item>
    <item row="9" column="2">
-    <widget class="QToolButton" name="cloneAlbumArtist">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="2">
-    <widget class="QToolButton" name="cloneOriginalArtist">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="2">
     <widget class="QToolButton" name="cloneUrl">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -544,6 +459,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
      <property name="checkable">
       <bool>false</bool>
      </property>
@@ -552,7 +470,20 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
+   <item row="10" column="0">
+    <widget class="QLabel" name="labelOriginalArtist">
+     <property name="text">
+      <string>Orig. artist</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>tagOriginalArtist</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
     <widget class="QToolButton" name="cloneComment">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -560,6 +491,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
      <property name="checkable">
       <bool>false</bool>
      </property>
@@ -568,28 +502,202 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QComboBox" name="tagArtist">
-     <property name="editable">
+   <item row="9" column="0">
+    <widget class="QLabel" name="labelUrl">
+     <property name="text">
+      <string>URL</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>tagUrl</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QSpinBox" name="tagYear">
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="cloneYear">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="edit-copy"/>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+       <property name="arrowType">
+        <enum>Qt::NoArrow</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelDisc">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Disc</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>tagDisc</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="tagDisc"/>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="2">
+    <widget class="QToolButton" name="cloneDisc">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
       <bool>true</bool>
      </property>
-     <property name="duplicatesEnabled">
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QToolButton" name="cloneGenre">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy"/>
+     </property>
+     <property name="checkable">
       <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="labelComment">
+     <property name="text">
+      <string>Comment</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>tagComment</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLineEdit" name="tagComment">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Extra</string>
      </property>
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="tagAlbum">
-     <property name="editable">
-      <bool>true</bool>
-     </property>
-     <property name="duplicatesEnabled">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="tagArtist"/>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="tagAlbum"/>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tagTitle</tabstop>
+  <tabstop>cloneTitle</tabstop>
+  <tabstop>tagArtist</tabstop>
+  <tabstop>cloneArtist</tabstop>
+  <tabstop>tagAlbum</tabstop>
+  <tabstop>cloneAlbum</tabstop>
+  <tabstop>tagYear</tabstop>
+  <tabstop>cloneYear</tabstop>
+  <tabstop>tagDisc</tabstop>
+  <tabstop>cloneDisc</tabstop>
+  <tabstop>tagNumber</tabstop>
+  <tabstop>tagTotal</tabstop>
+  <tabstop>autoNumbers</tabstop>
+  <tabstop>cloneTotal</tabstop>
+  <tabstop>tagGenre</tabstop>
+  <tabstop>cloneGenre</tabstop>
+  <tabstop>tagComment</tabstop>
+  <tabstop>cloneComment</tabstop>
+  <tabstop>tagUrl</tabstop>
+  <tabstop>cloneUrl</tabstop>
+  <tabstop>tagOriginalArtist</tabstop>
+  <tabstop>cloneOriginalArtist</tabstop>
+  <tabstop>tagAlbumArtist</tabstop>
+  <tabstop>cloneAlbumArtist</tabstop>
+  <tabstop>tagComposer</tabstop>
+  <tabstop>cloneComposer</tabstop>
+  <tabstop>tagEncoder</tabstop>
+  <tabstop>cloneEncoder</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

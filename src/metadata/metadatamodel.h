@@ -40,6 +40,7 @@ namespace Coquillo {
             inline void setRecursive(bool state) { _recursive = state; }
             void addDirectory(const QString & path);
             void addFiles(const QStringList & files);
+            void clear();
             void removeDirectory(const QString & path);
             void revert();
             void revert(const QModelIndex & idx);

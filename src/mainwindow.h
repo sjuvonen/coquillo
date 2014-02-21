@@ -24,6 +24,8 @@ namespace Coquillo {
 
         private slots:
             void applyValue(const QVariant & value, int column);
+            void invertSelection();
+            void selectAll();
 
         private:
             Ui::MainWindow * _ui;

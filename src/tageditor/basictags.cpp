@@ -20,9 +20,6 @@ namespace Coquillo {
             _labelMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
             _labelMapper->setItemDelegate(new MetaDataChangeIndicatorDelegate);
 
-            _ui->autoNumbers->setIcon(QIcon::fromTheme("view-sort-ascending",
-                style()->standardPixmap(QStyle::SP_ArrowDown)));
-
             QButtonGroup * clone_group = new QButtonGroup(this);
             setModel(0);
 
@@ -32,10 +29,6 @@ namespace Coquillo {
                 } else if (input->inherits("QSpinBox")) {
                     connect(input, SIGNAL(valueChanged(int)), _inputMapper, SLOT(submit()));
                 }
-            }
-
-            foreach (QToolButton * button, findChildren<QToolButton*>(QRegExp("^clone"))) {
-                button->setIcon(QIcon::fromTheme("edit-copy", QIcon::fromTheme("dialog-ok")));
             }
 
             foreach (QAbstractButton * button, findChildren<QAbstractButton*>(QRegExp("^clone"))) {
@@ -55,11 +48,6 @@ namespace Coquillo {
             if (model) {
                 _inputMapper->setModel(model);
                 _labelMapper->setModel(model);
-                _ui->tagArtist->setModel(model);
-                _ui->tagAlbum->setModel(model);
-
-                _ui->tagArtist->setModelColumn(2);
-                _ui->tagAlbum->setModelColumn(3);
             }
 
             _inputMapper->addMapping(_ui->tagTitle, 1);

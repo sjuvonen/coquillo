@@ -1,3 +1,5 @@
+
+#include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 
 #include "mainwindow.h"
@@ -39,7 +41,6 @@ namespace Coquillo {
             _basicTags, SLOT(setCurrentIndex(QModelIndex)));
 
         connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
-
         connect(_ui->actionReset, SIGNAL(triggered()), _metaData, SLOT(revert()));
 
         _ui->metaData->header()->setSectionResizeMode(0, QHeaderView::Fixed);
@@ -55,5 +56,24 @@ namespace Coquillo {
         foreach (QModelIndex idx, _ui->metaData->selectionModel()->selectedRows(column)) {
             const_cast<QAbstractItemModel*>(idx.model())->setData(idx, value);
         }
+    }
+
+    void MainWindow::selectAll() {
+        QAbstractItemModel * model = _ui->metaData->model();
+        const QModelIndex tl = model->index(0, 0);
+        const QModelIndex br = model->index(model->rowCount() - 1, model->columnCount() - 1);
+        _ui->metaData->selectionModel()->select(QItemSelection(tl, br), QItemSelectionModel::Select);
+    }
+
+    void MainWindow::invertSelection() {
+        QAbstractItemModel * model = _ui->metaData->model();
+        QItemSelectionModel * selection_model = _ui->metaData->selectionModel();
+        const QModelIndex tl = model->index(0, 0);
+        const QModelIndex br = model->index(model->rowCount() - 1, model->columnCount() - 1);
+        selection_model->select(QItemSelection(tl, br), QItemSelectionModel::Toggle);
+
+        // Make sure the active row stays within the selection so that the
+        // tag editor widget won't fall out of sync.
+        selection_model->setCurrentIndex(selection_model->selection().indexes().first(), QItemSelectionModel::NoUpdate);
     }
 }
