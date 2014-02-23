@@ -1,6 +1,7 @@
 
 #include <QFileInfo>
 #include <QFileSystemModel>
+#include <QMenu>
 #include <QStandardPaths>
 
 #include "directorymodel.h"
@@ -22,6 +23,10 @@ namespace Coquillo {
         _ui->directories->header()->hide();
         _ui->directories->setModel(_directories);
         _ui->directories->setRootIndex(_directories->index(home));
+
+        QMenu * menu = new QMenu(this);
+        menu->addAction("Nothing here");
+        _ui->bookmarks->setMenu(menu);
 
         connect(_ui->recursive, SIGNAL(toggled(bool)), _directories, SLOT(setRecursiveScanEnabled(bool)));
         connect(_ui->recursive, SIGNAL(toggled(bool)), SIGNAL(recursionEnabled(bool)));

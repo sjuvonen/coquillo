@@ -5,11 +5,11 @@
 
 namespace Coquillo {
     HistoryModel::HistoryModel(QObject * parent)
-    : QStringListModel(parent), _storage(0) {
+    : QStringListModel(parent), _limit(10) {
 
     }
     HistoryModel::HistoryModel(const QString & key, QObject * parent)
-    : QStringListModel(parent), _storage(0), _key(key) {
+    : QStringListModel(parent), _limit(10), _key(key) {
         read();
     }
 
@@ -32,11 +32,15 @@ namespace Coquillo {
     }
 
     void HistoryModel::setStorage(QSettings * settings) {
-        _storage = settings;
+        _storage = QPointer<QSettings>(settings);
 
         if (settings && !key().isNull()) {
             read();
         }
+    }
+
+    QSettings * HistoryModel::storage() const {
+        return _storage.data();
     }
 
     void HistoryModel::read() {
@@ -61,7 +65,7 @@ namespace Coquillo {
             return false;
         }
 
-        qDebug() << "submit";
+        qDebug() << "save history";
 
         QSettings * settings = storage();
         settings->beginWriteArray(key());

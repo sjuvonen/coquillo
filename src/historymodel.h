@@ -1,6 +1,7 @@
 #ifndef COQUILLO_HISTORYMODEL_H
 #define COQUILLO_HISTORYMODEL_H
 
+#include <QPointer>
 #include <QStringListModel>
 
 class QSettings;
@@ -17,15 +18,15 @@ namespace Coquillo {
             void setLimit(int limit);
             inline int limit() const { return _limit; }
             void setStorage(QSettings * settings);
-            inline QSettings * storage() const { return _storage; }
+            QSettings * storage() const;
 
         public slots:
             void read();
             bool submit();
 
         private:
-            QSettings * _storage;
             int _limit;
+            QPointer<QSettings> _storage;
             QString _key;
     };
 }

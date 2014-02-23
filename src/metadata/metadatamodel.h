@@ -15,7 +15,7 @@ namespace Coquillo {
         Q_OBJECT
 
         public:
-            enum DataRole { ModifiedRole = Qt::UserRole+1, FieldNameRole };
+            enum DataRole { ModifiedRole = Qt::UserRole+1, FieldNameRole, NamedRowDataRole };
 
             MetaDataModel(QObject * parent = 0);
             ~MetaDataModel();
@@ -24,7 +24,7 @@ namespace Coquillo {
             QVariant data(const QModelIndex & idx, int role = Qt::DisplayRole) const;
             bool setData(const QModelIndex & idx, const QVariant & data, int role = Qt::EditRole);
             QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-            QModelIndex index(int row, int col, const QModelIndex & parent) const;
+            QModelIndex index(int row, int col, const QModelIndex & parent = QModelIndex()) const;
             bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
 
             MetaData metaData(int row, bool original = false) const;

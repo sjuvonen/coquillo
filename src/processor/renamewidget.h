@@ -1,6 +1,7 @@
 #ifndef COQUILLO_PROCESSOR_RENAMEWIDGET_H
 #define COQUILLO_PROCESSOR_RENAMEWIDGET_H
 
+#include <QPointer>
 #include <QWidget>
 
 class QAbstractItemModel;
@@ -22,11 +23,13 @@ namespace Coquillo {
                 ~RenameWidget();
                 void setHistoryModel(QAbstractItemModel * history);
                 void setModel(QAbstractItemModel * model);
+                QAbstractItemModel * model() const;
                 void setSelectionModel(QItemSelectionModel * model);
+                QItemSelectionModel * selectionModel() const;
+                QModelIndex currentIndex() const;
+                QString pattern() const;
 
-                inline QAbstractItemModel * model() const { return _model; }
                 inline QAbstractItemModel * historyModel() const { return _history; }
-                inline QItemSelectionModel * selectionModel() const { return _selectionModel; }
 
             signals:
                 void patternAccepted(const QString & pattern);
@@ -34,12 +37,13 @@ namespace Coquillo {
             private slots:
                 void apply();
                 void applyPattern(const QString & pattern);
+                void updatePreview();
 
             private:
                 Ui::RenameWidget * _ui;
                 QAbstractItemModel * _history;
-                QAbstractItemModel * _model;
-                QItemSelectionModel * _selectionModel;
+                QPointer<QAbstractItemModel> _model;
+                QPointer<QItemSelectionModel> _selectionModel;
         };
     }
 }

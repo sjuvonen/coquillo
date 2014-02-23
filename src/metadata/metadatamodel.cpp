@@ -117,6 +117,17 @@ namespace Coquillo {
 
             case FieldNameRole:
                 return _columnMap.value(idx.column());
+
+            case NamedRowDataRole: {
+                const int row = idx.row();
+                QVariantHash data;
+
+                foreach (int col, _columnMap.keys()) {
+                    data[_columnMap[col]] = index(row, col).data();
+                }
+
+                return data;
+            }
         }
 
         return QVariant();

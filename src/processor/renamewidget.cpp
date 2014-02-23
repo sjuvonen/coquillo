@@ -3,14 +3,16 @@
 #include <QItemSelectionModel>
 #include <QDebug>
 
+#include <metadata/metadatamodel.h>
 #include "historymodel.h"
+#include "patterns.h"
 #include "renamewidget.h"
 #include "ui_renamewidget.h"
 
 namespace Coquillo {
     namespace Processor {
         RenameWidget::RenameWidget(QWidget * parent)
-        : QWidget(parent), _history(0), _model(0), _selectionModel(0) {
+        : QWidget(parent), _history(0), _selectionModel(0) {
             _ui = new Ui::RenameWidget;
             _ui->setupUi(this);
 
@@ -28,19 +30,41 @@ namespace Coquillo {
             }
             _history = history;
             _ui->pattern->setModel(history);
-            _history->connect(_ui->pattern, SIGNAL(activated(QString)), _history, SLOT(submit()));
+            connect(_ui->pattern, SIGNAL(activated(QString)), _history, SLOT(submit()));
         }
 
         void RenameWidget::setModel(QAbstractItemModel * model) {
-            _model = model;
+            if (_selectionModel) {
+                delete _selectionModel;
+            }
+
+            _model = QPointer<QAbstractItemModel>(model);
+            _selectionModel = new QItemSelectionModel(model);
+        }
+
+        QAbstractItemModel * RenameWidget::model() const {
+            return _model.data();
         }
 
         void RenameWidget::setSelectionModel(QItemSelectionModel * model) {
             _selectionModel = model;
+            connect(model, SIGNAL(currentChanged(QModelIndex, QModelIndex)), SLOT(updatePreview()));
+        }
+
+        QItemSelectionModel * RenameWidget::selectionModel() const {
+            return _selectionModel.data();
+        }
+
+        QModelIndex RenameWidget::currentIndex() const {
+            return selectionModel()->currentIndex();
+        }
+
+        QString RenameWidget::pattern() const {
+            return _ui->pattern->currentText();
         }
 
         void RenameWidget::apply() {
-            applyPattern(_ui->pattern->currentText());
+            applyPattern(pattern());
         }
 
         void RenameWidget::applyPattern(const QString & pattern) {
@@ -50,6 +74,19 @@ namespace Coquillo {
                 _ui->pattern->addItem(pattern);
                 _history->submit();
             }
+        }
+
+        void RenameWidget::updatePreview() {
+            if (!selectionModel()) {
+                return;
+            }
+
+            qDebug() << "Update preview";
+
+            Patterns patterns;
+            const QVariantHash values = currentIndex().data(MetaDataModel::NamedRowDataRole).toHash();
+            const QString text = patterns.compile(pattern(), values);
+            _ui->preview->setText(text);
         }
     }
 }

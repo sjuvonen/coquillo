@@ -22,7 +22,9 @@
         <string>Up</string>
        </property>
        <property name="icon">
-        <iconset theme="go-up"/>
+        <iconset theme="go-up">
+         <normaloff/>
+        </iconset>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -38,7 +40,9 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset theme="bookmark-new"/>
+        <iconset theme="bookmark-new">
+         <normaloff/>
+        </iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>

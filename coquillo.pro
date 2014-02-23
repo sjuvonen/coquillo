@@ -30,6 +30,7 @@ HEADERS += \
     src/metadata/metadata.h \
     src/metadata/metadatamodel.h \
     src/metadata/tagreader.h \
+    src/processor/patterns.h \
     src/processor/renamewidget.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
@@ -46,6 +47,7 @@ SOURCES += \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
     src/metadata/tagreader.cpp \
+    src/processor/patterns.cpp \
     src/processor/renamewidget.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \

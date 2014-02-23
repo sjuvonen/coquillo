@@ -1,5 +1,6 @@
 
 #include <QItemSelectionModel>
+#include <QPointer>
 #include <QSettings>
 #include <QSortFilterProxyModel>
 
@@ -32,6 +33,8 @@ namespace Coquillo {
 
         _fileRenamer = new Processor::RenameWidget(this);
         _fileRenamer->setHistoryModel(rename_history);
+        _fileRenamer->setModel(_ui->metaData->model());
+        _fileRenamer->setSelectionModel(_ui->metaData->selectionModel());
         _ui->tools->addTab(_fileRenamer, tr("Rename files"));
 
         _basicTags = new TagEditor::BasicTags(this);
