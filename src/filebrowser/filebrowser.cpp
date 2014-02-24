@@ -1,4 +1,5 @@
 
+#include <QDebug>
 #include <QFileInfo>
 #include <QFileSystemModel>
 #include <QMenu>
@@ -12,17 +13,12 @@ namespace Coquillo {
     FileBrowser::FileBrowser(QWidget * parent)
     : QWidget(parent) {
 
-        QString home = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-
         _ui = new Ui::FileBrowser;
         _ui->setupUi(this);
-        _ui->path->setText(home);
 
         _directories = new DirectoryModel(this);
-        _directories->sourceModel()->setRootPath(home);
         _ui->directories->header()->hide();
         _ui->directories->setModel(_directories);
-        _ui->directories->setRootIndex(_directories->index(home));
 
         QMenu * menu = new QMenu(this);
         menu->addAction("Nothing here");
@@ -30,11 +26,16 @@ namespace Coquillo {
 
         connect(_ui->recursive, SIGNAL(toggled(bool)), _directories, SLOT(setRecursiveScanEnabled(bool)));
         connect(_ui->recursive, SIGNAL(toggled(bool)), SIGNAL(recursionEnabled(bool)));
-
         connect(_directories, SIGNAL(pathChecked(QString, bool)), SIGNAL(pathSelected(QString, bool)));
         connect(_directories, SIGNAL(pathUnchecked(QString, bool)), SIGNAL(pathUnselected(QString, bool)));
         connect(_ui->path, SIGNAL(returnPressed()), SLOT(changeDirectoryFromText()));
+        connect(_ui->directory, SIGNAL(activated(QString)), SLOT(setDirectory(QString)));
         connect(_ui->directories, SIGNAL(activated(QModelIndex)), SLOT(changeDirectoryFromIndex(QModelIndex)));
+
+        _ui->path->hide();
+
+        const QString home = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+        setDirectory(home);
     }
 
     QString FileBrowser::directory() const {
@@ -47,7 +48,7 @@ namespace Coquillo {
 
     void FileBrowser::cdUp() {
         QDir dir = QFileInfo(directory()).absoluteDir();
-        if (dir.cdUp()) {
+        if (dir.exists()) {
             setDirectory(dir.absolutePath());
         }
     }
@@ -61,6 +62,7 @@ namespace Coquillo {
             }
 
             _ui->path->setText(path);
+            _ui->directory->setCurrentText(path);
             _directories->sourceModel()->setRootPath(path);
             _ui->directories->setRootIndex(_directories->index(path));
         }
@@ -80,5 +82,13 @@ namespace Coquillo {
 
     void FileBrowser::changeDirectoryFromText() {
         setDirectory(_ui->path->text());
+    }
+
+    void FileBrowser::populateBookmarksMenu() {
+
+    }
+
+    void FileBrowser::toggleBookmarked(bool state) {
+        QString path = _ui->path->text();
     }
 }

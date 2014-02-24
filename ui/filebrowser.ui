@@ -117,6 +117,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QComboBox" name="directory">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QTreeView" name="directories"/>
    </item>
    <item>

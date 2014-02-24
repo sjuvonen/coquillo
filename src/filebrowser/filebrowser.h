@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QStringListModel;
+
 namespace Ui {
     class FileBrowser;
 };
@@ -32,10 +34,13 @@ namespace Coquillo {
         private slots:
             void changeDirectoryFromIndex(const QModelIndex &);
             void changeDirectoryFromText();
+            void populateBookmarksMenu();
+            void toggleBookmarked(bool state);
 
         private:
             Ui::FileBrowser * _ui;
             DirectoryModel * _directories;
+            QStringListModel * _bookmarks;
     };
 };
 
