@@ -255,6 +255,15 @@ namespace Coquillo {
         _directories.removeOne(dir);
     }
 
+    void MetaDataModel::reload() {
+        QStringList dirs = _directories;
+        clear();
+
+        foreach (const QString dir, dirs) {
+            addDirectory(dir);
+        }
+    }
+
     void MetaDataModel::revert() {
         qDebug() << "revert";
         beginResetModel();

@@ -42,6 +42,7 @@ namespace Coquillo {
             void addFiles(const QStringList & files);
             void clear();
             void removeDirectory(const QString & path);
+            void reload();
             void revert();
             void revert(const QModelIndex & idx);
 

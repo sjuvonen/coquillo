@@ -59,6 +59,7 @@ namespace Coquillo {
 
         connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
         connect(_ui->actionReset, SIGNAL(triggered()), _metaData, SLOT(revert()));
+        connect(_ui->actionReload, SIGNAL(triggered()), _metaData, SLOT(reload()));
 
         _ui->metaData->header()->setSectionResizeMode(0, QHeaderView::Fixed);
         _ui->metaData->header()->resizeSection(0, 20);
