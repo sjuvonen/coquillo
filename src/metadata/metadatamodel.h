@@ -35,6 +35,7 @@ namespace Coquillo {
             }
 
             inline bool isRecursive() const { return _recursive; }
+            inline QStringList directories() const { return _directories; }
 
         public slots:
             inline void setRecursive(bool state) { _recursive = state; }

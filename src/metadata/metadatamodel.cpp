@@ -256,7 +256,7 @@ namespace Coquillo {
     }
 
     void MetaDataModel::reload() {
-        QStringList dirs = _directories;
+        const QStringList dirs = directories();
         clear();
 
         foreach (const QString dir, dirs) {
