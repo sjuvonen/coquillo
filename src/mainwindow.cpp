@@ -140,7 +140,6 @@ namespace Coquillo {
             header->setSectionHidden(section, !header->isSectionHidden(section));
         });
 
-
         menu.exec(header->mapToGlobal(point));
     }
 

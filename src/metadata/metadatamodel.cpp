@@ -94,7 +94,13 @@ namespace Coquillo {
                 const QString field = _columnMap.value(idx.column());
 
                 if (field == "filename") {
-                    return meta.path();
+                    QString root = containedDirectoryForRow(idx.row());
+
+                    if (_directories.count() > 1) {
+                        root = QFileInfo(root).absolutePath();
+                    }
+
+                    return meta.path().mid(root.length() + 1);
                 } else {
                     return meta.value(field);
                 }
