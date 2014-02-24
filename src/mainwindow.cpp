@@ -112,11 +112,11 @@ namespace Coquillo {
         QMap<QString, QAction *> labels;
 
         QAction * action = menu.addAction(tr("Show modification indicator"));
-        action->setData(0);
         action->setCheckable(true);
-        action->setChecked(true);
+        action->setChecked(!header->isSectionHidden(0));
         menu.addSeparator();
 
+        mapper.setMapping(action, 0);
         connect(action, SIGNAL(triggered()), &mapper, SLOT(map()));
 
         for (int i = 1; i < header->count(); i++) {
