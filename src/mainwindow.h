@@ -25,6 +25,7 @@ namespace Coquillo {
         public:
             MainWindow(QWidget * parent=0);
             ~MainWindow();
+            QMenu * createPopupMenu();
 
         protected:
             void closeEvent(QCloseEvent * event);

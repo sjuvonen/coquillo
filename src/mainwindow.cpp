@@ -75,6 +75,24 @@ namespace Coquillo {
         delete _ui;
     }
 
+    QMenu * MainWindow::createPopupMenu() {
+        QMenu * menu = QMainWindow::createPopupMenu();
+        menu->addSeparator();
+        QAction * action;
+
+        action = menu->addAction(tr("Menu Bar"));
+        action->setCheckable(true);
+        action->setChecked(menuBar()->isVisible());
+        connect(action, SIGNAL(triggered(bool)), menuBar(), SLOT(setVisible(bool)));
+
+        action = menu->addAction(tr("Status Bar"));
+        action->setCheckable(true);
+        action->setChecked(statusBar()->isVisible());
+        connect(action, SIGNAL(triggered(bool)), statusBar(), SLOT(setVisible(bool)));
+
+        return menu;
+    }
+
     void MainWindow::closeEvent(QCloseEvent * event) {
         saveSettings();
         event->accept();
@@ -147,6 +165,8 @@ namespace Coquillo {
         QSettings settings;
         restoreState(settings.value("UI/MainWindow/State").toByteArray());
         resize(settings.value("UI/MainWindow/Size").toSize());
+        menuBar()->setVisible(settings.value("UI/MainWindow/MenuBar", true).toBool());
+        statusBar()->setVisible(settings.value("UI/MainWindow/StatusBar", true).toBool());
         _ui->splitter->restoreState(settings.value("UI/MainSplitter/State").toByteArray());
         _ui->metaData->header()->restoreState(settings.value("UI/MainHeader/State").toByteArray());
         _fileBrowser->setRecursive(settings.value("RecursiveScan").toBool());
@@ -157,6 +177,8 @@ namespace Coquillo {
         settings.setValue("RecursiveScan", _fileBrowser->isRecursive());
         settings.setValue("UI/MainWindow/State", saveState());
         settings.setValue("UI/MainWindow/Size", size());
+        settings.setValue("UI/MainWindow/MenuBar", menuBar()->isVisible());
+        settings.setValue("UI/MainWindow/StatusBar", statusBar()->isVisible());
         settings.setValue("UI/MainSplitter/State", _ui->splitter->saveState());
         settings.setValue("UI/MainHeader/State", _ui->metaData->header()->saveState());
     }
