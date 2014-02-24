@@ -32,7 +32,7 @@ namespace Coquillo {
         _columns[12] = tr("Composer");
         _columns[13] = tr("Url");
         _columns[14] = tr("Encoder");
-//         _columns[0] = tr("Filename");
+        _columns[15] = tr("Filename");
 //         _columns[0] = tr("Length");
 
         _columnMap = QHash<int, QString>();
@@ -50,6 +50,7 @@ namespace Coquillo {
         _columnMap[12] = "composer";
         _columnMap[13] = "url";
         _columnMap[14] = "encoder";
+        _columnMap[15] = "filename";
 
         qRegisterMetaType<Coquillo::MetaData>("MetaData");
     }
@@ -91,7 +92,12 @@ namespace Coquillo {
             case Qt::EditRole: {
                 const MetaData meta = _metaData[idx.row()];
                 const QString field = _columnMap.value(idx.column());
-                return meta.value(field);
+
+                if (field == "filename") {
+                    return meta.path();
+                } else {
+                    return meta.value(field);
+                }
             }
 
             case Qt::DecorationRole: {

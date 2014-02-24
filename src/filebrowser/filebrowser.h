@@ -16,7 +16,7 @@ namespace Coquillo {
         public:
             FileBrowser(QWidget * parent = 0);
             QString directory() const;
-            bool recursive() const;
+            bool isRecursive() const;
 
         signals:
             void recursionEnabled(bool state);

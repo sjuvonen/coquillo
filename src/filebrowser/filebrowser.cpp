@@ -41,7 +41,7 @@ namespace Coquillo {
         return _ui->path->text();
     }
 
-    bool FileBrowser::recursive() const {
+    bool FileBrowser::isRecursive() const {
         return _ui->recursive->isChecked();
     }
 

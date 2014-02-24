@@ -26,12 +26,19 @@ namespace Coquillo {
             MainWindow(QWidget * parent=0);
             ~MainWindow();
 
+        protected:
+            void closeEvent(QCloseEvent * event);
+
         private slots:
             void applyValue(const QVariant & value, int column);
             void invertSelection();
+            void restoreSettings();
             void selectAll();
+            void showHeaderContextMenu(const QPoint & point) const;
 
         private:
+            void saveSettings();
+
             Ui::MainWindow * _ui;
             FileBrowser * _fileBrowser;
             MetaDataModel * _metaData;
