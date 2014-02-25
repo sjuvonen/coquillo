@@ -15,7 +15,8 @@ namespace Coquillo {
         Q_OBJECT
 
         public:
-            enum DataRole { ModifiedRole = Qt::UserRole+1, FieldNameRole, NamedRowDataRole };
+            enum DataRole { FilePathRole = Qt::UserRole+1, FileNameRole = Qt::UserRole+2,
+                ModifiedRole, FieldNameRole, NamedRowDataRole };
 
             MetaDataModel(QObject * parent = 0);
             ~MetaDataModel();
@@ -52,7 +53,7 @@ namespace Coquillo {
 
         private:
             static QStringList nameFilters();
-            void backup(const MetaData & metaData);
+            void backup(const MetaData & metaData, QString key = QString());
             bool isRowChanged(const QModelIndex & idx) const;
             bool isChanged(const QModelIndex & idx) const;
             void rowChanged(const QModelIndex & idx);

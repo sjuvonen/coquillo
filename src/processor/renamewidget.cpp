@@ -74,14 +74,20 @@ namespace Coquillo {
                 _ui->pattern->addItem(pattern);
                 _history->submit();
             }
+
+            Patterns patterns;
+
+            foreach (const QModelIndex idx, selectionModel()->selectedRows()) {
+                const QVariantHash values = currentIndex().data(MetaDataModel::NamedRowDataRole).toHash();
+                const QString path = patterns.compile(this->pattern(), values);
+                model()->setData(idx, path, MetaDataModel::FileNameRole);
+            }
         }
 
         void RenameWidget::updatePreview() {
             if (!selectionModel()) {
                 return;
             }
-
-            qDebug() << "Update preview";
 
             Patterns patterns;
             const QVariantHash values = currentIndex().data(MetaDataModel::NamedRowDataRole).toHash();
