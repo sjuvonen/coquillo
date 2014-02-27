@@ -31,6 +31,7 @@ namespace Coquillo {
                 parts << QString("%1: %2").arg(key, tags[key].toString());
             }
 
+            parts.sort(Qt::CaseInsensitive);
             setPreview(parts.join(", "));
         }
     }
