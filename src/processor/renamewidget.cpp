@@ -15,8 +15,6 @@ namespace Coquillo {
             _ui = new Ui::RenameWidget;
             _ui->setupUi(this);
             setupUi();
-            
-            connect(this, SIGNAL(patternAccepted(QString)), SLOT(applyPattern(QString)));
         }
 
         RenameWidget::~RenameWidget() {
@@ -39,6 +37,17 @@ namespace Coquillo {
                 const QString path = patterns.compile(this->pattern(), values);
                 model()->setData(idx, path, MetaDataModel::FileNameRole);
             }
+        }
+
+        void RenameWidget::updatePreview() {
+            if (!selectionModel()) {
+                return;
+            }
+
+            Patterns patterns;
+            const QVariantHash values = currentIndex().data(MetaDataModel::NamedRowDataRole).toHash();
+            const QString text = patterns.compile(pattern(), values);
+            setPreview(text);
         }
     }
 }

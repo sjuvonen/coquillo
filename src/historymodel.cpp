@@ -69,7 +69,7 @@ namespace Coquillo {
 
         QSettings * settings = storage();
         settings->beginWriteArray(key());
-        settings->clear();
+        settings->remove("");
 
         for (int i = 0; i < rowCount(); i++) {
             settings->setArrayIndex(i);

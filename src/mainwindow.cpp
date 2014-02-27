@@ -15,6 +15,7 @@
 #include "filebrowser/filebrowser.h"
 #include "metadata/metadatamodel.h"
 #include "processor/renamewidget.h"
+#include "processor/parserwidget.h"
 #include "tageditor/basictags.h"
 
 namespace Coquillo {
@@ -35,11 +36,20 @@ namespace Coquillo {
         HistoryModel * rename_history = new HistoryModel("rename", this);
         rename_history->setStorage(new QSettings("history"));
 
+        HistoryModel * parser_history = new HistoryModel("parser", this);
+        parser_history->setStorage(new QSettings("history"));
+
         _fileRenamer = new Processor::RenameWidget(this);
         _fileRenamer->setHistoryModel(rename_history);
         _fileRenamer->setModel(_ui->metaData->model());
         _fileRenamer->setSelectionModel(_ui->metaData->selectionModel());
         _ui->tools->addTab(_fileRenamer, tr("Rename files"));
+
+        _tagParser = new Processor::ParserWidget(this);
+        _tagParser->setHistoryModel(parser_history);
+        _tagParser->setModel(_ui->metaData->model());
+        _tagParser->setSelectionModel(_ui->metaData->selectionModel());
+        _ui->tools->addTab(_tagParser, tr("Parse tags"));
 
         _basicTags = new TagEditor::BasicTags(this);
         _basicTags->setModel(_ui->metaData->model());

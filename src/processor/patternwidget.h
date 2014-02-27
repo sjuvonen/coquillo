@@ -16,6 +16,7 @@ namespace Coquillo {
                 PatternWidget(QWidget * parent = 0);
                 virtual ~PatternWidget() { }
                 QString pattern() const;
+                virtual void setSelectionModel(QItemSelectionModel * model);
                 virtual void setHistoryModel(QAbstractItemModel * history);
                 inline QAbstractItemModel * historyModel() const { return _history; }
 
@@ -25,7 +26,8 @@ namespace Coquillo {
             protected slots:
                 void apply();
                 void setupUi();
-                void updatePreview();
+                void setPreview(const QString & text);
+                virtual void updatePreview() = 0;
                 virtual void applyPattern(const QString &) = 0;
 
             private slots:

@@ -3,6 +3,10 @@
 
 #include "patternwidget.h"
 
+namespace Ui {
+    class ParserWidget;
+}
+
 namespace Coquillo {
     namespace Processor {
         class ParserWidget : public PatternWidget {
@@ -11,6 +15,13 @@ namespace Coquillo {
             public:
                 ParserWidget(QWidget * parent = 0);
                 ~ParserWidget();
+
+            protected slots:
+                void applyPattern(const QString & pattern);
+                void updatePreview();
+
+            private:
+                Ui::ParserWidget * _ui;
         };
     }
 }

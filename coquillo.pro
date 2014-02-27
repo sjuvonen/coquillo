@@ -17,6 +17,7 @@ FORMS += \
     ui/filebrowser.ui \
     ui/basictags.ui \
     ui/mainwindow.ui \
+    ui/parserwidget.ui \
     ui/renamewidget.ui \
 
 HEADERS += \

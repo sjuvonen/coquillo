@@ -18,6 +18,7 @@ namespace Coquillo {
 
             protected slots:
                 void applyPattern(const QString & pattern);
+                void updatePreview();
 
             private:
                 Ui::RenameWidget * _ui;
