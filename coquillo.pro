@@ -30,6 +30,9 @@ HEADERS += \
     src/metadata/metadata.h \
     src/metadata/metadatamodel.h \
     src/metadata/tagreader.h \
+    src/processor/basewidget.h \
+    src/processor/parserwidget.h \
+    src/processor/patternwidget.h \
     src/processor/patterns.h \
     src/processor/renamewidget.h \
     src/tageditor/basictags.h \
@@ -47,6 +50,9 @@ SOURCES += \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
     src/metadata/tagreader.cpp \
+    src/processor/basewidget.cpp \
+    src/processor/parserwidget.cpp \
+    src/processor/patternwidget.cpp \
     src/processor/patterns.cpp \
     src/processor/renamewidget.cpp \
     src/tageditor/basictags.cpp \

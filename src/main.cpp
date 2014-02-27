@@ -6,7 +6,6 @@
 #include <processor/patterns.h>
 
 int main(int argc, char ** args) {
-
     QApplication::setOrganizationName("Juvonet");
     QApplication::setOrganizationDomain("juvonet.fi");
     QApplication::setApplicationName("Coquillo");
