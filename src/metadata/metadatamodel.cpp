@@ -279,7 +279,7 @@ namespace Coquillo {
                     _metaData[idx.row()] = meta;
                     rowChanged(idx);
 
-                    qDebug() << path;
+                    qDebug() << idx.row() << path;
                 }
 
                 return true;

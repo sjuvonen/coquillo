@@ -11,7 +11,7 @@ namespace Coquillo {
         : QWidget(parent) {
 
         }
-        
+
         void BaseWidget::setModel(QAbstractItemModel * model) {
             _model = QPointer<QAbstractItemModel>(model);
             setSelectionModel(new QItemSelectionModel(model));

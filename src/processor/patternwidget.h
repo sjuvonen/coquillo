@@ -3,6 +3,10 @@
 
 #include "basewidget.h"
 
+namespace Ui {
+    class PatternWidget;
+}
+
 namespace Coquillo {
     namespace Processor {
         class PatternWidget : public BaseWidget {
@@ -11,17 +15,21 @@ namespace Coquillo {
             public:
                 PatternWidget(QWidget * parent = 0);
                 virtual ~PatternWidget() { }
-
                 QString pattern() const;
-
-                void setHistoryModel(QAbstractItemModel * history);
+                virtual void setHistoryModel(QAbstractItemModel * history);
                 inline QAbstractItemModel * historyModel() const { return _history; }
 
             signals:
                 void patternAccepted(const QString & pattern);
 
             protected slots:
+                void apply();
+                void setupUi();
                 void updatePreview();
+                virtual void applyPattern(const QString &) = 0;
+
+            private slots:
+                void applyCurrentPattern();
 
             private:
                 QAbstractItemModel * _history;

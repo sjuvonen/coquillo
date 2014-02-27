@@ -19,10 +19,10 @@ namespace Coquillo {
                 QModelIndex currentIndex() const;
 
                 QAbstractItemModel * model() const;
-                void setModel(QAbstractItemModel * model);
+                virtual void setModel(QAbstractItemModel * model);
 
                 QItemSelectionModel * selectionModel() const;
-                void setSelectionModel(QItemSelectionModel * model);
+                virtual void setSelectionModel(QItemSelectionModel * model);
 
             protected slots:
                 virtual void apply() = 0;
