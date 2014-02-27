@@ -59,7 +59,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -91,7 +93,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -133,7 +137,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -185,7 +191,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -258,7 +266,9 @@
         <string>#</string>
        </property>
        <property name="icon">
-        <iconset theme="view-sort-ascending"/>
+        <iconset theme="view-sort-ascending">
+         <normaloff/>
+        </iconset>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -289,7 +299,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -341,7 +353,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -383,7 +397,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -418,7 +434,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -437,7 +455,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -466,7 +486,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -498,7 +520,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -520,7 +544,9 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="edit-copy"/>
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -564,7 +590,9 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset theme="edit-copy"/>
+        <iconset theme="edit-copy">
+         <normaloff/>
+        </iconset>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -648,10 +676,18 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="tagArtist"/>
+    <widget class="QLineEdit" name="tagArtist">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="tagAlbum"/>
+    <widget class="QLineEdit" name="tagAlbum">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="11" column="0">
     <widget class="QLabel" name="labelAlbumArtist">
