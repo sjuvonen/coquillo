@@ -1,4 +1,7 @@
 
+#include <QDebug>
+#include <QDir>
+
 #include <metadata/metadatamodel.h>
 #include "parserwidget.h"
 #include "patterns.h"
@@ -23,12 +26,18 @@ namespace Coquillo {
 
         void ParserWidget::updatePreview() {
             Patterns patterns;
-            const QString path = currentIndex().data(MetaDataModel::FilePathRole).toString();
-            const QVariantHash tags = patterns.extract(pattern(), path);
+            const QChar separator = QDir::separator();
+            const QString pattern = this->pattern();
+            QString path = currentIndex().data(MetaDataModel::FilePathRole).toString();
+            path = path.section(separator, -1 - pattern.count(separator));
+            path = path.left(path.length() - QFileInfo(path).suffix().length() - 1);
+
+            qDebug() << path;
+            const QVariantHash tags = patterns.extract(pattern, path);
             QStringList parts;
 
             foreach (QString key, tags.keys()) {
-                parts << QString("%1: %2").arg(key, tags[key].toString());
+                parts << QString("<b>%1</b>: %2").arg(key, tags[key].toString());
             }
 
             parts.sort(Qt::CaseInsensitive);
