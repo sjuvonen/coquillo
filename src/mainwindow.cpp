@@ -8,7 +8,7 @@
 #include <QSortFilterProxyModel>
 #include <QTimer>
 
-#include "historymodel.h"
+#include "stringstoremodel.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -33,10 +33,10 @@ namespace Coquillo {
         _fileBrowser = new FileBrowser(this);
         _ui->tools->addTab(_fileBrowser, tr("Directories"));
 
-        HistoryModel * rename_history = new HistoryModel("rename", this);
+        StringStoreModel * rename_history = new StringStoreModel("rename", this);
         rename_history->setStorage(new QSettings("history"));
 
-        HistoryModel * parser_history = new HistoryModel("parser", this);
+        StringStoreModel * parser_history = new StringStoreModel("parser", this);
         parser_history->setStorage(new QSettings("history"));
 
         _fileRenamer = new Processor::RenameWidget(this);

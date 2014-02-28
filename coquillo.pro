@@ -21,8 +21,8 @@ FORMS += \
     ui/renamewidget.ui \
 
 HEADERS += \
-    src/historymodel.h \
     src/mainwindow.h \
+    src/stringstoremodel.h \
     src/filebrowser/directorymodel.h \
     src/filebrowser/filebrowser.h \
     src/metadata/filereader.h \
@@ -41,8 +41,8 @@ HEADERS += \
 
 SOURCES += \
     src/main.cpp \
-    src/historymodel.cpp \
     src/mainwindow.cpp \
+    src/stringstoremodel.cpp \
     src/filebrowser/directorymodel.cpp \
     src/filebrowser/filebrowser.cpp \
     src/metadata/filereader.cpp \

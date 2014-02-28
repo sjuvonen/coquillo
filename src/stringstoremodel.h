@@ -1,5 +1,5 @@
-#ifndef COQUILLO_HISTORYMODEL_H
-#define COQUILLO_HISTORYMODEL_H
+#ifndef COQUILLO_STRINGSTOREMODEL_H
+#define COQUILLO_STRINGSTOREMODEL_H
 
 #include <QPointer>
 #include <QStringListModel>
@@ -7,12 +7,12 @@
 class QSettings;
 
 namespace Coquillo {
-    class HistoryModel : public QStringListModel {
+    class StringStoreModel : public QStringListModel {
         Q_OBJECT
 
         public:
-            HistoryModel(QObject * parent = 0);
-            HistoryModel(const QString & key, QObject * parent = 0);
+            StringStoreModel(QObject * parent = 0);
+            StringStoreModel(const QString & key, QObject * parent = 0);
             void setKey(const QString & key);
             inline QString key() const { return _key; }
             void setLimit(int limit);

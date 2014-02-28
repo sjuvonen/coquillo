@@ -1,19 +1,19 @@
 
 #include <QDebug>
 #include <QSettings>
-#include "historymodel.h"
+#include "stringstoremodel.h"
 
 namespace Coquillo {
-    HistoryModel::HistoryModel(QObject * parent)
+    StringStoreModel::StringStoreModel(QObject * parent)
     : QStringListModel(parent), _limit(10) {
 
     }
-    HistoryModel::HistoryModel(const QString & key, QObject * parent)
+    StringStoreModel::StringStoreModel(const QString & key, QObject * parent)
     : QStringListModel(parent), _limit(10), _key(key) {
         read();
     }
 
-    void HistoryModel::setKey(const QString & key) {
+    void StringStoreModel::setKey(const QString & key) {
         if (key != _key) {
             _key = key;
 
@@ -23,7 +23,7 @@ namespace Coquillo {
         }
     }
 
-    void HistoryModel::setLimit(int limit) {
+    void StringStoreModel::setLimit(int limit) {
         _limit = limit;
 
         if (limit > rowCount()) {
@@ -31,7 +31,7 @@ namespace Coquillo {
         }
     }
 
-    void HistoryModel::setStorage(QSettings * settings) {
+    void StringStoreModel::setStorage(QSettings * settings) {
         _storage = QPointer<QSettings>(settings);
 
         if (settings && !key().isNull()) {
@@ -39,11 +39,11 @@ namespace Coquillo {
         }
     }
 
-    QSettings * HistoryModel::storage() const {
+    QSettings * StringStoreModel::storage() const {
         return _storage.data();
     }
 
-    void HistoryModel::read() {
+    void StringStoreModel::read() {
         if (!storage() || key().isNull()) {
             return;
         }
@@ -60,7 +60,7 @@ namespace Coquillo {
         settings->endArray();
     }
 
-    bool HistoryModel::submit() {
+    bool StringStoreModel::submit() {
         if (!storage() || key().isNull()) {
             return false;
         }
