@@ -20,6 +20,8 @@ namespace Coquillo {
             FileBrowser(QWidget * parent = 0);
             void setBookmarkModel(QAbstractItemModel * model);
             QAbstractItemModel * bookmarkModel() const;
+            void setHistoryModel(QAbstractItemModel * model);
+            QAbstractItemModel * historyModel() const;
             QString directory() const;
             bool isRecursive() const;
 
@@ -36,17 +38,18 @@ namespace Coquillo {
             void uncheckAll();
 
         private slots:
+            void addToHistory(const QString & dir);
             void changeDirectoryFromIndex(const QModelIndex &);
             void changeDirectoryFromText();
             void populateBookmarksMenu();
-            void setDirectoryFromAction(QAction * bookmark);
+            void changeDirectoryFromAction(QAction * bookmark);
             void toggleBookmarked(bool state);
             void updateToggleBookmarkButton();
 
         private:
             void bookmarkCurrentPath();
-            void unsetCurrentBookmarked();
             int findBookmark(const QString & path) const;
+            void unsetCurrentBookmarked();
             Ui::FileBrowser * _ui;
             DirectoryModel * _directories;
             QPointer<QAbstractItemModel> _bookmarks;

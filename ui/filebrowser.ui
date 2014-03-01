@@ -32,27 +32,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toggleBookmark">
-       <property name="toolTip">
-        <string>Bookmark currently selected folder</string>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset theme="bookmark-new">
-         <normaloff/>
-        </iconset>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -68,10 +47,19 @@
      <item>
       <widget class="QToolButton" name="bookmarks">
        <property name="text">
-        <string>Bookmarks</string>
+        <string>Bookmark</string>
+       </property>
+       <property name="icon">
+        <iconset theme="bookmark-new"/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
        <property name="popupMode">
         <enum>QToolButton::MenuButtonPopup</enum>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -94,6 +82,9 @@
     <widget class="QComboBox" name="directory">
      <property name="editable">
       <bool>true</bool>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::InsertAtTop</enum>
      </property>
     </widget>
    </item>
@@ -131,13 +122,13 @@
    </hints>
   </connection>
   <connection>
-   <sender>toggleBookmark</sender>
-   <signal>clicked(bool)</signal>
+   <sender>bookmarks</sender>
+   <signal>triggered(QAction*)</signal>
    <receiver>FileBrowser</receiver>
-   <slot>toggleBookmarked(bool)</slot>
+   <slot>changeDirectoryFromAction(QAction*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>48</x>
+     <x>167</x>
      <y>21</y>
     </hint>
     <hint type="destinationlabel">
@@ -148,12 +139,12 @@
   </connection>
   <connection>
    <sender>bookmarks</sender>
-   <signal>triggered(QAction*)</signal>
+   <signal>clicked(bool)</signal>
    <receiver>FileBrowser</receiver>
-   <slot>setDirectoryFromAction(QAction*)</slot>
+   <slot>toggleBookmarked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
+     <x>199</x>
      <y>21</y>
     </hint>
     <hint type="destinationlabel">
@@ -167,6 +158,6 @@
   <slot>cdUp()</slot>
   <slot>setDirectory(QString)</slot>
   <slot>toggleBookmarked(bool)</slot>
-  <slot>setDirectoryFromAction(QAction*)</slot>
+  <slot>changeDirectoryFromAction(QAction*)</slot>
  </slots>
 </ui>

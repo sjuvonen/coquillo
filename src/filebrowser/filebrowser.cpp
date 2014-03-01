@@ -6,7 +6,6 @@
 #include <QInputDialog>
 #include <QMenu>
 #include <QSortFilterProxyModel>
-#include <QStandardPaths>
 
 #include "directorymodel.h"
 #include "filebrowser.h"
@@ -31,23 +30,20 @@ namespace Coquillo {
         connect(_ui->recursive, SIGNAL(toggled(bool)), SIGNAL(recursionEnabled(bool)));
         connect(_directories, SIGNAL(pathChecked(QString, bool)), SIGNAL(pathSelected(QString, bool)));
         connect(_directories, SIGNAL(pathUnchecked(QString, bool)), SIGNAL(pathUnselected(QString, bool)));
-        connect(_ui->path, SIGNAL(returnPressed()), SLOT(changeDirectoryFromText()));
+//         connect(_ui->path, SIGNAL(returnPressed()), SLOT(changeDirectoryFromText()));
         connect(_ui->directory, SIGNAL(activated(QString)), SLOT(setDirectory(QString)));
         connect(_ui->directories, SIGNAL(activated(QModelIndex)), SLOT(changeDirectoryFromIndex(QModelIndex)));
         connect(this, SIGNAL(directoryChanged(QString)), SLOT(updateToggleBookmarkButton()));
 
         _ui->path->hide();
         _ui->bookmarks->hide();
-        _ui->toggleBookmark->hide();
-
-        const QString home = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-        setDirectory(home);
+        _ui->bookmarks->hide();
     }
 
     void FileBrowser::setBookmarkModel(QAbstractItemModel * model) {
         _bookmarks = model;
         _ui->bookmarks->setVisible(model != 0);
-        _ui->toggleBookmark->setVisible(model != 0);
+        _ui->bookmarks->setVisible(model != 0);
         populateBookmarksMenu();
         updateToggleBookmarkButton();
 
@@ -57,6 +53,15 @@ namespace Coquillo {
 
     QAbstractItemModel * FileBrowser::bookmarkModel() const {
         return _bookmarks.data();
+    }
+
+    void FileBrowser::setHistoryModel(QAbstractItemModel * model) {
+        _history = model;
+        _ui->directory->setModel(model);
+    }
+
+    QAbstractItemModel * FileBrowser::historyModel() const {
+        return _history.data();
     }
 
     QString FileBrowser::directory() const {
@@ -76,6 +81,7 @@ namespace Coquillo {
 
     void FileBrowser::setDirectory(const QString & path) {
         if (QFileInfo(path).isDir()) {
+            addToHistory(path);
             if (!directory().contains(path)) {
                 // If NOT moving upwards in the tree, clear selections
                 // so that there are no 'ghosts' left behind.
@@ -97,6 +103,15 @@ namespace Coquillo {
 
     void FileBrowser::uncheckAll() {
         _directories->uncheckAll();
+    }
+
+    void FileBrowser::addToHistory(const QString & directory) {
+        _ui->directory->insertItem(0, directory);
+//         if (_ui->directory->findText(directory) == -1) {
+//             qDebug() << "Push to history";
+// //             _history.data()->submit();
+//             _ui->directory->insertItem(0, directory);
+//         }
     }
 
     void FileBrowser::changeDirectoryFromIndex(const QModelIndex & idx) {
@@ -121,7 +136,7 @@ namespace Coquillo {
         }
     }
 
-    void FileBrowser::setDirectoryFromAction(QAction * bookmark) {
+    void FileBrowser::changeDirectoryFromAction(QAction * bookmark) {
         const QString path = bookmark->data().toString();
         setDirectory(path);
 
@@ -134,6 +149,10 @@ namespace Coquillo {
         } else {
             unsetCurrentBookmarked();
         }
+    }
+
+    void FileBrowser::updateToggleBookmarkButton() {
+        _ui->bookmarks->setChecked(findBookmark(directory()) != -1);
     }
 
     void FileBrowser::bookmarkCurrentPath() {
@@ -151,6 +170,18 @@ namespace Coquillo {
             model->submit();
 
             qDebug() << "bookmarked" << label << path;
+        } else {
+            _ui->bookmarks->setChecked(false);
+        }
+    }
+
+    int FileBrowser::findBookmark(const QString & path) const {
+        if (!_bookmarks.isNull()) {
+            QAbstractItemModel * model = _bookmarks.data();
+            const QModelIndexList indices = model->match(model->index(0, 1), Qt::DisplayRole, path, 1, Qt::MatchFixedString);
+            return indices.value(0).row();
+        } else {
+            return -1;
         }
     }
 
@@ -167,20 +198,6 @@ namespace Coquillo {
             model->submit();
         } else {
             qDebug() << "Bookmark not found" << path;
-        }
-    }
-
-    void FileBrowser::updateToggleBookmarkButton() {
-        _ui->toggleBookmark->setChecked(findBookmark(directory()) != -1);
-    }
-
-    int FileBrowser::findBookmark(const QString & path) const {
-        if (!_bookmarks.isNull()) {
-            QAbstractItemModel * model = _bookmarks.data();
-            const QModelIndexList indices = model->match(model->index(0, 1), Qt::DisplayRole, path, 1, Qt::MatchFixedString);
-            return indices.value(0).row();
-        } else {
-            return -1;
         }
     }
 }

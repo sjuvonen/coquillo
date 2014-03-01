@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QSignalMapper>
 #include <QSortFilterProxyModel>
+#include <QStandardPaths>
 #include <QTimer>
 
 #include "stringstoremodel.h"
@@ -34,8 +35,14 @@ namespace Coquillo {
         StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
         bookmarks->setStorage(storage);
 
+        StringStoreModel * path_history = new StringStoreModel("directories", this);
+        path_history->setStorage(storage);
+        path_history->setLimit(100);
+
         _fileBrowser = new FileBrowser(this);
         _fileBrowser->setBookmarkModel(bookmarks);
+        _fileBrowser->setHistoryModel(path_history);
+        _fileBrowser->setDirectory(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
         _ui->tools->addTab(_fileBrowser, tr("Directories"));
 
         StringStoreModel * rename_history = new StringStoreModel("rename", this);
