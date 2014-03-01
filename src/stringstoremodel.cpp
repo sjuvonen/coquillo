@@ -1,16 +1,33 @@
 
 #include <QDebug>
 #include <QSettings>
+#include <QStandardItemModel>
 #include "stringstoremodel.h"
 
 namespace Coquillo {
     StringStoreModel::StringStoreModel(QObject * parent)
-    : QStringListModel(parent), _limit(10) {
-
+    : QIdentityProxyModel(parent), _limit(10) {
+        init(1);
     }
+
     StringStoreModel::StringStoreModel(const QString & key, QObject * parent)
-    : QStringListModel(parent), _limit(10), _key(key) {
+    : QIdentityProxyModel(parent), _limit(10), _key(key) {
+        init(1);
         read();
+    }
+
+    StringStoreModel::StringStoreModel(const QString & key, int cols, QObject * parent)
+    : QIdentityProxyModel(parent), _limit(10), _key(key) {
+        init(cols);
+        read();
+    }
+
+    void StringStoreModel::setColumnCount(int count) {
+        QStandardItemModel * backend = qobject_cast<QStandardItemModel*>(sourceModel());
+
+        if (backend) {
+            backend->setColumnCount(count);
+        }
     }
 
     void StringStoreModel::setKey(const QString & key) {
@@ -54,7 +71,11 @@ namespace Coquillo {
         for (int i = 0; i < size; i++) {
             settings->setArrayIndex(i);
             insertRow(i);
-            setData(index(i), settings->value("item"));
+
+            for (int j = 0; j < columnCount(); j++) {
+                const QString key = QString("item-%1").arg(j);
+                setData(index(i, j), settings->value(key));
+            }
         }
 
         settings->endArray();
@@ -65,7 +86,7 @@ namespace Coquillo {
             return false;
         }
 
-        qDebug() << "save history";
+        qDebug() << "save history" << rowCount();
 
         QSettings * settings = storage();
         settings->beginWriteArray(key());
@@ -73,12 +94,22 @@ namespace Coquillo {
 
         for (int i = 0; i < rowCount(); i++) {
             settings->setArrayIndex(i);
-            settings->setValue("item", index(i).data());
+
+            for (int j = 0; j < columnCount(); j++) {
+                const QString key = QString("item-%1").arg(j);
+                settings->setValue(key, index(i, j).data());
+            }
         }
 
         settings->endArray();
         settings->sync();
 
         return settings->status() == QSettings::NoError;
+    }
+
+    void StringStoreModel::init(int columns) {
+        QStandardItemModel * backend = new QStandardItemModel;
+        backend->setColumnCount(columns);
+        setSourceModel(backend);
     }
 }

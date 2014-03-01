@@ -2,17 +2,19 @@
 #define COQUILLO_STRINGSTOREMODEL_H
 
 #include <QPointer>
-#include <QStringListModel>
+#include <QIdentityProxyModel>
 
 class QSettings;
 
 namespace Coquillo {
-    class StringStoreModel : public QStringListModel {
+    class StringStoreModel : public QIdentityProxyModel {
         Q_OBJECT
 
         public:
             StringStoreModel(QObject * parent = 0);
             StringStoreModel(const QString & key, QObject * parent = 0);
+            StringStoreModel(const QString & key, int cols, QObject * parent = 0);
+            void setColumnCount(int count);
             void setKey(const QString & key);
             inline QString key() const { return _key; }
             void setLimit(int limit);
@@ -25,6 +27,7 @@ namespace Coquillo {
             bool submit();
 
         private:
+            void init(int cols);
             int _limit;
             QPointer<QSettings> _storage;
             QString _key;
