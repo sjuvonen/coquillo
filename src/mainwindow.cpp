@@ -30,14 +30,19 @@ namespace Coquillo {
         sort_proxy->setSourceModel(_metaData);
         _ui->metaData->setModel(sort_proxy);
 
+        QSettings * storage = new QSettings("history");
+        StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
+        bookmarks->setStorage(storage);
+
         _fileBrowser = new FileBrowser(this);
+        _fileBrowser->setBookmarkModel(bookmarks);
         _ui->tools->addTab(_fileBrowser, tr("Directories"));
 
         StringStoreModel * rename_history = new StringStoreModel("rename", this);
-        rename_history->setStorage(new QSettings("history"));
+        rename_history->setStorage(storage);
 
         StringStoreModel * parser_history = new StringStoreModel("parser", this);
-        parser_history->setStorage(new QSettings("history"));
+        parser_history->setStorage(storage);
 
         _fileRenamer = new Processor::RenameWidget(this);
         _fileRenamer->setHistoryModel(rename_history);

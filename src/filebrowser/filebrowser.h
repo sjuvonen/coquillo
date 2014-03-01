@@ -1,9 +1,10 @@
 #ifndef COQUILLO_FILEBROWSER_H
 #define COQUILLO_FILEBROWSER_H
 
+#include <QPointer>
 #include <QWidget>
 
-class QStringListModel;
+class QAbstractItemModel;
 
 namespace Ui {
     class FileBrowser;
@@ -17,10 +18,13 @@ namespace Coquillo {
 
         public:
             FileBrowser(QWidget * parent = 0);
+            void setBookmarkModel(QAbstractItemModel * model);
+            QAbstractItemModel * bookmarkModel() const;
             QString directory() const;
             bool isRecursive() const;
 
         signals:
+            void directoryChanged(const QString & dir);
             void recursionEnabled(bool state);
             void pathSelected(const QString & path, bool recursive);
             void pathUnselected(const QString & path, bool recursive);
@@ -35,12 +39,18 @@ namespace Coquillo {
             void changeDirectoryFromIndex(const QModelIndex &);
             void changeDirectoryFromText();
             void populateBookmarksMenu();
+            void setDirectoryFromAction(QAction * bookmark);
             void toggleBookmarked(bool state);
+            void updateToggleBookmarkButton();
 
         private:
+            void bookmarkCurrentPath();
+            void unsetCurrentBookmarked();
+            int findBookmark(const QString & path) const;
             Ui::FileBrowser * _ui;
             DirectoryModel * _directories;
-            QStringListModel * _bookmarks;
+            QPointer<QAbstractItemModel> _bookmarks;
+            QPointer<QAbstractItemModel> _history;
     };
 };
 
