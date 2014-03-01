@@ -89,7 +89,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QTreeView" name="directories"/>
+    <widget class="QTreeView" name="browser"/>
    </item>
    <item>
     <widget class="QCheckBox" name="recursive">

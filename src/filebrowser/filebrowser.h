@@ -24,6 +24,7 @@ namespace Coquillo {
             QAbstractItemModel * historyModel() const;
             QString directory() const;
             bool isRecursive() const;
+            bool eventFilter(QObject * watched, QEvent * event);
 
         signals:
             void directoryChanged(const QString & dir);
@@ -37,8 +38,13 @@ namespace Coquillo {
             void setRecursive(bool state);
             void uncheckAll();
 
+        protected:
+            void keyReleaseEvent(QKeyEvent * event);
+            void mouseReleaseEvent(QMouseEvent * event);
+
         private slots:
             void addToHistory(const QString & dir);
+            void changeDirectory(const QString & dir);
             void changeDirectoryFromIndex(const QModelIndex &);
             void changeDirectoryFromText();
             void populateBookmarksMenu();
@@ -49,11 +55,13 @@ namespace Coquillo {
         private:
             void bookmarkCurrentPath();
             int findBookmark(const QString & path) const;
+            void historyGoBack();
             void unsetCurrentBookmarked();
             Ui::FileBrowser * _ui;
             DirectoryModel * _directories;
             QPointer<QAbstractItemModel> _bookmarks;
             QPointer<QAbstractItemModel> _history;
+            QStringList _browser_history;
     };
 };
 

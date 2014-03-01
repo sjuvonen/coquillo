@@ -4,7 +4,9 @@
 #include <QFileInfo>
 #include <QFileSystemModel>
 #include <QInputDialog>
+#include <QKeyEvent>
 #include <QMenu>
+#include <QMouseEvent>
 #include <QSortFilterProxyModel>
 
 #include "directorymodel.h"
@@ -19,8 +21,8 @@ namespace Coquillo {
         _ui->setupUi(this);
 
         _directories = new DirectoryModel(this);
-        _ui->directories->header()->hide();
-        _ui->directories->setModel(_directories);
+        _ui->browser->header()->hide();
+        _ui->browser->setModel(_directories);
 
         QMenu * menu = new QMenu(this);
         menu->addAction("Nothing here");
@@ -32,12 +34,45 @@ namespace Coquillo {
         connect(_directories, SIGNAL(pathUnchecked(QString, bool)), SIGNAL(pathUnselected(QString, bool)));
 //         connect(_ui->path, SIGNAL(returnPressed()), SLOT(changeDirectoryFromText()));
         connect(_ui->directory, SIGNAL(activated(QString)), SLOT(setDirectory(QString)));
-        connect(_ui->directories, SIGNAL(activated(QModelIndex)), SLOT(changeDirectoryFromIndex(QModelIndex)));
+        connect(_ui->browser, SIGNAL(activated(QModelIndex)), SLOT(changeDirectoryFromIndex(QModelIndex)));
         connect(this, SIGNAL(directoryChanged(QString)), SLOT(updateToggleBookmarkButton()));
 
         _ui->path->hide();
         _ui->bookmarks->hide();
         _ui->bookmarks->hide();
+        _ui->browser->viewport()->installEventFilter(this);
+    }
+
+    void FileBrowser::keyReleaseEvent(QKeyEvent * event) {
+        if (event->key() == Qt::Key_Back) {
+            eventFilter(this, event);
+        }
+    }
+
+    void FileBrowser::mouseReleaseEvent(QMouseEvent * event) {
+        if (event->button() == Qt::BackButton) {
+            eventFilter(this, event);
+        }
+    }
+
+    bool FileBrowser::eventFilter(QObject *, QEvent * event) {
+        if (event->type() == QEvent::MouseButtonRelease) {
+            QMouseEvent * mouse_event = static_cast<QMouseEvent*>(event);
+            if (mouse_event->button() == Qt::BackButton) {
+                historyGoBack();
+                return true;
+            }
+        }
+
+        if (event->type() == QEvent::KeyRelease) {
+            QKeyEvent * key_event = static_cast<QKeyEvent*>(event);
+            if (key_event->key() == Qt::Key_Back) {
+                historyGoBack();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void FileBrowser::setBookmarkModel(QAbstractItemModel * model) {
@@ -82,6 +117,12 @@ namespace Coquillo {
     void FileBrowser::setDirectory(const QString & path) {
         if (QFileInfo(path).isDir()) {
             addToHistory(path);
+            changeDirectory(path);
+        }
+    }
+
+    void FileBrowser::changeDirectory(const QString & path) {
+        if (QFileInfo(path).isDir()) {
             if (!directory().contains(path)) {
                 // If NOT moving upwards in the tree, clear selections
                 // so that there are no 'ghosts' left behind.
@@ -91,7 +132,7 @@ namespace Coquillo {
             _ui->path->setText(path);
             _ui->directory->setCurrentText(path);
             _directories->sourceModel()->setRootPath(path);
-            _ui->directories->setRootIndex(_directories->index(path));
+            _ui->browser->setRootIndex(_directories->index(path));
 
             emit directoryChanged(path);
         }
@@ -198,6 +239,14 @@ namespace Coquillo {
             model->submit();
         } else {
             qDebug() << "Bookmark not found" << path;
+        }
+    }
+
+    void FileBrowser::historyGoBack() {
+        qDebug() << _ui->directory->currentIndex();
+        const QString path = _history.data()->index(1, 0).data().toString();
+        if (path.length() > 0) {
+            changeDirectory(path);
         }
     }
 }
