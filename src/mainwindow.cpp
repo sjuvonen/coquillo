@@ -102,6 +102,7 @@ namespace Coquillo {
         QMenu * menu = QMainWindow::createPopupMenu();
         menu->addSeparator();
         QAction * action;
+//         QMenu * sub;
 
         action = menu->addAction(tr("Menu Bar"));
         action->setCheckable(true);
@@ -113,8 +114,44 @@ namespace Coquillo {
         action->setChecked(statusBar()->isVisible());
         connect(action, SIGNAL(triggered(bool)), statusBar(), SLOT(setVisible(bool)));
 
+//         QSignalMapper * style_mapper = new QSignalMapper(this);
+//         connect(style_mapper, SIGNAL(mapped(int)), SLOT(setToolBarIconStyle(int)));
+//
+//         QSignalMapper * size_mapper = new QSignalMapper(this);
+//         connect(size_mapper, SIGNAL(mapped(int)), SLOT(setToolBarIconSize(int)));
+
+//         menu->addSeparator();
+//
+//         sub = menu->addMenu(tr("Text Position"));
+//         style_mapper->setMapping(sub->addAction(tr("Icons Only")), Qt::ToolButtonIconOnly);
+//         style_mapper->setMapping(sub->addAction(tr("Text Only")), Qt::ToolButtonTextOnly);
+//         style_mapper->setMapping(sub->addAction(tr("Text Alongside Icons")), Qt::ToolButtonTextBesideIcon);
+//         style_mapper->setMapping(sub->addAction(tr("Text Under Icons")), Qt::ToolButtonTextUnderIcon);
+//         connect(sub, SIGNAL(triggered(QAction*)), style_mapper, SLOT(map()));
+//
+//         sub = menu->addMenu(tr("Icon Size"));
+//         size_mapper->setMapping(sub->addAction(tr("Default")), -1);
+//         size_mapper->setMapping(sub->addAction(tr("Small") + " (16x16)"), 16);
+//         size_mapper->setMapping(sub->addAction(tr("Medium") + " (22x22)"), 22);
+//         size_mapper->setMapping(sub->addAction(tr("Large") + " (32x32)"), 32);
+//         connect(sub, SIGNAL(triggered(QAction*)), size_mapper, SLOT(map()));
+//
+//         connect(style_mapper, SIGNAL(destroyed(QObject*)), SLOT(debug(QObject*)));
+//
+//         connect(sub, SIGNAL(triggered(QAction*)), SLOT(debug(QAction*)));
+//         connect(menu, SIGNAL(destroyed(QObject*)), style_mapper, SLOT(deleteLater()));
+//         connect(menu, SIGNAL(destroyed(QObject*)), size_mapper, SLOT(deleteLater()));
+
         return menu;
     }
+
+//     void MainWindow::debug(QObject * obj) {
+//         qDebug() << "~()" << obj;
+//     }
+//
+//     void MainWindow::debug(QAction * obj) {
+//         qDebug() << "~()" << obj;
+//     }
 
     void MainWindow::closeEvent(QCloseEvent * event) {
         saveSettings();
@@ -145,6 +182,16 @@ namespace Coquillo {
         const QModelIndex br = model->index(model->rowCount() - 1, model->columnCount() - 1);
         _ui->metaData->selectionModel()->select(QItemSelection(tl, br), QItemSelectionModel::Select);
     }
+
+//     void MainWindow::setToolBarIconSize(int size) {
+//         qDebug() << "icon size" << size;
+//         setIconSize(QSize(size, size));
+//     }
+//
+//     void MainWindow::setToolBarIconStyle(int style) {
+//         qDebug() << "icon style" << style;
+//         setToolButtonStyle(static_cast<Qt::ToolButtonStyle>(style));
+//     }
 
     void MainWindow::showHeaderContextMenu(const QPoint & point) const {
         QHeaderView * header = _ui->metaData->header();

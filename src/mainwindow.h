@@ -36,7 +36,12 @@ namespace Coquillo {
             void invertSelection();
             void restoreSettings();
             void selectAll();
+//             void setToolBarIconSize(int size);
+//             void setToolBarIconStyle(int style);
             void showHeaderContextMenu(const QPoint & point) const;
+
+//             void debug(QObject * obj = 0);
+//             void debug(QAction * obj);
 
         private:
             void saveSettings();

@@ -5,6 +5,8 @@
 #include <QVariantHash>
 #include <processor/patterns.h>
 
+#include "webtags/tagsearchdialog.h"
+
 int main(int argc, char ** args) {
     QApplication::setOrganizationName("Juvonet");
     QApplication::setOrganizationDomain("juvonet.fi");
@@ -14,6 +16,10 @@ int main(int argc, char ** args) {
     QApplication app(argc, args);
     Coquillo::MainWindow window;
     window.show();
+
+    Coquillo::WebTags::TagSearchDialog dialog;
+    dialog.show();
+
     return app.exec();
 
 //     QVariantHash values;

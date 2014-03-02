@@ -11,6 +11,7 @@ UI_DIR = build
 
 unix {
     LIBS += -ltag
+    LIBS += -lmusicbrainz5
 }
 
 FORMS += \
@@ -19,6 +20,7 @@ FORMS += \
     ui/mainwindow.ui \
     ui/parserwidget.ui \
     ui/renamewidget.ui \
+    ui/tagsearchdialog.ui \
 
 HEADERS += \
     src/mainwindow.h \
@@ -38,6 +40,7 @@ HEADERS += \
     src/processor/renamewidget.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
+    src/webtags/tagsearchdialog.h \
 
 SOURCES += \
     src/main.cpp \
@@ -58,3 +61,4 @@ SOURCES += \
     src/processor/renamewidget.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
+    src/webtags/tagsearchdialog.cpp \
