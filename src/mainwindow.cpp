@@ -136,7 +136,7 @@ namespace Coquillo {
 
         // Make sure the active row stays within the selection so that the
         // tag editor widget won't fall out of sync.
-        selection_model->setCurrentIndex(selection_model->selection().indexes().first(), QItemSelectionModel::NoUpdate);
+        selection_model->setCurrentIndex(selection_model->selection().indexes().value(0), QItemSelectionModel::NoUpdate);
     }
 
     void MainWindow::selectAll() {
