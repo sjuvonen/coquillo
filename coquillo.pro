@@ -1,5 +1,6 @@
 TEMPLATE = app
 TARGET = coquillo
+QT += quick
 QT += widgets
 
 DEPENDPATH += src src/filebrowser src/metadata
@@ -41,6 +42,8 @@ HEADERS += \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
     src/webtags/tagsearchdialog.h \
+    # Experimental
+    src/quick/metadataproxymodel.h \
 
 SOURCES += \
     src/main.cpp \
@@ -62,3 +65,5 @@ SOURCES += \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
     src/webtags/tagsearchdialog.cpp \
+    # Experimental
+    src/quick/metadataproxymodel.cpp \
