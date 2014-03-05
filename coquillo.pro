@@ -25,6 +25,7 @@ FORMS += \
 
 HEADERS += \
     src/mainwindow.h \
+    src/actionsignalmapper.h \
     src/stringstoremodel.h \
     src/filebrowser/directorymodel.h \
     src/filebrowser/filebrowser.h \
@@ -46,6 +47,7 @@ HEADERS += \
     src/quick/metadataproxymodel.h \
 
 SOURCES += \
+    src/actionsignalmapper.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/stringstoremodel.cpp \
