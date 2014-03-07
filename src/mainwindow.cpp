@@ -123,6 +123,13 @@ namespace Coquillo {
 
         menu->addSeparator();
 
+        action = menu->addAction(tr("Lock interface"));
+        action->setCheckable(true);
+        action->setChecked(!findChildren<QToolBar*>().first()->isMovable());
+        connect(action, SIGNAL(triggered(bool)), SLOT(lockInterface(bool)));
+
+        menu->addSeparator();
+
         sub = menu->addMenu(tr("Text Position"));
         style_mapper->setMapping(sub->addAction(tr("Icons Only")), Qt::ToolButtonIconOnly);
         style_mapper->setMapping(sub->addAction(tr("Text Only")), Qt::ToolButtonTextOnly);
@@ -153,6 +160,10 @@ namespace Coquillo {
         event->accept();
     }
 
+    bool MainWindow::isInterfaceLocked() const {
+        return !findChildren<QToolBar*>().first()->isMovable();
+    }
+
     void MainWindow::applyValue(const QVariant & value, int column) {
         foreach (QModelIndex idx, _ui->metaData->selectionModel()->selectedRows(column)) {
             const_cast<QAbstractItemModel*>(idx.model())->setData(idx, value);
@@ -169,6 +180,12 @@ namespace Coquillo {
         // Make sure the active row stays within the selection so that the
         // tag editor widget won't fall out of sync.
         selection_model->setCurrentIndex(selection_model->selection().indexes().value(0), QItemSelectionModel::NoUpdate);
+    }
+
+    void MainWindow::lockInterface(bool state) {
+        foreach (QToolBar * bar, findChildren<QToolBar*>()) {
+            bar->setMovable(!state);
+        }
     }
 
     void MainWindow::selectAll() {
@@ -218,8 +235,9 @@ namespace Coquillo {
 
     void MainWindow::restoreSettings() {
         QSettings settings;
-        restoreState(settings.value("UI/MainWindow/State").toByteArray());
+        lockInterface(settings.value("UI/MainWindow/Locked").toBool());
         resize(settings.value("UI/MainWindow/Size").toSize());
+        restoreState(settings.value("UI/MainWindow/State").toByteArray());
         menuBar()->setVisible(settings.value("UI/MainWindow/MenuBar", true).toBool());
         statusBar()->setVisible(settings.value("UI/MainWindow/StatusBar", true).toBool());
         _ui->splitter->restoreState(settings.value("UI/MainSplitter/State").toByteArray());
@@ -230,8 +248,9 @@ namespace Coquillo {
     void MainWindow::saveSettings() {
         QSettings settings;
         settings.setValue("RecursiveScan", _fileBrowser->isRecursive());
-        settings.setValue("UI/MainWindow/State", saveState());
+        settings.setValue("UI/MainWindow/Locked", isInterfaceLocked());
         settings.setValue("UI/MainWindow/Size", size());
+        settings.setValue("UI/MainWindow/State", saveState());
         settings.setValue("UI/MainWindow/MenuBar", menuBar()->isVisible());
         settings.setValue("UI/MainWindow/StatusBar", statusBar()->isVisible());
         settings.setValue("UI/MainSplitter/State", _ui->splitter->saveState());

@@ -30,10 +30,12 @@ namespace Coquillo {
 
         protected:
             void closeEvent(QCloseEvent * event);
+            bool isInterfaceLocked() const;
 
         private slots:
             void applyValue(const QVariant & value, int column);
             void invertSelection();
+            void lockInterface(bool state);
             void restoreSettings();
             void selectAll();
             void setToolBarIconSize(int size);
