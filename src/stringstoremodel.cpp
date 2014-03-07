@@ -146,8 +146,6 @@ namespace Coquillo {
 
     int StringStoreModel::findValue(const QVariant & value, const QModelIndex & start) const {
         const QModelIndexList matches = match(start, Qt::DisplayRole, value, 1, Qt::MatchFixedString | Qt::MatchWrap);
-
-        qDebug() << "match" << value.toString() << matches.count() << matches.value(0).row();
         return matches.value(0).row();
     }
 
