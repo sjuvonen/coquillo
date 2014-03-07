@@ -1,4 +1,5 @@
 
+#include <QDebug>
 #include <QFileSystemModel>
 #include "directorymodel.h"
 
@@ -68,6 +69,22 @@ namespace Coquillo {
         }
 
         return QSortFilterProxyModel::setData(idx, value, role);
+    }
+
+    bool DirectoryModel::hasChildren(const QModelIndex & idx) const {
+        if (canFetchMore(idx)) {
+            const_cast<DirectoryModel*>(this)->fetchMore(idx);
+        }
+
+        return rowCount(idx) > 0;
+    }
+
+    int DirectoryModel::columnCount(const QModelIndex & parent) const {
+        if (!rowCount(parent)) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     void DirectoryModel::uncheckAll() {

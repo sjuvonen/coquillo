@@ -19,8 +19,9 @@ namespace Coquillo {
             Qt::ItemFlags flags(const QModelIndex & idx) const;
             QVariant data(const QModelIndex & idx, int role) const;
             bool setData(const QModelIndex & idx, const QVariant & value, int role=Qt::EditRole);
+            bool hasChildren(const QModelIndex & idx) const;
 
-            inline int columnCount(const QModelIndex & = QModelIndex()) const { return 1; };
+            int columnCount(const QModelIndex & parent = QModelIndex()) const;
 
         signals:
             void pathChecked(const QString & path, bool recursive);
@@ -29,7 +30,6 @@ namespace Coquillo {
         public slots:
             void setRecursiveScanEnabled(bool state) { _recursive = state; }
             void uncheckAll();
-
         private:
             bool isAncestorChecked(const QModelIndex & idx) const;
             bool isDescendantChecked(const QModelIndex & idx) const;
