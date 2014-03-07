@@ -69,6 +69,8 @@ namespace Coquillo {
         _basicTags->setModel(_ui->metaData->model());
         _ui->tagEditor->addTab(_basicTags, tr("Tags"));
 
+        addAction(_ui->action_Quit);
+
         connect(_fileBrowser, SIGNAL(recursionEnabled(bool)),
             _metaData, SLOT(setRecursive(bool)));
 
@@ -190,8 +192,8 @@ namespace Coquillo {
     }
 
     void MainWindow::openTagSearchDialog() {
-        qDebug() << "open dialog";
         WebTags::TagSearchDialog dialog(this);
+        dialog.setModel(_metaData);
         dialog.exec();
         _ui->actionSearch->setChecked(false);
     }

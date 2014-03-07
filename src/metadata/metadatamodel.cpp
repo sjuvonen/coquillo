@@ -81,97 +81,10 @@ namespace Coquillo {
     QVariant MetaDataModel::headerData(int section, Qt::Orientation orientation, int role) const {
         if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
             return _columns[section];
-        } else {
-            return QVariant();
         }
+
+        return QVariant();
     }
-
-//     QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
-//         switch (role) {
-//             case Qt::DisplayRole:
-//             case Qt::EditRole: {
-//                 const MetaData meta = _metaData[idx.row()];
-//                 const QString field = _columnMap.value(idx.column());
-//
-//                 if (field == "filename") {
-//                     QString root = containedDirectoryForRow(idx.row());
-//
-//                     if (_directories.count() > 1) {
-//                         root = QFileInfo(root).absolutePath();
-//                     }
-//
-//                     return meta.path().mid(root.length() + 1);
-//                 } else {
-//                     return meta.value(field);
-//                 }
-//             }
-//
-//             case Qt::DecorationRole: {
-//                 if (idx.column() == 0 && isRowChanged(idx)) {
-//                     return QIcon::fromTheme("emblem-important");
-//                 }
-//                 break;
-//             }
-//
-//             case Qt::ForegroundRole: {
-//                 if (isRowChanged(idx)) {
-//                     return QBrush(Qt::red);
-//                 }
-//                 break;
-//             }
-//
-//             case Qt::SizeHintRole:
-//                 return QSize(100, 24);
-//
-//             case ModifiedRole: {
-//                 return isChanged(idx);
-//             }
-//
-//             case FieldNameRole:
-//                 return _columnMap.value(idx.column());
-//
-//             case NamedRowDataRole: {
-//                 const int row = idx.row();
-//                 QVariantHash data;
-//
-//                 foreach (int col, _columnMap.keys()) {
-//                     data[_columnMap[col]] = index(row, col).data();
-//                 }
-//
-//                 return data;
-//             }
-//         }
-//
-//         return QVariant();
-//     }
-
-//     bool MetaDataModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
-//         if (role != Qt::EditRole && role != Qt::DisplayRole)  {
-//             return false;
-//         }
-//
-//         if (!idx.isValid() || idx.model() != this) {
-//             return false;
-//         }
-//
-//         const int row = idx.row();
-//         const QString name = _columnMap.value(idx.column());
-//         MetaData meta = _metaData[row];
-//
-//
-//         bool int_changed = value.type() == QVariant::Int && (value.toInt() != meta[name].toInt());
-//         bool str_changed = value.type() != QVariant::Int && (value.toString() != meta[name].toString());
-// //         if (meta.value(name).toString() != value.toString()) {
-//         if (int_changed || str_changed) {
-//             backup(_metaData[row]);
-//             _metaData[row].insert(name, value);
-//             rowChanged(idx);
-//             qDebug() << QString("set %1 to").arg(name) << value;
-//             return true;
-//         } else {
-//             return false;
-//         }
-//     }
 
     QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
         switch (role) {

@@ -42,6 +42,7 @@ HEADERS += \
     src/processor/renamewidget.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
+    src/webtags/filterproxymodel.h \
     src/webtags/tagsearchdialog.h \
     # Experimental
     src/quick/metadataproxymodel.h \
@@ -66,6 +67,7 @@ SOURCES += \
     src/processor/renamewidget.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
+    src/webtags/filterproxymodel.cpp \
     src/webtags/tagsearchdialog.cpp \
     # Experimental
     src/quick/metadataproxymodel.cpp \
