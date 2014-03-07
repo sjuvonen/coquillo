@@ -40,9 +40,6 @@ namespace Coquillo {
             void setToolBarIconStyle(int style);
             void showHeaderContextMenu(const QPoint & point) const;
 
-            void debug(QObject * obj = 0);
-            void debug(QAction * obj);
-
         private:
             void saveSettings();
 
