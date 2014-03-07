@@ -19,6 +19,7 @@
 #include "processor/renamewidget.h"
 #include "processor/parserwidget.h"
 #include "tageditor/basictags.h"
+#include "webtags/tagsearchdialog.h"
 
 namespace Coquillo {
     MainWindow::MainWindow(QWidget * parent)
@@ -186,6 +187,13 @@ namespace Coquillo {
         foreach (QToolBar * bar, findChildren<QToolBar*>()) {
             bar->setMovable(!state);
         }
+    }
+
+    void MainWindow::openTagSearchDialog() {
+        qDebug() << "open dialog";
+        WebTags::TagSearchDialog dialog(this);
+        dialog.exec();
+        _ui->actionSearch->setChecked(false);
     }
 
     void MainWindow::selectAll() {

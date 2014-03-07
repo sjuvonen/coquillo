@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1147</width>
-    <height>693</height>
+    <width>1078</width>
+    <height>704</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -92,7 +92,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1147</width>
+     <width>1078</width>
      <height>21</height>
     </rect>
    </property>
@@ -137,6 +137,8 @@
    <addaction name="separator"/>
    <addaction name="actionSelect_all"/>
    <addaction name="actionInvert"/>
+   <addaction name="separator"/>
+   <addaction name="actionSearch"/>
   </widget>
   <action name="action_About_Coquillo">
    <property name="text">
@@ -263,6 +265,20 @@
     <string>Ctrl+Z</string>
    </property>
   </action>
+  <action name="actionSearch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-find"/>
+   </property>
+   <property name="text">
+    <string>Online</string>
+   </property>
+   <property name="toolTip">
+    <string>Search tags online</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>tools</tabstop>
@@ -319,9 +335,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSearch</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openTagSearchDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>351</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectAll()</slot>
   <slot>invertSelection()</slot>
+  <slot>openTagSearchDialog()</slot>
  </slots>
 </ui>

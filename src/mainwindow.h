@@ -36,6 +36,7 @@ namespace Coquillo {
             void applyValue(const QVariant & value, int column);
             void invertSelection();
             void lockInterface(bool state);
+            void openTagSearchDialog();
             void restoreSettings();
             void selectAll();
             void setToolBarIconSize(int size);
