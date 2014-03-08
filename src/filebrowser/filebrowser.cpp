@@ -21,7 +21,6 @@ namespace Coquillo {
         _ui->setupUi(this);
 
         _directories = new DirectoryModel(this);
-        _ui->browser->header()->hide();
         _ui->browser->setModel(_directories);
 
         QMenu * menu = new QMenu(this);

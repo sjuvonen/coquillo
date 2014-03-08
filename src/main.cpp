@@ -9,6 +9,8 @@
 #include <metadata/metadatamodel.h>
 #include <quick/metadataproxymodel.h>
 
+#include <searcher/musicbrainz.h>
+
 int main(int argc, char ** args) {
     QApplication::setOrganizationName("Juvonet");
     QApplication::setOrganizationDomain("juvonet.fi");
@@ -30,6 +32,9 @@ int main(int argc, char ** args) {
         Coquillo::MainWindow * window = new Coquillo::MainWindow;
         window->show();
     }
+
+    Coquillo::Searcher::MusicBrainz searcher;
+    Q_UNUSED(searcher)
 
     return app.exec();
 }

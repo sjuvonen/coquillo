@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>515</height>
+    <width>671</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,13 +70,6 @@
         </spacer>
        </item>
        <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>Search</string>
@@ -110,10 +103,16 @@
         <widget class="QLineEdit" name="lineEdit"/>
        </item>
        <item>
-        <widget class="Line" name="line_5">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        <widget class="QRadioButton" name="radioButton_2">
+         <property name="text">
+          <string>Album</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">searchCategory</string>
+         </attribute>
         </widget>
        </item>
        <item>
@@ -124,23 +123,6 @@
          <attribute name="buttonGroup">
           <string notr="true">searchCategory</string>
          </attribute>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_2">
-         <property name="text">
-          <string>Album</string>
-         </property>
-         <attribute name="buttonGroup">
-          <string notr="true">searchCategory</string>
-         </attribute>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
         </widget>
        </item>
        <item>

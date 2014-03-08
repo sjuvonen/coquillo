@@ -19,7 +19,6 @@ namespace Coquillo {
 
             protected:
                 bool filterAcceptsRow(int src_row, const QModelIndex & src_parent = QModelIndex()) const;
-                bool filterAcceptsColumn(int, const QModelIndex & = QModelIndex()) const { return true; }
 
             private:
                 FilterMode _mode;

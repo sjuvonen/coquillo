@@ -1,5 +1,6 @@
 TEMPLATE = app
 TARGET = coquillo
+
 QT += quick
 QT += widgets
 
@@ -40,6 +41,8 @@ HEADERS += \
     src/processor/patternwidget.h \
     src/processor/patterns.h \
     src/processor/renamewidget.h \
+    src/searcher/abstractsearcher.h \
+    src/searcher/musicbrainz.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
     src/webtags/filterproxymodel.h \
@@ -65,6 +68,8 @@ SOURCES += \
     src/processor/patternwidget.cpp \
     src/processor/patterns.cpp \
     src/processor/renamewidget.cpp \
+    src/searcher/abstractsearcher.cpp \
+    src/searcher/musicbrainz.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
     src/webtags/filterproxymodel.cpp \
