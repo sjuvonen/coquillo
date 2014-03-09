@@ -1,5 +1,5 @@
-#ifndef COQUILLO_METADATA_H
-#define COQUILLO_METADATA_H
+#ifndef COQUILLO_METADATA_METADATA_H
+#define COQUILLO_METADATA_METADATA_H
 
 #include <QHash>
 #include <QString>
