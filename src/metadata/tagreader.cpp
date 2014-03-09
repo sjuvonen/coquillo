@@ -6,7 +6,7 @@
 
 #include "tagreader.h"
 
-#define T2QString(str) QString::fromUtf8(str.toCString(true))
+#define T2QString(str) QString::fromUtf8((str).toCString(true))
 
 namespace Coquillo {
     TagReader::TagReader(TagLib::Tag * tag) : _tag(tag) {
@@ -77,6 +77,18 @@ namespace Coquillo {
                 data.insert("total", parts[1].toInt());
             }
         }
+        
+        TagLib::ID3v2::FrameListMap::ConstIterator i = frames.begin();
+
+        for (; i != frames.end(); i++) {
+            const QString field = i->first.data();
+            TagLib::ID3v2::FrameList::ConstIterator j = i->second.begin();
+
+            for (; j != i->second.end();j++) {
+                const QString value = T2QString((*j)->toString());
+                data.insertMulti(field, value);
+            }
+        }
 
         return data;
     }
@@ -118,6 +130,20 @@ namespace Coquillo {
         if (tag->contains("DESCRIPTION")) {
             data.insert("comment", T2QString(fields["DESCRIPTION"].front()));
         }
+
+        TagLib::Ogg::FieldListMap::ConstIterator i = fields.begin();
+
+        for (; i != fields.end(); i++) {
+            const QString field = T2QString(i->first);
+            TagLib::StringList::ConstIterator j = i->second.begin();
+
+            for (; j != i->second.end(); j++) {
+                const QString value = T2QString(*j);
+                data.insertMulti(field, value);
+            }
+        }
+
+
 
         return data;
     }
