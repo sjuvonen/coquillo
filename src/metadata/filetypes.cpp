@@ -18,54 +18,56 @@
 #include "tagreader.h"
 
 namespace Coquillo {
-    void MpegReader::read() {
-        TagLib::MPEG::File file(path().toUtf8().constData());
-        MetaData meta(path());
+    namespace MetaData {
+        void MpegReader::read() {
+            TagLib::MPEG::File file(path().toUtf8().constData());
+            MetaData meta(path());
 
-        if (file.hasID3v2Tag()) {
-            Id3v2Reader reader(file.ID3v2Tag());
-            meta.addTag("id3v2", reader.read());
+            if (file.hasID3v2Tag()) {
+                Id3v2Reader reader(file.ID3v2Tag());
+                meta.addTag("id3v2", reader.read());
+            }
+
+            if (file.hasID3v1Tag()) {
+                Id3v1Reader reader(file.ID3v1Tag());
+                meta.addTag("id3v1", reader.read());
+            }
+
+            finish(meta);
         }
 
-        if (file.hasID3v1Tag()) {
-            Id3v1Reader reader(file.ID3v1Tag());
-            meta.addTag("id3v1", reader.read());
+        void FlacReader::read() {
+            TagLib::FLAC::File file(path().toUtf8().constData());
+            MetaData meta(path());
+
+            if (file.hasXiphComment()) {
+                XiphReader reader(file.xiphComment());
+                meta.addTag("xiph", reader.read());
+            }
+
+            if (file.hasID3v2Tag()) {
+                Id3v2Reader reader(file.ID3v2Tag());
+                meta.addTag("id3v2", reader.read());
+            }
+
+            if (file.hasID3v1Tag()) {
+                Id3v1Reader reader(file.ID3v1Tag());
+                meta.addTag("id3v1", reader.read());
+            }
+
+            finish(meta);
         }
 
-        finish(meta);
-    }
+        void OggVorbisReader::read() {
+            TagLib::Ogg::Vorbis::File file(path().toUtf8().constData());
+            MetaData meta(path());
 
-    void FlacReader::read() {
-        TagLib::FLAC::File file(path().toUtf8().constData());
-        MetaData meta(path());
+            if (file.tag()) {
+                XiphReader reader(file.tag());
+                meta.addTag("xiph", reader.read());
+            }
 
-        if (file.hasXiphComment()) {
-            XiphReader reader(file.xiphComment());
-            meta.addTag("xiph", reader.read());
+            finish(meta);
         }
-
-        if (file.hasID3v2Tag()) {
-            Id3v2Reader reader(file.ID3v2Tag());
-            meta.addTag("id3v2", reader.read());
-        }
-
-        if (file.hasID3v1Tag()) {
-            Id3v1Reader reader(file.ID3v1Tag());
-            meta.addTag("id3v1", reader.read());
-        }
-
-        finish(meta);
-    }
-
-    void OggVorbisReader::read() {
-        TagLib::Ogg::Vorbis::File file(path().toUtf8().constData());
-        MetaData meta(path());
-
-        if (file.tag()) {
-            XiphReader reader(file.tag());
-            meta.addTag("xiph", reader.read());
-        }
-
-        finish(meta);
     }
 }

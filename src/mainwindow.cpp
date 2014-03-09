@@ -27,7 +27,7 @@ namespace Coquillo {
         _ui = new Ui::MainWindow;
         _ui->setupUi(this);
 
-        _metaData = new MetaDataModel(this);
+        _metaData = new MetaData::MetaDataModel(this);
 
         QSortFilterProxyModel * sort_proxy = new QSortFilterProxyModel(this);
         sort_proxy->setSourceModel(_metaData);

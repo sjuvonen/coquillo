@@ -53,7 +53,7 @@ namespace Coquillo {
             QStringList filters;
 
             foreach (const QModelIndex idx, indices) {
-                const QString path = idx.data(Coquillo::MetaDataModel::FilePathRole).toString();
+                const QString path = idx.data(Coquillo::MetaData::MetaDataModel::FilePathRole).toString();
                 filters << path;
             }
 
@@ -65,7 +65,7 @@ namespace Coquillo {
             QStringList filters;
 
             foreach (const QModelIndex idx, indices) {
-                const QString path = idx.data(Coquillo::MetaDataModel::FilePathRole).toString();
+                const QString path = idx.data(Coquillo::MetaData::MetaDataModel::FilePathRole).toString();
                 filters << path;
             }
 

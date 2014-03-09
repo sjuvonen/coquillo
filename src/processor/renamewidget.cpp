@@ -33,9 +33,9 @@ namespace Coquillo {
              * refer to wrong items.
              */
             foreach (const QModelIndex idx, selectionModel()->selectedRows()) {
-                const QVariantHash values = idx.data(MetaDataModel::NamedRowDataRole).toHash();
+                const QVariantHash values = idx.data(MetaData::MetaDataModel::NamedRowDataRole).toHash();
                 const QString path = patterns.compile(this->pattern(), values);
-                model()->setData(idx, path, MetaDataModel::FileNameRole);
+                model()->setData(idx, path, MetaData::MetaDataModel::FileNameRole);
             }
         }
 
@@ -45,7 +45,7 @@ namespace Coquillo {
             }
 
             Patterns patterns;
-            const QVariantHash values = currentIndex().data(MetaDataModel::NamedRowDataRole).toHash();
+            const QVariantHash values = currentIndex().data(MetaData::MetaDataModel::NamedRowDataRole).toHash();
             const QString text = patterns.compile(pattern(), values);
             setPreview(text);
         }

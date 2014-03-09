@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include "metadata/metadatamodel.h"
+#include <metadata/metadatamodel.h>
 #include "metadatachangeindicatordelegate.h"
 
 namespace Coquillo {
@@ -15,7 +15,7 @@ namespace Coquillo {
         }
 
         QFont font = editor->font();
-        font.setBold(idx.data(MetaDataModel::ModifiedRole).toBool());
+        font.setBold(idx.data(MetaData::MetaDataModel::ModifiedRole).toBool());
         editor->setFont(font);
     }
 }

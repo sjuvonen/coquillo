@@ -9,7 +9,10 @@ namespace Ui {
 
 namespace Coquillo {
     class FileBrowser;
-    class MetaDataModel;
+
+    namespace MetaData {
+        class MetaDataModel;
+    }
 
     namespace Processor {
         class ParserWidget;
@@ -48,7 +51,7 @@ namespace Coquillo {
 
             Ui::MainWindow * _ui;
             FileBrowser * _fileBrowser;
-            MetaDataModel * _metaData;
+            MetaData::MetaDataModel * _metaData;
             TagEditor::BasicTags * _basicTags;
             Processor::ParserWidget * _tagParser;
             Processor::RenameWidget * _fileRenamer;

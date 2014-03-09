@@ -28,7 +28,7 @@ namespace Coquillo {
             Patterns patterns;
             const QChar separator = QDir::separator();
             const QString pattern = this->pattern();
-            QString path = currentIndex().data(MetaDataModel::FilePathRole).toString();
+            QString path = currentIndex().data(MetaData::MetaDataModel::FilePathRole).toString();
             path = path.section(separator, -1 - pattern.count(separator));
             path = path.left(path.length() - QFileInfo(path).suffix().length() - 1);
             const QVariantHash tags = patterns.extract(pattern, path);

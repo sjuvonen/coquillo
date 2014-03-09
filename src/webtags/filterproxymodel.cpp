@@ -31,7 +31,7 @@ namespace Coquillo {
 
         bool FilterProxyModel::filterAcceptsRow(int row, const QModelIndex & parent) const {
             const QModelIndex idx = sourceModel()->index(row, 0, parent);
-            const QString path = idx.data(MetaDataModel::FilePathRole).toString();
+            const QString path = idx.data(MetaData::MetaDataModel::FilePathRole).toString();
             return _filtered.contains(path) ^ (_mode == HideFiltered);
         }
 

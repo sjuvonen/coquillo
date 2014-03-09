@@ -20,7 +20,7 @@ int main(int argc, char ** args) {
     QApplication app(argc, args);
 
     if (QApplication::arguments().contains("--quick")) {
-        Coquillo::MetaDataModel * model = new Coquillo::MetaDataModel;
+        Coquillo::MetaData::MetaDataModel * model = new Coquillo::MetaData::MetaDataModel;
         model->addDirectory("/home/samu/Music/Swipe Me");
         Coquillo::Quick::MetaDataProxyModel * proxy = new Coquillo::Quick::MetaDataProxyModel;
         proxy->setSourceModel(model);
