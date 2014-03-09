@@ -7,7 +7,7 @@
 
 namespace Coquillo {
     namespace MetaData {
-        typedef QHash<QString, QVariant> Tag;
+        typedef QVariantMap Tag;
         class MetaData {
             public:
                 MetaData() { }
