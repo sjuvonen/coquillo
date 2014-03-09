@@ -24,8 +24,8 @@ namespace Coquillo {
         }
 
         void TagSearchDialog::setModel(QAbstractItemModel * model) {
-            qobject_cast<FilterProxyModel*>(_ui->source->model())->setSourceModel(model);
-            qobject_cast<FilterProxyModel*>(_ui->selected->model())->setSourceModel(model);
+            static_cast<FilterProxyModel*>(_ui->source->model())->setSourceModel(model);
+            static_cast<FilterProxyModel*>(_ui->selected->model())->setSourceModel(model);
             _ui->source->setModelColumn(1);
             _model = model;
 
@@ -73,14 +73,14 @@ namespace Coquillo {
         }
 
         void TagSearchDialog::selectPaths(const QStringList & paths) {
-            qobject_cast<FilterProxyModel*>(_ui->source->model())->addFilters(paths);
-            qobject_cast<FilterProxyModel*>(_ui->selected->model())->addFilters(paths);
+            static_cast<FilterProxyModel*>(_ui->source->model())->addFilters(paths);
+            static_cast<FilterProxyModel*>(_ui->selected->model())->addFilters(paths);
         }
 
         void TagSearchDialog::unselectPaths(const QStringList & paths) {
             foreach (const QString path, paths) {
-                qobject_cast<FilterProxyModel*>(_ui->source->model())->removeFilter(path);
-                qobject_cast<FilterProxyModel*>(_ui->selected->model())->removeFilter(path);
+                static_cast<FilterProxyModel*>(_ui->source->model())->removeFilter(path);
+                static_cast<FilterProxyModel*>(_ui->selected->model())->removeFilter(path);
             }
         }
     }
