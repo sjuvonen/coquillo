@@ -13,8 +13,6 @@
 #include "metadatamodel.h"
 #include "filereader.h"
 
-#include "new/xmetadata.h"
-
 namespace Coquillo {
     namespace MetaData {
         MetaDataModel::MetaDataModel(QObject * parent)
@@ -56,8 +54,6 @@ namespace Coquillo {
             _columnMap[15] = "filename";
 
             qRegisterMetaType<Coquillo::MetaData::MetaData>("MetaData");
-
-            X_MetaData foo();
         }
 
         MetaDataModel::~MetaDataModel() {

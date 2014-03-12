@@ -8,6 +8,7 @@
 namespace Coquillo {
     namespace MetaData {
         typedef QVariantMap Tag;
+        
         class MetaData {
             public:
                 MetaData() { }
