@@ -2,3 +2,5 @@ build
 Makefile
 coquillo
 .packaging
+*.kate-swp
+
