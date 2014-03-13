@@ -1,7 +1,9 @@
 
 #include <QAbstractItemModel>
+#include <QDebug>
 
 #include <metadata/metadatamodel.h>
+#include <searcher/musicbrainz.h>
 #include "filterproxymodel.h"
 #include "tagsearchdialog.h"
 #include "ui_tagsearchdialog.h"
@@ -34,6 +36,14 @@ namespace Coquillo {
                     _ui->selected->horizontalHeader()->hideSection(i);
                 }
             }
+
+            QList<Coquillo::MetaData::MetaData> items;
+
+            for (int i = 0; i < model->rowCount(); i++) {
+                items << model->index(i, 0).data(Coquillo::MetaData::MetaDataModel::MetaDataRole).value<Coquillo::MetaData::MetaData>();
+            }
+
+//             Coquillo::Searcher::MusicBrainz searcher;
         }
 
         QAbstractItemModel * TagSearchDialog::model() const {

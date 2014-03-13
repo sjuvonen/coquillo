@@ -135,6 +135,9 @@ namespace Coquillo {
                 case FieldNameRole:
                     return _columnMap.value(idx.column());
 
+                case MetaDataRole:
+                    return QVariant::fromValue(_metaData.value(idx.row()));
+
                 case NamedRowDataRole: {
                     const int row = idx.row();
                     QVariantHash data;
@@ -323,6 +326,8 @@ namespace Coquillo {
             beginInsertRows(QModelIndex(), row, row);
             _metaData << metaData;
             endInsertRows();
+
+            qDebug() << metaData.properties()["length"].toInt();
         }
 
         QStringList MetaDataModel::nameFilters() {
