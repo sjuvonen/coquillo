@@ -1,4 +1,7 @@
 
+#include <taglib/audioproperties.h>
+#include <taglib/tfile.h>
+
 #include <QFileInfo>
 #include "filetypes.h"
 #include "filereader.h"
@@ -26,7 +29,16 @@ namespace Coquillo {
 
         }
 
-        void FileReader::finish(const MetaData & metaData) {
+        void FileReader::finish(const TagLib::File & file, MetaData & metaData) {
+            const TagLib::AudioProperties * audio = file.audioProperties();
+
+            Properties props;
+            props["length"] = audio->length();
+            props["bitrate"] = audio->bitrate();
+            props["samplerate"] = audio->sampleRate();
+            props["channels"] = audio->channels();
+
+            metaData.setProperties(props);
             emit finished(metaData);
         }
     }

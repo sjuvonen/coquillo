@@ -33,7 +33,7 @@ namespace Coquillo {
                 meta.addTag("id3v1", reader.read());
             }
 
-            finish(meta);
+            finish(file, meta);
         }
 
         void FlacReader::read() {
@@ -55,7 +55,7 @@ namespace Coquillo {
                 meta.addTag("id3v1", reader.read());
             }
 
-            finish(meta);
+            finish(file, meta);
         }
 
         void OggVorbisReader::read() {
@@ -67,7 +67,7 @@ namespace Coquillo {
                 meta.addTag("xiph", reader.read());
             }
 
-            finish(meta);
+            finish(file, meta);
         }
     }
 }

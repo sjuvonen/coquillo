@@ -3,6 +3,10 @@
 
 #include <QObject>
 
+namespace TagLib {
+    class File;
+}
+
 namespace Coquillo {
     namespace MetaData {
         class MetaData;
@@ -26,7 +30,7 @@ namespace Coquillo {
                 void finished(const MetaData & metaData);
 
             protected:
-                void finish(const MetaData & metaData);
+                void finish(const TagLib::File & file, MetaData & metaData);
 
             private:
                 enum FileType { MpegFile, OggFile, FlacFile };

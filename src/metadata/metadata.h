@@ -7,8 +7,9 @@
 
 namespace Coquillo {
     namespace MetaData {
+        typedef QVariantMap Properties;
         typedef QVariantMap Tag;
-        
+
         class MetaData {
             public:
                 MetaData() { }
@@ -20,6 +21,9 @@ namespace Coquillo {
                 bool hasTag(const QString & name);
                 bool has(const QString & key);
                 bool has(const QString & key, const QString & tag);
+
+                inline void setProperties(const Properties & p) { _properties = p; }
+                inline Properties properties() const { return _properties; }
 
                 Tag tag(const QString & name) const { return _tags.value(name); }
                 void insert(const QString & key, const QVariant & value);
@@ -33,6 +37,7 @@ namespace Coquillo {
                 QString _path;
                 QString _primary;
                 QHash<QString, Tag> _tags;
+                Properties _properties;
         };
     }
 }
