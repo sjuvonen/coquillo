@@ -1,6 +1,8 @@
 #ifndef COQUILLO_SEARCHER_MUSICBRAINZ_H
 #define COQUILLO_SEARCHER_MUSICBRAINZ_H
 
+#include <string>
+#include <musicbrainz5/ReleaseList.h>
 #include "abstractsearcher.h"
 
 namespace Coquillo {
@@ -15,9 +17,11 @@ namespace Coquillo {
             public:
                 MusicBrainz(QObject * parent = 0);
                 QString discId(const QList<Coquillo::MetaData::MetaData> & data) const;
+                void search(const QVariantMap & params);
 
-            public slots:
-                void searchId(const QString & disc_id);
+            private:
+                std::string paramsToQuery(QVariantMap params) const;
+                Coquillo::Searcher::Results parseRecordings(const MusicBrainz5::CReleaseList *) const;
         };
     }
 }

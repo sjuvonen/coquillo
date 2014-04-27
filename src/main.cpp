@@ -1,13 +1,8 @@
 #include <QApplication>
 #include "mainwindow.h"
 
-#include <QDebug>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
-#include <QVariantHash>
-
-#include <metadata/metadatamodel.h>
-#include <quick/metadataproxymodel.h>
+#include <QVariantMap>
+#include "searcher/musicbrainz.h"
 
 int main(int argc, char ** args) {
     QApplication::setOrganizationName("Juvonet");
@@ -16,20 +11,14 @@ int main(int argc, char ** args) {
     QApplication::setApplicationVersion("0.1");
 
     QApplication app(argc, args);
+    Coquillo::MainWindow * window = new Coquillo::MainWindow;
+    window->show();
 
-    if (QApplication::arguments().contains("--quick")) {
-        Coquillo::MetaData::MetaDataModel * model = new Coquillo::MetaData::MetaDataModel;
-        model->addDirectory("/home/samu/Music/Swipe Me");
-        Coquillo::Quick::MetaDataProxyModel * proxy = new Coquillo::Quick::MetaDataProxyModel;
-        proxy->setSourceModel(model);
-
-        QQmlApplicationEngine * engine = new QQmlApplicationEngine();
-        engine->rootContext()->setContextProperty("metaData", proxy);
-        engine->load("quick/coquillo.qml");
-    } else {
-        Coquillo::MainWindow * window = new Coquillo::MainWindow;
-        window->show();
-    }
+    QVariantMap search;
+    search["artist"] = "scooter";
+    search["title"] = "push the beat";
+    Coquillo::Searcher::MusicBrainz searcher;
+    searcher.search(search);
 
     return app.exec();
 }

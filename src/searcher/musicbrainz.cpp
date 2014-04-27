@@ -1,6 +1,11 @@
 
 #include <QCryptographicHash>
+#include <QDebug>
 
+#include <musicbrainz5/ArtistCredit.h>
+#include <musicbrainz5/NameCredit.h>
+#include <musicbrainz5/Query.h>
+#include <musicbrainz5/Release.h>
 #include <metadata/metadata.h>
 #include "musicbrainz.h"
 
@@ -9,6 +14,18 @@ namespace Coquillo {
         MusicBrainz::MusicBrainz(QObject * parent)
         : AbstractSearcher(parent) {
 
+        }
+
+        void MusicBrainz::search(const QVariantMap & search) {
+            MusicBrainz5::CQuery::tParamMap params;
+            params["query"] = paramsToQuery(search);
+            MusicBrainz5::CQuery query("coquillo/2.0");
+            MusicBrainz5::CMetadata result = query.Query("release", "", "", params);
+            MusicBrainz5::CReleaseList * releases = result.ReleaseList();
+
+            Coquillo::Searcher::Results results = parseRecordings(releases);
+
+            qDebug() << results.count();
         }
 
         QString MusicBrainz::discId(const QList<Coquillo::MetaData::MetaData> & disc) const {
@@ -36,8 +53,60 @@ namespace Coquillo {
             return disc_id;
         }
 
-        void MusicBrainz::searchId(const QString & disc_id) {
+        std::string MusicBrainz::paramsToQuery(QVariantMap params) const {
+            QStringList query;
 
+            if (params.contains("title")) {
+                query.append(QString("\"%1\"").arg(params.take("title").toString()));
+            }
+
+            foreach (QString key, params.keys()) {
+                query.append(QString("%1:\"%2\"").arg(key, params[key].toString()));
+            }
+
+            return query.join(" AND ").toStdString();
+        }
+
+        Coquillo::Searcher::Results MusicBrainz::parseRecordings(const MusicBrainz5::CReleaseList * releases) const {
+            Coquillo::Searcher::Results results;
+
+            if (!releases) {
+                return results;
+            }
+
+            int count = qMin(releases->Count(), 25);
+
+            for (int i = 0; i < count; i++) {
+                QVariantMap data;
+                const MusicBrainz5::CRelease * r = releases->Item(i);
+
+                if (r) {
+                    data["id"] = QString::fromStdString(r->ID());
+                    data["title"] = QString::fromStdString(r->Title());
+                    data["disc"] = 1;
+
+                    if (r->ArtistCredit()) {
+                        const MusicBrainz5::CNameCreditList * names = r->ArtistCredit()->NameCreditList();
+
+                        if (names->Count() > 0) {
+                            data["artist"] = QString::fromStdString(names->Item(0)->Name());
+                        } else {
+                            data["artist"] = QString();
+                        }
+                    }
+
+                    results.append(data);
+
+                    if (r->MediumList() && r->MediumList()->Count() > 1) {
+                        for (int i = 1; i < r->MediumList()->Count(); i++) {
+                            data["disc"] = i+1;
+                            results.append(data);
+                        }
+                    }
+                }
+            }
+
+            return results;
         }
     }
 }

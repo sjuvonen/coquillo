@@ -1,7 +1,6 @@
 TEMPLATE = app
 TARGET = coquillo
 
-QT += quick
 QT += widgets
 
 DEPENDPATH += src src/filebrowser src/metadata
