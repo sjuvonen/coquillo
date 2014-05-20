@@ -2,11 +2,10 @@
 #define COQUILLO_SEARCHER_ABSTRACTSEARCHER_H
 
 #include <QObject>
+#include <QVariantMap>
 
 namespace Coquillo {
     namespace Searcher {
-        typedef QList<QVariantMap> Results;
-
         class AbstractSearcher : public QObject {
             Q_OBJECT
 
@@ -16,8 +15,7 @@ namespace Coquillo {
                 virtual void search(const QVariantMap & fields) = 0;
 
             signals:
-                void searchResults(const Results &);
-
+                void searchFinished(const QList<QVariantMap> &);
         };
     }
 }

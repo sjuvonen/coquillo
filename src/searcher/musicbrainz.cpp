@@ -2,6 +2,7 @@
 #include <QCryptographicHash>
 #include <QDebug>
 
+#include <musicbrainz5/Artist.h>
 #include <musicbrainz5/ArtistCredit.h>
 #include <musicbrainz5/NameCredit.h>
 #include <musicbrainz5/Query.h>
@@ -23,9 +24,9 @@ namespace Coquillo {
             MusicBrainz5::CMetadata result = query.Query("release", "", "", params);
             MusicBrainz5::CReleaseList * releases = result.ReleaseList();
 
-            Coquillo::Searcher::Results results = parseRecordings(releases);
+            QList<QVariantMap> results = parseRecordings(releases);
 
-            qDebug() << results.count();
+            emit searchFinished(results);
         }
 
         QString MusicBrainz::discId(const QList<Coquillo::MetaData::MetaData> & disc) const {
@@ -56,8 +57,8 @@ namespace Coquillo {
         std::string MusicBrainz::paramsToQuery(QVariantMap params) const {
             QStringList query;
 
-            if (params.contains("title")) {
-                query.append(QString("\"%1\"").arg(params.take("title").toString()));
+            if (params.contains("album")) {
+                query.append(QString("\"%1\"").arg(params.take("album").toString()));
             }
 
             foreach (QString key, params.keys()) {
@@ -67,8 +68,8 @@ namespace Coquillo {
             return query.join(" AND ").toStdString();
         }
 
-        Coquillo::Searcher::Results MusicBrainz::parseRecordings(const MusicBrainz5::CReleaseList * releases) const {
-            Coquillo::Searcher::Results results;
+        QList<QVariantMap> MusicBrainz::parseRecordings(const MusicBrainz5::CReleaseList * releases) const {
+            QList<QVariantMap> results;
 
             if (!releases) {
                 return results;
@@ -88,10 +89,10 @@ namespace Coquillo {
                     if (r->ArtistCredit()) {
                         const MusicBrainz5::CNameCreditList * names = r->ArtistCredit()->NameCreditList();
 
-                        if (names->Count() > 0) {
-                            data["artist"] = QString::fromStdString(names->Item(0)->Name());
+                        if (names->NumItems() > 0) {
+                            data["artist"] = QString::fromStdString(names->Item(0)->Artist()->Name());
                         } else {
-                            data["artist"] = QString();
+                            data["artist"] = QString("None");
                         }
                     }
 

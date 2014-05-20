@@ -1,6 +1,6 @@
 
-#include <QAbstractItemModel>
 #include <QDebug>
+#include <QStandardItemModel>
 
 #include <metadata/metadatamodel.h>
 #include <searcher/musicbrainz.h>
@@ -19,6 +19,12 @@ namespace Coquillo {
             FilterProxyModel * selected = new FilterProxyModel(this);
             selected->setFilterMode(FilterProxyModel::ShowFiltered);
             _ui->selected->setModel(selected);
+
+            QStandardItemModel * search_results = new QStandardItemModel(this);
+            search_results->setHorizontalHeaderLabels(QStringList() << tr("Title") << tr("Artist") << tr("D#") << tr("ID"));
+            _ui->listSearchResults->setModel(search_results);
+
+            addSearcher("musicbrainz", new Searcher::MusicBrainz(this));
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -40,14 +46,61 @@ namespace Coquillo {
             QList<Coquillo::MetaData::MetaData> items;
 
             for (int i = 0; i < model->rowCount(); i++) {
-                items << model->index(i, 0).data(Coquillo::MetaData::MetaDataModel::MetaDataRole).value<Coquillo::MetaData::MetaData>();
+                const int role = Coquillo::MetaData::MetaDataModel::MetaDataRole;
+                items << model->index(i, 0).data(role).value<Coquillo::MetaData::MetaData>();
             }
 
-//             Coquillo::Searcher::MusicBrainz searcher;
+            _ui->selected->verticalHeader()->show();
         }
 
         QAbstractItemModel * TagSearchDialog::model() const {
             return _model.data();
+        }
+
+        void TagSearchDialog::addSearcher(const QString & id, Searcher::AbstractSearcher * searcher) {
+            _searchers[id] = searcher;
+
+            connect(searcher, SIGNAL(searchFinished(QList<QVariantMap>)),
+                SLOT(showResults(QList<QVariantMap>)));
+        }
+
+        void TagSearchDialog::showResults(const QList<QVariantMap> & results) {
+            qDebug() << "got results:" << results.count();
+            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->listSearchResults->model());
+
+            foreach (const QVariantMap row, results) {
+                model->appendRow(QList<QStandardItem*>()
+                    << new QStandardItem(row["title"].toString())
+                    << new QStandardItem(row["artist"].toString())
+                    << new QStandardItem(row["disc"].toString())
+                    << new QStandardItem(row["id"].toString()));
+            }
+        }
+
+        void TagSearchDialog::search(const QVariantMap & data) {
+            qDebug() << "search with sources: " << _searchers.count();
+            _ui->mainTabs->setCurrentIndex(1);
+            foreach (Searcher::AbstractSearcher * s, _searchers.values()) {
+                s->search(data);
+            }
+        }
+
+        void TagSearchDialog::executeSearch() {
+            QVariantMap data;
+            const QString artist = _ui->textArtist->text();
+            const QString album = _ui->textAlbum->text();
+
+            if (artist.length()) {
+                data["artist"] = _ui->textArtist->text();
+            }
+
+            if (album.length()) {
+                data["album"] = _ui->textAlbum->text();
+            }
+
+            if (data.count()) {
+                search(data);
+            }
         }
 
         void TagSearchDialog::moveCurrentDown() {

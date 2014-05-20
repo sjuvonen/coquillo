@@ -80,11 +80,19 @@ namespace Coquillo {
         }
 
         QVariant MetaDataModel::headerData(int section, Qt::Orientation orientation, int role) const {
-            if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-                return _columns[section];
+            if (role == Qt::DisplayRole) {
+                if (orientation == Qt::Horizontal) {
+                    return _columns[section];
+                } else {
+                    return section;
+                }
             }
-
             return QVariant();
+//             if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
+//                 qDebug() << section << role;
+//                 return section;
+//             }
+//             return role == Qt::DisplayRole ? _columns[section] : QVariant();
         }
 
         QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
@@ -326,8 +334,6 @@ namespace Coquillo {
             beginInsertRows(QModelIndex(), row, row);
             _metaData << metaData;
             endInsertRows();
-
-            qDebug() << metaData.properties()["length"].toInt();
         }
 
         QStringList MetaDataModel::nameFilters() {

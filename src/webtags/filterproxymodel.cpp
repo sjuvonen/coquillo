@@ -39,5 +39,18 @@ namespace Coquillo {
             _mode = mode;
             invalidateFilter();
         }
+
+//         QVariant FilterProxyModel::headerData(int section, Qt::Orientation orientation, int role) const {
+// //             qDebug() << "here 1" << role;
+//             if (section == Qt::Vertical && role == Qt::DecorationRole) {
+// //                 qDebug() << "here 2";
+// //                 return 4;
+//                 qDebug() << section;
+//                 return 555;
+//                 return section + 1;
+//             } else {
+//                 return QSortFilterProxyModel::headerData(section, orientation, role);
+//             }
+//         }
     }
 }

@@ -21,7 +21,7 @@ namespace Coquillo {
 
             private:
                 std::string paramsToQuery(QVariantMap params) const;
-                Coquillo::Searcher::Results parseRecordings(const MusicBrainz5::CReleaseList *) const;
+                QList<QVariantMap> parseRecordings(const MusicBrainz5::CReleaseList *) const;
         };
     }
 }

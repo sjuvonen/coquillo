@@ -17,6 +17,8 @@ namespace Coquillo {
                 void setFilterMode(FilterMode mode);
                 inline FilterMode filterMode() const { return _mode; }
 
+//                 QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
             protected:
                 bool filterAcceptsRow(int src_row, const QModelIndex & src_parent = QModelIndex()) const;
 

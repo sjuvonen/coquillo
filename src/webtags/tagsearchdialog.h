@@ -2,7 +2,9 @@
 #define COQUILLO_WEBTAGS_TAGSEARCHDIALOG_H
 
 #include <QDialog>
+#include <QMap>
 #include <QPointer>
+#include <QVariant>
 
 class QAbstractItemModel;
 
@@ -11,6 +13,10 @@ namespace Ui {
 }
 
 namespace Coquillo {
+    namespace Searcher {
+        class AbstractSearcher;
+    }
+
     namespace WebTags {
         class TagSearchDialog : public QDialog {
             Q_OBJECT
@@ -20,11 +26,15 @@ namespace Coquillo {
                 ~TagSearchDialog();
                 void setModel(QAbstractItemModel * model);
                 QAbstractItemModel * model() const;
+                void addSearcher(const QString & id, Searcher::AbstractSearcher * searcher);
+                void search(const QVariantMap & params);
 
             private slots:
+                void executeSearch();
                 void moveCurrentDown();
                 void moveCurrentUp();
                 void selectCurrent();
+                void showResults(const QList<QVariantMap> & results);
                 void unselectCurrent();
 
             private:
@@ -32,6 +42,7 @@ namespace Coquillo {
                 void unselectPaths(const QStringList & paths);
                 Ui::TagSearchDialog * _ui;
                 QPointer<QAbstractItemModel> _model;
+                QMap<QString, Searcher::AbstractSearcher*> _searchers;
         };
     }
 }
