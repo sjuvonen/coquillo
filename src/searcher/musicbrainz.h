@@ -2,6 +2,7 @@
 #define COQUILLO_SEARCHER_MUSICBRAINZ_H
 
 #include <string>
+#include <musicbrainz5/NameCreditList.h>
 #include <musicbrainz5/ReleaseList.h>
 #include "abstractsearcher.h"
 
@@ -25,9 +26,11 @@ namespace Coquillo {
                 void search(const QVariantMap & params);
 
             private:
+                QString parseNameCredits(const MusicBrainz5::CNameCreditList * names) const;
                 MusicBrainz5::CQuery createQuery();
                 std::string paramsToQuery(QVariantMap params) const;
                 QList<QVariantMap> parseReleases(const MusicBrainz5::CReleaseList *) const;
+                const QString _anon;
         };
     }
 }

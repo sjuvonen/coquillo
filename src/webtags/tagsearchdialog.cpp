@@ -25,13 +25,23 @@ namespace Coquillo {
             _ui->tableSearchResults->setModel(search_results);
 
             QStandardItemModel * album_preview = new QStandardItemModel(this);
-            album_preview->setHorizontalHeaderLabels(QStringList() << tr("Title"));
+            album_preview->setHorizontalHeaderLabels(QStringList() << tr("Title") << tr("Artist"));
             _ui->tableAlbumPreview->setModel(album_preview);
 
             connect(_ui->tableSearchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
                 SLOT(executeFetchAlbum(QModelIndex)));
 
             addSearcher(new Searcher::MusicBrainz(this));
+            _ui->textAlbum->setFocus(Qt::ActiveWindowFocusReason);
+
+            _ui->tableSearchResults->horizontalHeader()->resizeSection(0, 240);
+            _ui->tableSearchResults->horizontalHeader()->resizeSection(1, 120);
+            _ui->tableSearchResults->horizontalHeader()->resizeSection(2, 40);
+            _ui->tableSearchResults->horizontalHeader()->resizeSection(3, 40);
+            _ui->tableSearchResults->horizontalHeader()->hideSection(3);
+            _ui->tableSearchResults->horizontalHeader()->hideSection(4);
+
+            _ui->tableAlbumPreview->horizontalHeader()->resizeSection(0, 260);
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -76,9 +86,10 @@ namespace Coquillo {
 
         void TagSearchDialog::executeFetchAlbum(const QModelIndex & idx) {
             qDebug() << "Fetch album info for" << idx.row();
+            const int disc = idx.sibling(idx.row(), 2).data().toInt();
             const QString id = idx.sibling(idx.row(), 3).data().toString();
             const QString source = idx.sibling(idx.row(), 4).data().toString();
-            _searchers[source]->albumInfo(id);
+            _searchers[source]->albumInfo(id, disc-1);
         }
 
         void TagSearchDialog::showAlbumInfo(const QVariantMap & album) {

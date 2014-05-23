@@ -18,7 +18,7 @@
 namespace Coquillo {
     namespace Searcher {
         MusicBrainz::MusicBrainz(QObject * parent)
-        : AbstractSearcher("musicbrainz", parent) {
+        : AbstractSearcher("musicbrainz", parent), _anon("89ad4ac3-39f7-470e-963a-56509c546377") {
 
         }
 
@@ -36,7 +36,8 @@ namespace Coquillo {
 
             MusicBrainz5::CMedium * medium = release->MediumList()->Item(disc);
 
-            std::cout << result << std::endl;
+//             qDebug() << "disc" << disc;
+//             std::cout << result << std::endl;
 
             if (medium) {
                 for (int i = 0; i < medium->TrackList()->NumItems(); i++) {
@@ -44,7 +45,7 @@ namespace Coquillo {
                     QVariantMap row;
                     row["number"] = track->Position();
                     row["title"] = QString::fromStdString(track->Recording()->Title());
-                    row["artist"] = QString::fromStdString(track->Recording()->ArtistCredit()->NameCreditList()->Item(0)->Artist()->Name());
+                    row["artist"] = parseNameCredits(track->Recording()->ArtistCredit()->NameCreditList());
                     tracks << row;
                 }
             }
@@ -52,7 +53,8 @@ namespace Coquillo {
             QVariantMap album;
             album["tracks"] = QVariant::fromValue< QList<QVariantMap> >(tracks);
             album["title"] = QString::fromStdString(release->Title());
-            album["artist"] = QString::fromStdString(release->ArtistCredit()->NameCreditList()->Item(0)->Artist()->Name());
+            album["artist"] = parseNameCredits(release->ArtistCredit()->NameCreditList());
+            album["date"] = QString::fromStdString(release->Date());
             album["disc"] = disc;
             album["source"] = this->id();
 
@@ -72,16 +74,26 @@ namespace Coquillo {
 
         std::string MusicBrainz::paramsToQuery(QVariantMap params) const {
             QStringList query;
-
-            if (params.contains("album")) {
-                query.append(QString("\"%1\"").arg(params.take("album").toString()));
-            }
+            query.append(QString("\"%1\"").arg(params.take("album").toString()));
 
             foreach (QString key, params.keys()) {
                 query.append(QString("%1:\"%2\"").arg(key, params[key].toString()));
             }
 
             return query.join(" AND ").toStdString();
+        }
+
+        QString MusicBrainz::parseNameCredits(const MusicBrainz5::CNameCreditList * names) const {
+            QString full;
+
+            for (int i = 0; i < names->NumItems(); i++) {
+                MusicBrainz5::CNameCredit * credit  = names->Item(i);
+                const QString name = QString::fromStdString(credit->Artist()->Name());
+                const QString glue = QString::fromStdString(credit->JoinPhrase());
+                full += name + glue;
+            }
+
+            return full.trimmed();
         }
 
         QList<QVariantMap> MusicBrainz::parseReleases(const MusicBrainz5::CReleaseList * releases) const {
@@ -106,7 +118,7 @@ namespace Coquillo {
                         const MusicBrainz5::CNameCreditList * names = r->ArtistCredit()->NameCreditList();
 
                         if (names->NumItems() > 0) {
-                            data["artist"] = QString::fromStdString(names->Item(0)->Artist()->Name());
+                            data["artist"] = parseNameCredits(names);
                         } else {
                             data["artist"] = QString("None");
                         }
