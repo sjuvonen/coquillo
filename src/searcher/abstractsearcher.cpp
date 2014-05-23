@@ -2,9 +2,13 @@
 
 namespace Coquillo {
     namespace Searcher {
-        AbstractSearcher::AbstractSearcher(QObject * parent)
-        : QObject(parent) {
+        AbstractSearcher::AbstractSearcher(const QString & id, QObject * parent)
+        : QObject(parent), _id(id) {
 
+        }
+
+        void AbstractSearcher::emitSearchFinished(const QList<QVariantMap> & results) {
+            emit searchReady(results, id());
         }
     }
 }

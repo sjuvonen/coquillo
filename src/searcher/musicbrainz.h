@@ -5,6 +5,10 @@
 #include <musicbrainz5/ReleaseList.h>
 #include "abstractsearcher.h"
 
+namespace MusicBrainz5 {
+    class CQuery;
+}
+
 namespace Coquillo {
     namespace MetaData {
         class MetaData;
@@ -17,11 +21,13 @@ namespace Coquillo {
             public:
                 MusicBrainz(QObject * parent = 0);
                 QString discId(const QList<Coquillo::MetaData::MetaData> & data) const;
+                void albumInfo(const QString & id, int disc = 0);
                 void search(const QVariantMap & params);
 
             private:
+                MusicBrainz5::CQuery createQuery();
                 std::string paramsToQuery(QVariantMap params) const;
-                QList<QVariantMap> parseRecordings(const MusicBrainz5::CReleaseList *) const;
+                QList<QVariantMap> parseReleases(const MusicBrainz5::CReleaseList *) const;
         };
     }
 }

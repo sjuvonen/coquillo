@@ -21,10 +21,17 @@ namespace Coquillo {
             _ui->selected->setModel(selected);
 
             QStandardItemModel * search_results = new QStandardItemModel(this);
-            search_results->setHorizontalHeaderLabels(QStringList() << tr("Title") << tr("Artist") << tr("D#") << tr("ID"));
-            _ui->listSearchResults->setModel(search_results);
+            search_results->setHorizontalHeaderLabels(QStringList() << tr("Title") << tr("Artist") << tr("D#") << tr("ID") << tr("Source"));
+            _ui->tableSearchResults->setModel(search_results);
 
-            addSearcher("musicbrainz", new Searcher::MusicBrainz(this));
+            QStandardItemModel * album_preview = new QStandardItemModel(this);
+            album_preview->setHorizontalHeaderLabels(QStringList() << tr("Title"));
+            _ui->tableAlbumPreview->setModel(album_preview);
+
+            connect(_ui->tableSearchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
+                SLOT(executeFetchAlbum(QModelIndex)));
+
+            addSearcher(new Searcher::MusicBrainz(this));
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -57,29 +64,53 @@ namespace Coquillo {
             return _model.data();
         }
 
-        void TagSearchDialog::addSearcher(const QString & id, Searcher::AbstractSearcher * searcher) {
-            _searchers[id] = searcher;
+        void TagSearchDialog::addSearcher(Searcher::AbstractSearcher * searcher) {
+            _searchers[searcher->id()] = searcher;
 
-            connect(searcher, SIGNAL(searchFinished(QList<QVariantMap>)),
-                SLOT(showResults(QList<QVariantMap>)));
+            connect(searcher, SIGNAL(searchReady(QList<QVariantMap>, QString)),
+                SLOT(showResults(QList<QVariantMap>, QString)));
+
+            connect(searcher, SIGNAL(albumReady(QVariantMap)),
+                SLOT(showAlbumInfo(QVariantMap)));
         }
 
-        void TagSearchDialog::showResults(const QList<QVariantMap> & results) {
+        void TagSearchDialog::executeFetchAlbum(const QModelIndex & idx) {
+            qDebug() << "Fetch album info for" << idx.row();
+            const QString id = idx.sibling(idx.row(), 3).data().toString();
+            const QString source = idx.sibling(idx.row(), 4).data().toString();
+            _searchers[source]->albumInfo(id);
+        }
+
+        void TagSearchDialog::showAlbumInfo(const QVariantMap & album) {
+            qDebug() << "Show album info";
+
+            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->tableAlbumPreview->model());
+            model->removeRows(0, model->rowCount());
+            const QList<QVariantMap> tracks = album["tracks"].value< QList<QVariantMap> >();
+
+            foreach (const QVariantMap row, tracks) {
+                model->appendRow(QList<QStandardItem*>()
+                    << new QStandardItem(row["title"].toString())
+                    << new QStandardItem(row["artist"].toString()));
+            }
+        }
+
+        void TagSearchDialog::showResults(const QList<QVariantMap> & results, const QString & source) {
             qDebug() << "got results:" << results.count();
-            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->listSearchResults->model());
+            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->tableSearchResults->model());
 
             foreach (const QVariantMap row, results) {
                 model->appendRow(QList<QStandardItem*>()
                     << new QStandardItem(row["title"].toString())
                     << new QStandardItem(row["artist"].toString())
                     << new QStandardItem(row["disc"].toString())
-                    << new QStandardItem(row["id"].toString()));
+                    << new QStandardItem(row["id"].toString())
+                    << new QStandardItem(source));
             }
         }
 
         void TagSearchDialog::search(const QVariantMap & data) {
             qDebug() << "search with sources: " << _searchers.count();
-            _ui->mainTabs->setCurrentIndex(1);
             foreach (Searcher::AbstractSearcher * s, _searchers.values()) {
                 s->search(data);
             }
@@ -97,6 +128,9 @@ namespace Coquillo {
             if (album.length()) {
                 data["album"] = _ui->textAlbum->text();
             }
+
+            int total = _ui->tableSearchResults->model()->rowCount();
+            _ui->tableSearchResults->model()->removeRows(0, total);
 
             if (data.count()) {
                 search(data);

@@ -26,18 +26,20 @@ namespace Coquillo {
                 ~TagSearchDialog();
                 void setModel(QAbstractItemModel * model);
                 QAbstractItemModel * model() const;
-                void addSearcher(const QString & id, Searcher::AbstractSearcher * searcher);
-                void search(const QVariantMap & params);
+                void addSearcher(Searcher::AbstractSearcher * searcher);
 
             private slots:
                 void executeSearch();
+                void executeFetchAlbum(const QModelIndex & idx);
                 void moveCurrentDown();
                 void moveCurrentUp();
                 void selectCurrent();
-                void showResults(const QList<QVariantMap> & results);
+                void showAlbumInfo(const QVariantMap & album);
+                void showResults(const QList<QVariantMap> & results, const QString & source);
                 void unselectCurrent();
 
             private:
+                void search(const QVariantMap & params);
                 void selectPaths(const QStringList & paths);
                 void unselectPaths(const QStringList & paths);
                 Ui::TagSearchDialog * _ui;

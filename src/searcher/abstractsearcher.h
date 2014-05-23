@@ -10,12 +10,21 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
-                AbstractSearcher(QObject * parent = 0);
                 virtual ~AbstractSearcher() { }
                 virtual void search(const QVariantMap & fields) = 0;
+                virtual void albumInfo(const QString & id, int disc = 0) = 0;
+                inline QString id() const { return _id; }
 
             signals:
-                void searchFinished(const QList<QVariantMap> &);
+                void searchReady(const QList<QVariantMap> & results, const QString & source);
+                void albumReady(const QVariantMap & data);
+
+            protected:
+                AbstractSearcher(const QString & id, QObject * parent = 0);
+                void emitSearchFinished(const QList<QVariantMap> & results);
+
+            private:
+                const QString _id;
         };
     }
 }
