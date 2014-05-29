@@ -33,6 +33,7 @@ namespace Coquillo {
                 void executeFetchAlbum(const QModelIndex & idx);
                 void moveCurrentDown();
                 void moveCurrentUp();
+                void reactToTabChange(int current);
                 void selectCurrent();
                 void showAlbumInfo(const QVariantMap & album);
                 void showResults(const QList<QVariantMap> & results, const QString & source);

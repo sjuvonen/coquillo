@@ -40,8 +40,8 @@ namespace Coquillo {
             _ui->tableSearchResults->horizontalHeader()->resizeSection(3, 40);
             _ui->tableSearchResults->horizontalHeader()->hideSection(3);
             _ui->tableSearchResults->horizontalHeader()->hideSection(4);
-
             _ui->tableAlbumPreview->horizontalHeader()->resizeSection(0, 260);
+            reactToTabChange(0);
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -154,6 +154,10 @@ namespace Coquillo {
 
         void TagSearchDialog::moveCurrentUp() {
 
+        }
+
+        void TagSearchDialog::reactToTabChange(int current) {
+            _ui->dialogButtons->button(QDialogButtonBox::Apply)->setEnabled(current == 1);
         }
 
         void TagSearchDialog::selectCurrent() {
