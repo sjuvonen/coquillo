@@ -1,5 +1,6 @@
 
 #include <QDebug>
+#include <QFileDialog>
 #include <QRegExp>
 #include <QSettings>
 
@@ -18,6 +19,10 @@ namespace Coquillo {
 
         SettingsDialog::~SettingsDialog() {
             delete _ui;
+        }
+
+        QList<QWidget*> SettingsDialog::findInputs() const {
+            return findChildren<QWidget*>(QRegExp("conf_(.+)"));
         }
 
         void SettingsDialog::restoreSettings() {
@@ -50,8 +55,13 @@ namespace Coquillo {
             }
         }
 
-        QList<QWidget*> SettingsDialog::findInputs() const {
-            return findChildren<QWidget*>(QRegExp("conf_(.+)"));
+        void SettingsDialog::selectHomeDirectory() {
+            const QString current_home = QSettings().value("DefaultLocation").toString();
+            QString new_home = QFileDialog::getExistingDirectory(this, tr("Select directory"), current_home);
+
+            if (!new_home.isNull()) {
+                _ui->conf_DefaultLocation->setText(new_home);
+            }
         }
     }
 }

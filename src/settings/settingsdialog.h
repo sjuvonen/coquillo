@@ -19,6 +19,9 @@ namespace Coquillo {
             public slots:
                 void accept() { saveSettings(); QDialog::accept(); }
 
+            private slots:
+                void selectHomeDirectory();
+
             private:
                 QList<QWidget*> findInputs() const;
                 void restoreSettings();

@@ -106,7 +106,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this to include all children of selected directories&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Scan subdirectories</string>
+      <string>Include subdirectories</string>
      </property>
     </widget>
    </item>

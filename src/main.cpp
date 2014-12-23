@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QDebug>
 #include <QMap>
 #include <QSettings>
 #include <QStandardPaths>
@@ -14,6 +15,7 @@ void prepare_settings() {
 
     foreach (const QString key, defaults.keys()) {
         if (!settings.contains(key)) {
+            qDebug() << "set default" << key << defaults[key];
             settings.setValue(key, defaults[key]);
         }
     }

@@ -34,7 +34,7 @@
            <widget class="QLineEdit" name="conf_DefaultLocation"/>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="buttonSelectHome">
             <property name="text">
              <string>Select directory</string>
             </property>
@@ -53,16 +53,6 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QCheckBox" name="conf_RecursiveScan">
-            <property name="text">
-             <string>Enable recursive scanning by default</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QCheckBox" name="conf_SafeFilenames">
             <property name="text">
              <string>Use safe filenames for portability</string>
@@ -80,7 +70,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>152</height>
+           <height>178</height>
           </size>
          </property>
         </spacer>
@@ -140,5 +130,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>buttonSelectHome</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>selectHomeDirectory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>567</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>305</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>selectHomeDirectory()</slot>
+ </slots>
 </ui>
