@@ -36,7 +36,7 @@
    <item row="6" column="0">
     <widget class="QLabel" name="labelGenre">
      <property name="text">
-      <string>Genre</string>
+      <string>&amp;Genre</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -114,7 +114,7 @@
    <item row="4" column="0">
     <widget class="QLabel" name="labelYear">
      <property name="text">
-      <string>Year</string>
+      <string>&amp;Year</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -391,30 +391,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QToolButton" name="cloneTitle">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset theme="edit-copy">
-       <normaloff/>
-      </iconset>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="autoRaise">
-      <bool>true</bool>
-     </property>
-     <property name="arrowType">
-      <enum>Qt::NoArrow</enum>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <widget class="QLabel" name="labelAlbum">
      <property name="text">
@@ -565,7 +541,7 @@
    <item row="9" column="0">
     <widget class="QLabel" name="labelUrl">
      <property name="text">
-      <string>URL</string>
+      <string>&amp;URL</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -630,10 +606,13 @@
         </size>
        </property>
        <property name="text">
-        <string>Disc</string>
+        <string>&amp;Disc</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
        </property>
        <property name="buddy">
         <cstring>tagDisc</cstring>
@@ -709,7 +688,6 @@
  </widget>
  <tabstops>
   <tabstop>tagTitle</tabstop>
-  <tabstop>cloneTitle</tabstop>
   <tabstop>tagArtist</tabstop>
   <tabstop>cloneArtist</tabstop>
   <tabstop>tagAlbum</tabstop>

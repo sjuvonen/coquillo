@@ -21,6 +21,7 @@ FORMS += \
     ui/mainwindow.ui \
     ui/parserwidget.ui \
     ui/renamewidget.ui \
+    ui/settingsdialog.ui \
     ui/tagsearchdialog.ui \
 
 HEADERS += \
@@ -42,6 +43,7 @@ HEADERS += \
     src/processor/renamewidget.h \
     src/searcher/abstractsearcher.h \
     src/searcher/musicbrainz.h \
+    src/settings/settingsdialog.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
     src/webtags/filterproxymodel.h \
@@ -69,6 +71,7 @@ SOURCES += \
     src/processor/renamewidget.cpp \
     src/searcher/abstractsearcher.cpp \
     src/searcher/musicbrainz.cpp \
+    src/settings/settingsdialog.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
     src/webtags/filterproxymodel.cpp \

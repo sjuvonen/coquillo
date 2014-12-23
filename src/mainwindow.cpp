@@ -18,6 +18,7 @@
 #include "metadata/metadatamodel.h"
 #include "processor/renamewidget.h"
 #include "processor/parserwidget.h"
+#include "settings/settingsdialog.h"
 #include "tageditor/basictags.h"
 #include "webtags/tagsearchdialog.h"
 
@@ -189,6 +190,11 @@ namespace Coquillo {
         foreach (QToolBar * bar, findChildren<QToolBar*>()) {
             bar->setMovable(!state);
         }
+    }
+
+    void MainWindow::openSettingsDialog() {
+        Settings::SettingsDialog dialog(this);
+        dialog.exec();
     }
 
     void MainWindow::openTagSearchDialog() {

@@ -292,7 +292,7 @@
      <item>
       <widget class="QPushButton" name="apply">
        <property name="text">
-        <string>Apply</string>
+        <string>&amp;Apply</string>
        </property>
        <property name="autoDefault">
         <bool>true</bool>

@@ -105,14 +105,16 @@
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
-     <string>&amp;Settings</string>
+     <string>Setti&amp;ngs</string>
     </property>
     <addaction name="action_Menubar"/>
     <addaction name="actionStatusbar"/>
+    <addaction name="separator"/>
+    <addaction name="actionConfigure"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
-     <string>&amp;Help</string>
+     <string>He&amp;lp</string>
     </property>
     <addaction name="action_About_Coquillo"/>
    </widget>
@@ -139,6 +141,8 @@
    <addaction name="actionInvert"/>
    <addaction name="separator"/>
    <addaction name="actionSearch"/>
+   <addaction name="separator"/>
+   <addaction name="actionConfigure"/>
   </widget>
   <action name="action_About_Coquillo">
    <property name="text">
@@ -161,7 +165,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Statusbar</string>
+    <string>&amp;Statusbar</string>
    </property>
   </action>
   <action name="actionToolbar">
@@ -270,13 +274,29 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="edit-find"/>
+    <iconset theme="edit-find">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Online</string>
    </property>
    <property name="toolTip">
     <string>Search tags online</string>
+   </property>
+  </action>
+  <action name="actionConfigure">
+   <property name="icon">
+    <iconset theme="preferences-desktop"/>
+   </property>
+   <property name="text">
+    <string>Configure...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open settings dialog</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>
@@ -351,10 +371,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionConfigure</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openSettingsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>351</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectAll()</slot>
   <slot>invertSelection()</slot>
   <slot>openTagSearchDialog()</slot>
+  <slot>openSettingsDialog()</slot>
  </slots>
 </ui>
