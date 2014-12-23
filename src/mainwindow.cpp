@@ -6,7 +6,6 @@
 #include <QSettings>
 #include <QSignalMapper>
 #include <QSortFilterProxyModel>
-#include <QStandardPaths>
 #include <QTimer>
 
 #include "actionsignalmapper.h"
@@ -45,7 +44,7 @@ namespace Coquillo {
         _fileBrowser = new FileBrowser(this);
         _fileBrowser->setBookmarkModel(bookmarks);
         _fileBrowser->setHistoryModel(path_history);
-        _fileBrowser->setDirectory(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+        _fileBrowser->setDirectory(QSettings().value("DefaultLocation").toString());
         _ui->tools->addTab(_fileBrowser, tr("Directories"));
 
         StringStoreModel * rename_history = new StringStoreModel("rename", this);
