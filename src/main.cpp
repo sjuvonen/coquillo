@@ -11,6 +11,7 @@ void prepare_settings() {
         {"DefaultLocation", QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()},
         {"RecursiveScan", true},
         {"SafeFilenames", true},
+        {"DeleteEmptyDirs", true},
     };
 
     foreach (const QString key, defaults.keys()) {

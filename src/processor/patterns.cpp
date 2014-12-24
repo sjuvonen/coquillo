@@ -7,9 +7,7 @@
 
 namespace Coquillo {
     namespace Processor {
-        Patterns::Patterns(QObject * parent)
-        : QObject(parent) {
-
+        Patterns::Patterns() {
             _symbols["artist"] = "%a";
             _symbols["album"] = "%b";
             _symbols["title"] = "%t";
@@ -21,8 +19,8 @@ namespace Coquillo {
             _symbols["ignore"] = "%i";
         }
 
-        Patterns::Patterns(const Symbols & symbols, QObject * parent)
-        : QObject(parent), _symbols(symbols) {
+        Patterns::Patterns(const Symbols & symbols)
+        : _symbols(symbols) {
 
         }
 

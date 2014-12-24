@@ -2,18 +2,16 @@
 #define COQUILLO_PROCESSOR_PATTERNS_H
 
 #include <QHash>
-#include <QObject>
 
 namespace Coquillo {
     namespace Processor {
         typedef QHash<QString, QString> Symbols;
 
-        class Patterns : public QObject {
-            Q_OBJECT
+        class Patterns {
 
             public:
-                Patterns(QObject * parent = 0);
-                Patterns(const Symbols & symbols, QObject * parent = 0);
+                Patterns();
+                Patterns(const Symbols & symbols);
 
                 /**
                  * Replace symbols in a string with real values

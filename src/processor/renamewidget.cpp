@@ -25,14 +25,13 @@ namespace Coquillo {
             qDebug() << "apply pattern" << pattern;
 
             Patterns patterns;
+            QList<QPersistentModelIndex> indices;
 
-            /*
-             * NOTE: This doesn't work when the model is QSortFilterProxyModel
-             * with dynamicSortFilter enabled, because the items might change
-             * rows after the path is renamed and then the list of indices will
-             * refer to wrong items.
-             */
             foreach (const QModelIndex idx, selectionModel()->selectedRows()) {
+                indices << QPersistentModelIndex(idx);
+            }
+            
+            foreach (const QPersistentModelIndex idx, indices) {
                 const QVariantHash values = idx.data(MetaData::MetaDataModel::NamedRowDataRole).toHash();
                 const QString path = patterns.compile(this->pattern(), values);
                 model()->setData(idx, path, MetaData::MetaDataModel::FileNameRole);

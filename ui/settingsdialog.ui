@@ -39,7 +39,9 @@
              <string>Select directory</string>
             </property>
             <property name="icon">
-             <iconset theme="document-open"/>
+             <iconset theme="document-open">
+              <normaloff/>
+             </iconset>
             </property>
            </widget>
           </item>
@@ -56,6 +58,13 @@
            <widget class="QCheckBox" name="conf_SafeFilenames">
             <property name="text">
              <string>Use safe filenames for portability</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="conf_DeleteEmptyDirs">
+            <property name="text">
+             <string>Remove empty directories after renaming files</string>
             </property>
            </widget>
           </item>
