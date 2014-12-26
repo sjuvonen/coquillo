@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Coquillo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -287,10 +287,12 @@
   </action>
   <action name="actionConfigure">
    <property name="icon">
-    <iconset theme="preferences-desktop"/>
+    <iconset theme="preferences-desktop">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
-    <string>Configure...</string>
+    <string>&amp;Configure...</string>
    </property>
    <property name="toolTip">
     <string>Open settings dialog</string>
