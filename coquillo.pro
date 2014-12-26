@@ -30,6 +30,10 @@ HEADERS += \
     src/stringstoremodel.h \
     src/filebrowser/directorymodel.h \
     src/filebrowser/filebrowser.h \
+    src/filters/abstractfilter.h \
+    src/filters/parsediscnumber.h \
+    src/filters/safefilenames.h \
+    src/filters/trimwhitespace.h \
     src/metadata/filereader.h \
     src/metadata/filetypes.h \
     src/metadata/mediacrawler.h \
@@ -56,6 +60,9 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/stringstoremodel.cpp \
+    src/filters/parsediscnumber.cpp \
+    src/filters/safefilenames.cpp \
+    src/filters/trimwhitespace.cpp \
     src/filebrowser/directorymodel.cpp \
     src/filebrowser/filebrowser.cpp \
     src/metadata/filereader.cpp \

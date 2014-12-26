@@ -21,20 +21,16 @@ namespace Coquillo {
             }
         }
 
-        bool MetaData::hasTag(const QString & name) {
+        bool MetaData::hasTag(const QString & name) const {
             return _tags.contains(name);
         }
 
-        bool MetaData::has(const QString & key) {
+        bool MetaData::has(const QString & key) const {
             return has(key, _primary);
         }
 
-        bool MetaData::has(const QString & key, const QString & tag) {
-            if (hasTag(tag)) {
-                return _tags[tag].contains(key);
-            } else {
-                return false;
-            }
+        bool MetaData::has(const QString & key, const QString & tag) const {
+            return hasTag(tag) and _tags[tag].contains(key);
         }
 
         void MetaData::insert(const QString & key, const QVariant & value) {
@@ -43,6 +39,14 @@ namespace Coquillo {
 
         QVariant MetaData::value(const QString & key, const QString & tag) const {
             return _tags.value(tag).value(key);
+        }
+
+        QStringList MetaData::fields() const {
+            return _tags[_primary].keys();
+        }
+
+        QStringList MetaData::fields(const QString & tag) const {
+            return hasTag(tag) ? _tags.value(tag).keys() : QStringList();
         }
     }
 }

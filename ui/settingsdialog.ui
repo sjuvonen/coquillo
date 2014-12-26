@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -88,8 +88,150 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>Tags</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>General</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QCheckBox" name="prefScaleCovers">
+              <property name="text">
+               <string>Scale pictures to</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="prefScaleWidth">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>50</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>x</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="prefScaleHeight">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="frame">
+               <bool>true</bool>
+              </property>
+              <property name="minimum">
+               <number>50</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>px</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_10">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox_3">
+            <property name="text">
+             <string>Parse disc number from album name</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>MPEG (.mp3)</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>Write ID3v1 tags in addition to ID3v2</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>FLAC</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="checkBox_2">
+            <property name="text">
+             <string>Write ID3v2 tags in addition to native tags</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
