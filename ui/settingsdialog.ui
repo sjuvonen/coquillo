@@ -208,7 +208,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QCheckBox" name="conf_MpegEnableId3v1">
+           <widget class="QCheckBox" name="conf_Compat_MpegEnableId3v1">
             <property name="text">
              <string>Write ID3v1 tags in addition to ID3v2</string>
             </property>
@@ -224,7 +224,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QCheckBox" name="conf_FlacEnableId3v2">
+           <widget class="QCheckBox" name="conf_Compat_FlacEnableId3v2">
             <property name="text">
              <string>Write ID3v2 tags in addition to native tags</string>
             </property>
