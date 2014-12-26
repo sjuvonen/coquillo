@@ -30,7 +30,7 @@ namespace Coquillo {
             QList<QWidget*> inputs = findInputs();
 
             foreach (QWidget * input, inputs) {
-                const QString key = input->objectName().mid(5);
+                const QString key = input->objectName().mid(5).replace('_', '/');
 
                 if (input->inherits("QLineEdit")) {
                     qobject_cast<QLineEdit*>(input)->setText(settings.value(key).toString());
@@ -45,7 +45,7 @@ namespace Coquillo {
             QList<QWidget*> inputs = findInputs();
 
             foreach (QWidget * input, inputs) {
-                const QString key = input->objectName().mid(5);
+                const QString key = input->objectName().mid(5).replace('_', '/');
 
                 if (input->inherits("QLineEdit")) {
                     settings.setValue(key, qobject_cast<QLineEdit*>(input)->text());

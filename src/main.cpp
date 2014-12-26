@@ -10,8 +10,12 @@ void prepare_settings() {
     QMap<QString, QVariant> defaults = {
         {"DefaultLocation", QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()},
         {"RecursiveScan", true},
-        {"SafeFilenames", true},
         {"DeleteEmptyDirs", true},
+        {"FlacEnableId3v2", false},
+        {"MpegEnableId3v1", false},
+        {"Filter/SafeFilenames", false},
+        {"Filter/ScalePictures", false},
+        {"Filter/ParseDiscNumber", false},
     };
 
     foreach (const QString key, defaults.keys()) {

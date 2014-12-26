@@ -55,7 +55,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QCheckBox" name="conf_SafeFilenames">
+           <widget class="QCheckBox" name="conf_Filter_SafeFilenames">
             <property name="text">
              <string>Use safe filenames for portability</string>
             </property>
@@ -100,14 +100,14 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QCheckBox" name="prefScaleCovers">
+             <widget class="QCheckBox" name="conf_Filter_ScalePictures">
               <property name="text">
                <string>Scale pictures to</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="prefScaleWidth">
+             <widget class="QSpinBox" name="conf_PictureScaleWith">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -133,7 +133,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="prefScaleHeight">
+             <widget class="QSpinBox" name="conf_PictureScaleHeight">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -177,7 +177,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox_3">
+           <widget class="QCheckBox" name="conf_Filter_ParseDiscNumber">
             <property name="text">
              <string>Parse disc number from album name</string>
             </property>
@@ -208,7 +208,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="conf_MpegEnableId3v1">
             <property name="text">
              <string>Write ID3v1 tags in addition to ID3v2</string>
             </property>
@@ -224,7 +224,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QCheckBox" name="checkBox_2">
+           <widget class="QCheckBox" name="conf_FlacEnableId3v2">
             <property name="text">
              <string>Write ID3v2 tags in addition to native tags</string>
             </property>
