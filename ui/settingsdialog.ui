@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -180,6 +180,21 @@
            <widget class="QCheckBox" name="checkBox_3">
             <property name="text">
              <string>Parse disc number from album name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_12">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Searches for &quot;(Disc %d)&quot; and &quot;(CD %d)&quot;</string>
+            </property>
+            <property name="indent">
+             <number>35</number>
             </property>
            </widget>
           </item>
