@@ -107,7 +107,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="conf_PictureScaleWith">
+             <widget class="QSpinBox" name="conf_PictureScaleWidth">
               <property name="enabled">
                <bool>false</bool>
               </property>
