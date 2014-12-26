@@ -16,6 +16,7 @@ void prepare_settings() {
         {"Filter/SafeFilenames", false},
         {"Filter/ScalePictures", false},
         {"Filter/ParseDiscNumber", false},
+        {"NumberPadWidth", 2},
     };
 
     foreach (const QString key, defaults.keys()) {

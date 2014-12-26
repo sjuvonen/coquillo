@@ -36,6 +36,8 @@ namespace Coquillo {
                     qobject_cast<QLineEdit*>(input)->setText(settings.value(key).toString());
                 } else if (input->inherits("QCheckBox")) {
                     qobject_cast<QCheckBox*>(input)->setChecked(settings.value(key).toBool());
+                } else if (input->inherits("QSpinBox")) {
+                    qobject_cast<QSpinBox*>(input)->setValue(settings.value(key).toInt());
                 }
             }
         }
@@ -51,6 +53,8 @@ namespace Coquillo {
                     settings.setValue(key, qobject_cast<QLineEdit*>(input)->text());
                 } else if (input->inherits("QCheckBox")) {
                     settings.setValue(key, qobject_cast<QCheckBox*>(input)->isChecked());
+                } else if (input->inherits("QSpinBox")) {
+                    settings.setValue(key, qobject_cast<QSpinBox*>(input)->value());
                 }
             }
         }
