@@ -1,14 +1,12 @@
 
 #include <taglib/audioproperties.h>
 #include <taglib/fileref.h>
-#include <taglib/taglib.h>
-#include <taglib/tfile.h>
-
 #include <taglib/flacfile.h>
 #include <taglib/mpegfile.h>
-#include <taglib/vorbisfile.h>
 #include <taglib/oggfile.h>
-
+#include <taglib/taglib.h>
+#include <taglib/tfile.h>
+#include <taglib/vorbisfile.h>
 
 #include <QFileInfo>
 #include "filereader.h"

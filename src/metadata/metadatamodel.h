@@ -18,7 +18,6 @@ namespace Coquillo {
                     ModifiedRole, FieldNameRole, NamedRowDataRole, MetaDataRole };
 
                 MetaDataModel(QObject * parent = 0);
-                ~MetaDataModel();
                 int columnCount(const QModelIndex & idx = QModelIndex()) const;
                 int rowCount(const QModelIndex & idx = QModelIndex()) const;
                 QVariant data(const QModelIndex & idx, int role = Qt::DisplayRole) const;

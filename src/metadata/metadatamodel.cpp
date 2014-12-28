@@ -56,13 +56,6 @@ namespace Coquillo {
             qRegisterMetaType<Coquillo::MetaData::MetaData>("MetaData");
         }
 
-        MetaDataModel::~MetaDataModel() {
-    //         while (QThread * thread = _workers.takeFirst()) {
-    //             thread->terminate();
-    //             thread->deleteLater();
-    //         }
-        }
-
         int MetaDataModel::columnCount(const QModelIndex & idx) const {
             if (idx.isValid()) {
                 return 0;
@@ -242,10 +235,20 @@ namespace Coquillo {
             }
         }
 
-        void MetaDataModel::addDirectory(const QString & dir) {
-            _directories << dir;
+        void MetaDataModel::addDirectory(const QString & directory) {
 
-            MediaCrawler * crawler = new MediaCrawler(dir);
+            /*
+             * NOTE: Lazy way to filter already added subdirectories.
+             */
+            foreach (const QString dir, _directories) {
+                if (dir.startsWith(directory)) {
+                    removeDirectory(dir);
+                }
+            }
+            
+            _directories << directory;
+
+            MediaCrawler * crawler = new MediaCrawler(directory);
             crawler->setNameFilters(nameFilters());
             crawler->setRecursive(isRecursive());
 
