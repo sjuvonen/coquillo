@@ -2,6 +2,8 @@
 #define COQUILLO_METADATA_FILEREADER_H
 
 #include <QObject>
+#include <QRunnable>
+#include <QStringList>
 
 namespace TagLib {
     class File;
@@ -11,30 +13,25 @@ namespace Coquillo {
     namespace MetaData {
         class MetaData;
 
-        class FileReader : public QObject {
+        class FileReader : public QObject, public QRunnable {
             Q_OBJECT
 
             public:
-                static FileReader * create(const QString & file);
-
-                FileReader(const QString & file, QObject * parent = 0);
-                virtual ~FileReader() { }
-
-                inline QString path() const { return _file; }
-                virtual void read() = 0;
+                FileReader(const QStringList & files, QObject * parent = 0);
 
             public slots:
-                void start() { read(); }
+                void run();
 
             signals:
-                void finished(const MetaData & metaData);
-
-            protected:
-                void finish(const TagLib::File & file, MetaData & metaData);
+                void resolved(const MetaData & metaData);
 
             private:
+                bool isFlacFile(const TagLib::File * file) const;
+                bool isMpegFile(const TagLib::File * file) const;
+                bool isVorbisFile(const TagLib::File * file) const;
+
                 enum FileType { MpegFile, OggFile, FlacFile };
-                QString _file;
+                QStringList _files;
         };
     }
 }

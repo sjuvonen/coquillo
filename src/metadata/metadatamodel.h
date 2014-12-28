@@ -5,8 +5,6 @@
 #include <QHash>
 #include "metadata.h"
 
-class QThread;
-
 namespace Coquillo {
     namespace MetaData {
         class MediaCrawler;
@@ -53,19 +51,18 @@ namespace Coquillo {
                 void addMetaData(const MetaData & metaData);
 
             private:
+                enum WorkerPriority { DirectoryReaderPriority, FileReaderPriority, FileWriterPriority };
+
                 static QStringList nameFilters();
                 void backup(const MetaData & metaData, QString key = QString());
                 bool isRowChanged(const QModelIndex & idx) const;
                 bool isChanged(const QModelIndex & idx) const;
                 void rowChanged(const QModelIndex & idx);
                 QString containedDirectoryForRow(int row) const;
-                MediaCrawler * createCrawler();
-                QThread * createWorker();
 
                 bool _recursive;
                 QHash<int, QString> _columns;
                 QHash<int, QString> _columnMap;
-                QList<QThread *> _workers;
                 QList<MetaData> _metaData;
                 QHash<QString, MetaData> _original;
                 QStringList _directories;

@@ -6,7 +6,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QIcon>
-#include <QThread>
+#include <QThreadPool>
 
 #include "mediacrawler.h"
 #include "metadata.h"
@@ -244,43 +244,21 @@ namespace Coquillo {
 
         void MetaDataModel::addDirectory(const QString & dir) {
             _directories << dir;
-    //         QThread * worker = createWorker();
-            MediaCrawler * crawler = createCrawler();
-    //         crawler->setDirectory(dir);
-    //         crawler->moveToThread(worker);
+
+            MediaCrawler * crawler = new MediaCrawler(dir);
+            crawler->setNameFilters(nameFilters());
+            crawler->setRecursive(isRecursive());
+
             connect(crawler, SIGNAL(finished(QStringList)), SLOT(addFiles(QStringList)));
             connect(crawler, SIGNAL(finished(QStringList)), crawler, SLOT(deleteLater()));
-    //         connect(worker, SIGNAL(started()), crawler, SLOT(start()));
-            crawler->crawl(dir);
-    //         worker->start();
-        }
 
-        bool MetaDataModel::removeRows(int row, int count, const QModelIndex & parent) {
-            if (row < 0 || rowCount() <= row) {
-                return false;
-            }
-
-            count = qMin(row + count, _metaData.count()) - row;
-            beginRemoveRows(parent, row, row + count - 1);
-            while (count-- > 0) {
-                _metaData.removeAt(row);
-            }
-            endRemoveRows();
-            return true;
+            QThreadPool::globalInstance()->start(crawler, DirectoryReaderPriority);
         }
 
         void MetaDataModel::addFiles(const QStringList & files) {
-            QThread * worker = createWorker();
-            foreach (QString file, files) {
-                FileReader * reader = FileReader::create(file);
-                reader->moveToThread(worker);
-                if (reader) {
-                    connect(reader, SIGNAL(finished(MetaData)), SLOT(addMetaData(MetaData)));
-                    connect(reader, SIGNAL(finished(MetaData)), reader, SLOT(deleteLater()));
-                    connect(worker, SIGNAL(started()), reader, SLOT(start()));
-                }
-            }
-            worker->start();
+            FileReader * reader = new FileReader(files);
+            connect(reader, SIGNAL(resolved(MetaData)), SLOT(addMetaData(MetaData)));
+            QThreadPool::globalInstance()->start(reader, FileReaderPriority);
         }
 
         void MetaDataModel::clear() {
@@ -298,6 +276,20 @@ namespace Coquillo {
                 }
             }
             _directories.removeOne(dir);
+        }
+
+        bool MetaDataModel::removeRows(int row, int count, const QModelIndex & parent) {
+            if (row < 0 || rowCount() <= row) {
+                return false;
+            }
+
+            count = qMin(row + count, _metaData.count()) - row;
+            beginRemoveRows(parent, row, row + count - 1);
+            while (count-- > 0) {
+                _metaData.removeAt(row);
+            }
+            endRemoveRows();
+            return true;
         }
 
         void MetaDataModel::reload() {
@@ -372,19 +364,6 @@ namespace Coquillo {
             } while (dir.cdUp());
 
             return QString();
-        }
-
-        MediaCrawler * MetaDataModel::createCrawler() {
-            MediaCrawler * crawler = new MediaCrawler;
-            crawler->setNameFilters(nameFilters());
-            crawler->setRecursive(isRecursive());
-            return crawler;
-        }
-
-        QThread * MetaDataModel::createWorker() {
-            QThread * worker = new QThread;
-    //         _workers << worker;
-            return worker;
         }
     }
 }

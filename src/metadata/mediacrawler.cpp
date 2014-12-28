@@ -1,13 +1,12 @@
 
-#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include "mediacrawler.h"
 
 namespace Coquillo {
     namespace MetaData {
-        MediaCrawler::MediaCrawler(QObject * parent)
-        : QObject(parent), _active(false), _recursive(false) {
+        MediaCrawler::MediaCrawler(const QString & dir, QObject * parent)
+        : QObject(parent), QRunnable(), _directory(dir), _active(false), _recursive(false) {
 
         }
 
@@ -16,12 +15,7 @@ namespace Coquillo {
             emit aborted();
         }
 
-        void MediaCrawler::crawl(const QString & path) {
-            setDirectory(path);
-            start();
-        }
-
-        void MediaCrawler::start() {
+        void MediaCrawler::run() {
             const QString path = directory();
 
             if (QFileInfo(path).isDir()) {
@@ -29,7 +23,7 @@ namespace Coquillo {
                 _active = true;
                 emit started();
 
-                QStringList files = scanDirectory(path);
+                const QStringList files = scanDirectory(path);
                 _active = false;
                 emit finished(files);
             } else {
