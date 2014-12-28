@@ -45,6 +45,7 @@ namespace Coquillo {
                 void reload();
                 void revert();
                 void revert(const QModelIndex & idx);
+                void writeToDisk();
 
             private slots:
                 void addMetaData(const MetaData & metaData);

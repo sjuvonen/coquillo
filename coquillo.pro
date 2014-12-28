@@ -35,6 +35,7 @@ HEADERS += \
     src/filters/safefilenames.h \
     src/filters/trimwhitespace.h \
     src/metadata/filereader.h \
+    src/metadata/filewriter.h \
     src/metadata/mapper.h \
     src/metadata/mediacrawler.h \
     src/metadata/metadata.h \
@@ -66,6 +67,7 @@ SOURCES += \
     src/filebrowser/directorymodel.cpp \
     src/filebrowser/filebrowser.cpp \
     src/metadata/filereader.cpp \
+    src/metadata/filewriter.cpp \
     src/metadata/mapper.cpp \
     src/metadata/mediacrawler.cpp \
     src/metadata/metadata.cpp \

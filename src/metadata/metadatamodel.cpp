@@ -12,6 +12,7 @@
 #include "metadata.h"
 #include "metadatamodel.h"
 #include "filereader.h"
+#include "filewriter.h"
 
 namespace Coquillo {
     namespace MetaData {
@@ -189,8 +190,8 @@ namespace Coquillo {
                     MetaData meta = _metaData[idx.row()];
 
                     if (value.toString() != meta.path()) {
-                        const QString path = QString("%1/%2").arg(
-                            QFileInfo(meta.path()).absolutePath(), value.toString());
+                        const QString path = QString("%1/%2")
+                            .arg(QFileInfo(meta.path()).absolutePath(), value.toString());
 
                         backup(meta, path);
                         meta.setPath(path);
@@ -245,7 +246,7 @@ namespace Coquillo {
                     removeDirectory(dir);
                 }
             }
-            
+
             _directories << directory;
 
             MediaCrawler * crawler = new MediaCrawler(directory);
@@ -322,6 +323,26 @@ namespace Coquillo {
                 _original.remove(path);
                 rowChanged(idx);
             }
+        }
+
+        void MetaDataModel::writeToDisk() {
+            qDebug() << "write to disk";
+
+            /*
+             * WARNING: This code should be optimized to know which files are
+             * only renamed and thus do not need rewrite of metadata!
+             */
+
+            QList<MetaData> modified;
+
+            foreach (const MetaData & data, _metaData) {
+                if (_original.contains(data.path())) {
+                    modified << data;
+                }
+            }
+
+            FileWriter * writer = new FileWriter(modified);
+            QThreadPool::globalInstance()->start(writer, FileWriterPriority);
         }
 
         void MetaDataModel::addMetaData(const MetaData & metaData) {

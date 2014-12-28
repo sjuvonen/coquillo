@@ -18,8 +18,6 @@ namespace Coquillo {
 
             public:
                 FileReader(const QStringList & files, QObject * parent = 0);
-
-            public slots:
                 void run();
 
             signals:
