@@ -20,12 +20,6 @@ namespace Coquillo {
                 QHash<QString, QString> _map;
         };
 
-        class DummyMapper : public Mapper {
-            public:
-                QVariant value(const QVariantMap & tag, const QString & field) const ;
-                void insert(QVariantMap & tag, const QString & field, const QVariant & value);
-        };
-
         class Id3v2Mapper : public Mapper {
             public:
                 Id3v2Mapper();
