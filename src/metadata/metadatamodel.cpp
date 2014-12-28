@@ -178,6 +178,7 @@ namespace Coquillo {
                     if (int_changed || str_changed) {
                         backup(_metaData[row]);
                         _metaData[row].insert(name, value);
+                        _only_path_changed.removeAll(_metaData[row].path());
                         rowChanged(idx);
                         qDebug() << QString("set %1 to").arg(name) << value;
                         return true;
@@ -193,7 +194,15 @@ namespace Coquillo {
                         const QString path = QString("%1/%2")
                             .arg(QFileInfo(meta.path()).absolutePath(), value.toString());
 
-                        backup(meta, path);
+                        if (_original.contains(meta.path())) {
+                            // Relocate old backup
+                            _original[path] = _original[meta.path()];
+                            reback(meta.path(), path);
+                        } else {
+                            backup(meta, path);
+                            _only_path_changed << path;
+                        }
+
                         meta.setPath(path);
                         _metaData[idx.row()] = meta;
                         rowChanged(idx);
@@ -213,8 +222,20 @@ namespace Coquillo {
                 key = metaData.path();
             }
 
-            if (!_original.contains(metaData.path())) {
-                _original[metaData.path()] = metaData;
+            if (!_original.contains(key)) {
+                _original[key] = metaData;
+            }
+        }
+
+        void MetaDataModel::reback(const QString & old_key, const QString & new_key) {
+            if (_original.contains(old_key)) {
+                _original.insert(new_key, _original[old_key]);
+                _original.remove(old_key);
+
+                if (_only_path_changed.contains(old_key)) {
+                    _only_path_changed.removeAll(old_key);
+                    _only_path_changed << new_key;
+                }
             }
         }
 
@@ -327,16 +348,16 @@ namespace Coquillo {
 
         void MetaDataModel::writeToDisk() {
             qDebug() << "write to disk";
-
-            /*
-             * WARNING: This code should be optimized to know which files are
-             * only renamed and thus do not need rewrite of metadata!
-             */
-
             QList<MetaData> modified;
+
+            foreach (const QString & path, _only_path_changed) {
+//                 QFile::rename(_original[path].path(), path);
+                _original.remove(path);
+            }
 
             foreach (const MetaData & data, _metaData) {
                 if (_original.contains(data.path())) {
+//                     QFile::rename(_original[data.path()].path(), data.path());
                     modified << data;
                 }
             }
