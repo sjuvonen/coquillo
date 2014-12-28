@@ -12,7 +12,11 @@ namespace Coquillo {
         }
 
         Mapper * MetaData::getMapper(const QString & tag) {
-            return mappers.value(tag);
+            if (mappers.contains(tag)) {
+                return mappers.value(tag);
+            } else {
+                return mappers.value("default");
+            }
         }
 
         void MetaData::addTag(const QString & name, const Tag & tag) {
