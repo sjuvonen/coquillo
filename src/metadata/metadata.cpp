@@ -1,14 +1,35 @@
 
+#include <QDebug>
+
+#include "mapper.h"
 #include "metadata.h"
 
 namespace Coquillo {
     namespace MetaData {
+
+        void MetaData::registerMapper(const QString & tag, Mapper * mapper) {
+            mappers[tag] = mapper;
+        }
+
+        Mapper * MetaData::getMapper(const QString & tag) {
+            return mappers.value(tag);
+        }
+
         void MetaData::addTag(const QString & name, const Tag & tag) {
-            _tags[name] = tag;
+            _tags[name] = Tag();
 
             if (_primary.isNull()) {
                 setPrimaryTag(name);
             }
+
+            if (Mapper * mapper = getMapper(name)) {
+                foreach (const QString key, tag.keys()) {
+    //                 insert(name, tag[key]);
+                    mapper->insert(_tags[name], key, tag[key]);
+                }
+            }
+
+            qDebug() << this->tag(name);
         }
 
         void MetaData::removeTag(const QString & name) {
@@ -34,11 +55,20 @@ namespace Coquillo {
         }
 
         void MetaData::insert(const QString & key, const QVariant & value) {
-            _tags[_primary][key] = value;
+            foreach (const QString tag, _tags.keys()) {
+                Mapper * mapper = getMapper(tag);
+                if (mapper) {
+                    mapper->insert(_tags[tag], key, value);
+                }
+            }
         }
 
         QVariant MetaData::value(const QString & key, const QString & tag) const {
-            return _tags.value(tag).value(key);
+            if (Mapper * mapper = getMapper(tag)) {
+                return mapper->value(_tags[tag], key);
+            } else {
+                return QVariant();
+            }
         }
 
         QStringList MetaData::fields() const {

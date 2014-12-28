@@ -10,12 +10,17 @@ namespace Coquillo {
         typedef QVariantMap Properties;
         typedef QVariantMap Tag;
 
+        class Mapper;
+
         /**
          * NOTE: Field names are in lowercased letters. Words are separated
          * with underscores.
          */
         class MetaData {
             public:
+                static void registerMapper(const QString & tag, Mapper * mapper);
+                static Mapper * getMapper(const QString & tag);
+
                 MetaData() { }
                 MetaData(const QString & path) : _path(path) { }
 
@@ -45,6 +50,11 @@ namespace Coquillo {
                 QString _primary;
                 QHash<QString, Tag> _tags;
                 Properties _properties;
+
+                /*
+                 * NOTE: Default set of mappers defined in mapper.h
+                 */
+                static QHash<QString, Mapper*> mappers;
         };
     }
 }
