@@ -54,18 +54,15 @@ namespace Coquillo {
         void Id3v2Mapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
             if (field == "number" or field == "total") {
                 const QString trck = tag.value("TRCK").toList().value(0, "0/0").toString();
-                QString number = field == "number" ? value.toString() : trck.section('/', 0, 0);
-                QString total = field == "total" ? value.toString() : trck.section('/', 1, 1);
-                QVariantList list = { QString("%1/%2").arg(number, total) };
+                const QString number = field == "number" ? value.toString() : trck.section('/', 0, 0);
+                const QString total = field == "total" ? value.toString() : trck.section('/', 1, 1);
+                const QVariantList list = { QString("%1/%2").arg(number, total) };
                 tag.insert("TRCK", list);
             } else {
                 const QString src = mapToSource(field);
-                QVariantList values = tag.value(src).toList();
-                if (values.isEmpty()) {
-                    values.append(value);
-                } else {
-                    values.replace(0, value);
-                }
+                const QVariantList values = QVariantList()
+                    << value
+                    << tag.value(src).toList().mid(1);
                 tag.insert(src, values);
             }
         }
