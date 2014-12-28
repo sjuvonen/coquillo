@@ -26,7 +26,6 @@ namespace Coquillo {
                 bool has(const QString & key) const;
                 bool has(const QString & key, const QString & tag) const;
 
-                QHash<QString, Tag> tags() const { return _tags; }
                 Tag tag(const QString & name) const { return _tags.value(name); }
                 void insert(const QString & key, const QVariant & value);
                 QVariant value(const QString & key, const QString & tag) const;
@@ -35,6 +34,7 @@ namespace Coquillo {
                 QStringList fields() const;
                 QStringList fields(const QString & tag) const;
 
+                inline QHash<QString, Tag> tags() const { return _tags; }
                 inline void setProperties(const Properties & p) { _properties = p; }
                 inline Properties properties() const { return _properties; }
                 inline void setPath(const QString & path) { _path = path; }
