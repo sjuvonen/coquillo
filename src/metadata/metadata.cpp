@@ -28,12 +28,9 @@ namespace Coquillo {
 
             if (Mapper * mapper = getMapper(name)) {
                 foreach (const QString key, tag.keys()) {
-    //                 insert(name, tag[key]);
                     mapper->insert(_tags[name], key, tag[key]);
                 }
             }
-
-            qDebug() << this->tag(name);
         }
 
         void MetaData::removeTag(const QString & name) {
