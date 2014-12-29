@@ -15,7 +15,7 @@ namespace Coquillo {
             if (mappers.contains(tag)) {
                 return mappers.value(tag);
             } else {
-                return mappers.value("default");
+                return mappers.value("unknown");
             }
         }
 

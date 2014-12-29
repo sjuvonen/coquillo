@@ -100,7 +100,7 @@ namespace Coquillo {
          * NOTE: Initialize mappers for MetaData class
          */
         QHash<QString, Mapper*> MetaData::mappers = {
-            {"default", new Mapper},
+            {"unknown", new Mapper},
             {"id3v2", new Id3v2Mapper},
             {"xiph", new XiphMapper},
         };

@@ -51,6 +51,8 @@ namespace Coquillo {
                     }
 
                     file->save();
+                } else {
+                    Container::Dummy(ref.tag()).write(data.primaryTag());
                 }
             }
         }

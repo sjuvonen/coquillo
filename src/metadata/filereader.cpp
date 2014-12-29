@@ -72,6 +72,8 @@ namespace Coquillo {
                     } else {
                         meta.addTag("xiph", Tag());
                     }
+                } else {
+                    meta.addTag("unknown", Container::Dummy(ref.tag()).read());
                 }
 
                 emit resolved(meta);

@@ -31,6 +31,7 @@ namespace Coquillo {
                 bool has(const QString & key) const;
                 bool has(const QString & key, const QString & tag) const;
 
+                Tag primaryTag() const { return _tags.value(_primary); }
                 Tag tag(const QString & name) const { return _tags.value(name); }
                 void insert(const QString & key, const QVariant & value);
                 QVariant value(const QString & key, const QString & tag) const;
