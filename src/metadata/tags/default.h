@@ -2,6 +2,7 @@
 #define COQUILLO_METADATA_TAG_ABSTRACTTAG_H
 
 #include <taglib/tag.h>
+#include "metadata/tag.h"
 
 namespace Coquillo {
     namespace MetaData {
@@ -10,8 +11,8 @@ namespace Coquillo {
                 public:
                     Default(TagLib::Tag * tag);
                     virtual ~Default() { }
-                    virtual void write(const QVariantMap & data);
-                    virtual QVariantMap read() const;
+                    virtual void write(const Tag & data);
+                    virtual Tag read() const;
 
                 protected:
                     TagLib::Tag * _tag;

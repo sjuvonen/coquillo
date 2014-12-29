@@ -21,6 +21,7 @@ namespace Coquillo {
 
     namespace TagEditor {
         class BasicTags;
+        class RawData;
     }
 
     class MainWindow : public QMainWindow {
@@ -49,11 +50,13 @@ namespace Coquillo {
 
         private:
             void saveSettings();
+            void setupTagEditor();
 
             Ui::MainWindow * _ui;
             FileBrowser * _fileBrowser;
             MetaData::MetaDataModel * _metaData;
             TagEditor::BasicTags * _basicTags;
+            TagEditor::RawData * _rawTags;
             Processor::ParserWidget * _tagParser;
             Processor::RenameWidget * _fileRenamer;
     };

@@ -1,5 +1,4 @@
 
-#include <QVariantMap>
 #include <taglib/tstring.h>
 #include "default.h"
 
@@ -14,25 +13,25 @@ namespace Coquillo {
 
             }
 
-            QVariantMap Default::read() const {
-                QVariantMap data;
-                data.insert("album", T2QString(_tag->album()));
-                data.insert("artist", T2QString(_tag->artist()));
-                data.insert("comment", T2QString(_tag->comment()));
-                data.insert("genre", T2QString(_tag->genre()));
-                data.insert("number", _tag->track());
-                data.insert("title", T2QString(_tag->title()));
-                data.insert("year", _tag->year());
+            MetaData::Tag Default::read() const {
+                MetaData::Tag data;
+                data["album"] << T2QString(_tag->album());
+                data["artist"] << T2QString(_tag->artist());
+                data["comment"] << T2QString(_tag->comment());
+                data["genre"] << T2QString(_tag->genre());
+                data["number"] << _tag->track();
+                data["title"] << T2QString(_tag->title());
+                data["year"] << _tag->year();
                 return data;
             }
 
-            void Default::write(const QVariantMap & data) {
-                _tag->setAlbum(Q2TString(data.value("album").toString()));
-                _tag->setArtist(Q2TString(data.value("artist").toString()));
-                _tag->setComment(Q2TString(data.value("comment").toString()));
-                _tag->setTrack(data.value("number").toUInt());
-                _tag->setTitle(Q2TString(data.value("title").toString()));
-                _tag->setYear(data.value("year").toUInt());
+            void Default::write(const MetaData::Tag & data) {
+                _tag->setAlbum(Q2TString(data.value("album").value(0).toString()));
+                _tag->setArtist(Q2TString(data.value("artist").value(0).toString()));
+                _tag->setComment(Q2TString(data.value("comment").value(0).toString()));
+                _tag->setTrack(data.value("number").value(0).toUInt());
+                _tag->setTitle(Q2TString(data.value("title").value(0).toString()));
+                _tag->setYear(data.value("year").value(0).toUInt());
             }
         }
     }

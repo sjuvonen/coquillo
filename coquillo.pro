@@ -20,6 +20,7 @@ FORMS += \
     ui/basictags.ui \
     ui/mainwindow.ui \
     ui/parserwidget.ui \
+    ui/rawdata.ui \
     ui/renamewidget.ui \
     ui/settingsdialog.ui \
     ui/tagsearchdialog.ui \
@@ -53,6 +54,7 @@ HEADERS += \
     src/settings/settingsdialog.h \
     src/tageditor/basictags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
+    src/tageditor/rawdata.h \
     src/webtags/filterproxymodel.h \
     src/webtags/tagsearchdialog.h \
     # Experimental
@@ -87,6 +89,7 @@ SOURCES += \
     src/settings/settingsdialog.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
+    src/tageditor/rawdata.cpp \
     src/webtags/filterproxymodel.cpp \
     src/webtags/tagsearchdialog.cpp \
     # Experimental

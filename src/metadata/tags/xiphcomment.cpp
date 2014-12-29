@@ -1,6 +1,5 @@
 
 #include <QDebug>
-#include <QVariantMap>
 #include <taglib/xiphcomment.h>
 #include "metadata/mapper.h"
 #include "xiphcomment.h"
@@ -16,18 +15,16 @@ namespace Coquillo {
 
             }
 
-            QVariantMap XiphComment::read() const {
-                QVariantMap data;
+            Tag XiphComment::read() const {
+                Tag data;
                 const auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
                 const auto fields = tag->fieldListMap();
 
                 for (auto i = fields.begin(); i != fields.end(); i++) {
                     const QString field = T2QString(i->first);
-                    QVariantList values;
                     for (auto j = i->second.begin(); j != i->second.end(); j++) {
-                        values << T2QString(*j);
+                        data[field] << T2QString(*j);
                     }
-                    data.insert(field, values);
                 }
 
 //                 if (tag->contains("ALBUM ARTIST")) {
@@ -62,23 +59,23 @@ namespace Coquillo {
 //                     data.insert("comment", T2QString(fields["DESCRIPTION"].front()));
 //                 }
 
-                qDebug() << data << "\n";
+//                 qDebug() << data << "\n";
 
                 return data;
             }
 
-            void XiphComment::write(const QVariantMap & orig) {
+            void XiphComment::write(const Tag & orig) {
                 qDebug() << "write xiph" << orig;
 
-                QVariantMap data(orig);
-                const MetaData::XiphMapper mapper;
-                const QVariantMap common = {
-                    {"album", mapper.take(data, "album")},
-                    {"artist", mapper.take(data, "artist")},
-                    {"comment", mapper.take(data, "comment")},
-                    {"number", mapper.take(data, "number")},
-                    {"title", mapper.take(data, "title")},
-                    {"year", mapper.take(data, "year")},
+                Tag data(orig);
+                const XiphMapper mapper;
+                const Tag common = {
+                    {"album", {mapper.take(data, "album")}},
+                    {"artist", {mapper.take(data, "artist")}},
+                    {"comment", {mapper.take(data, "comment")}},
+                    {"number", {mapper.take(data, "number")}},
+                    {"title", {mapper.take(data, "title")}},
+                    {"year", {mapper.take(data, "year")}},
                 };
                 Default::write(common);
 
@@ -95,7 +92,7 @@ namespace Coquillo {
 
                 foreach (const QString & name, fields) {
                     if (data.contains(name)) {
-                        tag->addField(Q2TString(name), Q2TString(data[name].toString()));
+                        tag->addField(Q2TString(name), Q2TString(data[name].value(0).toString()));
                     }
                 }
             }

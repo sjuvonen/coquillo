@@ -1,6 +1,5 @@
 
 #include <QDebug>
-#include <QVariantMap>
 #include <taglib/attachedpictureframe.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/textidentificationframe.h>
@@ -18,8 +17,8 @@ namespace Coquillo {
 
             }
 
-            QVariantMap Id3v2::read() const {
-                QVariantMap data;
+            Tag Id3v2::read() const {
+                Tag data;
                 const auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
                 const auto frames = tag->frameListMap();
 
@@ -71,22 +70,22 @@ namespace Coquillo {
                     data["TDRL"] = data.take("TYER");
                 }
 
-                qDebug() << data << "\n";
+//                 qDebug() << data << "\n";
 
                 return data;
             }
 
-            void Id3v2::write(const QVariantMap & orig) {
+            void Id3v2::write(const Tag & orig) {
                 qDebug() << "write id3v2" << orig;
 
-                QVariantMap data(orig);
-                const MetaData::Id3v2Mapper mapper;
-                const QVariantMap common = {
-                    {"album", mapper.take(data, "album")},
-                    {"artist", mapper.take(data, "artist")},
-                    {"comment", mapper.take(data, "comment")},
-                    {"title", mapper.take(data, "title")},
-                    {"year", mapper.take(data, "year")},
+                Tag data(orig);
+                const Id3v2Mapper mapper;
+                const Tag common = {
+                    {"album", {mapper.take(data, "album")}},
+                    {"artist", {mapper.take(data, "artist")}},
+                    {"comment", {mapper.take(data, "comment")}},
+                    {"title",{mapper.take(data, "title")}},
+                    {"year", {mapper.take(data, "year")}},
                 };
 
                 Default::write(common);
@@ -102,7 +101,7 @@ namespace Coquillo {
                 }
 
                 if (data.contains("WXXX")) {
-                    foreach (const QVariant & url, data.value("WXXX").toList()) {
+                    foreach (const QVariant & url, data["WXXX"]) {
                         auto frame = new TagLib::ID3v2::UserUrlLinkFrame;
                         frame->setText(url.toString().toStdString());
                         tag->addFrame(frame);
@@ -111,7 +110,7 @@ namespace Coquillo {
 
                 foreach (const QString & name, text_frames) {
                     if (data.contains(name)) {
-                        foreach (const QVariant & item, data[name].toList()) {
+                        foreach (const QVariant & item, data[name]) {
                             auto frame = new TagLib::ID3v2::TextIdentificationFrame(name.toUtf8().data());
                             frame->setText(item.toString().toStdString());
                             tag->addFrame(frame);
@@ -121,7 +120,7 @@ namespace Coquillo {
 
                 if (data.contains("TRCK")) {
                     auto frame = new TagLib::ID3v2::TextIdentificationFrame("TRCK");
-                    frame->setText(data["TRCK"].toList().first().toString().toStdString());
+                    frame->setText(data["TRCK"].first().toString().toStdString());
                     tag->removeFrames("TRCK");
                     tag->addFrame(frame);
                 }

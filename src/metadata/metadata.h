@@ -5,10 +5,11 @@
 #include <QString>
 #include <QVariant>
 
+#include "tag.h"
+
 namespace Coquillo {
     namespace MetaData {
         typedef QVariantMap Properties;
-        typedef QVariantMap Tag;
 
         class Mapper;
 
@@ -39,7 +40,8 @@ namespace Coquillo {
                 QVariant operator[](const QString & key) const { return value(key, _primary); }
                 QStringList fields() const;
                 QStringList fields(const QString & tag) const;
-
+                
+                inline QString primaryTagName() const { return _primary; }
                 inline QHash<QString, Tag> tags() const { return _tags; }
                 inline void setProperties(const Properties & p) { _properties = p; }
                 inline Properties properties() const { return _properties; }

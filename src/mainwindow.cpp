@@ -19,6 +19,7 @@
 #include "processor/parserwidget.h"
 #include "settings/settingsdialog.h"
 #include "tageditor/basictags.h"
+#include "tageditor/rawdata.h"
 #include "webtags/tagsearchdialog.h"
 
 namespace Coquillo {
@@ -65,9 +66,6 @@ namespace Coquillo {
         _tagParser->setSelectionModel(_ui->metaData->selectionModel());
         _ui->tools->addTab(_tagParser, tr("Parse tags"));
 
-        _basicTags = new TagEditor::BasicTags(this);
-        _basicTags->setModel(_ui->metaData->model());
-        _ui->tagEditor->addTab(_basicTags, tr("Tags"));
 
         addAction(_ui->action_Quit);
 
@@ -79,11 +77,6 @@ namespace Coquillo {
 
         connect(_fileBrowser, SIGNAL(pathUnselected(QString, bool)),
             _metaData, SLOT(removeDirectory(QString)));
-
-        connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-            _basicTags, SLOT(setCurrentIndex(QModelIndex)));
-
-        connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
         connect(_ui->actionReset, SIGNAL(triggered()), _metaData, SLOT(revert()));
         connect(_ui->actionReload, SIGNAL(triggered()), _metaData, SLOT(reload()));
         connect(_ui->actionSave, SIGNAL(triggered()), _metaData, SLOT(writeToDisk()));
@@ -96,7 +89,28 @@ namespace Coquillo {
         connect(_ui->metaData->header(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
 
+        setupTagEditor();
+
         QTimer::singleShot(1, this, SLOT(restoreSettings()));
+    }
+
+    void MainWindow::setupTagEditor() {
+
+        _basicTags = new TagEditor::BasicTags(this);
+        _basicTags->setModel(_ui->metaData->model());
+        _ui->tagEditor->addTab(_basicTags, tr("Tags"));
+
+        connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+            _basicTags, SLOT(setCurrentIndex(QModelIndex)));
+
+        connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
+
+        _rawTags = new TagEditor::RawData(this);
+        _rawTags->setModel(_ui->metaData->model());
+        _ui->tagEditor->addTab(_rawTags, tr("Raw"));
+
+        connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+            _rawTags, SLOT(setCurrentIndex(QModelIndex)));
     }
 
     MainWindow::~MainWindow() {

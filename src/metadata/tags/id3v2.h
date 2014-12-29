@@ -15,8 +15,8 @@ namespace Coquillo {
             class Id3v2 : public Default {
                 public:
                     Id3v2(TagLib::ID3v2::Tag * tag);
-                    void write(const QVariantMap & data);
-                    QVariantMap read() const;
+                    void write(const Tag & data);
+                    Tag read() const;
             };
         }
     }

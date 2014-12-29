@@ -13,18 +13,18 @@ namespace Coquillo {
             return _map.key(name, name);
         }
 
-        QVariant Mapper::value(const QVariantMap & tag, const QString & field) const {
-            return tag.value(mapToSource(field));
+        QVariant Mapper::value(const Tag & tag, const QString & field) const {
+            return tag.value(mapToSource(field)).value(0);
         }
 
-        QVariant Mapper::take(QVariantMap & tag, const QString & field) const {
+        QVariant Mapper::take(Tag & tag, const QString & field) const {
             QVariant val = value(tag, field);
             tag.remove(mapToSource(field));
             return val;
         }
 
-        void Mapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
-            tag.insert(mapToSource(field), value);
+        void Mapper::insert(Tag & tag, const QString & field, const QVariant & value) {
+            tag[mapToSource(field)] = {value};
         }
 
         Id3v2Mapper::Id3v2Mapper() : Mapper() {
@@ -40,26 +40,25 @@ namespace Coquillo {
                 {"number", "TRCK"},
                 {"original_artist", "TOPE"},
                 {"title", "TIT2"},
-//                 {"total", "TRACKTOTAL"},
                 {"url", "WXXX"},
                 {"year", "TDRL"},
             };
         }
 
-        QVariant Id3v2Mapper::value(const QVariantMap & tag, const QString & field) const {
+        QVariant Id3v2Mapper::value(const Tag & tag, const QString & field) const {
             if (field == "number" or field == "total") {
-                const QString trck = tag.value("TRCK").toList().value(0, "0/0").toString();
+                const QString trck = tag.value("TRCK").value(0, "0/0").toString();
                 int pos = (field == "number" ? 0 : 1);
                 return trck.section('/', pos, pos).toUInt();
             } else {
                 const QString src = mapToSource(field);
-                return tag.value(src).toList().value(0);
+                return tag.value(src).value(0);
             }
         }
 
-        void Id3v2Mapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
+        void Id3v2Mapper::insert(Tag & tag, const QString & field, const QVariant & value) {
             if (field == "number" or field == "total") {
-                const QString trck = tag.value("TRCK").toList().value(0, "0/0").toString();
+                const QString trck = tag.value("TRCK").value(0, "0/0").toString();
                 const QString number = field == "number" ? value.toString() : trck.section('/', 0, 0);
                 const QString total = field == "total" ? value.toString() : trck.section('/', 1, 1);
                 const QVariantList list = { QString("%1/%2").arg(number, total) };
@@ -68,7 +67,7 @@ namespace Coquillo {
                 const QString src = mapToSource(field);
                 const QVariantList values = QVariantList()
                     << value
-                    << tag.value(src).toList().mid(1);
+                    << tag.value(src).mid(1);
                 tag.insert(src, values);
             }
         }
@@ -94,16 +93,16 @@ namespace Coquillo {
             };
         }
 
-        QVariant XiphMapper::value(const QVariantMap & tag, const QString & field) const {
+        QVariant XiphMapper::value(const Tag & tag, const QString & field) const {
             const QString src = mapToSource(field);
-            return tag.value(src).toList().value(0);
+            return tag.value(src).value(0);
         }
 
-        void XiphMapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
+        void XiphMapper::insert(Tag & tag, const QString & field, const QVariant & value) {
             const QString src = mapToSource(field);
             const QVariantList values = QVariantList()
                 << value
-                << tag.value(src).toList().mid(1);
+                << tag.value(src).mid(1);
             tag.insert(src, values);
         }
 

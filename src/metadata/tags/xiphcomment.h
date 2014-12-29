@@ -15,8 +15,8 @@ namespace Coquillo {
             class XiphComment : public Default {
                 public:
                     XiphComment(TagLib::Ogg::XiphComment * tag);
-                    void write(const QVariantMap & data);
-                    QVariantMap read() const;
+                    void write(const Tag & data);
+                    Tag read() const;
             };
         }
     }
