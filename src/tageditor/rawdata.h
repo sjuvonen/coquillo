@@ -31,6 +31,7 @@ namespace Coquillo {
                 void setCurrentIndex(const QModelIndex & idx);
 
             private slots:
+                void onDataChanged(const QModelIndex & tl, const QModelIndex & br);
                 void selectTag(const QString & name);
 
             private:

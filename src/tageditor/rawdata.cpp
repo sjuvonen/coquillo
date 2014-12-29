@@ -24,17 +24,15 @@ namespace Coquillo {
             delete _ui;
         }
 
-        void RawData::setModel(QAbstractItemModel * model) {
-            _model = model;
+        MetaData::MetaData RawData::metaData() const {
+            int role = MetaData::MetaDataModel::MetaDataRole;
+            return _current.data(role).value<MetaData::MetaData>();
         }
 
-        void RawData::setCurrentIndex(const QModelIndex & idx) {
-            _current = idx;
-            const auto data = metaData();
-            _ui->comboBox->clear();
-            _ui->comboBox->addItems(data.tags().keys());
-            _ui->comboBox->setCurrentText(data.primaryTagName());
-            _ui->comboBox->setEnabled(data.tags().count() > 1);
+        void RawData::onDataChanged(const QModelIndex & tl, const QModelIndex & br) {
+            if (tl.row() <= _current.row() and br.row() >= _current.row()) {
+                setCurrentIndex(_current);
+            }
         }
 
         void RawData::selectTag(const QString & name) {
@@ -63,14 +61,25 @@ namespace Coquillo {
             }
         }
 
+        void RawData::setCurrentIndex(const QModelIndex & idx) {
+            _current = idx;
+            const auto data = metaData();
+            _ui->comboBox->clear();
+            _ui->comboBox->addItems(data.tags().keys());
+            _ui->comboBox->setCurrentText(data.primaryTagName());
+            _ui->comboBox->setEnabled(data.tags().count() > 1);
+        }
+
+        void RawData::setModel(QAbstractItemModel * model) {
+            _model = model;
+
+            connect(_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+                SLOT(onDataChanged(QModelIndex, QModelIndex)));
+        }
+
         QStandardItemModel * RawData::treeModel() const {
             auto proxy = qobject_cast<QSortFilterProxyModel*>(_ui->treeView->model());
             return qobject_cast<QStandardItemModel*>(proxy->sourceModel());
-        }
-
-        MetaData::MetaData RawData::metaData() const {
-            int role = MetaData::MetaDataModel::MetaDataRole;
-            return _current.data(role).value<MetaData::MetaData>();
         }
     }
 }
