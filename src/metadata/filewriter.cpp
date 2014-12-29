@@ -7,6 +7,9 @@
 #include <taglib/vorbisfile.h>
 
 #include "filewriter.h"
+#include "tags/dummy.h"
+#include "tags/id3v2.h"
+#include "tags/xiphcomment.h"
 
 namespace Coquillo {
     namespace MetaData {
@@ -20,27 +23,34 @@ namespace Coquillo {
                 const TagLib::FileRef ref(data.path().toUtf8().constData());
 
                 if (isFlacFile(ref.file())) {
-                    const auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
+                    auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
 
                     if (data.hasTag("id3v2")) {
-
+                        Container::Id3v2(file->ID3v2Tag(true)).write(data.tag("id3v2"));
                     }
 
                     if (data.hasTag("xiph")) {
-
+                        Container::XiphComment(file->xiphComment(true)).write(data.tag("xiph"));
                     }
+                    file->save();
                 } else if (isMpegFile(ref.file())) {
-                    const auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
+                    auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
+                    int tags = 0;
 
                     if (data.hasTag("id3v2")) {
-
+                        Container::Id3v2(file->ID3v2Tag(true)).write(data.tag("id3v2"));
+                        tags |= TagLib::MPEG::File::ID3v2;
                     }
+
+                    file->save(tags);
                 } else if (isVorbisFile(ref.file())) {
-                    const auto file = dynamic_cast<TagLib::Ogg::Vorbis::File*>(ref.file());
+                    auto file = dynamic_cast<TagLib::Ogg::Vorbis::File*>(ref.file());
 
                     if (data.hasTag("xiph")) {
-                        
+                        Container::XiphComment(file->tag()).write(data.tag("xiph"));
                     }
+
+                    file->save();
                 }
             }
         }

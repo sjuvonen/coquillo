@@ -1,6 +1,8 @@
 
+#include <QDebug>
 #include <QVariantMap>
 #include <taglib/id3v2tag.h>
+#include "metadata/mapper.h"
 #include "id3v2.h"
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
@@ -66,7 +68,18 @@ namespace Coquillo {
             }
 
             void Id3v2::write(const QVariantMap & data) {
-
+                qDebug() << "write id3v2" << data;
+                
+                const MetaData::Id3v2Mapper mapper;
+                const QVariantMap common = {
+                    {"album", mapper.value(data, "album")},
+                    {"artist", mapper.value(data, "artist")},
+                    {"comment", mapper.value(data, "comment")},
+                    {"number", mapper.value(data, "number")},
+                    {"title", mapper.value(data, "title")},
+                    {"year", mapper.value(data, "year")},
+                };
+                writeCommon(common);
             }
         }
     }

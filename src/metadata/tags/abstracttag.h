@@ -15,6 +15,7 @@ namespace Coquillo {
 
                 protected:
                     QVariantMap readCommon() const;
+                    void writeCommon(const QVariantMap & data);
                     TagLib::Tag * _tag;
             };
         }

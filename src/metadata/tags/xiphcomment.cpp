@@ -1,6 +1,8 @@
 
+#include <QDebug>
 #include <QVariantMap>
 #include <taglib/xiphcomment.h>
+#include "metadata/mapper.h"
 #include "xiphcomment.h"
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
@@ -18,6 +20,10 @@ namespace Coquillo {
                 QVariantMap data = readCommon();
                 const auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
                 const auto fields = tag->fieldListMap();
+
+                if (tag->contains("ALBUM ARTIST")) {
+                    data.insert("album_artist", T2QString(fields["ALBUM ARTIST"].front()));
+                }
 
                 if (tag->contains("COMPOSER")) {
                     data.insert("composer", T2QString(fields["COMPOSER"].front()));
@@ -50,11 +56,9 @@ namespace Coquillo {
                 for (auto i = fields.begin(); i != fields.end(); i++) {
                     const QString field = T2QString(i->first);
                     QVariantList values;
-                    
                     for (auto j = i->second.begin(); j != i->second.end(); j++) {
                         values << T2QString(*j);
                     }
-
                     data.insert(field, values);
                 }
 
@@ -62,7 +66,18 @@ namespace Coquillo {
             }
 
             void XiphComment::write(const QVariantMap & data) {
+                qDebug() << "write xiph" << data;
 
+                const MetaData::XiphMapper mapper;
+                const QVariantMap common = {
+                    {"album", mapper.value(data, "album")},
+                    {"artist", mapper.value(data, "artist")},
+                    {"comment", mapper.value(data, "comment")},
+                    {"number", mapper.value(data, "number")},
+                    {"title", mapper.value(data, "title")},
+                    {"year", mapper.value(data, "year")},
+                };
+                writeCommon(common);
             }
         }
     }
