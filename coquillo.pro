@@ -40,7 +40,6 @@ HEADERS += \
     src/metadata/mediacrawler.h \
     src/metadata/metadata.h \
     src/metadata/metadatamodel.h \
-    src/metadata/tagreader.h \
     src/metadata/tags/abstracttag.h \
     src/metadata/tags/dummy.h \
     src/metadata/tags/id3v2.h \
@@ -76,7 +75,6 @@ SOURCES += \
     src/metadata/mediacrawler.cpp \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
-    src/metadata/tagreader.cpp \
     src/metadata/tags/abstracttag.cpp \
     src/metadata/tags/dummy.cpp \
     src/metadata/tags/id3v2.cpp \
