@@ -38,7 +38,7 @@
       <bool>true</bool>
      </attribute>
      <attribute name="headerDefaultSectionSize">
-      <number>140</number>
+      <number>100</number>
      </attribute>
     </widget>
    </item>

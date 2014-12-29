@@ -37,6 +37,7 @@ namespace Coquillo {
             private:
                 MetaData::MetaData metaData() const;
                 QStandardItemModel * treeModel() const;
+
                 Ui::RawData * _ui;
                 QPointer<QAbstractItemModel> _model;
                 QPersistentModelIndex _current;

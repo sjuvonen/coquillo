@@ -47,15 +47,19 @@ namespace Coquillo {
                 auto label_item = new QStandardItem(key);
                 auto value_item = new QStandardItem;
 
-                if (values.count() > 1) {
-                    value_item->setText(tr("%1 values").arg(values.count()));
-                } else {
+                if (values.count() <= 1) {
                     value_item->setText(values.value(0).toString());
+                } else {
+                    value_item->setText(tr("%1 values").arg(values.count()));
+                    QFont font = value_item->font();
+                    font.setItalic(true);
+                    value_item->setFont(font);
 
                     foreach (const QVariant & value, values) {
-                        value_item->appendRow(new QStandardItem(value.toString()));
+                        label_item->appendRow({ new QStandardItem, new QStandardItem(value.toString()) });
                     }
                 }
+                
                 model->appendRow({label_item, value_item});
             }
         }
