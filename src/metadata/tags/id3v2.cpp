@@ -1,7 +1,10 @@
 
 #include <QDebug>
 #include <QVariantMap>
+#include <taglib/attachedpictureframe.h>
 #include <taglib/id3v2tag.h>
+#include <taglib/textidentificationframe.h>
+#include <taglib/urllinkframe.h>
 #include "metadata/mapper.h"
 #include "id3v2.h"
 
@@ -76,11 +79,46 @@ namespace Coquillo {
                     {"album", mapper.take(data, "album")},
                     {"artist", mapper.take(data, "artist")},
                     {"comment", mapper.take(data, "comment")},
-                    {"number", mapper.take(data, "number")},
                     {"title", mapper.take(data, "title")},
                     {"year", mapper.take(data, "year")},
                 };
+
                 Default::write(common);
+
+                auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
+                const QStringList text_frames = {"TCOM", "TENC", "TOPE", "TPOS"};
+                const QStringList supported = (QStringList){"WXXX"} + text_frames;
+
+                foreach (const QString & name, supported) {
+                    if (data.contains(name)) {
+                        tag->removeFrames(name.toUtf8().constData());
+                    }
+                }
+
+                if (data.contains("WXXX")) {
+                    foreach (const QVariant & url, data.value("WXXX").toList()) {
+                        auto frame = new TagLib::ID3v2::UserUrlLinkFrame;
+                        frame->setText(url.toString().toStdString());
+                        tag->addFrame(frame);
+                    }
+                }
+
+                foreach (const QString & name, text_frames) {
+                    if (data.contains(name)) {
+                        foreach (const QVariant & item, data[name].toList()) {
+                            auto frame = new TagLib::ID3v2::TextIdentificationFrame(name.toUtf8().data());
+                            frame->setText(item.toString().toStdString());
+                            tag->addFrame(frame);
+                        }
+                    }
+                }
+
+                if (data.contains("TRCK")) {
+                    auto frame = new TagLib::ID3v2::TextIdentificationFrame("TRCK");
+                    frame->setText(data["TRCK"].toList().first().toString().toStdString());
+                    tag->removeFrames("TRCK");
+                    tag->addFrame(frame);
+                }
             }
         }
     }

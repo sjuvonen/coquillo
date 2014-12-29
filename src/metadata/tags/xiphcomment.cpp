@@ -5,6 +5,7 @@
 #include "metadata/mapper.h"
 #include "xiphcomment.h"
 
+#define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 
 namespace Coquillo {
@@ -78,6 +79,23 @@ namespace Coquillo {
                     {"year", mapper.take(data, "year")},
                 };
                 Default::write(common);
+
+                auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
+                const QStringList fields = {
+                    "ALBUM ARTIST",
+                    "COMPOSER",
+                    "ENCODED-BY",
+                    "DISCNUMBER",
+                    "LICENSE",
+                    "PERFORMER",
+                    "TRACKTOTAL",
+                };
+
+                foreach (const QString & name, fields) {
+                    if (data.contains(name)) {
+                        tag->addField(Q2TString(name), Q2TString(data[name].toString()));
+                    }
+                }
             }
         }
     }
