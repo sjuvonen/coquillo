@@ -39,8 +39,8 @@ namespace Coquillo {
             auto model = treeModel();
             model->removeRows(0, model->rowCount());
 
-            const MetaData::MetaData data = metaData();
-            const MetaData::Tag tag = data.tag(name);
+            const auto data = metaData();
+            const auto tag = data.tag(name);
 
             foreach (const QString & key, tag.keys()) {
                 QVariantList values = tag[key];
@@ -56,8 +56,7 @@ namespace Coquillo {
                         value_item->appendRow(new QStandardItem(value.toString()));
                     }
                 }
-
-                model->appendRow((QList<QStandardItem*>){label_item, value_item});
+                model->appendRow({label_item, value_item});
             }
         }
 
@@ -71,10 +70,15 @@ namespace Coquillo {
         }
 
         void RawData::setModel(QAbstractItemModel * model) {
+            if (_model) {
+                disconnect(_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+                    this, SLOT(onDataChanged(QModelIndex, QModelIndex)));
+            }
+            if (model) {
+                connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+                    this, SLOT(onDataChanged(QModelIndex, QModelIndex)));
+            }
             _model = model;
-
-            connect(_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-                SLOT(onDataChanged(QModelIndex, QModelIndex)));
         }
 
         QStandardItemModel * RawData::treeModel() const {
