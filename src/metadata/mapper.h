@@ -31,6 +31,8 @@ namespace Coquillo {
         class XiphMapper : public Mapper {
             public:
                 XiphMapper();
+                QVariant value(const QVariantMap & tag, const QString & field) const ;
+                void insert(QVariantMap & tag, const QString & field, const QVariant & value);
         };
     }
 }

@@ -42,7 +42,7 @@ namespace Coquillo {
                 {"title", "TIT2"},
 //                 {"total", "TRACKTOTAL"},
                 {"url", "WXXX"},
-                {"year", "TYER"},
+                {"year", "TDRL"},
             };
         }
 
@@ -90,8 +90,21 @@ namespace Coquillo {
                 {"title", "TITLE"},
                 {"total", "TRACKTOTAL"},
                 {"url", "LICENSE"},
-//                 {"year", "DATE"},
+                {"year", "DATE"},
             };
+        }
+
+        QVariant XiphMapper::value(const QVariantMap & tag, const QString & field) const {
+            const QString src = mapToSource(field);
+            return tag.value(src).toList().value(0);
+        }
+
+        void XiphMapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
+            const QString src = mapToSource(field);
+            const QVariantList values = QVariantList()
+                << value
+                << tag.value(src).toList().mid(1);
+            tag.insert(src, values);
         }
 
         /*

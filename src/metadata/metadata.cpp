@@ -20,16 +20,10 @@ namespace Coquillo {
         }
 
         void MetaData::addTag(const QString & name, const Tag & tag) {
-            _tags[name] = Tag();
+            _tags[name] = tag;
 
             if (_primary.isNull()) {
                 setPrimaryTag(name);
-            }
-
-            if (Mapper * mapper = getMapper(name)) {
-                foreach (const QString key, tag.keys()) {
-                    mapper->insert(_tags[name], key, tag[key]);
-                }
             }
         }
 
@@ -57,19 +51,12 @@ namespace Coquillo {
 
         void MetaData::insert(const QString & key, const QVariant & value) {
             foreach (const QString tag, _tags.keys()) {
-                Mapper * mapper = getMapper(tag);
-                if (mapper) {
-                    mapper->insert(_tags[tag], key, value);
-                }
+                getMapper(tag)->insert(_tags[tag], key, value);
             }
         }
 
         QVariant MetaData::value(const QString & key, const QString & tag) const {
-            if (Mapper * mapper = getMapper(tag)) {
-                return mapper->value(_tags[tag], key);
-            } else {
-                return QVariant();
-            }
+            return getMapper(tag)->value(_tags[tag], key);
         }
 
         QStringList MetaData::fields() const {
