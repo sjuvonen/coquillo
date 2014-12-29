@@ -41,6 +41,10 @@ HEADERS += \
     src/metadata/metadata.h \
     src/metadata/metadatamodel.h \
     src/metadata/tagreader.h \
+    src/metadata/tags/abstracttag.h \
+    src/metadata/tags/dummy.h \
+    src/metadata/tags/id3v2.h \
+    src/metadata/tags/xiphcomment.h \
     src/processor/basewidget.h \
     src/processor/parserwidget.h \
     src/processor/patternwidget.h \
@@ -73,6 +77,10 @@ SOURCES += \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
     src/metadata/tagreader.cpp \
+    src/metadata/tags/abstracttag.cpp \
+    src/metadata/tags/dummy.cpp \
+    src/metadata/tags/id3v2.cpp \
+    src/metadata/tags/xiphcomment.cpp \
     src/processor/basewidget.cpp \
     src/processor/parserwidget.cpp \
     src/processor/patternwidget.cpp \

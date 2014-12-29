@@ -262,7 +262,7 @@ namespace Coquillo {
             /*
              * NOTE: Lazy way to filter already added subdirectories.
              */
-            foreach (const QString dir, _directories) {
+            foreach (const QString & dir, _directories) {
                 if (dir.startsWith(directory)) {
                     removeDirectory(dir);
                 }
@@ -291,6 +291,7 @@ namespace Coquillo {
             _metaData.clear();
             _original.clear();
             _directories.clear();
+            _only_path_changed.clear();
             endRemoveRows();
         }
 
@@ -321,7 +322,7 @@ namespace Coquillo {
             const QStringList dirs = directories();
             clear();
 
-            foreach (const QString dir, dirs) {
+            foreach (const QString & dir, dirs) {
                 addDirectory(dir);
             }
         }
@@ -353,12 +354,14 @@ namespace Coquillo {
             foreach (const QString & path, _only_path_changed) {
 //                 QFile::rename(_original[path].path(), path);
                 _original.remove(path);
+                qDebug() << "rename only:" << path;
             }
 
             foreach (const MetaData & data, _metaData) {
                 if (_original.contains(data.path())) {
 //                     QFile::rename(_original[data.path()].path(), data.path());
                     modified << data;
+                    qDebug() << "rewrite:" << data.path();
                 }
             }
 

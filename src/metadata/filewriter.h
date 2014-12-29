@@ -5,6 +5,10 @@
 #include <QRunnable>
 #include "metadata.h"
 
+namespace TagLib {
+    class File;
+}
+
 namespace Coquillo {
     namespace MetaData {
         class MetaData;
@@ -16,6 +20,10 @@ namespace Coquillo {
                 void run();
 
             private:
+                bool isFlacFile(const TagLib::File * file) const;
+                bool isMpegFile(const TagLib::File * file) const;
+                bool isVorbisFile(const TagLib::File * file) const;
+
                 QList<MetaData> _files;
         };
     }
