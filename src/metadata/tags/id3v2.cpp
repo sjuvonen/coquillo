@@ -11,12 +11,12 @@ namespace Coquillo {
     namespace MetaData {
         namespace Container {
             Id3v2::Id3v2(TagLib::ID3v2::Tag * tag)
-            : AbstractTag(tag) {
+            : Default(tag) {
 
             }
 
             QVariantMap Id3v2::read() const {
-                QVariantMap data = readCommon();
+                QVariantMap data = Default::read();
                 const auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
                 const auto frames = tag->frameListMap();
 
@@ -67,19 +67,20 @@ namespace Coquillo {
                 return data;
             }
 
-            void Id3v2::write(const QVariantMap & data) {
-                qDebug() << "write id3v2" << data;
-                
+            void Id3v2::write(const QVariantMap & orig) {
+                qDebug() << "write id3v2" << orig;
+
+                QVariantMap data(orig);
                 const MetaData::Id3v2Mapper mapper;
                 const QVariantMap common = {
-                    {"album", mapper.value(data, "album")},
-                    {"artist", mapper.value(data, "artist")},
-                    {"comment", mapper.value(data, "comment")},
-                    {"number", mapper.value(data, "number")},
-                    {"title", mapper.value(data, "title")},
-                    {"year", mapper.value(data, "year")},
+                    {"album", mapper.take(data, "album")},
+                    {"artist", mapper.take(data, "artist")},
+                    {"comment", mapper.take(data, "comment")},
+                    {"number", mapper.take(data, "number")},
+                    {"title", mapper.take(data, "title")},
+                    {"year", mapper.take(data, "year")},
                 };
-                writeCommon(common);
+                Default::write(common);
             }
         }
     }

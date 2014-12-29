@@ -7,7 +7,7 @@
 #include <taglib/vorbisfile.h>
 
 #include "filewriter.h"
-#include "tags/dummy.h"
+#include "tags/default.h"
 #include "tags/id3v2.h"
 #include "tags/xiphcomment.h"
 
@@ -52,7 +52,7 @@ namespace Coquillo {
 
                     file->save();
                 } else {
-                    Container::Dummy(ref.tag()).write(data.primaryTag());
+                    Container::Default(ref.tag()).write(data.primaryTag());
                 }
             }
         }

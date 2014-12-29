@@ -40,8 +40,7 @@ HEADERS += \
     src/metadata/mediacrawler.h \
     src/metadata/metadata.h \
     src/metadata/metadatamodel.h \
-    src/metadata/tags/abstracttag.h \
-    src/metadata/tags/dummy.h \
+    src/metadata/tags/default.h \
     src/metadata/tags/id3v2.h \
     src/metadata/tags/xiphcomment.h \
     src/processor/basewidget.h \
@@ -75,8 +74,7 @@ SOURCES += \
     src/metadata/mediacrawler.cpp \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
-    src/metadata/tags/abstracttag.cpp \
-    src/metadata/tags/dummy.cpp \
+    src/metadata/tags/default.cpp \
     src/metadata/tags/id3v2.cpp \
     src/metadata/tags/xiphcomment.cpp \
     src/processor/basewidget.cpp \

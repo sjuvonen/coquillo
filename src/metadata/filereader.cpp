@@ -10,7 +10,7 @@
 #include <QFileInfo>
 #include "filereader.h"
 #include "metadata.h"
-#include "tags/dummy.h"
+#include "tags/default.h"
 #include "tags/id3v2.h"
 #include "tags/xiphcomment.h"
 
@@ -49,7 +49,7 @@ namespace Coquillo {
                         meta.addTag("id3v2", Container::Id3v2(file->ID3v2Tag()).read());
                     }
                     if (file->hasID3v1Tag()) {
-                        meta.addTag("id3v1", Container::Dummy(file->ID3v1Tag()).read());
+                        meta.addTag("id3v1", Container::Default(file->ID3v1Tag()).read());
                     }
                     if (meta.tags().isEmpty()) {
                         meta.addTag("xiph", Tag());
@@ -60,7 +60,7 @@ namespace Coquillo {
                         meta.addTag("id3v2", Container::Id3v2(file->ID3v2Tag()).read());
                     }
                     if (file->hasID3v1Tag()) {
-                        meta.addTag("id3v1", Container::Dummy(file->ID3v1Tag()).read());
+                        meta.addTag("id3v1", Container::Default(file->ID3v1Tag()).read());
                     }
                     if (meta.tags().isEmpty()) {
                         meta.addTag("id3v2", Tag());
@@ -73,7 +73,7 @@ namespace Coquillo {
                         meta.addTag("xiph", Tag());
                     }
                 } else {
-                    meta.addTag("unknown", Container::Dummy(ref.tag()).read());
+                    meta.addTag("unknown", Container::Default(ref.tag()).read());
                 }
 
                 emit resolved(meta);

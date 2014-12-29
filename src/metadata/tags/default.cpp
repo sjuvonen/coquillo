@@ -1,7 +1,7 @@
 
 #include <QVariantMap>
 #include <taglib/tstring.h>
-#include "abstracttag.h"
+#include "default.h"
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
@@ -9,12 +9,12 @@
 namespace Coquillo {
     namespace MetaData {
         namespace Container {
-            AbstractTag::AbstractTag(TagLib::Tag * tag)
+            Default::Default(TagLib::Tag * tag)
             : _tag(tag) {
 
             }
 
-            QVariantMap AbstractTag::readCommon() const {
+            QVariantMap Default::read() const {
                 QVariantMap data;
                 data.insert("album", T2QString(_tag->album()));
                 data.insert("artist", T2QString(_tag->artist()));
@@ -26,7 +26,7 @@ namespace Coquillo {
                 return data;
             }
 
-            void AbstractTag::writeCommon(const QVariantMap & data) {
+            void Default::write(const QVariantMap & data) {
                 _tag->setAlbum(Q2TString(data.value("album").toString()));
                 _tag->setArtist(Q2TString(data.value("artist").toString()));
                 _tag->setComment(Q2TString(data.value("comment").toString()));

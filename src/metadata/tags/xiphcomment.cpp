@@ -10,14 +10,13 @@
 namespace Coquillo {
     namespace MetaData {
         namespace Container {
-
             XiphComment::XiphComment(TagLib::Ogg::XiphComment * tag)
-            : AbstractTag(tag) {
+            : Default(tag) {
 
             }
 
             QVariantMap XiphComment::read() const {
-                QVariantMap data = readCommon();
+                QVariantMap data = Default::read();
                 const auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
                 const auto fields = tag->fieldListMap();
 
@@ -65,19 +64,20 @@ namespace Coquillo {
                 return data;
             }
 
-            void XiphComment::write(const QVariantMap & data) {
-                qDebug() << "write xiph" << data;
+            void XiphComment::write(const QVariantMap & orig) {
+                qDebug() << "write xiph" << orig;
 
+                QVariantMap data(orig);
                 const MetaData::XiphMapper mapper;
                 const QVariantMap common = {
-                    {"album", mapper.value(data, "album")},
-                    {"artist", mapper.value(data, "artist")},
-                    {"comment", mapper.value(data, "comment")},
-                    {"number", mapper.value(data, "number")},
-                    {"title", mapper.value(data, "title")},
-                    {"year", mapper.value(data, "year")},
+                    {"album", mapper.take(data, "album")},
+                    {"artist", mapper.take(data, "artist")},
+                    {"comment", mapper.take(data, "comment")},
+                    {"number", mapper.take(data, "number")},
+                    {"title", mapper.take(data, "title")},
+                    {"year", mapper.take(data, "year")},
                 };
-                writeCommon(common);
+                Default::write(common);
             }
         }
     }

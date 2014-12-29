@@ -17,6 +17,12 @@ namespace Coquillo {
             return tag.value(mapToSource(field));
         }
 
+        QVariant Mapper::take(QVariantMap & tag, const QString & field) const {
+            QVariant val = value(tag, field);
+            tag.remove(mapToSource(field));
+            return val;
+        }
+
         void Mapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
             tag.insert(mapToSource(field), value);
         }
@@ -86,14 +92,6 @@ namespace Coquillo {
                 {"url", "LICENSE"},
 //                 {"year", "DATE"},
             };
-        }
-
-        QVariant XiphMapper::value(const QVariantMap & tag, const QString & field) const {
-            return tag.value(mapToSource(field));
-        }
-
-        void XiphMapper::insert(QVariantMap & tag, const QString & field, const QVariant & value) {
-            tag.insert(mapToSource(field), value);
         }
 
         /*
