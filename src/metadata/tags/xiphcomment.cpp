@@ -1,6 +1,7 @@
 
 #include <QDebug>
 #include <taglib/xiphcomment.h>
+#include "metadata/image.h"
 #include "metadata/mapper.h"
 #include "xiphcomment.h"
 
@@ -19,15 +20,45 @@ namespace Coquillo {
                 Tag data;
                 const auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
                 const auto fields = tag->fieldListMap();
+                const QStringList ignored = {"METADATA_BLOCK_PICTURE"};
 
                 for (auto i = fields.begin(); i != fields.end(); i++) {
                     const QString field = T2QString(i->first);
-                    for (auto j = i->second.begin(); j != i->second.end(); j++) {
-                        data[field] << T2QString(*j);
+                    if (!ignored.contains(field)) {
+                        for (auto j = i->second.begin(); j != i->second.end(); j++) {
+                            data[field] << T2QString(*j);
+                        }
                     }
                 }
 
                 return data;
+            }
+
+            ImageList XiphComment::readLegacyImages() const {
+                return ImageList();
+            }
+
+            ImageList XiphComment::readImages() const {
+                const auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
+                const auto fields = tag->fieldListMap();
+                const char * key = "METADATA_BLOCK_PICTURE";
+                ImageList images;
+
+                if (fields.contains(key)) {
+                    auto blocks = fields[key];
+                    for (auto i = blocks.begin(); i != blocks.end(); i++) {
+                        const QByteArray data = QByteArray::fromBase64(i->toCString());
+                        Image image = parseImage(data);
+
+                        if (!image.isNull()) {
+                            images << image;
+                        }
+                    }
+                }
+
+                qDebug() << "xiph images:" << images.count();
+
+                return images;
             }
 
             void XiphComment::write(const Tag & orig) {
@@ -62,6 +93,54 @@ namespace Coquillo {
                         tag->addField(Q2TString(name), Q2TString(data[name].value(0).toString()));
                     }
                 }
+            }
+
+            Image XiphComment::parseImage(const QByteArray & data) {
+                QDataStream s(data);
+
+                int type;
+                uint mimelen;
+                int descrlen;
+                int datalen;
+
+                int w;
+                int h;
+                int c;
+                int ic;
+
+                char * mime;
+                char * descr;
+                char * pic;
+
+                s >> type;
+                s >> mimelen;
+
+                mime = new char[mimelen+1];
+                s.readRawData(mime, mimelen);
+
+                mime[mimelen] = 0;
+
+                s >> descrlen;
+
+                descr = new char[descrlen+1];
+                s.readRawData(descr, descrlen);
+
+                descr[descrlen] = 0;
+
+                s >> w >> h >> c >> ic >> datalen;
+
+                Image image;
+
+                if (datalen) {
+                    pic = new char[datalen];
+                    s.readRawData(pic, datalen);
+
+//                     QString mimeType = QString::fromUtf8(mime, mimelen);
+                    image.setSource(QImage::fromData(QByteArray(pic, datalen)));
+                    image.setDescription(QString::fromUtf8(descr, descrlen));
+                }
+
+                return image;
             }
         }
     }

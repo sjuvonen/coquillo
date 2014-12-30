@@ -8,8 +8,6 @@
 #include "metadata/mapper.h"
 #include "id3v2.h"
 
-#include "metadata/imagecache.h"
-
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 
 namespace Coquillo {
@@ -46,6 +44,28 @@ namespace Coquillo {
                 }
 
                 return data;
+            }
+
+            ImageList Id3v2::readImages() const {
+                auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
+                const auto frames = tag->frameList("APIC");
+                QList<Image> images;
+                for (auto i = frames.begin(); i != frames.end(); i++) {
+                    const auto frame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*i);
+
+                    /*
+                     * WARNING: For some reason fromData() fails if bytes are
+                     * stored into a temp variable in between
+                     */
+                    const QImage source = QImage::fromData(reinterpret_cast<uchar*>(frame->picture().data()), frame->picture().size());
+
+                    Image image;
+                    image.setSource(source);
+                    image.setDescription(T2QString(frame->description()));
+                    image.setType(frame->type());
+                    images << image;
+                }
+                return images;
             }
 
             void Id3v2::write(const Tag & orig) {
@@ -98,28 +118,6 @@ namespace Coquillo {
                         tag->addFrame(frame);
                     }
                 }
-            }
-
-            ImageList Id3v2::readImages() const {
-                auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
-                const auto frames = tag->frameList("APIC");
-                QList<Image> images;
-                for (auto i = frames.begin(); i != frames.end(); i++) {
-                    const auto frame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*i);
-
-                    /*
-                     * WARNING: For some reason fromData() fails if bytes are
-                     * stored into a temp variable in between
-                     */
-                    const QImage source = QImage::fromData(reinterpret_cast<uchar*>(frame->picture().data()), frame->picture().size());
-
-                    Image image;
-                    image.setSource(source);
-                    image.setDescription(T2QString(frame->description()));
-                    image.setType(frame->type());
-                    images << image;
-                }
-                return images;
             }
         }
     }

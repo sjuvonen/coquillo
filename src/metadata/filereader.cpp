@@ -1,4 +1,7 @@
 
+#include <QDebug>
+#include <QFileInfo>
+
 #include <taglib/audioproperties.h>
 #include <taglib/fileref.h>
 #include <taglib/flacfile.h>
@@ -7,12 +10,14 @@
 #include <taglib/tfile.h>
 #include <taglib/vorbisfile.h>
 
-#include <QFileInfo>
 #include "filereader.h"
 #include "metadata.h"
 #include "tags/default.h"
 #include "tags/id3v2.h"
 #include "tags/xiphcomment.h"
+
+
+#include "metadata/imagecache.h"
 
 namespace Coquillo {
     namespace MetaData {
@@ -43,10 +48,17 @@ namespace Coquillo {
                 if (isFlacFile(ref.file())) {
                     const auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
                     if (file->hasXiphComment()) {
-                        meta.addTag("xiph", Container::XiphComment(file->xiphComment()).read());
+                        const auto reader = Container::XiphComment(file->xiphComment());
+                        meta.addTag("xiph", reader.read());
+                        meta.setImages(reader.readImages());
                     }
                     if (file->hasID3v2Tag()) {
-                        meta.addTag("id3v2", Container::Id3v2(file->ID3v2Tag()).read());
+                        const auto reader = Container::Id3v2(file->ID3v2Tag());
+                        meta.addTag("id3v2", reader.read());
+
+                        if (!file->hasXiphComment()) {
+                            meta.setImages(reader.readImages());
+                        }
                     }
                     if (file->hasID3v1Tag()) {
                         meta.addTag("id3v1", Container::Default(file->ID3v1Tag()).read());
@@ -70,7 +82,9 @@ namespace Coquillo {
                 } else if (isVorbisFile(ref.file())) {
                     const auto file = dynamic_cast<TagLib::Ogg::Vorbis::File*>(ref.file());
                     if (file->tag()) {
-                        meta.addTag("xiph", Container::XiphComment(file->tag()).read());
+                        const auto reader = Container::XiphComment(file->tag());
+                        meta.addTag("xiph", reader.read());
+                        meta.setImages(reader.readImages());
                     } else {
                         meta.addTag("xiph", Tag());
                     }
@@ -80,6 +94,8 @@ namespace Coquillo {
 
                 emit resolved(meta);
             }
+
+            qDebug() << "cache size:" << ImageCache::instance()->count();
         }
 
         bool FileReader::isFlacFile(const TagLib::File * file) const {

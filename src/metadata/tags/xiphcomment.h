@@ -17,6 +17,11 @@ namespace Coquillo {
                     XiphComment(TagLib::Ogg::XiphComment * tag);
                     void write(const Tag & data);
                     Tag read() const;
+                    QList<Image> readImages() const;
+
+                private:
+                    static Image parseImage(const QByteArray & data);
+                    QList<Image> readLegacyImages() const;
             };
         }
     }
