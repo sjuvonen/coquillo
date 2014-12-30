@@ -42,6 +42,12 @@ namespace Coquillo {
                     data["TDRL"] = data.take("TYER");
                 }
 
+                if (data.contains("WXXX")) {
+                    // Strip leading "[] "
+                    const QRegExp prefix("^\\[\\] ");
+                    data["WXXX"][0] = data["WXXX"].first().toString().remove(prefix);
+                }
+
                 return data;
             }
 
