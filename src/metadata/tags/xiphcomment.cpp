@@ -35,7 +35,25 @@ namespace Coquillo {
             }
 
             ImageList XiphComment::readLegacyImages() const {
-                return ImageList();
+                const auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
+                const auto fields = tag->fieldListMap();
+                ImageList images;
+
+                if (fields.contains("COVERART")) {
+                    const auto covers = fields["COVERART"];
+                    const auto descr = fields["COVERARTDESCRIPTION"];
+                    for (uint i = 0; i < covers.size(); i++) {
+                        const QByteArray data = QByteArray::fromRawData(covers[i].toCString(), covers[i].size());
+                        const QImage source = QImage::fromData(QByteArray::fromBase64(data));
+                        Image image;
+                        image.setSource(source);
+                        image.setDescription(T2QString(descr[i]));
+                        images << image;
+                    }
+                }
+
+                qDebug() << "xiph legacy images:" << images.count();
+                return images;
             }
 
             ImageList XiphComment::readImages() const {
@@ -48,7 +66,7 @@ namespace Coquillo {
                     auto blocks = fields[key];
                     for (auto i = blocks.begin(); i != blocks.end(); i++) {
                         const QByteArray data = QByteArray::fromBase64(i->toCString());
-                        Image image = parseImage(data);
+                        const Image image = parseImage(data);
 
                         if (!image.isNull()) {
                             images << image;
