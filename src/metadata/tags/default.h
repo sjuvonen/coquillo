@@ -6,6 +6,8 @@
 
 namespace Coquillo {
     namespace MetaData {
+        class Image;
+
         namespace Container {
             class Default {
                 public:
@@ -13,6 +15,7 @@ namespace Coquillo {
                     virtual ~Default() { }
                     virtual void write(const Tag & data);
                     virtual Tag read() const;
+                    virtual QList<Image> readImages() const;
 
                 protected:
                     TagLib::Tag * _tag;

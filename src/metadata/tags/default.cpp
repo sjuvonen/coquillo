@@ -1,5 +1,6 @@
 
 #include <taglib/tstring.h>
+#include "metadata/image.h"
 #include "default.h"
 
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
@@ -29,9 +30,14 @@ namespace Coquillo {
                 _tag->setAlbum(Q2TString(data.value("album").value(0).toString()));
                 _tag->setArtist(Q2TString(data.value("artist").value(0).toString()));
                 _tag->setComment(Q2TString(data.value("comment").value(0).toString()));
+                _tag->setGenre(Q2TString(data.value("genre").value(0).toString()));
                 _tag->setTrack(data.value("number").value(0).toUInt());
                 _tag->setTitle(Q2TString(data.value("title").value(0).toString()));
                 _tag->setYear(data.value("year").value(0).toUInt());
+            }
+
+            QList<Image> Default::readImages() const {
+                return QList<Image>();
             }
         }
     }

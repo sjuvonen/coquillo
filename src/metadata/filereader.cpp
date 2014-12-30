@@ -57,7 +57,9 @@ namespace Coquillo {
                 } else if (isMpegFile(ref.file())) {
                     const auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
                     if (file->hasID3v2Tag()) {
-                        meta.addTag("id3v2", Container::Id3v2(file->ID3v2Tag()).read());
+                        const auto reader = Container::Id3v2(file->ID3v2Tag());
+                        meta.addTag("id3v2", reader.read());
+                        meta.setImages(reader.readImages());
                     }
                     if (file->hasID3v1Tag()) {
                         meta.addTag("id3v1", Container::Default(file->ID3v1Tag()).read());

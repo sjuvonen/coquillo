@@ -4,8 +4,11 @@
 #include <taglib/id3v2tag.h>
 #include <taglib/textidentificationframe.h>
 #include <taglib/urllinkframe.h>
+#include "metadata/image.h"
 #include "metadata/mapper.h"
 #include "id3v2.h"
+
+#include "metadata/imagecache.h"
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 
@@ -22,55 +25,25 @@ namespace Coquillo {
                 const auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
                 const auto frames = tag->frameListMap();
 
+                const QStringList ignored = {"APIC"};
+
                 for (auto i = frames.begin(); i != frames.end(); i++) {
                     const QString field = i->first.data();
-                    QVariantList values;
 
-                    for (auto j = i->second.begin(); j != i->second.end();j++) {
-                        values << T2QString((*j)->toString());
+                    if (!ignored.contains(field)) {
+                        QVariantList values;
+
+                        for (auto j = i->second.begin(); j != i->second.end();j++) {
+                            values << T2QString((*j)->toString());
+                        }
+
+                        data.insert(field, values);
                     }
-
-                    data.insert(field, values);
                 }
-
-//                 if (tag->frameList("TCOM").size() > 0) {
-//                     data.insert("composer", T2QString(frames["TCOM"].front()->toString()));
-//                 }
-//
-//                 if (tag->frameList("TENC").size() > 0) {
-//                     data.insert("encoder", T2QString(frames["TENC"].front()->toString()));
-//                 }
-//
-//                 if (tag->frameList("TOPE").size() > 0) {
-//                     data.insert("original_artist", T2QString(frames["TOPE"].front()->toString()));
-//                 }
-//
-//                 if (tag->frameList("TPE2").size() > 0) {
-//                     data.insert("album_artist", T2QString(frames["TPE2"].front()->toString()));
-//                 }
-
-//                 if (tag->frameList("TPOS").size() > 0) {
-//                     data.insert("disc", T2QString(frames["TPOS"].front()->toString()).toInt());
-//                 }
-//
-//                 if (tag->frameList("WXXX").size() > 0) {
-//                     data.insert("url", T2QString(frames["WXXX"].front()->toString()).remove(QRegExp("^\\[\\] ")));
-//                 }
-//
-//                 if (tag->frameList("TRCK").size() > 0) {
-//                     const QString track = T2QString(frames["TRCK"].front()->toString());
-//                     const QStringList parts = track.split('/');
-//
-//                     if (parts.count() >= 2) {
-//                         data.insert("total", parts[1].toInt());
-//                     }
-//                 }
 
                 if (data.contains("TYER")) {
                     data["TDRL"] = data.take("TYER");
                 }
-
-//                 qDebug() << data << "\n";
 
                 return data;
             }
@@ -84,6 +57,7 @@ namespace Coquillo {
                     {"album", {mapper.take(data, "album")}},
                     {"artist", {mapper.take(data, "artist")}},
                     {"comment", {mapper.take(data, "comment")}},
+                    {"genre", {mapper.take(data, "genre")}},
                     {"title",{mapper.take(data, "title")}},
                     {"year", {mapper.take(data, "year")}},
                 };
@@ -97,14 +71,6 @@ namespace Coquillo {
                 foreach (const QString & name, supported) {
                     if (data.contains(name)) {
                         tag->removeFrames(name.toUtf8().constData());
-                    }
-                }
-
-                if (data.contains("WXXX")) {
-                    foreach (const QVariant & url, data["WXXX"]) {
-                        auto frame = new TagLib::ID3v2::UserUrlLinkFrame;
-                        frame->setText(url.toString().toStdString());
-                        tag->addFrame(frame);
                     }
                 }
 
@@ -124,6 +90,36 @@ namespace Coquillo {
                     tag->removeFrames("TRCK");
                     tag->addFrame(frame);
                 }
+
+                if (data.contains("WXXX")) {
+                    foreach (const QVariant & url, data["WXXX"]) {
+                        auto frame = new TagLib::ID3v2::UserUrlLinkFrame;
+                        frame->setText(url.toString().toStdString());
+                        tag->addFrame(frame);
+                    }
+                }
+            }
+
+            ImageList Id3v2::readImages() const {
+                auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
+                const auto frames = tag->frameList("APIC");
+                QList<Image> images;
+                for (auto i = frames.begin(); i != frames.end(); i++) {
+                    const auto frame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*i);
+
+                    /*
+                     * WARNING: For some reason fromData() fails if bytes are
+                     * stored into a temp variable in between
+                     */
+                    const QImage source = QImage::fromData(reinterpret_cast<uchar*>(frame->picture().data()), frame->picture().size());
+
+                    Image image;
+                    image.setSource(source);
+                    image.setDescription(T2QString(frame->description()));
+                    image.setType(frame->type());
+                    images << image;
+                }
+                return images;
             }
         }
     }

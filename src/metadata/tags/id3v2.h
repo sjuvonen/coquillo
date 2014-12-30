@@ -17,6 +17,7 @@ namespace Coquillo {
                     Id3v2(TagLib::ID3v2::Tag * tag);
                     void write(const Tag & data);
                     Tag read() const;
+                    QList<Image> readImages() const;
             };
         }
     }

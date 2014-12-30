@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVariant>
 
+#include "image.h"
 #include "tag.h"
 
 namespace Coquillo {
@@ -40,7 +41,7 @@ namespace Coquillo {
                 QVariant operator[](const QString & key) const { return value(key, _primary); }
                 QStringList fields() const;
                 QStringList fields(const QString & tag) const;
-                
+
                 inline QString primaryTagName() const { return _primary; }
                 inline QHash<QString, Tag> tags() const { return _tags; }
                 inline void setProperties(const Properties & p) { _properties = p; }
@@ -48,10 +49,15 @@ namespace Coquillo {
                 inline void setPath(const QString & path) { _path = path; }
                 inline QString path() const { return _path; }
 
+                void setImages(const ImageList & images) { _images = images; }
+                const ImageList images() const { return _images; }
+                ImageList & images() { return _images; }
+
             private:
                 QString _path;
                 QString _primary;
                 QHash<QString, Tag> _tags;
+                ImageList _images;
                 Properties _properties;
 
                 /*

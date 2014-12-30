@@ -37,6 +37,8 @@ HEADERS += \
     src/filters/trimwhitespace.h \
     src/metadata/filereader.h \
     src/metadata/filewriter.h \
+    src/metadata/image.h \
+    src/metadata/imagecache.h \
     src/metadata/mapper.h \
     src/metadata/mediacrawler.h \
     src/metadata/metadata.h \
@@ -72,6 +74,8 @@ SOURCES += \
     src/filebrowser/filebrowser.cpp \
     src/metadata/filereader.cpp \
     src/metadata/filewriter.cpp \
+    src/metadata/image.cpp \
+    src/metadata/imagecache.cpp \
     src/metadata/mapper.cpp \
     src/metadata/mediacrawler.cpp \
     src/metadata/metadata.cpp \
