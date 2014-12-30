@@ -13,7 +13,7 @@ namespace Coquillo {
         }
 
         int ImageCache::insert(const QImage & image) {
-            auto bits = reinterpret_cast<const char*>(image.bits());
+            const auto bits = reinterpret_cast<const char*>(image.bits());
             int id = qChecksum(bits, image.byteCount());
             if (id and !_images.contains(id)) {
                 _images[id] = image;
@@ -24,7 +24,6 @@ namespace Coquillo {
         void ImageCache::resize(int id, const QSize & size) {
             if (contains(id)) {
                 const QImage image = this->image(id);
-
                 if (image.width() > size.width() or image.height() > size.height()) {
                     const QImage scaled = image.scaled(size, Qt::KeepAspectRatio);
                     replace(id, scaled);

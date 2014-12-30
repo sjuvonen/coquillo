@@ -85,7 +85,7 @@ namespace Coquillo {
                 Default::write(common);
 
                 auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
-                const QStringList text_frames = {"TCOM", "TENC", "TOPE", "TPOS"};
+                const QStringList text_frames = {"TCOM", "TENC", "TOPE", "TPE2", "TPOS"};
                 const QStringList supported = (QStringList){"WXXX"} + text_frames;
 
                 foreach (const QString & name, supported) {

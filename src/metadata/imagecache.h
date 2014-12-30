@@ -9,7 +9,6 @@ namespace Coquillo {
         class ImageCache {
             public:
                 static ImageCache * instance();
-
                 int insert(const QImage & image);
                 void resize(int id, const QSize & size);
 
