@@ -22,7 +22,6 @@ namespace Coquillo {
                 Tag data;
                 const auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
                 const auto frames = tag->frameListMap();
-
                 const QStringList ignored = {"APIC"};
 
                 for (auto i = frames.begin(); i != frames.end(); i++) {
@@ -63,6 +62,7 @@ namespace Coquillo {
                     image.setSource(source);
                     image.setDescription(T2QString(frame->description()));
                     image.setType(frame->type());
+                    image.setMimeType(T2QString(frame->mimeType()));
                     images << image;
                 }
                 return images;

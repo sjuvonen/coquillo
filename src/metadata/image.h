@@ -21,6 +21,9 @@ namespace Coquillo {
                 inline int type() const { return _type; }
                 inline void setType(int type) { _type = type; }
 
+                inline QString mimeType() const { return _mime; }
+                inline void setMimeType(const QString & m) { _mime = m; } 
+
             private:
                 inline int id() const { return _id; }
                 ImageCache * cache() const;
@@ -28,6 +31,7 @@ namespace Coquillo {
                 int _id;
                 int _type;
                 QString _description;
+                QString _mime;
         };
 
         typedef QList<Image> ImageList;

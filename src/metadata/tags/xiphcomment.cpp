@@ -42,12 +42,14 @@ namespace Coquillo {
                 if (fields.contains("COVERART")) {
                     const auto covers = fields["COVERART"];
                     const auto descr = fields["COVERARTDESCRIPTION"];
+                    const auto mimes = fields["COVERARTMIME"];
                     for (uint i = 0; i < covers.size(); i++) {
                         const QByteArray data = QByteArray::fromRawData(covers[i].toCString(), covers[i].size());
                         const QImage source = QImage::fromData(QByteArray::fromBase64(data));
                         Image image;
                         image.setSource(source);
                         image.setDescription(T2QString(descr[i]));
+                        image.setMimeType(T2QString(mimes[i]));
                         images << image;
                     }
                 }
@@ -147,18 +149,18 @@ namespace Coquillo {
 
                 s >> w >> h >> c >> ic >> datalen;
 
-                Image image;
 
                 if (datalen) {
                     pic = new char[datalen];
                     s.readRawData(pic, datalen);
-
-//                     QString mimeType = QString::fromUtf8(mime, mimelen);
+                    Image image;
                     image.setSource(QImage::fromData(QByteArray(pic, datalen)));
                     image.setDescription(QString::fromUtf8(descr, descrlen));
+                    image.setMimeType(QString::fromUtf8(mime, mimelen));
+                    return image;
+                } else {
+                    return Image();
                 }
-
-                return image;
             }
         }
     }

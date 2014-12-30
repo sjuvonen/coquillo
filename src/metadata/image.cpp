@@ -22,7 +22,7 @@ namespace Coquillo {
         }
 
         ImageCache * Image::cache() const {
-            return ImageCache::instance();
+            return ImageCache::instance(); 
         }
     }
 }
