@@ -19,11 +19,6 @@ namespace Coquillo {
         class RenameWidget;
     }
 
-    namespace TagEditor {
-        class BasicTags;
-        class RawData;
-    }
-
     class MainWindow : public QMainWindow {
         Q_OBJECT
 
@@ -37,7 +32,6 @@ namespace Coquillo {
             bool isInterfaceLocked() const;
 
         private slots:
-            void applyValue(const QVariant & value, int column);
             void invertSelection();
             void lockInterface(bool state);
             void openSettingsDialog();
@@ -55,8 +49,6 @@ namespace Coquillo {
             Ui::MainWindow * _ui;
             FileBrowser * _fileBrowser;
             MetaData::MetaDataModel * _metaData;
-            TagEditor::BasicTags * _basicTags;
-            TagEditor::RawData * _rawTags;
             Processor::ParserWidget * _tagParser;
             Processor::RenameWidget * _fileRenamer;
     };

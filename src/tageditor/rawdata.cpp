@@ -31,7 +31,7 @@ namespace Coquillo {
 
         void RawData::onDataChanged(const QModelIndex & tl, const QModelIndex & br) {
             if (tl.row() <= _current.row() and br.row() >= _current.row()) {
-                setCurrentIndex(_current);
+                setEditorIndex(_current);
             }
         }
 
@@ -59,12 +59,12 @@ namespace Coquillo {
                         label_item->appendRow({ new QStandardItem, new QStandardItem(value.toString()) });
                     }
                 }
-                
+
                 model->appendRow({label_item, value_item});
             }
         }
 
-        void RawData::setCurrentIndex(const QModelIndex & idx) {
+        void RawData::setEditorIndex(const QModelIndex & idx) {
             _current = idx;
             const auto data = metaData();
             _ui->comboBox->clear();

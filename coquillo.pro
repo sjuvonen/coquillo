@@ -18,6 +18,7 @@ unix {
 FORMS += \
     ui/filebrowser.ui \
     ui/basictags.ui \
+    ui/imagetags.ui \
     ui/mainwindow.ui \
     ui/parserwidget.ui \
     ui/rawdata.ui \
@@ -39,6 +40,7 @@ HEADERS += \
     src/metadata/filewriter.h \
     src/metadata/image.h \
     src/metadata/imagecache.h \
+    src/metadata/imagetypes.h \
     src/metadata/mapper.h \
     src/metadata/mediacrawler.h \
     src/metadata/metadata.h \
@@ -55,8 +57,11 @@ HEADERS += \
     src/searcher/musicbrainz.h \
     src/settings/settingsdialog.h \
     src/tageditor/basictags.h \
+    src/tageditor/imagemodel.h \
+    src/tageditor/imagetags.h \
     src/tageditor/metadatachangeindicatordelegate.h \
     src/tageditor/rawdata.h \
+    src/tageditor/tageditor.h \
     src/webtags/filterproxymodel.h \
     src/webtags/tagsearchdialog.h \
     # Experimental
@@ -76,6 +81,7 @@ SOURCES += \
     src/metadata/filewriter.cpp \
     src/metadata/image.cpp \
     src/metadata/imagecache.cpp \
+    src/metadata/imagetypes.cpp \
     src/metadata/mapper.cpp \
     src/metadata/mediacrawler.cpp \
     src/metadata/metadata.cpp \
@@ -92,8 +98,11 @@ SOURCES += \
     src/searcher/musicbrainz.cpp \
     src/settings/settingsdialog.cpp \
     src/tageditor/basictags.cpp \
+    src/tageditor/imagemodel.cpp \
+    src/tageditor/imagetags.cpp \
     src/tageditor/metadatachangeindicatordelegate.cpp \
     src/tageditor/rawdata.cpp \
+    src/tageditor/tageditor.cpp \
     src/webtags/filterproxymodel.cpp \
     src/webtags/tagsearchdialog.cpp \
     # Experimental

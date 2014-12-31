@@ -76,8 +76,6 @@ namespace Coquillo {
                     }
                 }
 
-                qDebug() << "xiph images:" << images.count();
-
                 return images;
             }
 
@@ -148,7 +146,6 @@ namespace Coquillo {
                 descr[descrlen] = 0;
 
                 s >> w >> h >> c >> ic >> datalen;
-
 
                 if (datalen) {
                     pic = new char[datalen];

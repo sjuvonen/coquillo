@@ -1,4 +1,5 @@
 
+#include <QDebug>
 #include "imagecache.h"
 
 namespace Coquillo {
@@ -12,22 +13,41 @@ namespace Coquillo {
             return s_instance;
         }
 
-        int ImageCache::insert(const QImage & image) {
+        quint16 ImageCache::insert(const QImage & image) {
             const auto bits = reinterpret_cast<const char*>(image.bits());
-            int id = qChecksum(bits, image.byteCount());
+            quint16 id = qChecksum(bits, image.byteCount());
             if (id and !_images.contains(id)) {
                 _images[id] = image;
             }
             return id;
         }
 
-        void ImageCache::resize(int id, const QSize & size) {
+        void ImageCache::resize(quint16 id, const QSize & size) {
             if (contains(id)) {
                 const QImage image = this->image(id);
                 if (image.width() > size.width() or image.height() > size.height()) {
-                    const QImage scaled = image.scaled(size, Qt::KeepAspectRatio);
-                    replace(id, scaled);
+                    replace(id, scaled(id, size));
                 }
+            }
+        }
+
+        const QImage ImageCache::scaled(quint16 id, const QSize & size) {
+            const QString key = QString("%1x%2").arg(size.width()).arg(size.height());
+            if (contains(id)) {
+                if (!_scaled[id].contains(key)) {
+                    _scaled[id][key] = image(id).scaled(size, Qt::KeepAspectRatio,
+                        Qt::SmoothTransformation);
+                }
+                return _scaled[id][key];
+            } else {
+                return QImage();
+            }
+        }
+
+        void ImageCache::test() const {
+            qDebug() << "keys:" << _images.keys();
+            foreach (const QImage & image, _images.values()) {
+                qDebug() << "image:" << image.isNull();
             }
         }
     }

@@ -51,7 +51,9 @@ namespace Coquillo {
 
                 void setImages(const ImageList & images) { _images = images; }
                 const ImageList images() const { return _images; }
-                ImageList & images() { return _images; }
+
+                // Breaks up my app for some reason
+//                 ImageList images() { return _images; }
 
             private:
                 QString _path;

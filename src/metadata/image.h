@@ -13,8 +13,12 @@ namespace Coquillo {
                 Image();
 
                 bool isNull() const;
-                QImage source() const;
+                const QImage scaled(const QSize & size) const;
+                const QImage source() const;
                 void setSource(const QImage & image);
+
+                int height() const;
+                int width() const;
 
                 inline QString description() const { return _description; }
                 inline void setDescription(const QString & d)  { _description = d; }
@@ -22,13 +26,13 @@ namespace Coquillo {
                 inline void setType(int type) { _type = type; }
 
                 inline QString mimeType() const { return _mime; }
-                inline void setMimeType(const QString & m) { _mime = m; } 
+                inline void setMimeType(const QString & m) { _mime = m; }
+                inline quint16 id() const { return _id; }
 
             private:
-                inline int id() const { return _id; }
-                ImageCache * cache() const;
+                static ImageCache * cache();
 
-                int _id;
+                quint16 _id;
                 int _type;
                 QString _description;
                 QString _mime;

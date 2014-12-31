@@ -16,9 +16,6 @@
 #include "tags/id3v2.h"
 #include "tags/xiphcomment.h"
 
-
-#include "metadata/imagecache.h"
-
 namespace Coquillo {
     namespace MetaData {
         FileReader::FileReader(const QStringList & files, QObject * parent)
@@ -35,15 +32,23 @@ namespace Coquillo {
             foreach (const QString & file, _files) {
                 const TagLib::FileRef ref(file.toUtf8().constData());
                 const TagLib::AudioProperties * audio = ref.audioProperties();
-
-                Properties props;
-                props["length"] = audio->length();
-                props["bitrate"] = audio->bitrate();
-                props["samplerate"] = audio->sampleRate();
-                props["channels"] = audio->channels();
-
                 MetaData meta(file);
-                meta.setProperties(props);
+
+                if (audio) {
+                    Properties props;
+                    props["length"] = audio->length();
+                    props["bitrate"] = audio->bitrate();
+                    props["samplerate"] = audio->sampleRate();
+                    props["channels"] = audio->channels();
+                    meta.setProperties(props);
+                } else {
+                    /*
+                     * NOTE: Files that have wrong suffix might also fail reading!
+                     * Consider possibilities to detect these and read them correctly.
+                     */
+                    qWarning() << "Possibly corrupted file:" << file;
+                    continue;
+                }
 
                 if (isFlacFile(ref.file())) {
                     const auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
@@ -88,14 +93,12 @@ namespace Coquillo {
                     } else {
                         meta.addTag("xiph", Tag());
                     }
-                } else {
+                } else if (ref.tag()) {
                     meta.addTag("unknown", Container::Default(ref.tag()).read());
                 }
 
                 emit resolved(meta);
             }
-
-            qDebug() << "cache size:" << ImageCache::instance()->count();
         }
 
         bool FileReader::isFlacFile(const TagLib::File * file) const {

@@ -337,7 +337,7 @@
    <item row="1" column="0">
     <widget class="QLabel" name="labelTitle">
      <property name="text">
-      <string>Title</string>
+      <string>&amp;Title</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -394,7 +394,7 @@
    <item row="3" column="0">
     <widget class="QLabel" name="labelAlbum">
      <property name="text">
-      <string>Album</string>
+      <string>A&amp;lbum</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -684,10 +684,35 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="cloneTitle">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-copy">
+       <normaloff/>
+      </iconset>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>tagTitle</tabstop>
+  <tabstop>cloneTitle</tabstop>
   <tabstop>tagArtist</tabstop>
   <tabstop>cloneArtist</tabstop>
   <tabstop>tagAlbum</tabstop>

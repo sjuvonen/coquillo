@@ -37,7 +37,7 @@ namespace Coquillo {
                 clone_group->addButton(button, column);
             }
 
-            connect(clone_group, SIGNAL(buttonClicked(int)), SLOT(emitCloneValue(int)));
+            connect(clone_group, SIGNAL(buttonClicked(int)), SLOT(emitCloneField(int)));
         }
 
         BasicTags::~BasicTags() {
@@ -85,15 +85,14 @@ namespace Coquillo {
             return _inputMapper->model();
         }
 
-        void BasicTags::setCurrentIndex(const QModelIndex & idx) {
+        void BasicTags::setEditorIndex(const QModelIndex & idx) {
             _inputMapper->setCurrentModelIndex(idx);
             _labelMapper->setCurrentModelIndex(idx);
-            setEnabled(idx.isValid());
         }
 
-        void BasicTags::emitCloneValue(int column) {
+        void BasicTags::emitCloneField(int column) {
             const QVariant value = _inputMapper->model()->index(_inputMapper->currentIndex(), column).data();
-            emit cloneValue(value, column);
+            emit cloneField(column, value);
         }
     }
 }

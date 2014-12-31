@@ -20,16 +20,16 @@ namespace Coquillo {
                 ~BasicTags();
 
                 void setModel(QAbstractItemModel * model);
-                inline QAbstractItemModel * model() const;
+                QAbstractItemModel * model() const;
 
             public slots:
-                void setCurrentIndex(const QModelIndex & idx);
+                void setEditorIndex(const QModelIndex & idx);
 
             signals:
-                void cloneValue(const QVariant & value, int column);
+                void cloneField(int column, const QVariant & value);
 
             private slots:
-                void emitCloneValue(int column);
+                void emitCloneField(int column);
 
             private:
                 QDataWidgetMapper * _inputMapper;

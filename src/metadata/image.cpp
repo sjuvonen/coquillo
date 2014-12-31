@@ -13,7 +13,15 @@ namespace Coquillo {
             return !cache()->contains(id());
         }
 
-        QImage Image::source() const {
+        int Image::height() const {
+            return source().height();
+        }
+
+        const QImage Image::scaled(const QSize & size) const {
+            return cache()->scaled(id(), size);
+        }
+
+        const QImage Image::source() const {
             return cache()->image(id());
         }
 
@@ -21,8 +29,12 @@ namespace Coquillo {
             _id = cache()->insert(image);
         }
 
-        ImageCache * Image::cache() const {
-            return ImageCache::instance(); 
+        int Image::width() const {
+            return source().width();
+        }
+
+        ImageCache * Image::cache() {
+            return ImageCache::instance();
         }
     }
 }

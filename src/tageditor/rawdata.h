@@ -28,7 +28,7 @@ namespace Coquillo {
                 inline QAbstractItemModel * model() const { return _model; }
 
             public slots:
-                void setCurrentIndex(const QModelIndex & idx);
+                void setEditorIndex(const QModelIndex & idx);
 
             private slots:
                 void onDataChanged(const QModelIndex & tl, const QModelIndex & br);

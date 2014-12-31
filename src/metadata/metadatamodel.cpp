@@ -352,14 +352,14 @@ namespace Coquillo {
             QList<MetaData> modified;
 
             foreach (const QString & path, _only_path_changed) {
-//                 QFile::rename(_original[path].path(), path);
+                QFile::rename(_original[path].path(), path);
                 _original.remove(path);
                 qDebug() << "rename only:" << path;
             }
 
             foreach (const MetaData & data, _metaData) {
                 if (_original.contains(data.path())) {
-//                     QFile::rename(_original[data.path()].path(), data.path());
+                    QFile::rename(_original[data.path()].path(), data.path());
                     modified << data;
                     qDebug() << "rewrite:" << data.path();
                 }

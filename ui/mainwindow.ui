@@ -78,7 +78,7 @@
         <bool>false</bool>
        </attribute>
       </widget>
-      <widget class="QTabWidget" name="tagEditor">
+      <widget class="Coquillo::TagEditor::TagEditor" name="tagEditor">
        <property name="currentIndex">
         <number>-1</number>
        </property>
@@ -302,6 +302,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Coquillo::TagEditor::TagEditor</class>
+   <extends>QTabWidget</extends>
+   <header>tageditor/tageditor.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>tools</tabstop>
   <tabstop>metaData</tabstop>

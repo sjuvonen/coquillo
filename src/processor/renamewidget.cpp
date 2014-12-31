@@ -1,5 +1,6 @@
 
 #include <QDebug>
+#include <QFileInfo>
 #include <QItemSelectionModel>
 #include <QTimer>
 
@@ -30,10 +31,12 @@ namespace Coquillo {
             foreach (const QModelIndex idx, selectionModel()->selectedRows()) {
                 indices << QPersistentModelIndex(idx);
             }
-            
+
             foreach (const QPersistentModelIndex idx, indices) {
                 const QVariantHash values = idx.data(MetaData::MetaDataModel::NamedRowDataRole).toHash();
-                const QString path = patterns.compile(this->pattern(), values);
+                const QString suffix = QFileInfo(values["filename"].toString()).suffix();
+                const QString compiled = patterns.compile(this->pattern(), values);
+                const QString path = QString("%1.%2").arg(compiled, suffix);
                 model()->setData(idx, path, MetaData::MetaDataModel::FileNameRole);
             }
         }
@@ -45,8 +48,10 @@ namespace Coquillo {
 
             Patterns patterns;
             const QVariantHash values = currentIndex().data(MetaData::MetaDataModel::NamedRowDataRole).toHash();
+            const QString suffix = QFileInfo(values["filename"].toString()).suffix();
             const QString text = patterns.compile(pattern(), values);
-            setPreview(text);
+            const QString name = QString("%1.%2").arg(text, suffix);
+            setPreview(name);
         }
     }
 }

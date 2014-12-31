@@ -18,8 +18,6 @@
 #include "processor/renamewidget.h"
 #include "processor/parserwidget.h"
 #include "settings/settingsdialog.h"
-#include "tageditor/basictags.h"
-#include "tageditor/rawdata.h"
 #include "webtags/tagsearchdialog.h"
 
 namespace Coquillo {
@@ -33,6 +31,9 @@ namespace Coquillo {
         QSortFilterProxyModel * sort_proxy = new QSortFilterProxyModel(this);
         sort_proxy->setSourceModel(_metaData);
         _ui->metaData->setModel(sort_proxy);
+
+        _ui->tagEditor->setModel(_ui->metaData->model());
+        _ui->tagEditor->setSelectionModel(_ui->metaData->selectionModel());
 
         QSettings * storage = new QSettings("history");
         StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
@@ -66,7 +67,6 @@ namespace Coquillo {
         _tagParser->setSelectionModel(_ui->metaData->selectionModel());
         _ui->tools->addTab(_tagParser, tr("Parse tags"));
 
-
         addAction(_ui->action_Quit);
 
         connect(_fileBrowser, SIGNAL(recursionEnabled(bool)),
@@ -89,28 +89,28 @@ namespace Coquillo {
         connect(_ui->metaData->header(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
 
-        setupTagEditor();
+//         setupTagEditor();
 
         QTimer::singleShot(1, this, SLOT(restoreSettings()));
     }
 
     void MainWindow::setupTagEditor() {
 
-        _basicTags = new TagEditor::BasicTags(this);
-        _basicTags->setModel(_ui->metaData->model());
-        _ui->tagEditor->addTab(_basicTags, tr("Tags"));
-
-        connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-            _basicTags, SLOT(setCurrentIndex(QModelIndex)));
-
-        connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
-
-        _rawTags = new TagEditor::RawData(this);
-        _rawTags->setModel(_ui->metaData->model());
-        _ui->tagEditor->addTab(_rawTags, tr("Raw"));
-
-        connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-            _rawTags, SLOT(setCurrentIndex(QModelIndex)));
+//         _basicTags = new TagEditor::BasicTags(this);
+//         _basicTags->setModel(_ui->metaData->model());
+//         _ui->tagEditor->addTab(_basicTags, tr("Tags"));
+//
+//         connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+//             _basicTags, SLOT(setCurrentIndex(QModelIndex)));
+//
+//         connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
+//
+//         _rawTags = new TagEditor::RawData(this);
+//         _rawTags->setModel(_ui->metaData->model());
+//         _ui->tagEditor->addTab(_rawTags, tr("Raw"));
+//
+//         connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+//             _rawTags, SLOT(setCurrentIndex(QModelIndex)));
     }
 
     MainWindow::~MainWindow() {
@@ -180,12 +180,6 @@ namespace Coquillo {
 
     bool MainWindow::isInterfaceLocked() const {
         return !findChildren<QToolBar*>().first()->isMovable();
-    }
-
-    void MainWindow::applyValue(const QVariant & value, int column) {
-        foreach (QModelIndex idx, _ui->metaData->selectionModel()->selectedRows(column)) {
-            const_cast<QAbstractItemModel*>(idx.model())->setData(idx, value);
-        }
     }
 
     void MainWindow::invertSelection() {
