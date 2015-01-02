@@ -49,11 +49,9 @@ namespace Coquillo {
                 inline void setPath(const QString & path) { _path = path; }
                 inline QString path() const { return _path; }
 
-                void setImages(const ImageList & images) { _images = images; }
-                const ImageList images() const { return _images; }
-
-                // Breaks up my app for some reason
-//                 ImageList images() { return _images; }
+                inline void setImages(const ImageList & images) { _images = images; }
+                inline const ImageList images() const { return _images; }
+                inline ImageList & images() { return _images; }
 
             private:
                 QString _path;

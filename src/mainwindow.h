@@ -44,7 +44,6 @@ namespace Coquillo {
 
         private:
             void saveSettings();
-            void setupTagEditor();
 
             Ui::MainWindow * _ui;
             FileBrowser * _fileBrowser;

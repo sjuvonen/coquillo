@@ -27,6 +27,8 @@ namespace Coquillo {
                 ImageTags(QWidget * parent = 0);
                 ~ImageTags();
                 int imageCount() const;
+                void setModel(QAbstractItemModel * model);
+                QAbstractItemModel * model() const;
 
             public slots:
                 void setEditorIndex(const QModelIndex & idx);
@@ -35,15 +37,19 @@ namespace Coquillo {
                 void cloneField(int column, const QVariant & value);
 
             private slots:
+                void addImage();
+                void exportCurrentImage();
                 void on_cloneImages_clicked();
                 void onImageSelect(const QModelIndex & idx);
+                void removeCurrentRow();
 
             private:
-                MetaData::MetaData metaData(const QModelIndex &) const;
+                inline ImageModel * imageModel() const { return _model; }
+                MetaData::MetaData metaData() const;
                 Ui::ImageTags * _ui;
-                QPersistentModelIndex _current;
                 QDataWidgetMapper * _mapper;
                 ImageModel * _model;
+                QString _last_dir;
         };
     }
 }

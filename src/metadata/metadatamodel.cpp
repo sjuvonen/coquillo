@@ -35,6 +35,7 @@ namespace Coquillo {
             _columns[13] = tr("Url");
             _columns[14] = tr("Encoder");
             _columns[15] = tr("Filename");
+            _columns[16] = tr("Images");
     //         _columns[0] = tr("Length");
 
             _columnMap = QHash<int, QString>();
@@ -53,6 +54,7 @@ namespace Coquillo {
             _columnMap[13] = "url";
             _columnMap[14] = "encoder";
             _columnMap[15] = "filename";
+            _columnMap[16] = "images";
 
             qRegisterMetaType<Coquillo::MetaData::MetaData>("MetaData");
         }
@@ -168,22 +170,37 @@ namespace Coquillo {
             switch (role) {
                 case Qt::DisplayRole:
                 case Qt::EditRole: {
+//                     qDebug() << "setData" << idx;
                     const int row = idx.row();
-                    const QString name = _columnMap.value(idx.column());
+                    const QString name = _columnMap[idx.column()];
                     MetaData meta = _metaData[row];
 
-                    bool int_changed = value.type() == QVariant::Int && (value.toInt() != meta[name].toInt());
-                    bool str_changed = value.type() != QVariant::Int && (value.toString() != meta[name].toString());
+                    if (idx.column() == 16) {
+                        const ImageList images = value.value<ImageList>();
 
-                    if (int_changed || str_changed) {
-                        backup(_metaData[row]);
-                        _metaData[row].insert(name, value);
-                        _only_path_changed.removeAll(_metaData[row].path());
-                        rowChanged(idx);
-                        qDebug() << QString("set %1 to").arg(name) << value;
-                        return true;
+                        if (images != meta.images()) {
+                            backup(_metaData[row]);
+                            _metaData[row].setImages(images);
+                            _only_path_changed.removeAll(_metaData[row].path());
+                            rowChanged(idx);
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
-                        return false;
+                        bool int_changed = value.type() == QVariant::Int && (value.toInt() != meta[name].toInt());
+                        bool str_changed = value.type() != QVariant::Int && (value.toString() != meta[name].toString());
+
+                        if (int_changed || str_changed) {
+                            backup(_metaData[row]);
+                            _metaData[row].insert(name, value);
+                            _only_path_changed.removeAll(_metaData[row].path());
+                            rowChanged(idx);
+                            qDebug() << QString("set %1 to").arg(name) << value;
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 }
 

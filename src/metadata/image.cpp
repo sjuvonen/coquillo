@@ -9,6 +9,11 @@ namespace Coquillo {
 
         }
 
+        Image::Image(const QImage & source) {
+            setSource(source);
+            setMimeType("image/jpeg");
+        }
+
         bool Image::isNull() const {
             return !cache()->contains(id());
         }
@@ -35,6 +40,13 @@ namespace Coquillo {
 
         ImageCache * Image::cache() {
             return ImageCache::instance();
+        }
+
+        bool Image::operator==(const Image & other) const {
+            return _id == other._id
+                and _type == other._type
+                and _description == other._description
+                and _mime == other._mime;
         }
     }
 }

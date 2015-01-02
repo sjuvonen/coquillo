@@ -89,28 +89,7 @@ namespace Coquillo {
         connect(_ui->metaData->header(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
 
-//         setupTagEditor();
-
         QTimer::singleShot(1, this, SLOT(restoreSettings()));
-    }
-
-    void MainWindow::setupTagEditor() {
-
-//         _basicTags = new TagEditor::BasicTags(this);
-//         _basicTags->setModel(_ui->metaData->model());
-//         _ui->tagEditor->addTab(_basicTags, tr("Tags"));
-//
-//         connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-//             _basicTags, SLOT(setCurrentIndex(QModelIndex)));
-//
-//         connect(_basicTags, SIGNAL(cloneValue(QVariant, int)), SLOT(applyValue(QVariant, int)));
-//
-//         _rawTags = new TagEditor::RawData(this);
-//         _rawTags->setModel(_ui->metaData->model());
-//         _ui->tagEditor->addTab(_rawTags, tr("Raw"));
-//
-//         connect(_ui->metaData->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-//             _rawTags, SLOT(setCurrentIndex(QModelIndex)));
     }
 
     MainWindow::~MainWindow() {

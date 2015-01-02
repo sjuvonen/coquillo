@@ -49,7 +49,9 @@
       <string>Export</string>
      </property>
      <property name="icon">
-      <iconset theme="document-save"/>
+      <iconset theme="document-save">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
@@ -62,7 +64,9 @@
       <string>Add</string>
      </property>
      <property name="icon">
-      <iconset theme="list-add"/>
+      <iconset theme="list-add">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
@@ -75,7 +79,9 @@
       <string>Delete</string>
      </property>
      <property name="icon">
-      <iconset theme="list-remove"/>
+      <iconset theme="list-remove">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
@@ -127,12 +133,6 @@
        <height>64</height>
       </size>
      </property>
-     <property name="modelColumn">
-      <number>0</number>
-     </property>
-     <property name="uniformItemSizes">
-      <bool>true</bool>
-     </property>
     </widget>
    </item>
   </layout>
@@ -147,5 +147,59 @@
   <tabstop>cloneImages</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonDelete</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageTags</receiver>
+   <slot>removeCurrentRow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>103</x>
+     <y>546</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonAdd</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageTags</receiver>
+   <slot>addImage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>546</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonExport</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageTags</receiver>
+   <slot>exportCurrentImage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>23</x>
+     <y>546</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>removeCurrentRow()</slot>
+  <slot>addImage()</slot>
+  <slot>exportCurrentImage()</slot>
+ </slots>
 </ui>

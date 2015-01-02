@@ -11,6 +11,7 @@ namespace Coquillo {
         class Image {
             public:
                 Image();
+                Image(const QImage & source);
 
                 bool isNull() const;
                 const QImage scaled(const QSize & size) const;
@@ -29,6 +30,8 @@ namespace Coquillo {
                 inline void setMimeType(const QString & m) { _mime = m; }
                 inline quint16 id() const { return _id; }
 
+                bool operator==(const Image & other) const;
+
             private:
                 static ImageCache * cache();
 
@@ -41,5 +44,7 @@ namespace Coquillo {
         typedef QList<Image> ImageList;
     }
 }
+
+Q_DECLARE_METATYPE(Coquillo::MetaData::Image)
 
 #endif

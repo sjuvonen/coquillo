@@ -50,6 +50,7 @@ namespace Coquillo {
 
         void TagEditor::setModel(QAbstractItemModel * model) {
             _basic->setModel(model);
+            _images->setModel(model);
         }
 
         void TagEditor::setSelectionModel(QItemSelectionModel * model) {
