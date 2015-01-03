@@ -26,7 +26,7 @@ namespace Coquillo {
 
         MetaData::MetaData RawData::metaData() const {
             int role = MetaData::MetaDataModel::MetaDataRole;
-            return _current.data(role).value<MetaData::MetaData>();
+            return qvariant_cast<MetaData::MetaData>(_current.data(role));
         }
 
         void RawData::onDataChanged(const QModelIndex & tl, const QModelIndex & br) {

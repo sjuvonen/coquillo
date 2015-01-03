@@ -2,6 +2,7 @@
 #include <QCloseEvent>
 #include <QDebug>
 #include <QItemSelectionModel>
+#include <QNetworkAccessManager>
 #include <QPointer>
 #include <QSettings>
 #include <QSignalMapper>
@@ -27,6 +28,7 @@ namespace Coquillo {
         _ui->setupUi(this);
 
         _metaData = new MetaData::MetaDataModel(this);
+        _nam = new QNetworkAccessManager(this);
 
         QSortFilterProxyModel * sort_proxy = new QSortFilterProxyModel(this);
         sort_proxy->setSourceModel(_metaData);

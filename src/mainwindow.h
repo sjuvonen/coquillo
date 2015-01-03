@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class QNetworkAccessManager;
+
 namespace Ui {
     class MainWindow;
 };
@@ -50,6 +52,7 @@ namespace Coquillo {
             MetaData::MetaDataModel * _metaData;
             Processor::ParserWidget * _tagParser;
             Processor::RenameWidget * _fileRenamer;
+            QNetworkAccessManager * _nam;
     };
 }
 

@@ -176,7 +176,7 @@ namespace Coquillo {
                     MetaData meta = _metaData[row];
 
                     if (idx.column() == 16) {
-                        const ImageList images = value.value<ImageList>();
+                        const ImageList images = qvariant_cast<ImageList>(value);
 
                         if (images != meta.images()) {
                             backup(_metaData[row]);

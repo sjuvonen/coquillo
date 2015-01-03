@@ -63,8 +63,8 @@ namespace Coquillo {
             QList<Coquillo::MetaData::MetaData> items;
 
             for (int i = 0; i < model->rowCount(); i++) {
-                const int role = Coquillo::MetaData::MetaDataModel::MetaDataRole;
-                items << model->index(i, 0).data(role).value<Coquillo::MetaData::MetaData>();
+                const int role = MetaData::MetaDataModel::MetaDataRole;
+                items << qvariant_cast<MetaData::MetaData>(model->index(i, 0).data(role));
             }
 
             _ui->selected->verticalHeader()->show();
@@ -97,7 +97,7 @@ namespace Coquillo {
 
             QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->tableAlbumPreview->model());
             model->removeRows(0, model->rowCount());
-            const QList<QVariantMap> tracks = album["tracks"].value< QList<QVariantMap> >();
+            const QList<QVariantMap> tracks = qvariant_cast< QList<QVariantMap> >(album["tracks"]);
 
             foreach (const QVariantMap row, tracks) {
                 model->appendRow(QList<QStandardItem*>()
