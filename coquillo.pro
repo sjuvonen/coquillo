@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = coquillo
 
-QT += widgets
+QT += network widgets
 
 DEPENDPATH += src src/filebrowser src/metadata
 INCLUDEPATH += src
