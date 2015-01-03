@@ -27,14 +27,15 @@ FORMS += \
     ui/tagsearchdialog.ui \
 
 HEADERS += \
-    src/mainwindow.h \
     src/actionsignalmapper.h \
+    src/mainwindow.h \
     src/stringstoremodel.h \
     src/filebrowser/directorymodel.h \
     src/filebrowser/filebrowser.h \
     src/filters/abstractfilter.h \
     src/filters/parsediscnumber.h \
     src/filters/safefilenames.h \
+    src/filters/scaleimages.h \
     src/filters/trimwhitespace.h \
     src/metadata/filereader.h \
     src/metadata/filewriter.h \
@@ -68,12 +69,13 @@ HEADERS += \
     src/quick/metadataproxymodel.h \
 
 SOURCES += \
-    src/actionsignalmapper.cpp \
     src/main.cpp \
+    src/actionsignalmapper.cpp \
     src/mainwindow.cpp \
     src/stringstoremodel.cpp \
     src/filters/parsediscnumber.cpp \
     src/filters/safefilenames.cpp \
+    src/filters/scaleimages.cpp \
     src/filters/trimwhitespace.cpp \
     src/filebrowser/directorymodel.cpp \
     src/filebrowser/filebrowser.cpp \

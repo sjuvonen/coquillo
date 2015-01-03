@@ -8,6 +8,11 @@ namespace Coquillo {
     namespace MetaData {
         typedef QHash<QString, QImage> SizeCache;
 
+        /*
+         * NOTE: One option for tracking scaled images (for marking changed metadata)
+         * is to store the original image size in MetaData and then compare that
+         * to the size of referenced QImage.
+         */
         class ImageCache {
             public:
                 static ImageCache * instance();
@@ -19,7 +24,8 @@ namespace Coquillo {
                 const QImage scaled(quint16 id, const QSize & size);
                 void replace(quint16 id, const QImage & image) { _images.insert(id, image); }
                 int count() const { return _images.count(); }
- 
+                const QList<quint16> ids() const { return _images.keys(); }
+
                 void test() const;
 
             private:
