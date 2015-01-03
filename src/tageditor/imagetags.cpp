@@ -54,6 +54,7 @@ namespace Coquillo {
         }
 
         void ImageTags::exportCurrentImage() {
+            // TODO: Support multiple images at once
             if (!_ui->listImages->currentIndex().isValid()) {
                 return;
             }
@@ -73,7 +74,7 @@ namespace Coquillo {
 
         MetaData::MetaData ImageTags::metaData() const {
             int role = MetaData::MetaDataModel::MetaDataRole;
-            return imageModel()->sourceIndex().data(role).value<MetaData::MetaData>();
+            return qvariant_cast<MetaData::MetaData>(imageModel()->sourceIndex().data(role));
         }
 
         QAbstractItemModel * ImageTags::model() const {
@@ -81,6 +82,7 @@ namespace Coquillo {
         }
 
         void ImageTags::removeCurrentRow() {
+            // TODO: Support multiple rows at once
             qDebug() << "remove row" << _ui->listImages->currentIndex().row() <<
             _model->removeRow(_ui->listImages->currentIndex().row());
         }

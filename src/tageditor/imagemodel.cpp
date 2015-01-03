@@ -1,5 +1,10 @@
 
 #include <QDebug>
+#include <QMimeData>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
 
 #include "metadata/metadatamodel.h"
 #include "imagemodel.h"
@@ -8,16 +13,18 @@ namespace Coquillo {
     namespace TagEditor {
         ImageModel::ImageModel(QObject * parent)
         : QAbstractTableModel(parent), _source(0) {
-
+            _nam = new QNetworkAccessManager(this);
         }
 
         void ImageModel::addImage(const QImage & image) {
-            MetaData::ImageList images = metaData().images();
-            images << image;
-            const QVariant value = QVariant::fromValue<MetaData::ImageList>(images);
-            beginInsertRows(QModelIndex(), rowCount(), rowCount());
-            qDebug() << "add image" << sourceModel()->setData(sourceIndex(), value);
-            endInsertRows();
+            if (!image.isNull()) {
+                MetaData::ImageList images = metaData().images();
+                images << image;
+                const QVariant value = QVariant::fromValue<MetaData::ImageList>(images);
+                beginInsertRows(QModelIndex(), rowCount(), rowCount());
+                qDebug() << "add image" << sourceModel()->setData(sourceIndex(), value);
+                endInsertRows();
+            }
         }
 
         QVariant ImageModel::data(const QModelIndex & idx, int role) const {
@@ -47,11 +54,48 @@ namespace Coquillo {
             return QVariant();
         }
 
+        void ImageModel::download(const QUrl & url) {
+            QNetworkReply * reply = _nam->get(QNetworkRequest(url));
+
+            connect(reply, &QNetworkReply::finished, [=]() {
+                if (reply->isReadable()) {
+                    addImage(QImage::fromData(reply->readAll()));
+                    reply->deleteLater();
+                } else {
+                    qWarning() << "Failed to read data" << reply->error();
+                }
+            });
+        }
+
+        bool ImageModel::dropMimeData(const QMimeData * data, Qt::DropAction, int, int, const QModelIndex &) {
+            foreach (const QUrl & url, data->urls()) {
+                if (url.isLocalFile()) {
+                    addImage(QImage(url.path()));
+                } else {
+                    download(url);
+                }
+            }
+
+            if (data->hasImage()) {
+                addImage(qvariant_cast<QImage>(data->imageData()));
+            }
+
+            return false;
+        }
+
+        Qt::ItemFlags ImageModel::flags(const QModelIndex & idx) const {
+            return QAbstractTableModel::flags(idx) | Qt::ItemIsDropEnabled;
+        }
+
         QVariant ImageModel::headerData(int section, Qt::Orientation orientation, int role) const {
             if ((role == Qt::DisplayRole or role == Qt::EditRole) and orientation == Qt::Horizontal) {
                 return ((QStringList){tr("Image"), tr("Type"), tr("Description")})[section];
             }
             return QVariant();
+        }
+
+        QStringList ImageModel::mimeTypes() const {
+            return { "text/uri-list", "image/png", "image/jpeg", "image/gif" };
         }
 
         bool ImageModel::removeRows(int row, int count, const QModelIndex & parent) {
@@ -115,7 +159,7 @@ namespace Coquillo {
 
         MetaData::MetaData ImageModel::metaData() const {
             int role = MetaData::MetaDataModel::MetaDataRole;
-            return _index.data(role).value<MetaData::MetaData>();
+            return qvariant_cast<MetaData::MetaData>(_index.data(role));
         }
     }
 }
