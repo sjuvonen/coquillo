@@ -6,7 +6,6 @@
 
 namespace Coquillo {
     namespace MetaData {
-
         void MetaData::registerMapper(const QString & tag, Mapper * mapper) {
             mappers[tag] = mapper;
         }

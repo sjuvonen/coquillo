@@ -149,7 +149,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QTableView" name="tableSearchResults">
+            <widget class="QTableView" name="listResults">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -177,13 +177,10 @@
              <attribute name="horizontalHeaderCascadingSectionResizes">
               <bool>true</bool>
              </attribute>
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>16</number>
-             </attribute>
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>
              </attribute>
-             <attribute name="verticalHeaderVisible">
+             <attribute name="verticalHeaderHighlightSections">
               <bool>false</bool>
              </attribute>
             </widget>
@@ -205,7 +202,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QTableView" name="tableAlbumPreview">
+            <widget class="QTableView" name="listAlbum">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -236,6 +233,9 @@
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>
              </attribute>
+             <attribute name="verticalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
             </widget>
            </item>
           </layout>
@@ -251,189 +251,132 @@
       <attribute name="title">
        <string>Apply Results</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>All Items</string>
+        <widget class="QSplitter" name="splitter_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <property name="leftMargin">
-           <number>0</number>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Tracks</string>
           </property>
-          <item>
-           <widget class="QListView" name="source">
-            <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
-            </property>
-            <property name="dragEnabled">
-             <bool>true</bool>
-            </property>
-            <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDrop</enum>
-            </property>
-            <property name="defaultDropAction">
-             <enum>Qt::MoveAction</enum>
-            </property>
-            <property name="selectionMode">
-             <enum>QAbstractItemView::ExtendedSelection</enum>
-            </property>
-            <property name="selectionBehavior">
-             <enum>QAbstractItemView::SelectRows</enum>
-            </property>
-            <property name="uniformItemSizes">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
-         <item>
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <property name="leftMargin">
+            <number>0</number>
            </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QToolButton" name="buttonUnselect">
-           <property name="toolTip">
-            <string>Unselect item</string>
-           </property>
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="autoRaise">
-            <bool>true</bool>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::LeftArrow</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="buttonSelect">
-           <property name="toolTip">
-            <string>Select item</string>
-           </property>
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="autoRaise">
-            <bool>true</bool>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::RightArrow</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="line_4">
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="buttonMoveUp">
-           <property name="toolTip">
-            <string>Move up in order</string>
-           </property>
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="autoRaise">
-            <bool>true</bool>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::UpArrow</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="buttonMoveDown">
-           <property name="toolTip">
-            <string>Move down in order</string>
-           </property>
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="autoRaise">
-            <bool>true</bool>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::DownArrow</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="title">
-          <string>Selected Items (exact order)</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <property name="leftMargin">
-           <number>0</number>
+           <item row="0" column="1">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>124</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="4" column="1">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>124</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="1">
+            <widget class="QToolButton" name="buttonUp">
+             <property name="toolTip">
+              <string>Move selected items up</string>
+             </property>
+             <property name="text">
+              <string>Move up</string>
+             </property>
+             <property name="arrowType">
+              <enum>Qt::UpArrow</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QToolButton" name="buttonDown">
+             <property name="toolTip">
+              <string>Move selected items down</string>
+             </property>
+             <property name="text">
+              <string>Move down</string>
+             </property>
+             <property name="arrowType">
+              <enum>Qt::DownArrow</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="0" rowspan="5">
+            <widget class="QTableView" name="listTracks">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>Album Details</string>
           </property>
-          <item>
-           <widget class="QTableView" name="selected">
-            <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
-            </property>
-            <property name="dragEnabled">
-             <bool>true</bool>
-            </property>
-            <property name="dragDropMode">
-             <enum>QAbstractItemView::DragDrop</enum>
-            </property>
-            <property name="defaultDropAction">
-             <enum>Qt::MoveAction</enum>
-            </property>
-            <property name="selectionBehavior">
-             <enum>QAbstractItemView::SelectRows</enum>
-            </property>
-            <property name="showGrid">
-             <bool>false</bool>
-            </property>
-            <attribute name="horizontalHeaderVisible">
-             <bool>false</bool>
-            </attribute>
-            <attribute name="horizontalHeaderStretchLastSection">
-             <bool>true</bool>
-            </attribute>
-           </widget>
-          </item>
-         </layout>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QTableView" name="listPreview">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="dragEnabled">
+              <bool>true</bool>
+             </property>
+             <property name="dragDropMode">
+              <enum>QAbstractItemView::DragDrop</enum>
+             </property>
+             <property name="defaultDropAction">
+              <enum>Qt::MoveAction</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -457,15 +400,11 @@
   <tabstop>textAlbum</tabstop>
   <tabstop>textArtist</tabstop>
   <tabstop>buttonSearch</tabstop>
-  <tabstop>tableSearchResults</tabstop>
-  <tabstop>tableAlbumPreview</tabstop>
+  <tabstop>listResults</tabstop>
+  <tabstop>listAlbum</tabstop>
   <tabstop>dialogButtons</tabstop>
-  <tabstop>selected</tabstop>
-  <tabstop>buttonUnselect</tabstop>
-  <tabstop>buttonSelect</tabstop>
-  <tabstop>source</tabstop>
-  <tabstop>buttonMoveUp</tabstop>
-  <tabstop>buttonMoveDown</tabstop>
+  <tabstop>listPreview</tabstop>
+  <tabstop>listTracks</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -502,86 +441,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonMoveDown</sender>
-   <signal>clicked()</signal>
-   <receiver>TagSearchDialog</receiver>
-   <slot>moveCurrentDown()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>471</x>
-     <y>248</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>257</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonMoveUp</sender>
-   <signal>clicked()</signal>
-   <receiver>TagSearchDialog</receiver>
-   <slot>moveCurrentUp()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>471</x>
-     <y>210</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>257</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonSelect</sender>
-   <signal>clicked()</signal>
-   <receiver>TagSearchDialog</receiver>
-   <slot>selectCurrent()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>471</x>
-     <y>163</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>257</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonUnselect</sender>
-   <signal>clicked()</signal>
-   <receiver>TagSearchDialog</receiver>
-   <slot>unselectCurrent()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>471</x>
-     <y>125</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>257</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>source</sender>
-   <signal>activated(QModelIndex)</signal>
-   <receiver>TagSearchDialog</receiver>
-   <slot>selectCurrent()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>198</x>
-     <y>302</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>257</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>buttonSearch</sender>
    <signal>clicked()</signal>
    <receiver>TagSearchDialog</receiver>
@@ -601,11 +460,43 @@
    <sender>mainTabs</sender>
    <signal>currentChanged(int)</signal>
    <receiver>TagSearchDialog</receiver>
-   <slot>reactToTabChange(int)</slot>
+   <slot>onTabChange(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>455</x>
      <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>455</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonUp</sender>
+   <signal>clicked()</signal>
+   <receiver>TagSearchDialog</receiver>
+   <slot>moveCurrentUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>428</x>
+     <y>220</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>455</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonDown</sender>
+   <signal>clicked()</signal>
+   <receiver>TagSearchDialog</receiver>
+   <slot>moveCurrentDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>428</x>
+     <y>258</y>
     </hint>
     <hint type="destinationlabel">
      <x>455</x>
@@ -620,6 +511,6 @@
   <slot>selectCurrent()</slot>
   <slot>unselectCurrent()</slot>
   <slot>executeSearch()</slot>
-  <slot>reactToTabChange(int)</slot>
+  <slot>onTabChange(int)</slot>
  </slots>
 </ui>

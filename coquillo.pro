@@ -65,6 +65,7 @@ HEADERS += \
     src/tageditor/tageditor.h \
     src/webtags/filterproxymodel.h \
     src/webtags/tagsearchdialog.h \
+    src/webtags/trackselectionmodel.h \
     # Experimental
     src/quick/metadataproxymodel.h \
 
@@ -107,5 +108,6 @@ SOURCES += \
     src/tageditor/tageditor.cpp \
     src/webtags/filterproxymodel.cpp \
     src/webtags/tagsearchdialog.cpp \
+    src/webtags/trackselectionmodel.cpp \
     # Experimental
     src/quick/metadataproxymodel.cpp \

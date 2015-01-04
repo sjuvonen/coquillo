@@ -4,7 +4,7 @@
 
 #include <metadata/metadatamodel.h>
 #include <searcher/musicbrainz.h>
-#include "filterproxymodel.h"
+#include "trackselectionmodel.h"
 #include "tagsearchdialog.h"
 #include "ui_tagsearchdialog.h"
 
@@ -14,34 +14,34 @@ namespace Coquillo {
         : QDialog(parent) {
             _ui = new Ui::TagSearchDialog;
             _ui->setupUi(this);
-            _ui->source->setModel(new FilterProxyModel(this));
-
-            FilterProxyModel * selected = new FilterProxyModel(this);
-            selected->setFilterMode(FilterProxyModel::ShowFiltered);
-            _ui->selected->setModel(selected);
+            _ui->listTracks->setModel(new TrackSelectionModel(this));
+            _ui->listTracks->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
             QStandardItemModel * search_results = new QStandardItemModel(this);
             search_results->setHorizontalHeaderLabels(QStringList() << tr("Title") << tr("Artist") << tr("D#") << tr("ID") << tr("Source"));
-            _ui->tableSearchResults->setModel(search_results);
+            _ui->listResults->setModel(search_results);
 
             QStandardItemModel * album_preview = new QStandardItemModel(this);
             album_preview->setHorizontalHeaderLabels(QStringList() << tr("Title") << tr("Artist"));
-            _ui->tableAlbumPreview->setModel(album_preview);
+            _ui->listAlbum->setModel(album_preview);
+            _ui->listPreview->setModel(album_preview);
 
-            connect(_ui->tableSearchResults->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
+            connect(_ui->listResults->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
                 SLOT(executeFetchAlbum(QModelIndex)));
 
             addSearcher(new Searcher::MusicBrainz(this));
             _ui->textAlbum->setFocus(Qt::ActiveWindowFocusReason);
 
-            _ui->tableSearchResults->horizontalHeader()->resizeSection(0, 240);
-            _ui->tableSearchResults->horizontalHeader()->resizeSection(1, 120);
-            _ui->tableSearchResults->horizontalHeader()->resizeSection(2, 40);
-            _ui->tableSearchResults->horizontalHeader()->resizeSection(3, 40);
-            _ui->tableSearchResults->horizontalHeader()->hideSection(3);
-            _ui->tableSearchResults->horizontalHeader()->hideSection(4);
-            _ui->tableAlbumPreview->horizontalHeader()->resizeSection(0, 260);
-            reactToTabChange(0);
+            _ui->listResults->horizontalHeader()->resizeSection(0, 240);
+            _ui->listResults->horizontalHeader()->resizeSection(1, 120);
+            _ui->listResults->horizontalHeader()->resizeSection(2, 40);
+            _ui->listResults->horizontalHeader()->resizeSection(3, 40);
+            _ui->listResults->horizontalHeader()->hideSection(3);
+            _ui->listResults->horizontalHeader()->hideSection(4);
+            _ui->listAlbum->horizontalHeader()->resizeSection(0, 260);
+
+            _ui->listPreview->horizontalHeader()->restoreState(_ui->listAlbum->horizontalHeader()->saveState());
+            onTabChange(0);
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -49,29 +49,12 @@ namespace Coquillo {
         }
 
         void TagSearchDialog::setModel(QAbstractItemModel * model) {
-            static_cast<FilterProxyModel*>(_ui->source->model())->setSourceModel(model);
-            static_cast<FilterProxyModel*>(_ui->selected->model())->setSourceModel(model);
-            _ui->source->setModelColumn(1);
+            qobject_cast<TrackSelectionModel*>(_ui->listTracks->model())->setSourceModel(model);
             _model = model;
-
-            for (int i = 0; i < _ui->selected->horizontalHeader()->count(); i++) {
-                if (i != _ui->source->modelColumn()) {
-                    _ui->selected->horizontalHeader()->hideSection(i);
-                }
-            }
-
-            QList<Coquillo::MetaData::MetaData> items;
-
-            for (int i = 0; i < model->rowCount(); i++) {
-                const int role = MetaData::MetaDataModel::MetaDataRole;
-                items << qvariant_cast<MetaData::MetaData>(model->index(i, 0).data(role));
-            }
-
-            _ui->selected->verticalHeader()->show();
         }
 
         QAbstractItemModel * TagSearchDialog::model() const {
-            return _model.data();
+            return _model;
         }
 
         void TagSearchDialog::addSearcher(Searcher::AbstractSearcher * searcher) {
@@ -95,7 +78,7 @@ namespace Coquillo {
         void TagSearchDialog::showAlbumInfo(const QVariantMap & album) {
             qDebug() << "Show album info";
 
-            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->tableAlbumPreview->model());
+            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->listAlbum->model());
             model->removeRows(0, model->rowCount());
             const QList<QVariantMap> tracks = qvariant_cast< QList<QVariantMap> >(album["tracks"]);
 
@@ -108,7 +91,7 @@ namespace Coquillo {
 
         void TagSearchDialog::showResults(const QList<QVariantMap> & results, const QString & source) {
             qDebug() << "got results:" << results.count();
-            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->tableSearchResults->model());
+            QStandardItemModel * model = qobject_cast<QStandardItemModel*>(_ui->listResults->model());
 
             foreach (const QVariantMap row, results) {
                 model->appendRow(QList<QStandardItem*>()
@@ -140,8 +123,8 @@ namespace Coquillo {
                 data["album"] = _ui->textAlbum->text();
             }
 
-            int total = _ui->tableSearchResults->model()->rowCount();
-            _ui->tableSearchResults->model()->removeRows(0, total);
+            int total = _ui->listResults->model()->rowCount();
+            _ui->listResults->model()->removeRows(0, total);
 
             if (data.count()) {
                 search(data);
@@ -149,51 +132,19 @@ namespace Coquillo {
         }
 
         void TagSearchDialog::moveCurrentDown() {
-
+//             qDebug() << "move down";
+            const QModelIndexList rows = _ui->listTracks->selectionModel()->selectedRows();
+            qobject_cast<TrackSelectionModel*>(_ui->listTracks->model())->shiftRows(rows, 1);
         }
 
         void TagSearchDialog::moveCurrentUp() {
-
+//             qDebug() << "move up";
+            const QModelIndexList rows = _ui->listTracks->selectionModel()->selectedRows();
+            qobject_cast<TrackSelectionModel*>(_ui->listTracks->model())->shiftRows(rows, -1);
         }
 
-        void TagSearchDialog::reactToTabChange(int current) {
+        void TagSearchDialog::onTabChange(int current) {
             _ui->dialogButtons->button(QDialogButtonBox::Apply)->setEnabled(current == 1);
-        }
-
-        void TagSearchDialog::selectCurrent() {
-            QModelIndexList indices = _ui->source->selectionModel()->selectedRows();
-            QStringList filters;
-
-            foreach (const QModelIndex idx, indices) {
-                const QString path = idx.data(Coquillo::MetaData::MetaDataModel::FilePathRole).toString();
-                filters << path;
-            }
-
-            selectPaths(filters);
-        }
-
-        void TagSearchDialog::unselectCurrent() {
-            QModelIndexList indices = _ui->selected->selectionModel()->selectedRows();
-            QStringList filters;
-
-            foreach (const QModelIndex idx, indices) {
-                const QString path = idx.data(Coquillo::MetaData::MetaDataModel::FilePathRole).toString();
-                filters << path;
-            }
-
-            unselectPaths(filters);
-        }
-
-        void TagSearchDialog::selectPaths(const QStringList & paths) {
-            static_cast<FilterProxyModel*>(_ui->source->model())->addFilters(paths);
-            static_cast<FilterProxyModel*>(_ui->selected->model())->addFilters(paths);
-        }
-
-        void TagSearchDialog::unselectPaths(const QStringList & paths) {
-            foreach (const QString path, paths) {
-                static_cast<FilterProxyModel*>(_ui->source->model())->removeFilter(path);
-                static_cast<FilterProxyModel*>(_ui->selected->model())->removeFilter(path);
-            }
         }
     }
 }

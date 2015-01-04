@@ -33,16 +33,12 @@ namespace Coquillo {
                 void executeFetchAlbum(const QModelIndex & idx);
                 void moveCurrentDown();
                 void moveCurrentUp();
-                void reactToTabChange(int current);
-                void selectCurrent();
+                void onTabChange(int current);
                 void showAlbumInfo(const QVariantMap & album);
                 void showResults(const QList<QVariantMap> & results, const QString & source);
-                void unselectCurrent();
 
             private:
                 void search(const QVariantMap & params);
-                void selectPaths(const QStringList & paths);
-                void unselectPaths(const QStringList & paths);
                 Ui::TagSearchDialog * _ui;
                 QPointer<QAbstractItemModel> _model;
                 QMap<QString, Searcher::AbstractSearcher*> _searchers;

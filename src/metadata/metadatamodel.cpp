@@ -79,16 +79,9 @@ namespace Coquillo {
             if (role == Qt::DisplayRole) {
                 if (orientation == Qt::Horizontal) {
                     return _columns[section];
-                } else {
-                    return section;
                 }
             }
-            return QVariant();
-//             if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
-//                 qDebug() << section << role;
-//                 return section;
-//             }
-//             return role == Qt::DisplayRole ? _columns[section] : QVariant();
+            return QAbstractItemModel::headerData(section, orientation, role);
         }
 
         QVariant MetaDataModel::data(const QModelIndex & idx, int role) const {
