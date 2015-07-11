@@ -153,11 +153,6 @@ namespace Coquillo {
 
     void FileBrowser::addToHistory(const QString & directory) {
         _ui->directory->insertItem(0, directory);
-//         if (_ui->directory->findText(directory) == -1) {
-//             qDebug() << "Push to history";
-// //             _history.data()->submit();
-//             _ui->directory->insertItem(0, directory);
-//         }
     }
 
     void FileBrowser::changeDirectoryFromIndex(const QModelIndex & idx) {
@@ -236,8 +231,6 @@ namespace Coquillo {
         const QString path = QFileInfo(_ui->path->text()).absoluteFilePath();
         const QModelIndexList indices = model->match(model->index(0, 1), Qt::DisplayRole, path, 1, Qt::MatchFixedString);
 
-        qDebug() << "found matches" << indices.count();
-
         if (indices.count() > 0) {
             qDebug() << "Removed bookmark" << path << indices[0].row();
             model->removeRow(indices[0].row());
@@ -248,7 +241,6 @@ namespace Coquillo {
     }
 
     void FileBrowser::historyGoBack() {
-        qDebug() << _ui->directory->currentIndex();
         const QString path = _history.data()->index(1, 0).data().toString();
         if (path.length() > 0) {
             changeDirectory(path);
