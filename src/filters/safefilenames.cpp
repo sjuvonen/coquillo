@@ -1,6 +1,6 @@
 
-#include "metadata/metadata.h"
-#include "safefilenames.h"
+#include "metadata/metadata.hpp"
+#include "safefilenames.hpp"
 
 namespace Coquillo {
     namespace Filter {

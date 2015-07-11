@@ -1,10 +1,10 @@
 
 #include <QDebug>
 
-#include "basictags.h"
-#include "imagetags.h"
-#include "rawdata.h"
-#include "tageditor.h"
+#include "basictags.hpp"
+#include "imagetags.hpp"
+#include "rawdata.hpp"
+#include "tageditor.hpp"
 
 namespace Coquillo {
     namespace TagEditor {

@@ -1,7 +1,7 @@
 #ifndef COQUILLO_PROCESSOR_PATTERNWIDGET_H
 #define COQUILLO_PROCESSOR_PATTERNWIDGET_H
 
-#include "basewidget.h"
+#include "basewidget.hpp"
 
 namespace Ui {
     class PatternWidget;

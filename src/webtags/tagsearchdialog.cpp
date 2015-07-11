@@ -2,10 +2,10 @@
 #include <QDebug>
 #include <QStandardItemModel>
 
-#include <metadata/metadatamodel.h>
-#include <searcher/musicbrainz.h>
-#include "trackselectionmodel.h"
-#include "tagsearchdialog.h"
+#include "metadata/metadatamodel.hpp"
+#include "searcher/musicbrainz.hpp"
+#include "trackselectionmodel.hpp"
+#include "tagsearchdialog.hpp"
 #include "ui_tagsearchdialog.h"
 
 namespace Coquillo {

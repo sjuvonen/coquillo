@@ -4,9 +4,9 @@
 #include <taglib/id3v2tag.h>
 #include <taglib/textidentificationframe.h>
 #include <taglib/urllinkframe.h>
-#include "metadata/image.h"
-#include "metadata/mapper.h"
-#include "id3v2.h"
+#include "metadata/image.hpp"
+#include "metadata/mapper.hpp"
+#include "id3v2.hpp"
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 

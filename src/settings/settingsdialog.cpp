@@ -5,7 +5,7 @@
 #include <QSettings>
 
 #include "ui_settingsdialog.h"
-#include "settingsdialog.h"
+#include "settingsdialog.hpp"
 
 namespace Coquillo {
     namespace Settings {

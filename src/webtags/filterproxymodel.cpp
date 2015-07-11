@@ -1,8 +1,8 @@
 
 #include <QDebug>
 
-#include <metadata/metadatamodel.h>
-#include "filterproxymodel.h"
+#include "metadata/metadatamodel.hpp"
+#include "filterproxymodel.hpp"
 
 namespace Coquillo {
     namespace WebTags {

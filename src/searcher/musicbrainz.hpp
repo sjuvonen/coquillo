@@ -4,7 +4,7 @@
 #include <string>
 #include <musicbrainz5/NameCreditList.h>
 #include <musicbrainz5/ReleaseList.h>
-#include "abstractsearcher.h"
+#include "abstractsearcher.hpp"
 
 namespace MusicBrainz5 {
     class CQuery;

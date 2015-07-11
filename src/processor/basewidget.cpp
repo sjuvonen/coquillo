@@ -3,7 +3,7 @@
 #include <QItemSelectionModel>
 #include <QDebug>
 
-#include "basewidget.h"
+#include "basewidget.hpp"
 
 namespace Coquillo {
     namespace Processor {

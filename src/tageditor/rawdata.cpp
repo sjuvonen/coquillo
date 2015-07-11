@@ -1,8 +1,8 @@
 
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
-#include "metadata/metadatamodel.h"
-#include "rawdata.h"
+#include "metadata/metadatamodel.hpp"
+#include "rawdata.hpp"
 #include "ui_rawdata.h"
 
 namespace Coquillo {

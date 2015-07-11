@@ -1,6 +1,6 @@
 
-#include "image.h"
-#include "imagecache.h"
+#include "image.hpp"
+#include "imagecache.hpp"
 
 namespace Coquillo {
     namespace MetaData {

@@ -10,11 +10,11 @@
 #include <taglib/tfile.h>
 #include <taglib/vorbisfile.h>
 
-#include "filereader.h"
-#include "metadata.h"
-#include "tags/default.h"
-#include "tags/id3v2.h"
-#include "tags/xiphcomment.h"
+#include "filereader.hpp"
+#include "metadata.hpp"
+#include "tags/default.hpp"
+#include "tags/id3v2.hpp"
+#include "tags/xiphcomment.hpp"
 
 namespace Coquillo {
     namespace MetaData {

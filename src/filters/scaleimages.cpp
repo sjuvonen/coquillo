@@ -1,7 +1,7 @@
 
-#include "metadata/imagecache.h"
-#include "metadata/metadata.h"
-#include "scaleimages.h"
+#include "metadata/imagecache.hpp"
+#include "metadata/metadata.hpp"
+#include "scaleimages.hpp"
 
 namespace Coquillo {
     namespace Filter {

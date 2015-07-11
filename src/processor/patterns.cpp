@@ -3,7 +3,7 @@
 #include <QRegularExpression>
 #include <QVariant>
 
-#include "patterns.h"
+#include "patterns.hpp"
 
 namespace Coquillo {
     namespace Processor {

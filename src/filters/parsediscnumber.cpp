@@ -1,6 +1,6 @@
 
-#include "metadata/metadata.h"
-#include "parsediscnumber.h"
+#include "metadata/metadata.hpp"
+#include "parsediscnumber.hpp"
 
 namespace Coquillo {
     namespace Filter {

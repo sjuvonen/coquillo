@@ -1,6 +1,6 @@
 
 #include <QAction>
-#include "actionsignalmapper.h"
+#include "actionsignalmapper.hpp"
 
 namespace Coquillo {
     void ActionSignalMapper::map(QAction * action) {

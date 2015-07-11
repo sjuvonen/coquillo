@@ -2,9 +2,9 @@
 #include <QDebug>
 #include <QDir>
 
-#include <metadata/metadatamodel.h>
-#include "parserwidget.h"
-#include "patterns.h"
+#include "metadata/metadatamodel.hpp"
+#include "parserwidget.hpp"
+#include "patterns.hpp"
 #include "ui_parserwidget.h"
 
 namespace Coquillo {

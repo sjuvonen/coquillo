@@ -5,8 +5,8 @@
 #include <QString>
 #include <QVariant>
 
-#include "image.h"
-#include "tag.h"
+#include "image.hpp"
+#include "tag.hpp"
 
 namespace Coquillo {
     namespace MetaData {

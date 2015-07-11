@@ -9,8 +9,8 @@
 #include <QMouseEvent>
 #include <QSortFilterProxyModel>
 
-#include "directorymodel.h"
-#include "filebrowser.h"
+#include "directorymodel.hpp"
+#include "filebrowser.hpp"
 #include "ui_filebrowser.h"
 
 namespace Coquillo {

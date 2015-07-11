@@ -4,9 +4,9 @@
 #include <QItemSelectionModel>
 #include <QTimer>
 
-#include <metadata/metadatamodel.h>
-#include "patterns.h"
-#include "renamewidget.h"
+#include "metadata/metadatamodel.hpp"
+#include "patterns.hpp"
+#include "renamewidget.hpp"
 #include "ui_renamewidget.h"
 
 namespace Coquillo {

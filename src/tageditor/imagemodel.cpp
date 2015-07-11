@@ -6,8 +6,8 @@
 #include <QNetworkRequest>
 #include <QUrl>
 
-#include "metadata/metadatamodel.h"
-#include "imagemodel.h"
+#include "metadata/metadatamodel.hpp"
+#include "imagemodel.hpp"
 
 namespace Coquillo {
     namespace TagEditor {

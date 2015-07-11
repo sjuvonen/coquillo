@@ -1,7 +1,7 @@
 
 #include <QDebug>
 
-#include "metadataproxymodel.h"
+#include "metadataproxymodel.hpp"
 
 namespace Coquillo {
     namespace Quick {

@@ -5,7 +5,7 @@
 #include <QString>
 #include <QVariant>
 
-#include "tag.h"
+#include "tag.hpp"
 
 namespace Coquillo {
     namespace MetaData {

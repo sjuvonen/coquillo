@@ -1,7 +1,7 @@
 #ifndef COQUILLO_FILTER_TRIMWHITESPACE_H
 #define COQUILLO_FILTER_TRIMWHITESPACE_H
 
-#include "abstractfilter.h"
+#include "abstractfilter.hpp"
 
 namespace Coquillo {
     namespace Filter {

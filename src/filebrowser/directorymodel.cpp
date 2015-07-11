@@ -1,7 +1,7 @@
 
 #include <QDebug>
 #include <QFileSystemModel>
-#include "directorymodel.h"
+#include "directorymodel.hpp"
 
 namespace Coquillo {
     DirectoryModel::DirectoryModel(QObject * parent)

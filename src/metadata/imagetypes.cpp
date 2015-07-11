@@ -1,7 +1,7 @@
 
 #include <QStringList>
 #include <taglib/flacpicture.h>
-#include "imagetypes.h"
+#include "imagetypes.hpp"
 
 #define tr(str) QObject::tr(str)
 

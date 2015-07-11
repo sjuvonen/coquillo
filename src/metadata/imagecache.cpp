@@ -1,6 +1,6 @@
 
 #include <QDebug>
-#include "imagecache.h"
+#include "imagecache.hpp"
 
 namespace Coquillo {
     namespace MetaData {

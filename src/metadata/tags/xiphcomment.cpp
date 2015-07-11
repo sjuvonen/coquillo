@@ -1,9 +1,9 @@
 
 #include <QDebug>
 #include <taglib/xiphcomment.h>
-#include "metadata/image.h"
-#include "metadata/mapper.h"
-#include "xiphcomment.h"
+#include "metadata/image.hpp"
+#include "metadata/mapper.hpp"
+#include "xiphcomment.hpp"
 
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
 #define T2QString(str) QString::fromUtf8((str).toCString(true))

@@ -12,8 +12,8 @@
 #include <musicbrainz5/Recording.h>
 #include <musicbrainz5/Release.h>
 #include <musicbrainz5/Track.h>
-#include <metadata/metadata.h>
-#include "musicbrainz.h"
+#include "metadata/metadata.hpp"
+#include "musicbrainz.hpp"
 
 namespace Coquillo {
     namespace Searcher {

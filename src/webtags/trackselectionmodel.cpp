@@ -1,6 +1,6 @@
 
 #include <QDebug>
-#include "trackselectionmodel.h"
+#include "trackselectionmodel.hpp"
 
 namespace Coquillo {
     namespace WebTags {

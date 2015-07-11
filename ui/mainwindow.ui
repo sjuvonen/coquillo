@@ -306,7 +306,7 @@
   <customwidget>
    <class>Coquillo::TagEditor::TagEditor</class>
    <extends>QTabWidget</extends>
-   <header>tageditor/tageditor.h</header>
+   <header>tageditor/tageditor.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

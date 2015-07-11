@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QRunnable>
-#include "metadata.h"
+#include "metadata.hpp"
 
 namespace TagLib {
     class File;

@@ -1,6 +1,6 @@
 
-#include "metadata/metadata.h"
-#include "trimwhitespace.h"
+#include "metadata/metadata.hpp"
+#include "trimwhitespace.hpp"
 
 namespace Coquillo {
     namespace Filter {

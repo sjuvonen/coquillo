@@ -1,7 +1,7 @@
 #ifndef COQUILLO_PROCESSOR_PARSERWIDGET_H
 #define COQUILLO_PROCESSOR_PARSERWIDGET_H
 
-#include "patternwidget.h"
+#include "patternwidget.hpp"
 
 namespace Ui {
     class ParserWidget;

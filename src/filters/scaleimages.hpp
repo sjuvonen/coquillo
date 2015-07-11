@@ -1,7 +1,7 @@
 #ifndef COQUILLO_FILTER_SCALEIMAGES_H
 #define COQUILLO_FILTER_SCALEIMAGES_H
 
-#include "abstractfilter.h"
+#include "abstractfilter.hpp"
 
 namespace Coquillo {
     namespace Filter {

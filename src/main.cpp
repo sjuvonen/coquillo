@@ -3,7 +3,7 @@
 #include <QMap>
 #include <QSettings>
 #include <QStandardPaths>
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 
 void prepare_settings() {
     QSettings settings;

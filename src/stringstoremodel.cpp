@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QStandardItemModel>
-#include "stringstoremodel.h"
+#include "stringstoremodel.hpp"
 
 namespace Coquillo {
     StringStoreModel::StringStoreModel(QObject * parent)

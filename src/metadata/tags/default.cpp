@@ -1,7 +1,7 @@
 
 #include <taglib/tstring.h>
-#include "metadata/image.h"
-#include "default.h"
+#include "metadata/image.hpp"
+#include "default.hpp"
 
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
 #define T2QString(str) QString::fromUtf8((str).toCString(true))

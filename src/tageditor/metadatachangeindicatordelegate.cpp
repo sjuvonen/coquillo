@@ -1,7 +1,7 @@
 #include <QDebug>
 
-#include <metadata/metadatamodel.h>
-#include "metadatachangeindicatordelegate.h"
+#include "metadata/metadatamodel.hpp"
+#include "metadatachangeindicatordelegate.hpp"
 
 namespace Coquillo {
     MetaDataChangeIndicatorDelegate::MetaDataChangeIndicatorDelegate(QObject * parent)

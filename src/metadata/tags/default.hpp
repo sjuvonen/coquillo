@@ -2,7 +2,7 @@
 #define COQUILLO_METADATA_TAG_ABSTRACTTAG_H
 
 #include <taglib/tag.h>
-#include "metadata/tag.h"
+#include "metadata/tag.hpp"
 
 namespace Coquillo {
     namespace MetaData {

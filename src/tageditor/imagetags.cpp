@@ -2,10 +2,10 @@
 #include <QDebug>
 #include <QDataWidgetMapper>
 #include <QFileDialog>
-#include "metadata/imagetypes.h"
-#include "metadata/metadatamodel.h"
-#include "imagemodel.h"
-#include "imagetags.h"
+#include "metadata/imagetypes.hpp"
+#include "metadata/metadatamodel.hpp"
+#include "imagemodel.hpp"
+#include "imagetags.hpp"
 #include "ui_imagetags.h"
 
 namespace Coquillo {

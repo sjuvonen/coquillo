@@ -1,7 +1,7 @@
 #ifndef COQUILLO_METADATA_TAG_ID3V2_H
 #define COQUILLO_METADATA_TAG_ID3V2_H
 
-#include "default.h"
+#include "default.hpp"
 
 namespace TagLib {
     namespace ID3v2 {

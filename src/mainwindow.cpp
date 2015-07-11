@@ -9,17 +9,17 @@
 #include <QSortFilterProxyModel>
 #include <QTimer>
 
-#include "actionsignalmapper.h"
-#include "stringstoremodel.h"
-#include "mainwindow.h"
+#include "actionsignalmapper.hpp"
+#include "stringstoremodel.hpp"
+#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
-#include "filebrowser/filebrowser.h"
-#include "metadata/metadatamodel.h"
-#include "processor/renamewidget.h"
-#include "processor/parserwidget.h"
-#include "settings/settingsdialog.h"
-#include "webtags/tagsearchdialog.h"
+#include "filebrowser/filebrowser.hpp"
+#include "metadata/metadatamodel.hpp"
+#include "processor/renamewidget.hpp"
+#include "processor/parserwidget.hpp"
+#include "settings/settingsdialog.hpp"
+#include "webtags/tagsearchdialog.hpp"
 
 namespace Coquillo {
     MainWindow::MainWindow(QWidget * parent)

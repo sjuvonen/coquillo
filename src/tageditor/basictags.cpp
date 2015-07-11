@@ -3,8 +3,8 @@
 #include <QButtonGroup>
 #include <QDataWidgetMapper>
 #include <QDebug>
-#include "basictags.h"
-#include "metadatachangeindicatordelegate.h"
+#include "basictags.hpp"
+#include "metadatachangeindicatordelegate.hpp"
 #include "ui_basictags.h"
 
 namespace Coquillo {

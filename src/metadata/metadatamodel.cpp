@@ -8,11 +8,11 @@
 #include <QIcon>
 #include <QThreadPool>
 
-#include "mediacrawler.h"
-#include "metadata.h"
-#include "metadatamodel.h"
-#include "filereader.h"
-#include "filewriter.h"
+#include "mediacrawler.hpp"
+#include "metadata.hpp"
+#include "metadatamodel.hpp"
+#include "filereader.hpp"
+#include "filewriter.hpp"
 
 namespace Coquillo {
     namespace MetaData {

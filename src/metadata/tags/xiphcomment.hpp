@@ -1,7 +1,7 @@
 #ifndef COQUILLO_METADATA_TAG_XIPHCOMMENT_H
 #define COQUILLO_METADATA_TAG_XIPHCOMMENT_H
 
-#include "default.h"
+#include "default.hpp"
 
 namespace TagLib {
     namespace Ogg {

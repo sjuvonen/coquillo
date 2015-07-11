@@ -1,4 +1,4 @@
-#include "abstractsearcher.h"
+#include "abstractsearcher.hpp"
 
 namespace Coquillo {
     namespace Searcher {

@@ -1,7 +1,7 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include "mediacrawler.h"
+#include "mediacrawler.hpp"
 
 namespace Coquillo {
     namespace MetaData {

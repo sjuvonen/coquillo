@@ -1,8 +1,8 @@
 
 #include <QDebug>
 
-#include "mapper.h"
-#include "metadata.h"
+#include "mapper.hpp"
+#include "metadata.hpp"
 
 namespace Coquillo {
     namespace MetaData {

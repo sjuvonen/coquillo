@@ -3,7 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QHash>
-#include "metadata.h"
+#include "metadata.hpp"
 
 namespace Coquillo {
     namespace MetaData {

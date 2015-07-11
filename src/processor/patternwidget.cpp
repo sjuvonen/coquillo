@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "patternwidget.h"
+#include "patternwidget.hpp"
 
 namespace Coquillo {
     namespace Processor {

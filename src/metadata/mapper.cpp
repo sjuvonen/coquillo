@@ -1,6 +1,6 @@
 
-#include "metadata.h"
-#include "mapper.h"
+#include "metadata.hpp"
+#include "mapper.hpp"
 
 namespace Coquillo {
     namespace MetaData {
