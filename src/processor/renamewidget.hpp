@@ -21,6 +21,7 @@ namespace Coquillo {
                 void updatePreview();
 
             private:
+                QVariantHash sourceValues(const QModelIndex &) const;
                 Ui::RenameWidget * _ui;
         };
     }

@@ -17,7 +17,9 @@ namespace Coquillo {
                 {"genre", "%g"},
                 {"comment", "%c"},
                 {"original_artist", "%q"},
-                {"ignore", "%i"}
+                {"ignore", "%i"},
+                {"padded_number", "%N"},
+                {"padded_disc", "%D"}
             };
         }
 
@@ -32,7 +34,7 @@ namespace Coquillo {
             foreach (const QString key, _symbols.keys()) {
                 const QString value = data.value(key).toString();
                 const QString rx_pattern = QString("(?<!%)%1").arg(_symbols[key]);
-                const QRegularExpression rx(rx_pattern, QRegularExpression::CaseInsensitiveOption);
+                const QRegularExpression rx(rx_pattern);
                 result.replace(rx, value);
             }
 
@@ -50,10 +52,6 @@ namespace Coquillo {
                 const QString key = _symbols.key(symbols[i-1]);
                 values[key] = matches[i];
             }
-
-//             qDebug() << extractSymbols(pattern);
-//             qDebug() << patternToRegex(pattern);
-//             qDebug() << rx.match(string).capturedTexts();
 
             return values;
         }
