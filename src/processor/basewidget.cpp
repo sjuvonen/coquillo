@@ -35,7 +35,7 @@ namespace Coquillo {
         }
 
         QModelIndex BaseWidget::currentIndex() const {
-            return selectionModel()->currentIndex();
+            return selectionModel() ? selectionModel()->currentIndex() : QModelIndex();
         }
     }
 }

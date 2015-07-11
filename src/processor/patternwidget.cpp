@@ -60,6 +60,7 @@ namespace Coquillo {
             QPushButton * apply = findChild<QPushButton*>("apply");
             QComboBox * pattern = findChild<QComboBox*>("pattern");
 
+            connect(pattern, SIGNAL(editTextChanged(QString)), SLOT(updatePreview()));
             connect(apply, SIGNAL(clicked()), SLOT(applyCurrentPattern()));
             connect(pattern, SIGNAL(activated(QString)), SIGNAL(patternAccepted(QString)));
         }

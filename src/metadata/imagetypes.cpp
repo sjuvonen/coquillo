@@ -1,4 +1,5 @@
 
+#include <QObject>
 #include <QStringList>
 #include <taglib/flacpicture.h>
 #include "imagetypes.hpp"

@@ -8,15 +8,17 @@
 namespace Coquillo {
     namespace Processor {
         Patterns::Patterns() {
-            _symbols["artist"] = "%a";
-            _symbols["album"] = "%b";
-            _symbols["title"] = "%t";
-            _symbols["number"] = "%n";
-            _symbols["disc"] = "%d";
-            _symbols["genre"] = "%g";
-            _symbols["comment"] = "%c";
-            _symbols["original_artist"] = "%q";
-            _symbols["ignore"] = "%i";
+            _symbols = {
+                {"artist", "%a"},
+                {"album", "%b"},
+                {"title", "%t"},
+                {"number", "%n"},
+                {"disc", "%d"},
+                {"genre", "%g"},
+                {"comment", "%c"},
+                {"original_artist", "%q"},
+                {"ignore", "%i"}
+            };
         }
 
         Patterns::Patterns(const Symbols & symbols)
