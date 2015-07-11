@@ -51,10 +51,13 @@ namespace Coquillo {
 
     bool DirectoryModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
         if (role == Qt::CheckStateRole) {
-            QString path = idx.data(QFileSystemModel::FilePathRole).toString();
+            const QString path = idx.data(QFileSystemModel::FilePathRole).toString();
 
             if (value.toBool()) {
                 _checked << path;
+                if (_recursive) {
+                    clearCheckedDescendants(path);
+                }
                 emit pathChecked(path, _recursive);
             } else {
                 _checked.removeAll(path);
@@ -69,6 +72,15 @@ namespace Coquillo {
         }
 
         return QSortFilterProxyModel::setData(idx, value, role);
+    }
+
+    void DirectoryModel::clearCheckedDescendants(const QString & path) {
+        for (int i = _checked.count() - 1; i >= 0; i--) {
+            if (_checked[i].indexOf(path + '/') == 0) {
+                const QString path =_checked.takeAt(i);
+                emit dataChanged(index(path), index(path, columnCount()-1));
+            }
+        }
     }
 
     bool DirectoryModel::hasChildren(const QModelIndex & idx) const {

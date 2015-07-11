@@ -37,6 +37,7 @@ namespace Coquillo {
             bool isAncestorChecked(const QModelIndex & idx) const;
             bool isDescendantChecked(const QModelIndex & idx) const;
             void recursiveDataChanged(const QModelIndex & parent);
+            void clearCheckedDescendants(const QString & path);
             QStringList _checked;
             bool _recursive;
     };

@@ -45,7 +45,5 @@ int main(int argc, char ** args) {
         window->openDirectories(QApplication::arguments().mid(1));
     }
 
-    qDebug() << QApplication::arguments();
-
     return app.exec();
 }
