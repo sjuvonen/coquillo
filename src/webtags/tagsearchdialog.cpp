@@ -132,13 +132,11 @@ namespace Coquillo {
         }
 
         void TagSearchDialog::moveCurrentDown() {
-//             qDebug() << "move down";
             const QModelIndexList rows = _ui->listTracks->selectionModel()->selectedRows();
             qobject_cast<TrackSelectionModel*>(_ui->listTracks->model())->shiftRows(rows, 1);
         }
 
         void TagSearchDialog::moveCurrentUp() {
-//             qDebug() << "move up";
             const QModelIndexList rows = _ui->listTracks->selectionModel()->selectedRows();
             qobject_cast<TrackSelectionModel*>(_ui->listTracks->model())->shiftRows(rows, -1);
         }
