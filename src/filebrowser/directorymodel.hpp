@@ -28,8 +28,11 @@ namespace Coquillo {
             void pathUnchecked(const QString & path, bool recursive);
 
         public slots:
+            void selectPath(const QString & path);
+            void selectPaths(const QStringList & paths);
             void setRecursiveScanEnabled(bool state) { _recursive = state; }
             void uncheckAll();
+
         private:
             bool isAncestorChecked(const QModelIndex & idx) const;
             bool isDescendantChecked(const QModelIndex & idx) const;

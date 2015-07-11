@@ -34,6 +34,7 @@ namespace Coquillo {
 
         public slots:
             void cdUp();
+            void setSelectedDirectories(const QStringList & dirs);
             void setDirectory(const QString & path);
             void setRecursive(bool state);
             void uncheckAll();
@@ -57,6 +58,7 @@ namespace Coquillo {
             int findBookmark(const QString & path) const;
             void historyGoBack();
             void unsetCurrentBookmarked();
+            static QString commonParentDirectory(QStringList paths);
             Ui::FileBrowser * _ui;
             DirectoryModel * _directories;
             QPointer<QAbstractItemModel> _bookmarks;

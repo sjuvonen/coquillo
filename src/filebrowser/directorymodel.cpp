@@ -87,6 +87,17 @@ namespace Coquillo {
         }
     }
 
+    void DirectoryModel::selectPath(const QString & path) {
+        selectPaths({path});
+    }
+
+    void DirectoryModel::selectPaths(const QStringList & paths) {
+        foreach (const QString path, paths) {
+            qDebug() << "select" << path << index(path);
+            setData(index(path), Qt::Checked, Qt::CheckStateRole);
+        }
+    }
+
     void DirectoryModel::uncheckAll() {
         while (!_checked.isEmpty()) {
             const QString dir = _checked.takeFirst();

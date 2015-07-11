@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QDebug>
+#include <QFileInfo>
 #include <QMap>
 #include <QSettings>
 #include <QStandardPaths>
@@ -39,6 +40,12 @@ int main(int argc, char ** args) {
     prepare_settings();
     Coquillo::MainWindow * window = new Coquillo::MainWindow;
     window->show();
+
+    if (QApplication::arguments().count() > 1) {
+        window->openDirectories(QApplication::arguments().mid(1));
+    }
+
+    qDebug() << QApplication::arguments();
 
     return app.exec();
 }

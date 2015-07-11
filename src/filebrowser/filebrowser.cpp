@@ -113,6 +113,12 @@ namespace Coquillo {
         }
     }
 
+    void FileBrowser::setSelectedDirectories(const QStringList & dirs) {
+        uncheckAll();
+        setDirectory(commonParentDirectory(dirs));
+        _directories->selectPaths(dirs);
+    }
+
     void FileBrowser::setDirectory(const QString & path) {
         if (QFileInfo(path).isDir()) {
             addToHistory(path);
@@ -247,5 +253,23 @@ namespace Coquillo {
         if (path.length() > 0) {
             changeDirectory(path);
         }
+    }
+
+    QString FileBrowser::commonParentDirectory(QStringList paths) {
+        if (!paths.isEmpty()) {
+            for (int i = 0; i < paths.count(); i++) {
+                paths.replace(i, QFileInfo(paths[i]).absoluteFilePath());
+            }
+
+            QDir ref = QDir(paths.takeFirst());
+            ref.cdUp();
+
+            foreach (const QString path, paths) {
+                if (path.indexOf(ref.path() + '/') == 0) {
+                    return ref.path();
+                }
+            }
+        }
+        return QString();
     }
 }

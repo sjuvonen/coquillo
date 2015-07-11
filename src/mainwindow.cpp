@@ -91,7 +91,8 @@ namespace Coquillo {
         connect(_ui->metaData->header(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
 
-        QTimer::singleShot(1, this, SLOT(restoreSettings()));
+        restoreSettings();
+        // QTimer::singleShot(1, this, SLOT(restoreSettings()));
     }
 
     MainWindow::~MainWindow() {
@@ -144,6 +145,10 @@ namespace Coquillo {
         connect(sub, SIGNAL(triggered(QAction*)), size_mapper, SLOT(map(QAction*)));
 
         return menu;
+    }
+
+    void MainWindow::openDirectories(const QStringList & dirs) {
+        _fileBrowser->setSelectedDirectories(dirs);
     }
 
     void MainWindow::setToolBarIconSize(int size) {

@@ -29,6 +29,8 @@ namespace Coquillo {
             ~MainWindow();
             QMenu * createPopupMenu();
 
+            void openDirectories(const QStringList & dirs);
+
         protected:
             void closeEvent(QCloseEvent * event);
             bool isInterfaceLocked() const;
