@@ -55,6 +55,8 @@ namespace Coquillo {
                     Container::Default(ref.tag()).write(data.primaryTag());
                 }
             }
+
+            emit finished();
         }
 
         bool FileWriter::isFlacFile(const TagLib::File * file) const {

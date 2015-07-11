@@ -377,6 +377,11 @@ namespace Coquillo {
 
             FileWriter * writer = new FileWriter(modified);
             QThreadPool::globalInstance()->start(writer, FileWriterPriority);
+
+            connect(writer, &FileWriter::finished, [this]() {
+                this->_original.clear();
+                this->revert();
+            });
         }
 
         void MetaDataModel::addMetaData(const MetaData & metaData) {

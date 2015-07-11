@@ -19,6 +19,9 @@ namespace Coquillo {
                 FileWriter(const QList<MetaData> & files, QObject * parent = 0);
                 void run();
 
+            signals:
+                void finished();
+
             private:
                 bool isFlacFile(const TagLib::File * file) const;
                 bool isMpegFile(const TagLib::File * file) const;
