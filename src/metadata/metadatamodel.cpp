@@ -197,7 +197,9 @@ namespace Coquillo {
 
                 case FileNameRole: {
                     MetaData meta = _store.at(idx.row());
-                    const QString new_path = QFileInfo(value.toString()).absoluteFilePath();
+
+                    const QString new_path = QString("%1/%2")
+                            .arg(QFileInfo(meta.path()).absolutePath(), value.toString());
 
                     if (new_path != meta.path()) {
                         const QString path = QString("%1/%2")
