@@ -23,8 +23,10 @@ namespace Coquillo {
                 static void registerMapper(const QString & tag, Mapper * mapper);
                 static Mapper * getMapper(const QString & tag);
 
-                MetaData() { }
-                MetaData(const QString & path) : _path(path) { }
+                MetaData() : _id(0) { }
+                MetaData(const QString & path);
+
+                inline uint id() const { return _id; }
 
                 void addTag(const QString & name, const Tag & tag);
                 void removeTag(const QString & name);
@@ -56,6 +58,7 @@ namespace Coquillo {
             private:
                 QString _path;
                 QString _primary;
+                uint _id;
                 QHash<QString, Tag> _tags;
                 ImageList _images;
                 Properties _properties;

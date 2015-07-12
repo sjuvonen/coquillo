@@ -46,6 +46,7 @@ HEADERS += \
     src/metadata/mediacrawler.hpp \
     src/metadata/metadata.hpp \
     src/metadata/metadatamodel.hpp \
+    src/metadata/metadatastore.hpp \
     src/metadata/tags/default.hpp \
     src/metadata/tags/id3v2.hpp \
     src/metadata/tags/xiphcomment.hpp \
@@ -89,6 +90,7 @@ SOURCES += \
     src/metadata/mediacrawler.cpp \
     src/metadata/metadata.cpp \
     src/metadata/metadatamodel.cpp \
+    src/metadata/metadatastore.cpp \
     src/metadata/tags/default.cpp \
     src/metadata/tags/id3v2.cpp \
     src/metadata/tags/xiphcomment.cpp \

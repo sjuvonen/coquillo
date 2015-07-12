@@ -4,6 +4,7 @@
 #include <QAbstractItemModel>
 #include <QHash>
 #include "metadata.hpp"
+#include "metadatastore.hpp"
 
 namespace Coquillo {
     namespace MetaData {
@@ -49,13 +50,12 @@ namespace Coquillo {
 
             private slots:
                 void addMetaData(const MetaData & metaData);
+                void onWriteFinished();
 
             private:
                 enum WorkerPriority { DirectoryReaderPriority, FileReaderPriority, FileWriterPriority };
 
                 static QStringList nameFilters();
-                void backup(const MetaData & metaData, QString key = QString());
-                void reback(const QString & old_key, const QString & new_key);
                 bool isRowChanged(const QModelIndex & idx) const;
                 bool isChanged(const QModelIndex & idx) const;
                 void rowChanged(const QModelIndex & idx);
@@ -64,10 +64,10 @@ namespace Coquillo {
                 bool _recursive;
                 QHash<int, QString> _columns;
                 QHash<int, QString> _columnMap;
-                QList<MetaData> _metaData;
-                QHash<QString, MetaData> _original;
                 QStringList _directories;
-                QStringList _only_path_changed;
+
+                MetaDataStore _store;
+
         };
     }
 }

@@ -60,6 +60,7 @@ namespace Coquillo {
             QVariantHash values = idx.data(MetaData::MetaDataModel::NamedRowDataRole).toHash();
             values["padded_disc"] = values["disc"].toString().rightJustified(pad_width, '0');
             values["padded_number"] = values["number"].toString().rightJustified(pad_width, '0');
+            values["padded_year"] = values["year"].toString().rightJustified(pad_width, '0');
             return values;
         }
     }

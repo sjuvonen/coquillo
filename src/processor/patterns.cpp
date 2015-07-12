@@ -9,17 +9,19 @@ namespace Coquillo {
     namespace Processor {
         Patterns::Patterns() {
             _symbols = {
-                {"artist", "%a"},
                 {"album", "%b"},
-                {"title", "%t"},
-                {"number", "%n"},
+                {"artist", "%a"},
+                {"comment", "%c"},
                 {"disc", "%d"},
                 {"genre", "%g"},
-                {"comment", "%c"},
-                {"original_artist", "%q"},
                 {"ignore", "%i"},
+                {"number", "%n"},
+                {"original_artist", "%q"},
+                {"padded_disc", "%D"},
                 {"padded_number", "%N"},
-                {"padded_disc", "%D"}
+                {"padded_year", "%Y"},
+                {"title", "%t"},
+                {"year", "%y"}
             };
         }
 

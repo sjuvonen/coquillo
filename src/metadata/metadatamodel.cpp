@@ -71,7 +71,7 @@ namespace Coquillo {
             if (idx.isValid()) {
                 return 0;
             } else {
-                return _metaData.count();
+                return _store.count();
             }
         }
 
@@ -88,7 +88,7 @@ namespace Coquillo {
             switch (role) {
                 case Qt::DisplayRole:
                 case Qt::EditRole: {
-                    const MetaData meta = _metaData[idx.row()];
+                    const MetaData meta = _store.at(idx.row());
                     const QString field = _columnMap.value(idx.column());
 
                     if (field == "filename") {
@@ -133,7 +133,7 @@ namespace Coquillo {
                     return _columnMap.value(idx.column());
 
                 case MetaDataRole:
-                    return QVariant::fromValue(_metaData.value(idx.row()));
+                    return QVariant::fromValue(_store.at(idx.row()));
 
                 case NamedRowDataRole: {
                     const int row = idx.row();
@@ -166,15 +166,14 @@ namespace Coquillo {
 //                     qDebug() << "setData" << idx;
                     const int row = idx.row();
                     const QString name = _columnMap[idx.column()];
-                    MetaData meta = _metaData[row];
+                    MetaData meta = _store.at(row);
 
                     if (idx.column() == 16) {
                         const ImageList images = qvariant_cast<ImageList>(value);
 
                         if (images != meta.images()) {
-                            backup(_metaData[row]);
-                            _metaData[row].setImages(images);
-                            _only_path_changed.removeAll(_metaData[row].path());
+                            _store.backup(row);
+                            _store.at(row).setImages(images);
                             rowChanged(idx);
                             return true;
                         } else {
@@ -185,9 +184,8 @@ namespace Coquillo {
                         bool str_changed = value.type() != QVariant::Int && (value.toString() != meta[name].toString());
 
                         if (int_changed || str_changed) {
-                            backup(_metaData[row]);
-                            _metaData[row].insert(name, value);
-                            _only_path_changed.removeAll(_metaData[row].path());
+                            _store.backup(row);
+                            _store.at(row).insert(name, value);
                             rowChanged(idx);
                             qDebug() << QString("set %1 to").arg(name) << value;
                             return true;
@@ -198,26 +196,15 @@ namespace Coquillo {
                 }
 
                 case FileNameRole: {
-                    MetaData meta = _metaData[idx.row()];
+                    MetaData meta = _store.at(idx.row());
+                    const QString new_path = QFileInfo(value.toString()).absoluteFilePath();
 
-                    if (value.toString() != meta.path()) {
+                    if (new_path != meta.path()) {
                         const QString path = QString("%1/%2")
                             .arg(QFileInfo(meta.path()).absolutePath(), value.toString());
 
-                        if (_original.contains(meta.path())) {
-                            // Relocate old backup
-                            _original[path] = _original[meta.path()];
-                            reback(meta.path(), path);
-                        } else {
-                            backup(meta, path);
-                            _only_path_changed << path;
-                        }
-
-                        meta.setPath(path);
-                        _metaData[idx.row()] = meta;
+                        _store.rename(idx.row(), path);
                         rowChanged(idx);
-
-                        qDebug() << idx.row() << path;
                     }
 
                     return true;
@@ -227,44 +214,16 @@ namespace Coquillo {
             return false;
         }
 
-        void MetaDataModel::backup(const MetaData & metaData, QString key) {
-            if (key.isNull()) {
-                key = metaData.path();
-            }
-
-            if (!_original.contains(key)) {
-                _original[key] = metaData;
-            }
-        }
-
-        void MetaDataModel::reback(const QString & old_key, const QString & new_key) {
-            if (_original.contains(old_key)) {
-                _original.insert(new_key, _original[old_key]);
-                _original.remove(old_key);
-
-                if (_only_path_changed.contains(old_key)) {
-                    _only_path_changed.removeAll(old_key);
-                    _only_path_changed << new_key;
-                }
-            }
-        }
-
         QModelIndex MetaDataModel::index(int row, int col, const QModelIndex & parent) const {
             if (parent.isValid()) {
                 return QModelIndex();
             } else {
-                const QString path = _metaData.value(row).path();
-                return createIndex(row, col, qHash(path, col));
+                return createIndex(row, col, qHash(_store.at(row).id(), col));
             }
         }
 
         MetaData MetaDataModel::metaData(int row, bool original) const {
-            const MetaData meta = _metaData.value(row);
-            if (original && _original.contains(meta.path())) {
-                return _original[meta.path()];
-            } else {
-                return meta;
-            }
+            return original ? _store.originalAt(row) : _store.at(row);
         }
 
         void MetaDataModel::addDirectory(const QString & directory) {
@@ -298,10 +257,8 @@ namespace Coquillo {
 
         void MetaDataModel::clear() {
             beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
-            _metaData.clear();
-            _original.clear();
+            _store.clear();
             _directories.clear();
-            _only_path_changed.clear();
             endRemoveRows();
         }
 
@@ -319,10 +276,10 @@ namespace Coquillo {
                 return false;
             }
 
-            count = qMin(row + count, _metaData.count()) - row;
+            count = qMin(row + count, _store.count()) - row;
             beginRemoveRows(parent, row, row + count - 1);
             while (count-- > 0) {
-                _metaData.removeAt(row);
+                _store.remove(row);
             }
             endRemoveRows();
             return true;
@@ -340,54 +297,42 @@ namespace Coquillo {
         void MetaDataModel::revert() {
             qDebug() << "revert";
             beginResetModel();
-            for (int i = 0; i < rowCount(); i++) {
-                _metaData[i] = metaData(i, true);
-            }
-            _original.clear();
+            _store.reset();
             endResetModel();
         }
 
         void MetaDataModel::revert(const QModelIndex & idx) {
             if (idx.isValid()) {
                 int row = idx.row();
-                const QString path = metaData(row).path();
-                _metaData[row] = metaData(row, true);
-                _original.remove(path);
+                _store.restore(row);
                 rowChanged(idx);
             }
         }
 
         void MetaDataModel::writeToDisk() {
             qDebug() << "write to disk";
-            QList<MetaData> modified;
+            QList<MetaData> modified = _store.modifiedExcludingOnlyRenamed();
+            QHash<QString, QString> renamed = _store.renamedPaths();
 
-            foreach (const QString & path, _only_path_changed) {
-                QFile::rename(_original[path].path(), path);
-                _original.remove(path);
-                qDebug() << "rename only:" << path;
-            }
-
-            foreach (const MetaData & data, _metaData) {
-                if (_original.contains(data.path())) {
-                    QFile::rename(_original[data.path()].path(), data.path());
-                    modified << data;
-                    qDebug() << "rewrite:" << data.path();
-                }
+            foreach (const QString old_path, renamed.keys()) {
+                QFile::rename(old_path, renamed[old_path]);
             }
 
             FileWriter * writer = new FileWriter(modified);
             QThreadPool::globalInstance()->start(writer, FileWriterPriority);
 
-            connect(writer, &FileWriter::finished, [this]() {
-                this->_original.clear();
-                this->revert();
-            });
+            connect(writer, SIGNAL(finished()), SLOT(onWriteFinished()));
+        }
+
+        void MetaDataModel::onWriteFinished() {
+            _store.clearBackup();
+            emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()-1));
         }
 
         void MetaDataModel::addMetaData(const MetaData & metaData) {
             int row = rowCount();
             beginInsertRows(QModelIndex(), row, row);
-            _metaData << metaData;
+            _store.append(metaData);
             endInsertRows();
         }
 
@@ -399,15 +344,14 @@ namespace Coquillo {
         }
 
         bool MetaDataModel::isRowChanged(const QModelIndex & idx) const {
-            const MetaData data = _metaData[idx.row()];
-            return _original.contains(data.path());
+            return _store.isModified(idx.row());
         }
 
         bool MetaDataModel::isChanged(const QModelIndex & idx) const {
-            const MetaData data = _metaData[idx.row()];
-            if (_original.contains(data.path())) {
+            const MetaData data = _store.at(idx.row());
+            if (_store.isModified(data)) {
+                const MetaData original = _store.originalAt(idx.row());
                 const QString key = idx.data(FieldNameRole).toString();
-                const MetaData original = _original[data.path()];
                 return data.value(key) != original.value(key);
             } else {
                 return false;

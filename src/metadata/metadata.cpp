@@ -18,6 +18,11 @@ namespace Coquillo {
             }
         }
 
+        MetaData::MetaData(const QString & path) {
+            _id = qHash(path);
+            _path = path;
+        }
+
         void MetaData::addTag(const QString & name, const Tag & tag) {
             _tags[name] = tag;
 
