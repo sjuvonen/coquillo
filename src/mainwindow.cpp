@@ -10,8 +10,9 @@
 #include <QTimer>
 
 #include "actionsignalmapper.hpp"
-#include "stringstoremodel.hpp"
+#include "itemcountlabel.hpp"
 #include "mainwindow.hpp"
+#include "stringstoremodel.hpp"
 #include "ui_mainwindow.h"
 
 #include "filebrowser/filebrowser.hpp"
@@ -68,6 +69,8 @@ namespace Coquillo {
         _tagParser->setModel(_ui->metaData->model());
         _tagParser->setSelectionModel(_ui->metaData->selectionModel());
         _ui->tools->addTab(_tagParser, tr("Parse tags"));
+
+        statusBar()->addPermanentWidget(new ItemCountLabel(sort_proxy));
 
         addAction(_ui->action_Quit);
 

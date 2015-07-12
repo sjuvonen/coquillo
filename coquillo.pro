@@ -1,6 +1,7 @@
 TEMPLATE = app
 TARGET = coquillo
 
+CONFIG += c++11
 QT += network widgets
 
 DEPENDPATH += src src/filebrowser src/metadata
@@ -28,6 +29,7 @@ FORMS += \
 
 HEADERS += \
     src/actionsignalmapper.hpp \
+    src/itemcountlabel.hpp \
     src/mainwindow.hpp \
     src/stringstoremodel.hpp \
     src/filebrowser/directorymodel.hpp \
@@ -73,6 +75,7 @@ HEADERS += \
 SOURCES += \
     src/main.cpp \
     src/actionsignalmapper.cpp \
+    src/itemcountlabel.cpp \
     src/mainwindow.cpp \
     src/stringstoremodel.cpp \
     src/filters/parsediscnumber.cpp \
