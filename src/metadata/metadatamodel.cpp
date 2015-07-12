@@ -150,6 +150,10 @@ namespace Coquillo {
                     const int col = _columnMap.key("filename");
                     return index(idx.row(), col).data(Qt::EditRole);
                 }
+
+                case Qt::ToolTipRole: {
+                    return _store.at(idx.row()).path();
+                }
             }
 
             return QVariant();
