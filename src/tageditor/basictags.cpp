@@ -3,6 +3,7 @@
 #include <QButtonGroup>
 #include <QDataWidgetMapper>
 #include <QDebug>
+#include "metadata/itemdataroles.hpp"
 #include "basictags.hpp"
 #include "metadatachangeindicatordelegate.hpp"
 #include "ui_basictags.h"
@@ -88,6 +89,8 @@ namespace Coquillo {
         void BasicTags::setEditorIndex(const QModelIndex & idx) {
             _inputMapper->setCurrentModelIndex(idx);
             _labelMapper->setCurrentModelIndex(idx);
+
+            _ui->audioProperties->setData(idx.data(MetaData::ModelData::AudioPropertiesRole).toMap());
         }
 
         void BasicTags::emitCloneField(int column) {

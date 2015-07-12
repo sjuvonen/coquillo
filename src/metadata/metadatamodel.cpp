@@ -11,6 +11,7 @@
 #include "mediacrawler.hpp"
 #include "metadata.hpp"
 #include "metadatamodel.hpp"
+#include "itemdataroles.hpp"
 #include "filereader.hpp"
 #include "filewriter.hpp"
 
@@ -125,17 +126,17 @@ namespace Coquillo {
                 case Qt::SizeHintRole:
                     return QSize(100, 24);
 
-                case ModifiedRole: {
+                case ModelData::ModifiedRole: {
                     return isChanged(idx);
                 }
 
-                case FieldNameRole:
+                case ModelData::FieldNameRole:
                     return _columnMap.value(idx.column());
 
-                case MetaDataRole:
+                case ModelData::MetaDataRole:
                     return QVariant::fromValue(_store.at(idx.row()));
 
-                case NamedRowDataRole: {
+                case ModelData::NamedRowDataRole: {
                     const int row = idx.row();
                     QVariantHash data;
 
@@ -146,10 +147,13 @@ namespace Coquillo {
                     return data;
                 }
 
-                case FilePathRole: {
+                case ModelData::FilePathRole: {
                     const int col = _columnMap.key("filename");
                     return index(idx.row(), col).data(Qt::EditRole);
                 }
+
+                case ModelData::AudioPropertiesRole:
+                    return _store.at(idx.row()).properties();
 
                 case Qt::ToolTipRole: {
                     return _store.at(idx.row()).path();
@@ -316,7 +320,10 @@ namespace Coquillo {
         }
 
         void MetaDataModel::writeToDisk() {
-            qDebug() << "write to disk";
+            if (!rowCount()) {
+                return;
+            }
+
             QList<MetaData> modified = _store.modifiedExcludingOnlyRenamed();
             QHash<QString, QString> renamed = _store.renamedPaths();
 

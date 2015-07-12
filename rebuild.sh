@@ -1,5 +1,5 @@
 #!/usr/bin/sh
 make distclean
-qmake CONFIG+=c++11
+qmake
 make -j7
 

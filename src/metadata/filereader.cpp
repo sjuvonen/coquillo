@@ -35,11 +35,14 @@ namespace Coquillo {
                 MetaData meta(file);
 
                 if (audio) {
+                    qDebug() << "LENGTH" << audio->length();
+
                     Properties props;
                     props["length"] = audio->length();
                     props["bitrate"] = audio->bitrate();
                     props["samplerate"] = audio->sampleRate();
                     props["channels"] = audio->channels();
+                    props["filesize"] = QFileInfo(file).size();
                     meta.setProperties(props);
                 } else {
                     /*

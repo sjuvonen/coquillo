@@ -17,8 +17,9 @@ unix {
 }
 
 FORMS += \
-    ui/filebrowser.ui \
+    ui/audioproperties.ui \
     ui/basictags.ui \
+    ui/filebrowser.ui \
     ui/imagetags.ui \
     ui/mainwindow.ui \
     ui/parserwidget.ui \
@@ -44,6 +45,7 @@ HEADERS += \
     src/metadata/image.hpp \
     src/metadata/imagecache.hpp \
     src/metadata/imagetypes.hpp \
+    src/metadata/itemdataroles.hpp \
     src/metadata/mapper.hpp \
     src/metadata/mediacrawler.hpp \
     src/metadata/metadata.hpp \
@@ -60,6 +62,7 @@ HEADERS += \
     src/searcher/abstractsearcher.hpp \
     src/searcher/musicbrainz.hpp \
     src/settings/settingsdialog.hpp \
+    src/tageditor/audioproperties.hpp \
     src/tageditor/basictags.hpp \
     src/tageditor/imagemodel.hpp \
     src/tageditor/imagetags.hpp \
@@ -105,6 +108,7 @@ SOURCES += \
     src/searcher/abstractsearcher.cpp \
     src/searcher/musicbrainz.cpp \
     src/settings/settingsdialog.cpp \
+    src/tageditor/audioproperties.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/imagemodel.cpp \
     src/tageditor/imagetags.cpp \

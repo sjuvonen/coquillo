@@ -16,7 +16,7 @@ namespace Coquillo {
 
             public:
                 enum DataRole { FilePathRole = Qt::UserRole+1, FileNameRole = Qt::UserRole+2,
-                    ModifiedRole, FieldNameRole, NamedRowDataRole, MetaDataRole };
+                    ModifiedRole, FieldNameRole, NamedRowDataRole, MetaDataRole, AudioPropertiesRole };
 
                 MetaDataModel(QObject * parent = 0);
                 int columnCount(const QModelIndex & idx = QModelIndex()) const;

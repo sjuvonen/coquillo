@@ -12,6 +12,7 @@ namespace Ui {
 
 namespace Coquillo {
     namespace TagEditor {
+
         class BasicTags : public QWidget {
             Q_OBJECT
 
