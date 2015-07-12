@@ -101,8 +101,6 @@ namespace Coquillo {
             return false;
         }
 
-        qDebug() << "save history" << rowCount();
-
         QSettings * settings = storage();
         settings->beginWriteArray(key());
         settings->remove("");

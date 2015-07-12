@@ -1,5 +1,4 @@
 
-#include <QDebug>
 #include "metadatastore.hpp"
 
 namespace Coquillo {
