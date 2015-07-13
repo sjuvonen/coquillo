@@ -35,8 +35,6 @@ namespace Coquillo {
                 MetaData meta(file);
 
                 if (audio) {
-                    qDebug() << "LENGTH" << audio->length();
-
                     Properties props;
                     props["length"] = audio->length();
                     props["bitrate"] = audio->bitrate();

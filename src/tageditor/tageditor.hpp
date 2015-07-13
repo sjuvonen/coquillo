@@ -28,6 +28,7 @@ namespace Coquillo {
                 void setEditorIndex(const QModelIndex & idx);
 
             private slots:
+                void onAutoNumbering();
                 void onCloneField(int column, const QVariant & field);
 
             private:

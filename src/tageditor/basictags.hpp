@@ -27,6 +27,7 @@ namespace Coquillo {
                 void setEditorIndex(const QModelIndex & idx);
 
             signals:
+                void autoNumberingClicked();
                 void cloneField(int column, const QVariant & value);
 
             private slots:

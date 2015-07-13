@@ -1,6 +1,7 @@
 
 #include <QDebug>
 
+#include "autonumbers.hpp"
 #include "basictags.hpp"
 #include "imagetags.hpp"
 #include "rawdata.hpp"
@@ -18,12 +19,15 @@ namespace Coquillo {
             addTab(_images, tr("Images"));
             addTab(_raw, tr("Raw"));
 
-            connect(_basic, SIGNAL(cloneField(int, QVariant)),
-                SLOT(onCloneField(int, QVariant)));
-            connect(_images, SIGNAL(cloneField(int, QVariant)),
-                SLOT(onCloneField(int, QVariant)));
+            connect(_basic, SIGNAL(autoNumberingClicked()), SLOT(onAutoNumbering()));
+            connect(_basic, SIGNAL(cloneField(int, QVariant)), SLOT(onCloneField(int, QVariant)));
+            connect(_images, SIGNAL(cloneField(int, QVariant)), SLOT(onCloneField(int, QVariant)));
 
             setEditorIndex(QModelIndex());
+        }
+
+        void TagEditor::onAutoNumbering() {
+            AutoNumbers::autoNumberItems(model(), selectionModel()->selectedRows());
         }
 
         void TagEditor::onCloneField(int column, const QVariant & value) {
@@ -46,6 +50,10 @@ namespace Coquillo {
             } else {
                 setTabText(1, tr("Images"));
             }
+        }
+
+        QAbstractItemModel * TagEditor::model() const {
+            return _basic->model();
         }
 
         void TagEditor::setModel(QAbstractItemModel * model) {

@@ -63,6 +63,7 @@ HEADERS += \
     src/searcher/musicbrainz.hpp \
     src/settings/settingsdialog.hpp \
     src/tageditor/audioproperties.hpp \
+    src/tageditor/autonumbers.hpp \
     src/tageditor/basictags.hpp \
     src/tageditor/imagemodel.hpp \
     src/tageditor/imagetags.hpp \
@@ -109,6 +110,7 @@ SOURCES += \
     src/searcher/musicbrainz.cpp \
     src/settings/settingsdialog.cpp \
     src/tageditor/audioproperties.cpp \
+    src/tageditor/autonumbers.cpp \
     src/tageditor/basictags.cpp \
     src/tageditor/imagemodel.cpp \
     src/tageditor/imagetags.cpp \

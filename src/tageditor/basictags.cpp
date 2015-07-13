@@ -39,6 +39,7 @@ namespace Coquillo {
             }
 
             connect(clone_group, SIGNAL(buttonClicked(int)), SLOT(emitCloneField(int)));
+            connect(_ui->autoNumbers, SIGNAL(clicked()), SIGNAL(autoNumberingClicked()));
         }
 
         BasicTags::~BasicTags() {
