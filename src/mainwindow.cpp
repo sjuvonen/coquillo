@@ -13,6 +13,7 @@
 #include "itemcountlabel.hpp"
 #include "mainwindow.hpp"
 #include "stringstoremodel.hpp"
+#include "togglewidgetbyaction.hpp"
 #include "ui_mainwindow.h"
 
 #include "filebrowser/filebrowser.hpp"
@@ -30,6 +31,9 @@ namespace Coquillo {
 
         _metaData = new MetaData::MetaDataModel(this);
         _nam = new QNetworkAccessManager(this);
+
+        new ToggleWidgetByAction(menuBar(), _ui->actionMenubar);
+        new ToggleWidgetByAction(statusBar(), _ui->actionStatusbar);
 
         QSortFilterProxyModel * sort_proxy = new QSortFilterProxyModel(this);
         sort_proxy->setSourceModel(_metaData);
@@ -72,7 +76,8 @@ namespace Coquillo {
 
         statusBar()->addPermanentWidget(new ItemCountLabel(sort_proxy));
 
-        addAction(_ui->action_Quit);
+        addAction(_ui->actionQuit);
+        addAction(_ui->actionMenubar);
 
         connect(_fileBrowser, SIGNAL(recursionEnabled(bool)),
             _metaData, SLOT(setRecursive(bool)));

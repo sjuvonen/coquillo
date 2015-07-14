@@ -33,6 +33,7 @@ HEADERS += \
     src/itemcountlabel.hpp \
     src/mainwindow.hpp \
     src/stringstoremodel.hpp \
+    src/togglewidgetbyaction.hpp \
     src/filebrowser/directorymodel.hpp \
     src/filebrowser/filebrowser.hpp \
     src/filters/abstractfilter.hpp \
@@ -82,6 +83,7 @@ SOURCES += \
     src/itemcountlabel.cpp \
     src/mainwindow.cpp \
     src/stringstoremodel.cpp \
+    src/togglewidgetbyaction.cpp \
     src/filters/parsediscnumber.cpp \
     src/filters/safefilenames.cpp \
     src/filters/scaleimages.cpp \
