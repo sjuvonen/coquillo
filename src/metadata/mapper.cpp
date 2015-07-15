@@ -41,7 +41,7 @@ namespace Coquillo {
                 {"original_artist", "TOPE"},
                 {"title", "TIT2"},
                 {"url", "WXXX"},
-                {"year", "TDRL"},
+                {"year", "TDRC"},
             };
         }
 

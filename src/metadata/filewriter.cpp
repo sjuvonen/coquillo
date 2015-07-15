@@ -32,6 +32,7 @@ namespace Coquillo {
                     if (data.hasTag("xiph")) {
                         Container::XiphComment(file->xiphComment(true)).write(data.tag("xiph"));
                     }
+                    
                     file->save();
                 } else if (isMpegFile(ref.file())) {
                     auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());

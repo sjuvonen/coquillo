@@ -39,7 +39,7 @@ namespace Coquillo {
                 }
 
                 if (data.contains("TYER")) {
-                    data["TDRL"] = data.take("TYER");
+                    data["TDRC"] = data.take("TYER");
                 }
 
                 if (data.contains("WXXX")) {
