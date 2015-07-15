@@ -5,6 +5,7 @@
 #include <taglib/oggfile.h>
 #include <taglib/tfile.h>
 #include <taglib/vorbisfile.h>
+#include <QDebug>
 
 #include "filewriter.hpp"
 #include "tags/default.hpp"
@@ -32,7 +33,7 @@ namespace Coquillo {
                     if (data.hasTag("xiph")) {
                         Container::XiphComment(file->xiphComment(true)).write(data.tag("xiph"));
                     }
-                    
+
                     file->save();
                 } else if (isMpegFile(ref.file())) {
                     auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
@@ -54,6 +55,7 @@ namespace Coquillo {
                     file->save();
                 } else {
                     Container::Default(ref.tag()).write(data.primaryTag());
+                    ref.file()->save();
                 }
             }
 
