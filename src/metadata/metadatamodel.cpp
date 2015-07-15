@@ -332,9 +332,9 @@ namespace Coquillo {
             }
 
             FileWriter * writer = new FileWriter(modified);
-            QThreadPool::globalInstance()->start(writer, FileWriterPriority);
-
             connect(writer, SIGNAL(finished()), SLOT(onWriteFinished()));
+
+            QThreadPool::globalInstance()->start(writer, FileWriterPriority);
         }
 
         void MetaDataModel::onWriteFinished() {
