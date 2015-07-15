@@ -9,9 +9,14 @@ namespace Coquillo {
             connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), SLOT(onRowCountChanged()));
             connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int)), SLOT(onRowCountChanged()));
         }
+        onRowCountChanged();
     }
 
     void ItemCountLabel::onRowCountChanged() {
-        setText(QString("%1 files").arg(_model->rowCount()));
+        if (_model->rowCount() > 0) {
+            setText(QString("%1 files").arg(_model->rowCount()));
+        } else {
+            setText(tr("No files"));
+        }
     }
 }
