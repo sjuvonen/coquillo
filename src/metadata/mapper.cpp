@@ -72,8 +72,6 @@ namespace Coquillo {
             }
         }
 
-
-
         XiphMapper::XiphMapper() : Mapper() {
             _map = {
                 {"album", "ALBUM"},
