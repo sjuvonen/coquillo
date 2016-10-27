@@ -55,6 +55,7 @@ namespace Coquillo {
             const QString primary = file.value("primary").toString();
             const QVariantHash taghash = file.value("tags").toHash();
             Container item(path);
+            item.setPrimaryTag(primary);
 
             foreach (const QString type, taghash.keys()) {
                 const Tag::Mapping mapping = _mappings.contains(type) ? _mappings.value(type) : _fallback;

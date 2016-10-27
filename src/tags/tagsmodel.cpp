@@ -47,11 +47,12 @@ namespace Coquillo {
 
             qRegisterMetaType<Coquillo::Tags::Tag>("Tag");
 
-            auto crawler = new Crawler::Crawler;
-            crawler->searchPath("/mnt/data/Music/Swipe Me");
+            auto crawler = new Crawler::Crawler(this);
+            crawler->searchPath("/mnt/data/Music/Artists");
 
-            crawler->connect(crawler, &Crawler::Crawler::finished, [this]{
+            crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
                 qDebug() << "size:" << rowCount();
+                crawler->deleteLater();
             });
 
             crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
@@ -72,8 +73,16 @@ namespace Coquillo {
         QVariant TagsModel::data(const QModelIndex & idx, int role) const {
             if (idx.isValid() && (role == Qt::EditRole || role == Qt::DisplayRole)) {
                 const auto file = _store.at(idx.row());
-                const auto field = _columnMap.value(idx.column() + 1);
-                return file.value(field);
+
+                switch (idx.column()) {
+                    case 15:
+                        return file.path();
+
+                    default: {
+                        const auto field = _columnMap.value(idx.column() + 1);
+                        return file.value(field);
+                    }
+                }
             }
 
             return QVariant();
@@ -90,7 +99,7 @@ namespace Coquillo {
             if (parent.isValid()) {
                 return QModelIndex();
             } else {
-                return createIndex(row, col, qHash(_store.at(row).id, col));
+                return createIndex(row, col, qHash(_store.at(row).id(), col));
             }
         }
     }

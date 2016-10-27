@@ -3,7 +3,7 @@
 namespace Coquillo {
     namespace Tags {
         Container::Container(const QString & path)
-        : id(qHash(path)), _path(path) {
+        : _id(qHash(path)), _path(path) {
 
         }
 
@@ -13,6 +13,10 @@ namespace Coquillo {
             if (_primary.isNull()) {
                 _primary = tag.id();
             }
+        }
+
+        void Container::setPrimaryTag(const QString & id) {
+            _primary = id;
         }
 
         QVariant Container::value(const QString & field) const {
