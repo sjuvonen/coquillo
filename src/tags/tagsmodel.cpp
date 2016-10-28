@@ -48,7 +48,7 @@ namespace Coquillo {
             qRegisterMetaType<Coquillo::Tags::Tag>("Tag");
 
             auto crawler = new Crawler::Crawler(this);
-            crawler->searchPath("/mnt/data/Music/Artists");
+            crawler->searchPath("/mnt/data/Music/Artists/666");
 
             crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
                 qDebug() << "size:" << rowCount();
@@ -56,6 +56,7 @@ namespace Coquillo {
             });
 
             crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
+                qDebug() << results;
                 beginInsertRows(QModelIndex(), _store.size(), _store.size() + results.size() - 1);
                 _store.add(results);
                 endInsertRows();
@@ -75,7 +76,7 @@ namespace Coquillo {
                 const auto file = _store.at(idx.row());
 
                 switch (idx.column()) {
-                    case 15:
+                    case 14:
                         return file.path();
 
                     default: {
