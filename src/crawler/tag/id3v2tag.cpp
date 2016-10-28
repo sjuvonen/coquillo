@@ -1,9 +1,12 @@
 
 #include <taglib/attachedpictureframe.h>
+#include <taglib/id3v1genres.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/textidentificationframe.h>
 #include <taglib/urllinkframe.h>
 #include "id3v2tag.hpp"
+
+#include <QDebug>
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 
@@ -32,6 +35,18 @@ namespace Coquillo {
                         }
 
                         // data.insert(field, values);
+                    }
+                }
+
+                /*
+                 * Convert legacy genre enum into a string.
+                 */
+                if (data.contains("TCON")) {
+                    bool ok = false;
+                    int genre_id = data["TCON"].toInt(&ok);
+
+                    if (ok) {
+                        data["TCON"] = T2QString(TagLib::ID3v1::genre(genre_id));
                     }
                 }
 
