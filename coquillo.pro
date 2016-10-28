@@ -27,6 +27,7 @@ HEADERS += \
   src/itemcountlabel.hpp \
   src/mainwindow.hpp \
   src/stringstoremodel.hpp \
+  src/togglewidgetbyaction.hpp \
   src/crawler/crawler.hpp \
   src/crawler/tag/generic.hpp \
   src/crawler/tag/id3v2tag.hpp \
@@ -49,6 +50,7 @@ SOURCES += \
   src/main.cpp \
   src/mainwindow.cpp \
   src/stringstoremodel.cpp \
+  src/togglewidgetbyaction.cpp \
   src/crawler/crawler.cpp \
   src/crawler/tag/generic.cpp \
   src/crawler/tag/id3v2tag.cpp \

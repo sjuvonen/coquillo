@@ -82,19 +82,21 @@
     <property name="title">
      <string>&amp;Coquillo</string>
     </property>
-    <addaction name="action_Quit"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
      <string>&amp;Settings</string>
     </property>
-    <addaction name="action_Configure"/>
+    <addaction name="actionConfigure"/>
+    <addaction name="actionMenubar"/>
+    <addaction name="actionStatusbar"/>
    </widget>
    <addaction name="menu_Coquillo"/>
    <addaction name="menu_Settings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_Quit">
+  <action name="actionQuit">
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -102,9 +104,28 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_Configure">
+  <action name="actionConfigure">
    <property name="text">
     <string>&amp;Configure...</string>
+   </property>
+  </action>
+  <action name="actionMenubar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Menubar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionStatusbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Statusbar</string>
    </property>
   </action>
  </widget>
@@ -119,7 +140,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>action_Quit</sender>
+   <sender>actionQuit</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
@@ -135,7 +156,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Configure</sender>
+   <sender>actionConfigure</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>openSettingsDialog()</slot>

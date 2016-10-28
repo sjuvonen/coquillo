@@ -6,8 +6,10 @@
 #include "filebrowser/filebrowser.hpp"
 #include "settings/settingsdialog.hpp"
 #include "tags/tagsmodel.hpp"
+#include "itemcountlabel.hpp"
 #include "mainwindow.hpp"
 #include "stringstoremodel.hpp"
+#include "togglewidgetbyaction.hpp"
 #include "ui_mainwindow.h"
 
 #include <QDebug>
@@ -51,6 +53,9 @@ namespace Coquillo {
     }
 
     void MainWindow::setupMainView() {
+        addAction(_ui->actionQuit);
+        addAction(_ui->actionMenubar);
+
         _model = new Tags::TagsModel(this);
 
         auto proxy = new QSortFilterProxyModel(this);
@@ -63,6 +68,11 @@ namespace Coquillo {
 
         connect(_ui->itemView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
+
+        statusBar()->addPermanentWidget(new ItemCountLabel(proxy));
+
+        new ToggleWidgetByAction(menuBar(), _ui->actionMenubar);
+        new ToggleWidgetByAction(statusBar(), _ui->actionStatusbar);
     }
 
     void MainWindow::setupTagEditor() {
@@ -135,6 +145,9 @@ namespace Coquillo {
         _ui->splitter->restoreState(settings.value("UI/MainWindow/Splitter").toByteArray());
         _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/MainWindow/Header").toByteArray());
         _ui->itemView->horizontalHeader()->setSectionsMovable(true);
+
+        menuBar()->setVisible(settings.value("UI/MainWindow/MenuBar").toBool());
+        statusBar()->setVisible(settings.value("UI/MainWindow/StatusBar").toBool());
     }
 
     void MainWindow::saveSettings() {
@@ -143,6 +156,8 @@ namespace Coquillo {
         settings.setValue("UI/MainWindow/State", saveState());
         settings.setValue("UI/MainWindow/Splitter", _ui->splitter->saveState());
         settings.setValue("UI/MainWindow/Header", _ui->itemView->horizontalHeader()->saveState());
+        settings.setValue("UI/MainWindow/MenuBar", menuBar()->isVisible());
+        settings.setValue("UI/MainWindow/StatusBar", statusBar()->isVisible());
         settings.sync();
     }
 }
