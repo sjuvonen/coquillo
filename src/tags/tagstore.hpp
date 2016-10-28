@@ -11,6 +11,10 @@ namespace Coquillo {
                 void add(const QVariantHash & file);
                 void add(const QList<QVariantHash> & files);
                 const Container & at(int pos) const;
+                bool isModified(int pos) const;
+                bool isFieldModified(int pos, const QString & field) const;
+
+                void remove(int pos);
 
                 inline int size() const { return _items.size(); }
 
@@ -18,6 +22,7 @@ namespace Coquillo {
                 Tag::Mapping _fallback;
                 QHash< QString, Tag::Mapping> _mappings;
                 QList<Container> _items;
+                QHash<uint, Container> _backup;
         };
     }
 }

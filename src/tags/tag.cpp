@@ -8,9 +8,19 @@ namespace Coquillo {
 
         }
 
+        QStringList Tag::keys() const {
+            QStringList all = _raw.keys();
+            all.removeDuplicates();
+            return all;
+        }
+
         QVariant Tag::value(const QString & field) const {
             const QString mapped = _mapping.value(field);
             return mapped.isNull() ? QVariant() : _raw.value(mapped);
+        }
+
+        QVariantList Tag::all(const QString & raw) const {
+            return _raw.values(raw);
         }
     }
 }

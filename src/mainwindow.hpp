@@ -8,6 +8,12 @@ namespace Ui {
 }
 
 namespace Coquillo {
+    namespace Tags {
+        class TagsModel;
+    }
+
+    class FileBrowser;
+
     class MainWindow : public QMainWindow {
         Q_OBJECT
 
@@ -15,10 +21,22 @@ namespace Coquillo {
             MainWindow(Qt::WindowFlags flags = Qt::WindowFlags());
             ~MainWindow();
 
+        protected:
+            void closeEvent(QCloseEvent * event);
+
         private slots:
+            void openSettingsDialog();
             void showHeaderContextMenu(const QPoint & point) const;
 
         private:
+            void setupFileBrowser();
+            void setupMainView();
+            void setupTagEditor();
+            void restoreSettings();
+            void saveSettings();
+
+            FileBrowser * _files;
+            Tags::TagsModel * _model;
             Ui::MainWindow * _ui;
     };
 }

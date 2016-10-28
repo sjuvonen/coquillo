@@ -1,7 +1,13 @@
+#include <QSortFilterProxyModel>
+#include <QCloseEvent>
+#include <QSettings>
 #include <QSignalMapper>
 
+#include "filebrowser/filebrowser.hpp"
+#include "settings/settingsdialog.hpp"
 #include "tags/tagsmodel.hpp"
 #include "mainwindow.hpp"
+#include "stringstoremodel.hpp"
 #include "ui_mainwindow.h"
 
 #include <QDebug>
@@ -12,20 +18,74 @@ namespace Coquillo {
         _ui = new Ui::MainWindow;
         _ui->setupUi(this);
 
-        auto model = new Tags::TagsModel(this);
-        _ui->tableView->setModel(model);
-        _ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+        setupMainView();
+        setupTagEditor();
+        setupFileBrowser();
 
-        connect(_ui->tableView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
+        restoreSettings();
+    }
+
+    void MainWindow::setupFileBrowser() {
+        QSettings * storage = new QSettings("history");
+        StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
+        bookmarks->setStorage(storage);
+
+        StringStoreModel * path_history = new StringStoreModel("directories", this);
+        path_history->setStorage(storage);
+        path_history->setLimit(100);
+
+        _files = new FileBrowser;
+        _files->setBookmarkModel(bookmarks);
+        _files->setHistoryModel(path_history);
+        _files->setDirectory(QSettings().value("DefaultLocation").toString());
+        _ui->toolBox->addTab(_files, tr("Files"));
+
+        connect(_files, SIGNAL(recursionEnabled(bool)),
+            _model, SLOT(setRecursive(bool)));
+
+        connect(_files, SIGNAL(pathSelected(QString, bool)),
+            _model, SLOT(addPath(QString)));
+
+        connect(_files, SIGNAL(pathUnselected(QString, bool)),
+            _model, SLOT(removeDirectory(QString)));
+    }
+
+    void MainWindow::setupMainView() {
+        _model = new Tags::TagsModel(this);
+
+        auto proxy = new QSortFilterProxyModel(this);
+        proxy->setSortRole(Qt::EditRole);
+        proxy->setSourceModel(_model);
+
+        _ui->itemView->setModel(proxy);
+        _ui->itemView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+        _ui->itemView->horizontalHeader()->setSectionsMovable(true);
+
+        connect(_ui->itemView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
+    }
+
+    void MainWindow::setupTagEditor() {
+        _ui->tagEditor->setModel(_ui->itemView->model());
+        _ui->tagEditor->setSelectionModel(_ui->itemView->selectionModel());
     }
 
     MainWindow::~MainWindow() {
         delete _ui;
     }
 
+    void MainWindow::closeEvent(QCloseEvent * event) {
+        saveSettings();
+        event->accept();
+    }
+
+    void MainWindow::openSettingsDialog() {
+        Settings::SettingsDialog dialog(this);
+        dialog.exec();
+    }
+
     void MainWindow::showHeaderContextMenu(const QPoint & point) const {
-        QHeaderView * header = _ui->tableView->horizontalHeader();
+        QHeaderView * header = _ui->itemView->horizontalHeader();
         QSignalMapper mapper;
         QMap<QString, QAction *> labels;
 
@@ -66,5 +126,23 @@ namespace Coquillo {
 
         menu->exec(header->mapToGlobal(point));
         menu->deleteLater();
+    }
+
+    void MainWindow::restoreSettings() {
+        QSettings settings;
+        resize(settings.value("UI/MainWindow/Size").toSize());
+        restoreState(settings.value("UI/MainWindow/State").toByteArray());
+        _ui->splitter->restoreState(settings.value("UI/MainWindow/Splitter").toByteArray());
+        _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/MainWindow/Header").toByteArray());
+        _ui->itemView->horizontalHeader()->setSectionsMovable(true);
+    }
+
+    void MainWindow::saveSettings() {
+        QSettings settings;
+        settings.setValue("UI/MainWindow/Size", size());
+        settings.setValue("UI/MainWindow/State", saveState());
+        settings.setValue("UI/MainWindow/Splitter", _ui->splitter->saveState());
+        settings.setValue("UI/MainWindow/Header", _ui->itemView->horizontalHeader()->saveState());
+        settings.sync();
     }
 }

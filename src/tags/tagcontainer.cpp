@@ -2,6 +2,11 @@
 
 namespace Coquillo {
     namespace Tags {
+        Container::Container()
+        : _id(0) {
+
+        }
+
         Container::Container(const QString & path)
         : _id(qHash(path)), _path(path) {
 
@@ -21,6 +26,18 @@ namespace Coquillo {
 
         QVariant Container::value(const QString & field) const {
             return _tags[_primary].value(field);
+        }
+
+        const Tag Container::tag(const QString & id) const {
+            return _tags[id];
+        }
+
+        QList<Tag> Container::tags() const {
+            return _tags.values();
+        }
+
+        QStringList Container::tagNames() const {
+            return _tags.keys();
         }
     }
 }

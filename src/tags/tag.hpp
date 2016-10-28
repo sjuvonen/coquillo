@@ -12,7 +12,9 @@ namespace Coquillo {
                 Tag() { }
                 Tag(const QString & type, const Mapping & mapping, const QVariantHash & values);
 
+                QStringList keys() const;
                 QVariant value(const QString & field) const;
+                QVariantList all(const QString & raw) const;
 
                 inline bool isNull() const { return _id.isNull(); }
                 inline QString id() const { return _id; }

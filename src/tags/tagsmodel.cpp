@@ -1,11 +1,15 @@
+#include <QDir>
 #include "crawler/crawler.hpp"
 #include "tag.hpp"
+#include "tagdataroles.hpp"
 #include "tagsmodel.hpp"
+
+#include <QDebug>
 
 namespace Coquillo {
     namespace Tags {
         TagsModel::TagsModel(QObject * parent)
-        : QAbstractItemModel(parent) {
+        : QAbstractItemModel(parent), _recursive(false) {
             _columns = QHash<int, QString>();
             _columns[0] = tr("Title");
             _columns[1] = tr("Artist");
@@ -42,20 +46,7 @@ namespace Coquillo {
             _columnMap[14] = "filename";
             _columnMap[15] = "images";
 
-            qRegisterMetaType<Coquillo::Tags::Tag>("Tag");
-
-            auto crawler = new Crawler::Crawler(this);
-            crawler->searchPath("/mnt/data/Music/Artists/666");
-
-            crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
-                crawler->deleteLater();
-            });
-
-            crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
-                beginInsertRows(QModelIndex(), _store.size(), _store.size() + results.size());
-                _store.add(results);
-                endInsertRows();
-            });
+            qRegisterMetaType<Coquillo::Tags::Container>("TagContainer");
         }
 
         int TagsModel::columnCount(const QModelIndex & parent) const {
@@ -67,17 +58,28 @@ namespace Coquillo {
         }
 
         QVariant TagsModel::data(const QModelIndex & idx, int role) const {
-            if (idx.isValid() && (role == Qt::EditRole || role == Qt::DisplayRole)) {
-                const auto file = _store.at(idx.row());
-
-                switch (idx.column()) {
-                    case 15:
-                        return file.path();
-
-                    default: {
-                        const auto field = _columnMap.value(idx.column());
-                        return file.value(field);
+            if (idx.isValid()) {
+                if (role == Qt::EditRole || role == Qt::DisplayRole) {
+                    const auto file = _store.at(idx.row());
+                    if (idx.column() == 14) {
+                        if (role == Qt::EditRole) {
+                            return file.path();
+                        } else {
+                            const auto root = containedDirectoryForRow(idx.row());
+                            return file.path().midRef(root.length() + 1).toString();
+                        }
                     }
+                    const auto field = _columnMap.value(idx.column());
+                    return file.value(field);
+                } else if (role == ContainerRole) {
+                    return QVariant::fromValue(_store.at(idx.row()));
+                } else if (role == ItemModifiedStateRole) {
+                    return _store.isModified(idx.row());
+                } else if (role == FieldModifiedStateRole) {
+                    const QString field = headerData(idx.column(), Qt::Horizontal).toString();
+                    return _store.isFieldModified(idx.row(), field);
+                } else if (role == RootPathRole) {
+                    return containedDirectoryForRow(idx.row());
                 }
             }
 
@@ -92,11 +94,79 @@ namespace Coquillo {
         }
 
         QModelIndex TagsModel::index(int row, int col, const QModelIndex & parent) const {
-            if (parent.isValid()) {
-                return QModelIndex();
-            } else {
+            if (row >= 0 && row < rowCount() && col >= 0 && col < columnCount() && !parent.isValid()) {
                 return createIndex(row, col, qHash(_store.at(row).id(), col));
+            } else {
+                return QModelIndex();
             }
+        }
+
+        bool TagsModel::removeRows(int row, int count, const QModelIndex & parent) {
+            if (row < 0 || row >= rowCount()) {
+                return false;
+            }
+
+            count = qMin(row + count, _store.size()) - row;
+            beginRemoveRows(parent, row, row + count - 1);
+            while (count-- > 0) {
+                _store.remove(row);
+            }
+            endRemoveRows();
+            return true;
+        }
+
+        void TagsModel::addPath(const QString & path) {
+            addPaths({path});
+        }
+
+        void TagsModel::addPaths(const QStringList & paths) {
+            _directories << paths;
+            _directories.removeDuplicates();
+
+            auto crawler = new Crawler::Crawler(this);
+            crawler->setRecursive(_recursive);
+            crawler->searchPaths(paths);
+
+            crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
+                crawler->deleteLater();
+            });
+
+            crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
+                beginInsertRows(QModelIndex(), _store.size(), _store.size() + results.size() - 1);
+                _store.add(results);
+                endInsertRows();
+            });
+        }
+
+        void TagsModel::removeDirectory(const QString & path) {
+            for (int i = rowCount() - 1; i >= 0; i--) {
+                if (containedDirectoryForRow(i) == path) {
+                    removeRow(i);
+                }
+            }
+            _directories.removeOne(path);
+        }
+
+        QString TagsModel::containedDirectoryForRow(int row) const {
+            QDir dir = QFileInfo(tagContainer(row).path()).absoluteDir();
+            do {
+                if (_directories.contains(dir.absolutePath())) {
+                    return dir.absolutePath();
+                }
+            } while (dir.cdUp());
+
+            return QString();
+        }
+
+        const Container TagsModel::tagContainer(int row) const {
+            return tagContainer(index(row, 0));
+        }
+
+        const Container TagsModel::tagContainer(const QModelIndex & idx) const {
+            if (idx.isValid()) {
+                return _store.at(idx.row());
+            }
+            return Container();
         }
     }
 }

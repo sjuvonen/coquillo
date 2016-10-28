@@ -61,7 +61,6 @@ namespace Coquillo {
                 const Tag::Mapping mapping = _mappings.contains(type) ? _mappings.value(type) : _fallback;
                 const QVariantHash values = taghash[type].toHash();
                 const Tag tag(type, mapping, values);
-
                 item.addTag(tag);
             }
 
@@ -76,6 +75,28 @@ namespace Coquillo {
 
         const Container & Store::at(int pos) const {
             return _items.at(pos);
+        }
+
+        bool Store::isModified(int pos) const {
+            const Container & item = at(pos);
+            return _backup.contains(item.id());
+        }
+
+        bool Store::isFieldModified(int pos, const QString & field) const {
+            const Container & item = at(pos);
+            if (_backup.contains(item.id())) {
+                const Container & backup = _backup[item.id()];
+                return item.value(field) == backup.value(field);
+            }
+            return false;
+        }
+
+        void Store::remove(int pos) {
+            if (pos >= 0 && pos < size()) {
+                const auto item = at(pos);
+                _backup.remove(item.id());
+                _items.removeAt(pos);
+            }
         }
     }
 }
