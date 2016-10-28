@@ -15,6 +15,9 @@ namespace Coquillo {
             MainWindow(Qt::WindowFlags flags = Qt::WindowFlags());
             ~MainWindow();
 
+        private slots:
+            void showHeaderContextMenu(const QPoint & point) const;
+
         private:
             Ui::MainWindow * _ui;
     };
