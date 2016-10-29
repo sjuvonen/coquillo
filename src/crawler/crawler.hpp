@@ -34,8 +34,8 @@ namespace Coquillo {
 
         class DirectoryReader {
             public:
-                QStringList read(const QString & path);
-                QStringList read(const QStringList & paths);
+                QStringList read(const QString & path, bool recursive = false);
+                QStringList read(const QStringList & paths, bool recursive = false);
 
             private:
                 QStringList nameFilters() const;

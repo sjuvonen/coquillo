@@ -17,7 +17,7 @@
 namespace Coquillo {
     namespace Crawler {
         QStringList process_dir(const QString & path) {
-            return DirectoryReader().read(path);
+            return DirectoryReader().read(path, true);
         }
 
         QVariantHash process_file(const QString & path) {
@@ -66,13 +66,14 @@ namespace Coquillo {
             });
         }
 
-        QStringList DirectoryReader::read(const QString & path) {
+        QStringList DirectoryReader::read(const QString & path, bool recursive) {
             QFileInfo info(path);
             if (info.isFile()) {
                 return QStringList() << info.absoluteFilePath();
             }
             QStringList files;
-            QDirIterator it(path, nameFilters(), QDir::Files, QDirIterator::Subdirectories);
+            auto flags = recursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags;
+            QDirIterator it(path, nameFilters(), QDir::Files, flags);
 
             while (it.hasNext()) {
                 it.next();
@@ -81,7 +82,7 @@ namespace Coquillo {
             return files;
         }
 
-        QStringList DirectoryReader::read(const QStringList & paths) {
+        QStringList DirectoryReader::read(const QStringList & paths, bool recursive) {
             QStringList files;
             foreach (const QString & path, paths) {
                 files << read(path);

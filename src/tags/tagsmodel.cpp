@@ -61,7 +61,7 @@ namespace Coquillo {
             if (idx.isValid()) {
                 if (role == Qt::EditRole || role == Qt::DisplayRole) {
                     const auto file = _store.at(idx.row());
-                    if (idx.column() == 14) {
+                    if (idx.column() == PathField) {
                         if (role == Qt::EditRole) {
                             return file.path();
                         } else {
@@ -76,7 +76,7 @@ namespace Coquillo {
                 } else if (role == ItemModifiedStateRole) {
                     return _store.isModified(idx.row());
                 } else if (role == FieldModifiedStateRole) {
-                    const QString field = headerData(idx.column(), Qt::Horizontal).toString();
+                    const QString field = _columnMap[idx.column()];
                     return _store.isFieldModified(idx.row(), field);
                 } else if (role == RootPathRole) {
                     return containedDirectoryForRow(idx.row());
@@ -84,6 +84,31 @@ namespace Coquillo {
             }
 
             return QVariant();
+        }
+
+        bool TagsModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
+            if (!idx.isValid()) {
+                return false;
+            }
+
+            if (role != Qt::EditRole && role != Qt::DisplayRole) {
+                return QAbstractItemModel::setData(idx, value, role);
+            }
+
+            if (idx.column() == PathField) {
+                if (_store.rename(idx.row(), value.toString())) {
+                    rowChanged(idx);
+                    return true;
+                }
+            } else {
+                const QString field = _columnMap[idx.column()];
+                if (_store.setValue(idx.row(), field, value)) {
+                    rowChanged(idx);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         QVariant TagsModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -120,12 +145,26 @@ namespace Coquillo {
         }
 
         void TagsModel::addPaths(const QStringList & paths) {
-            _directories << paths;
-            _directories.removeDuplicates();
+            QStringList copy(paths);
+
+            for (int i = copy.size() - 1; i >= 0; i--) {
+                const QString path = copy[i];
+                for (int j = 0; j < _directories.size(); i++) {
+                    const QString test = _directories[j];
+                    if (path == test) {
+                        copy.removeAt(i);
+                    } else if (test.startsWith(path + '/')) {
+                        removeDirectory(test);
+                    }
+                }
+            }
+
+            _directories << copy;
+            // _directories.removeDuplicates();
 
             auto crawler = new Crawler::Crawler(this);
             crawler->setRecursive(_recursive);
-            crawler->searchPaths(paths);
+            crawler->searchPaths(copy);
 
             crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
                 crawler->deleteLater();
@@ -167,6 +206,10 @@ namespace Coquillo {
                 return _store.at(idx.row());
             }
             return Container();
+        }
+
+        void TagsModel::rowChanged(const QModelIndex & idx) {
+            emit dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), columnCount() - 1));
         }
     }
 }

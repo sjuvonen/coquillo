@@ -32,6 +32,10 @@ namespace Coquillo {
             return _tags[id];
         }
 
+        Tag & Container::tag(const QString & id) {
+            return _tags[id];
+        }
+
         QList<Tag> Container::tags() const {
             return _tags.values();
         }

@@ -74,7 +74,11 @@ namespace Coquillo {
         }
 
         const Container & Store::at(int pos) const {
-            return _items.at(pos);
+            return _items[pos];
+        }
+
+        Container & Store::at(int pos) {
+            return _items[pos];
         }
 
         bool Store::isModified(int pos) const {
@@ -86,7 +90,7 @@ namespace Coquillo {
             const Container & item = at(pos);
             if (_backup.contains(item.id())) {
                 const Container & backup = _backup[item.id()];
-                return item.value(field) == backup.value(field);
+                return item.value(field) != backup.value(field);
             }
             return false;
         }
@@ -96,6 +100,53 @@ namespace Coquillo {
                 const auto item = at(pos);
                 _backup.remove(item.id());
                 _items.removeAt(pos);
+            }
+        }
+
+        bool Store::rename(int pos, const QString & new_path) {
+            Container & item = at(pos);
+
+            if (item.path() != new_path) {
+                backup(pos);
+                item.setPath(new_path);
+                return true;
+            }
+
+            return false;
+        }
+
+        bool Store::setValue(int pos, const QString & field, const QVariant & value) {
+            Container & item = at(pos);
+            bool changed = false;
+
+            foreach (const QString key, item.tagNames()) {
+                /*
+                 * NOTE: Using a const copy here to prevent the backup also changing upon writing
+                 * into the field.
+                 */
+                const Tag tag = item.tag(key);
+
+                if (!tag.equals(field, value)) {
+                    backup(item);
+                    item.tag(key).insert(field, value);
+                    changed = true;
+                }
+            }
+
+            return changed;
+        }
+
+        void Store::backup(int pos) {
+            const Container item = at(pos);
+
+            if (!_backup.contains(item.id())) {
+                _backup.insert(item.id(), item);
+            }
+        }
+
+        void Store::backup(const Container & item) {
+            if (!_backup.contains(item.id())) {
+                _backup.insert(item.id(), item);
             }
         }
     }

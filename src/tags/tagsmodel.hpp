@@ -10,6 +10,8 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
+                enum Fields { PathField = 14, ImageField = 15 };
+
                 TagsModel(QObject * parent = 0);
 
                 int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -18,6 +20,7 @@ namespace Coquillo {
                 QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
                 QModelIndex index(int row, int col, const QModelIndex & parent = QModelIndex()) const;
                 bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
+                bool setData(const QModelIndex & idx, const QVariant & value, int role = Qt::EditRole);
 
                 inline QModelIndex parent(const QModelIndex &) const {
                     return QModelIndex();
@@ -33,6 +36,7 @@ namespace Coquillo {
                 const Container tagContainer(const QModelIndex & idx) const;
                 const Container tagContainer(int row) const;
                 QString containedDirectoryForRow(int row) const;
+                void rowChanged(const QModelIndex & idx);
 
                 QHash<int, QString> _columns;
                 QHash<int, QString> _columnMap;

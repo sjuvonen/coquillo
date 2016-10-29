@@ -16,8 +16,12 @@ namespace Coquillo {
                 QVariant value(const QString & field) const;
                 QVariantList all(const QString & raw) const;
 
+                bool insert(const QString & field, const QVariant & value);
+
                 inline bool isNull() const { return _id.isNull(); }
                 inline QString id() const { return _id; }
+
+                bool equals(const QString & field, const QVariant & value) const;
 
             private:
                 QString _id;
