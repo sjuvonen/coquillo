@@ -22,6 +22,7 @@ namespace Coquillo {
             signals:
                 void finished();
                 void progress(int value);
+                void rangeChanged(int, int);
                 void results(const QList<QVariantHash> & results);
                 void started();
 

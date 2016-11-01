@@ -40,13 +40,14 @@ namespace Coquillo {
             files_watcher->setPendingResultsLimit(50);
             dirs_watcher->setFuture(QtConcurrent::mapped(paths, &process_dir));
 
+            connect(files_watcher, SIGNAL(progressValueChanged(int)), SIGNAL(progress(int)));
+            connect(files_watcher, SIGNAL(progressRangeChanged(int, int)), SIGNAL(rangeChanged(int, int)));
+            connect(files_watcher, SIGNAL(finished()), SIGNAL(finished()));
+            connect(files_watcher, SIGNAL(finished()), SLOT(deleteLater()));
+
             connect(dirs_watcher, &QFutureWatcher<QStringList>::finished, [dirs_watcher, files_watcher]() {
                 files_watcher->setFuture(QtConcurrent::mapped(dirs_watcher->future().result(), &process_file));
                 dirs_watcher->deleteLater();
-            });
-
-            connect(files_watcher, &QFutureWatcher<QVariantHash>::progressValueChanged, [this](int value) {
-                emit(progress(value));
             });
 
             connect(files_watcher, &QFutureWatcher<QVariantHash>::resultsReadyAt, [this, files_watcher](int a, int b) {
@@ -58,11 +59,6 @@ namespace Coquillo {
                 }
 
                 emit(results(items));
-            });
-
-            connect(files_watcher, &QFutureWatcher<QVariantHash>::finished, [this, files_watcher]() {
-                emit(finished());
-                files_watcher->deleteLater();
             });
 
             emit started();

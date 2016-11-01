@@ -78,25 +78,25 @@ namespace Coquillo {
     }
 
     void MainWindow::setupStatusBar() {
-        // auto * bar = new QProgressBar(this);
-        // bar->setFixedWidth(140);
-        // bar->hide();
+        auto * bar = new QProgressBar(this);
+        bar->setFixedWidth(140);
+        bar->hide();
 
         auto * label = new ItemCountLabel(_ui->itemView->model());
 
-        // connect(_progress, SIGNAL(started()), label, SLOT(hide()));
-        // connect(_progress, SIGNAL(finished()), label, SLOT(show()));
+        connect(_progress, SIGNAL(started()), label, SLOT(hide()));
+        connect(_progress, SIGNAL(finished()), label, SLOT(show()));
 
-        // connect(_progress, SIGNAL(started()), bar, SLOT(show()));
-        // connect(_progress, SIGNAL(finished()), bar, SLOT(hide()));
-        // connect(_progress, SIGNAL(aborted()), bar, SLOT(hide()));
-        // connect(_progress, SIGNAL(progress(int)), bar, SLOT(setValue(int)));
-        // connect(_progress, SIGNAL(rangeChanged(int, int)), bar, SLOT(setRange(int, int)));
+        connect(_progress, SIGNAL(started()), bar, SLOT(show()));
+        connect(_progress, SIGNAL(finished()), bar, SLOT(hide()));
+        connect(_progress, SIGNAL(aborted()), bar, SLOT(hide()));
+        connect(_progress, SIGNAL(progress(int)), bar, SLOT(setValue(int)));
+        connect(_progress, SIGNAL(rangeChanged(int, int)), bar, SLOT(setRange(int, int)));
 
         statusBar()->addPermanentWidget(label);
-        // statusBar()->addPermanentWidget(bar);
+        statusBar()->addPermanentWidget(bar);
 
-        // new ToggleWidgetByAction(statusBar(), _ui->actionStatusbar);
+        new ToggleWidgetByAction(statusBar(), _ui->actionStatusbar);
     }
 
     void MainWindow::setupTagEditor() {

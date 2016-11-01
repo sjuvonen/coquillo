@@ -151,7 +151,7 @@ namespace Coquillo {
 
             for (int i = copy.size() - 1; i >= 0; i--) {
                 const QString path = copy[i];
-                for (int j = 0; j < _directories.size(); i++) {
+                for (int j = 0; j < _directories.size(); j++) {
                     const QString test = _directories[j];
                     if (path == test) {
                         copy.removeAt(i);
@@ -164,22 +164,21 @@ namespace Coquillo {
             _directories << copy;
 
             auto crawler = new Crawler::Crawler(this);
-            crawler->setRecursive(_recursive);
-            crawler->searchPaths(copy);
 
-            // connect(crawler, SIGNAL(started()), _progress, SIGNAL(started()));
-            // connect(crawler, SIGNAL(finished()), _progress, SIGNAL(finished()));
-            // connect(crawler, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
-
-            crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
-                crawler->deleteLater();
-            });
+            connect(crawler, SIGNAL(started()), _progress, SIGNAL(started()));
+            connect(crawler, SIGNAL(finished()), _progress, SIGNAL(finished()));
+            connect(crawler, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
+            connect(crawler, SIGNAL(rangeChanged(int, int)), _progress, SIGNAL(rangeChanged(int, int)));
+            connect(crawler, SIGNAL(finished()), crawler, SLOT(deleteLater()));
 
             crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
                 beginInsertRows(QModelIndex(), _store.size(), _store.size() + results.size() - 1);
                 _store.add(results);
                 endInsertRows();
             });
+
+            crawler->setRecursive(_recursive);
+            crawler->searchPaths(copy);
         }
 
         void TagsModel::discardChanges() {
