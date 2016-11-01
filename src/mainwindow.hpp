@@ -13,6 +13,7 @@ namespace Coquillo {
     }
 
     class FileBrowser;
+    class ProgressListener;
 
     class MainWindow : public QMainWindow {
         Q_OBJECT
@@ -31,13 +32,16 @@ namespace Coquillo {
         private:
             void setupFileBrowser();
             void setupMainView();
+            void setupStatusBar();
             void setupTagEditor();
+            void setupToolBar();
             void restoreSettings();
             void saveSettings();
 
             FileBrowser * _files;
             Tags::TagsModel * _model;
             Ui::MainWindow * _ui;
+            ProgressListener * _progress;
     };
 }
 

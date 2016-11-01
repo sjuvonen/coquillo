@@ -21,7 +21,7 @@ namespace Coquillo {
                 };
             }
 
-            void Generic::write(const QVariantMap & values) {
+            void Generic::write(TagLib::Tag * tag, const QVariantMap & values) {
                 Q_UNUSED(values)
             }
         }

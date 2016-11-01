@@ -1,5 +1,6 @@
 #include <QSortFilterProxyModel>
 #include <QCloseEvent>
+#include <QProgressBar>
 #include <QSettings>
 #include <QSignalMapper>
 
@@ -8,6 +9,7 @@
 #include "tags/tagsmodel.hpp"
 #include "itemcountlabel.hpp"
 #include "mainwindow.hpp"
+#include "progresslistener.hpp"
 #include "stringstoremodel.hpp"
 #include "togglewidgetbyaction.hpp"
 #include "ui_mainwindow.h"
@@ -20,7 +22,12 @@ namespace Coquillo {
         _ui = new Ui::MainWindow;
         _ui->setupUi(this);
 
+        _progress = new ProgressListener(this);
+        _model = new Tags::TagsModel(_progress, this);
+
         setupMainView();
+        setupToolBar();
+        setupStatusBar();
         setupTagEditor();
         setupFileBrowser();
 
@@ -56,8 +63,6 @@ namespace Coquillo {
         addAction(_ui->actionQuit);
         addAction(_ui->actionMenubar);
 
-        _model = new Tags::TagsModel(this);
-
         auto proxy = new QSortFilterProxyModel(this);
         proxy->setSortRole(Qt::EditRole);
         proxy->setSourceModel(_model);
@@ -69,15 +74,40 @@ namespace Coquillo {
         connect(_ui->itemView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
 
-        statusBar()->addPermanentWidget(new ItemCountLabel(proxy));
-
         new ToggleWidgetByAction(menuBar(), _ui->actionMenubar);
-        new ToggleWidgetByAction(statusBar(), _ui->actionStatusbar);
+    }
+
+    void MainWindow::setupStatusBar() {
+        // auto * bar = new QProgressBar(this);
+        // bar->setFixedWidth(140);
+        // bar->hide();
+
+        auto * label = new ItemCountLabel(_ui->itemView->model());
+
+        // connect(_progress, SIGNAL(started()), label, SLOT(hide()));
+        // connect(_progress, SIGNAL(finished()), label, SLOT(show()));
+
+        // connect(_progress, SIGNAL(started()), bar, SLOT(show()));
+        // connect(_progress, SIGNAL(finished()), bar, SLOT(hide()));
+        // connect(_progress, SIGNAL(aborted()), bar, SLOT(hide()));
+        // connect(_progress, SIGNAL(progress(int)), bar, SLOT(setValue(int)));
+        // connect(_progress, SIGNAL(rangeChanged(int, int)), bar, SLOT(setRange(int, int)));
+
+        statusBar()->addPermanentWidget(label);
+        // statusBar()->addPermanentWidget(bar);
+
+        // new ToggleWidgetByAction(statusBar(), _ui->actionStatusbar);
     }
 
     void MainWindow::setupTagEditor() {
         _ui->tagEditor->setModel(_ui->itemView->model());
         _ui->tagEditor->setSelectionModel(_ui->itemView->selectionModel());
+    }
+
+    void MainWindow::setupToolBar() {
+        connect(_ui->actionSave, SIGNAL(triggered()), _model, SLOT(writeToDisk()));
+        connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(discardChanges()));
+        connect(_ui->actionReload, SIGNAL(triggered()), _model, SLOT(reload()));
     }
 
     MainWindow::~MainWindow() {

@@ -10,7 +10,7 @@ namespace Coquillo {
                 {"artist", "artist"},
                 {"comment", "comment"},
                 {"genre", "genre"},
-                {"number", "TRACnumberKNUMBER"},
+                {"number", "TRACKNUMBER"},
                 {"title", "title"},
                 {"year", "year"},
             };
@@ -148,6 +148,18 @@ namespace Coquillo {
             if (!_backup.contains(item.id())) {
                 _backup.insert(item.id(), item);
             }
+        }
+
+        QList<Container> Store::changedItems() const {
+            QList<Container> changed;
+
+            foreach (const Container & item, _items) {
+                if (_backup.contains(item.id())) {
+                    changed << item;
+                }
+            }
+
+            return changed;
         }
     }
 }

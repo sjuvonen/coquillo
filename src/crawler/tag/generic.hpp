@@ -12,7 +12,7 @@ namespace Coquillo {
                 public:
                     Generic() {}
                     QVariantHash read(const TagLib::Tag * tag) const;
-                    virtual void write(const QVariantMap & data);
+                    virtual void write(TagLib::Tag * tag, const QVariantMap & data);
 
             };
         }

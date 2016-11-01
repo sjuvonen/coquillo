@@ -26,6 +26,7 @@ FORMS += \
 HEADERS += \
   src/itemcountlabel.hpp \
   src/mainwindow.hpp \
+  src/progresslistener.hpp \
   src/stringstoremodel.hpp \
   src/togglewidgetbyaction.hpp \
   src/crawler/crawler.hpp \
@@ -44,11 +45,14 @@ HEADERS += \
   src/tags/tagcontainer.hpp \
   src/tags/tagsmodel.hpp \
   src/tags/tagstore.hpp \
+  src/tags/tagwriter.hpp \
+  src/tags/tagwriterjob.hpp \
 
 SOURCES += \
   src/itemcountlabel.cpp \
   src/main.cpp \
   src/mainwindow.cpp \
+  src/progresslistener.cpp \
   src/stringstoremodel.cpp \
   src/togglewidgetbyaction.cpp \
   src/crawler/crawler.cpp \
@@ -66,3 +70,4 @@ SOURCES += \
   src/tags/tagcontainer.cpp \
   src/tags/tagsmodel.cpp \
   src/tags/tagstore.cpp \
+  src/tags/tagwriter.cpp \

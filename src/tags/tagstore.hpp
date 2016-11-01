@@ -1,6 +1,7 @@
 #ifndef COQUILLO_TAGS_TAGSTORE_H
 #define COQUILLO_TAGS_TAGSTORE_H
 
+#include <QObject>
 #include "tagcontainer.hpp"
 
 namespace Coquillo {
@@ -22,6 +23,8 @@ namespace Coquillo {
 
                 bool rename(int pos, const QString & new_path);
                 bool setValue(int pos, const QString & field, const QVariant & value);
+
+                QList<Container> changedItems() const;
 
             private:
                 Container & at(int pos);

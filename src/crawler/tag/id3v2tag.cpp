@@ -22,10 +22,7 @@ namespace Coquillo {
                     const QString field = i->first.data();
 
                     if (!ignored.contains(field)) {
-                        // QVariantList values;
-
                         for (auto j = i->second.begin(); j != i->second.end();j++) {
-                            // values << T2QString((*j)->toString());
                             if (field == "WXXX") {
                                 const QRegExp prefix("^\\[\\] ");
                                 data.insertMulti(field, T2QString((*j)->toString()).remove(prefix));
@@ -33,8 +30,6 @@ namespace Coquillo {
                                 data.insertMulti(field, T2QString((*j)->toString()));
                             }
                         }
-
-                        // data.insert(field, values);
                     }
                 }
 
@@ -54,13 +49,55 @@ namespace Coquillo {
                     data["TDRC"] = data.take("TYER");
                 }
 
-                // if (data.contains("WXXX")) {
-                //     // Strip leading "[] "
-                //     const QRegExp prefix("^\\[\\] ");
-                //     data["WXXX"][0] = data["WXXX"].first().toString().remove(prefix);
-                // }
-
                 return data;
+            }
+
+            void Id3v2Tag::write(TagLib::ID3v2::Tag * tag, const QVariantHash & values) {
+                // QVariantHash common = {
+                //     {"album", values.value("TALB")},
+                //     {"artist", values.value("TPE1")},
+                //     {"comment", values.value("COMM")},
+                //     {"genre", values.value("TCON")},
+                //     {"title", values.value("TIT2")},
+                //     {"year", values.value("TDRC")},
+                // };
+                //
+                // // Default::write(common);
+                //
+                // auto tag = dynamic_cast<TagLib::ID3v2::Tag*>(_tag);
+                // const QStringList text_frames = {"TCOM", "TENC", "TOPE", "TPE2", "TPOS"};
+                // const QStringList supported = (QStringList){"WXXX"} + text_frames;
+                //
+                // foreach (const QString & name, supported) {
+                //     if (data.contains(name)) {
+                //         tag->removeFrames(name.toUtf8().constData());
+                //     }
+                // }
+                //
+                // foreach (const QString & name, text_frames) {
+                //     if (data.contains(name)) {
+                //         foreach (const QVariant & item, data[name]) {
+                //             auto frame = new TagLib::ID3v2::TextIdentificationFrame(name.toUtf8().data());
+                //             frame->setText(item.toString().toStdString());
+                //             tag->addFrame(frame);
+                //         }
+                //     }
+                // }
+                //
+                // if (data.contains("TRCK")) {
+                //     auto frame = new TagLib::ID3v2::TextIdentificationFrame("TRCK");
+                //     frame->setText(data["TRCK"].first().toString().toStdString());
+                //     tag->removeFrames("TRCK");
+                //     tag->addFrame(frame);
+                // }
+                //
+                // if (data.contains("WXXX")) {
+                //     foreach (const QVariant & url, data["WXXX"]) {
+                //         auto frame = new TagLib::ID3v2::UserUrlLinkFrame;
+                //         frame->setText(url.toString().toStdString());
+                //         tag->addFrame(frame);
+                //     }
+                // }
             }
         }
     }

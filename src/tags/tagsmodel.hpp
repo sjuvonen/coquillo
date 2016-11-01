@@ -2,9 +2,12 @@
 #define COQUILLO_TAGS_TAGSMODEL_H
 
 #include <QAbstractItemModel>
+#include <QPointer>
 #include "tagstore.hpp"
 
 namespace Coquillo {
+    class ProgressListener;
+
     namespace Tags {
         class TagsModel : public QAbstractItemModel {
             Q_OBJECT
@@ -12,7 +15,7 @@ namespace Coquillo {
             public:
                 enum Fields { PathField = 14, ImageField = 15 };
 
-                TagsModel(QObject * parent = 0);
+                TagsModel(ProgressListener * progress, QObject * parent = 0);
 
                 int columnCount(const QModelIndex & parent = QModelIndex()) const;
                 int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -26,11 +29,19 @@ namespace Coquillo {
                     return QModelIndex();
                 }
 
+            signals:
+                void started();
+                void progress(int);
+                void finished();
+
             public slots:
                 void addPath(const QString & path);
                 void addPaths(const QStringList & paths);
+                void discardChanges();
+                void reload();
                 void removeDirectory(const QString & path);
                 void setRecursive(bool state) { _recursive = state; }
+                void writeToDisk();
 
             private:
                 const Container tagContainer(const QModelIndex & idx) const;
@@ -41,6 +52,7 @@ namespace Coquillo {
                 QHash<int, QString> _columns;
                 QHash<int, QString> _columnMap;
                 Store _store;
+                QPointer<ProgressListener> _progress;
                 bool _recursive;
                 QStringList _directories;
         };

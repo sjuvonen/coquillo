@@ -1,15 +1,17 @@
 #include <QDir>
 #include "crawler/crawler.hpp"
+#include "../progresslistener.hpp"
 #include "tag.hpp"
 #include "tagdataroles.hpp"
 #include "tagsmodel.hpp"
+#include "tagwriter.hpp"
 
 #include <QDebug>
 
 namespace Coquillo {
     namespace Tags {
-        TagsModel::TagsModel(QObject * parent)
-        : QAbstractItemModel(parent), _recursive(false) {
+        TagsModel::TagsModel(ProgressListener * progress, QObject * parent)
+        : QAbstractItemModel(parent), _progress(progress), _recursive(false) {
             _columns = QHash<int, QString>();
             _columns[0] = tr("Title");
             _columns[1] = tr("Artist");
@@ -160,11 +162,14 @@ namespace Coquillo {
             }
 
             _directories << copy;
-            // _directories.removeDuplicates();
 
             auto crawler = new Crawler::Crawler(this);
             crawler->setRecursive(_recursive);
             crawler->searchPaths(copy);
+
+            // connect(crawler, SIGNAL(started()), _progress, SIGNAL(started()));
+            // connect(crawler, SIGNAL(finished()), _progress, SIGNAL(finished()));
+            // connect(crawler, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
 
             crawler->connect(crawler, &Crawler::Crawler::finished, [this, crawler]{
                 crawler->deleteLater();
@@ -177,6 +182,14 @@ namespace Coquillo {
             });
         }
 
+        void TagsModel::discardChanges() {
+
+        }
+
+        void TagsModel::reload() {
+
+        }
+
         void TagsModel::removeDirectory(const QString & path) {
             for (int i = rowCount() - 1; i >= 0; i--) {
                 if (containedDirectoryForRow(i) == path) {
@@ -184,6 +197,21 @@ namespace Coquillo {
                 }
             }
             _directories.removeOne(path);
+        }
+
+        void TagsModel::writeToDisk() {
+            const QList<Container> items = _store.changedItems();
+
+            if (items.size() > 0) {
+                auto * writer = new Writer(this);
+
+                connect(writer, SIGNAL(started()), _progress, SIGNAL(started()));
+                connect(writer, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
+                connect(writer, SIGNAL(finished()), _progress, SIGNAL(finished()));
+                connect(writer, SIGNAL(finished()), writer, SLOT(deleteLater()));
+
+                writer->write(items);
+            }
         }
 
         QString TagsModel::containedDirectoryForRow(int row) const {

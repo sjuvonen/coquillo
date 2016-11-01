@@ -64,6 +64,8 @@ namespace Coquillo {
                 emit(finished());
                 files_watcher->deleteLater();
             });
+
+            emit started();
         }
 
         QStringList DirectoryReader::read(const QString & path, bool recursive) {

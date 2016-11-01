@@ -23,6 +23,7 @@ namespace Coquillo {
                 void finished();
                 void progress(int value);
                 void results(const QList<QVariantHash> & results);
+                void started();
 
             public slots:
                 void searchPath(const QString & path);
