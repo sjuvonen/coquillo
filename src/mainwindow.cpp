@@ -154,6 +154,13 @@ namespace Coquillo {
         dialog.exec();
     }
 
+    void MainWindow::selectAll() {
+        QAbstractItemModel * model = _ui->itemView->model();
+        const QModelIndex start = model->index(0, 0);
+        const QModelIndex end = model->index(model->rowCount() - 1, model->columnCount() - 1);
+        _ui->itemView->selectionModel()->select(QItemSelection(start, end), QItemSelectionModel::Select);
+    }
+
     void MainWindow::setInterfaceLocked(bool state) {
         foreach (QToolBar * bar, findChildren<QToolBar*>()) {
             bar->setMovable(!state);

@@ -6,12 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
-    <height>666</height>
+    <width>1122</width>
+    <height>751</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -83,7 +80,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1094</width>
+     <width>1122</width>
      <height>20</height>
     </rect>
    </property>
@@ -115,7 +112,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionSelectAll"/>
+   <addaction name="separator"/>
    <addaction name="actionReload"/>
+   <addaction name="separator"/>
    <addaction name="actionSave"/>
    <addaction name="actionDiscard"/>
   </widget>
@@ -199,6 +199,17 @@
     <string>Ctrl+R</string>
    </property>
   </action>
+  <action name="actionSelectAll">
+   <property name="icon">
+    <iconset theme="edit-select-all"/>
+   </property>
+   <property name="text">
+    <string>Select All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -242,8 +253,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSelectAll</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>546</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openSettingsDialog()</slot>
+  <slot>selectAll()</slot>
  </slots>
 </ui>
