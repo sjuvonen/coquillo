@@ -1,3 +1,4 @@
+#include <functional>
 #include <taglib/fileref.h>
 #include <taglib/flacfile.h>
 #include <taglib/id3v1tag.h>
@@ -14,10 +15,12 @@
 #include "tag/id3v2.hpp"
 #include "tag/xiphcomment.hpp"
 
+#include <QDebug>
+
 namespace Coquillo {
     namespace Crawler {
-        QStringList process_dir(const QString & path) {
-            return DirectoryReader().read(path, true);
+        QStringList process_dir(const QString & path, bool recursive) {
+            return DirectoryReader().read(path, recursive);
         }
 
         QVariantHash process_file(const QString & path) {
@@ -34,11 +37,15 @@ namespace Coquillo {
         }
 
         void Crawler::searchPaths(const QStringList & paths) {
+            using namespace std::placeholders;
+
             auto dirs_watcher = new QFutureWatcher<QStringList>(this);
             auto files_watcher = new QFutureWatcher<QVariantHash>(this);
 
+            std::function<QStringList(const QString &)> proc_d = std::bind(&process_dir, _1, _recursive);
+
             files_watcher->setPendingResultsLimit(50);
-            dirs_watcher->setFuture(QtConcurrent::mapped(paths, &process_dir));
+            dirs_watcher->setFuture(QtConcurrent::mapped(paths, proc_d));
 
             connect(files_watcher, SIGNAL(progressValueChanged(int)), SIGNAL(progress(int)));
             connect(files_watcher, SIGNAL(progressRangeChanged(int, int)), SIGNAL(rangeChanged(int, int)));
@@ -83,7 +90,7 @@ namespace Coquillo {
         QStringList DirectoryReader::read(const QStringList & paths, bool recursive) {
             QStringList files;
             foreach (const QString & path, paths) {
-                files << read(path);
+                files << read(path, recursive);
             }
             return files;
         }
