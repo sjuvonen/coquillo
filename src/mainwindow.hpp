@@ -21,12 +21,14 @@ namespace Coquillo {
         public:
             MainWindow(Qt::WindowFlags flags = Qt::WindowFlags());
             ~MainWindow();
+            QMenu * createPopupMenu();
 
         protected:
             void closeEvent(QCloseEvent * event);
 
         private slots:
             void openSettingsDialog();
+            void setInterfaceLocked(bool state);
             void showHeaderContextMenu(const QPoint & point) const;
 
         private:

@@ -34,6 +34,37 @@ namespace Coquillo {
         restoreSettings();
     }
 
+    MainWindow::~MainWindow() {
+        delete _ui;
+    }
+
+    QMenu * MainWindow::createPopupMenu() {
+        auto * menu = QMainWindow::createPopupMenu();
+        menu->addSeparator();
+
+        auto * action = menu->addAction(tr("Menubar"));
+        action->setCheckable(true);
+        action->setChecked(menuBar()->isVisible());
+
+        connect(action, SIGNAL(triggered(bool)), menuBar(), SLOT(setVisible(bool)));
+
+        action = menu->addAction(tr("Statusbar"));
+        action->setCheckable(true);
+        action->setChecked(statusBar()->isVisible());
+
+        connect(action, SIGNAL(triggered(bool)), statusBar(), SLOT(setVisible(bool)));
+
+        menu->addSeparator();
+
+        action = menu->addAction(tr("Lock toolbars"));
+        action->setCheckable(true);
+        action->setChecked(!findChild<QToolBar*>()->isMovable());
+
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(setInterfaceLocked(bool)));
+
+        return menu;
+    }
+
     void MainWindow::setupFileBrowser() {
         QSettings * storage = new QSettings("history");
         StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
@@ -113,10 +144,6 @@ namespace Coquillo {
         connect(_ui->actionReload, SIGNAL(triggered()), _model, SLOT(reload()));
     }
 
-    MainWindow::~MainWindow() {
-        delete _ui;
-    }
-
     void MainWindow::closeEvent(QCloseEvent * event) {
         saveSettings();
         event->accept();
@@ -125,6 +152,12 @@ namespace Coquillo {
     void MainWindow::openSettingsDialog() {
         Settings::SettingsDialog dialog(this);
         dialog.exec();
+    }
+
+    void MainWindow::setInterfaceLocked(bool state) {
+        foreach (QToolBar * bar, findChildren<QToolBar*>()) {
+            bar->setMovable(!state);
+        }
     }
 
     void MainWindow::showHeaderContextMenu(const QPoint & point) const {
@@ -181,6 +214,8 @@ namespace Coquillo {
 
         menuBar()->setVisible(settings.value("UI/MainWindow/MenuBar").toBool());
         statusBar()->setVisible(settings.value("UI/MainWindow/StatusBar").toBool());
+
+        setInterfaceLocked(settings.value("UI/MainWindow/LockToolBars").toBool());
     }
 
     void MainWindow::saveSettings() {
@@ -191,6 +226,7 @@ namespace Coquillo {
         settings.setValue("UI/MainWindow/Header", _ui->itemView->horizontalHeader()->saveState());
         settings.setValue("UI/MainWindow/MenuBar", menuBar()->isVisible());
         settings.setValue("UI/MainWindow/StatusBar", statusBar()->isVisible());
+        settings.setValue("UI/MainWindow/LockToolBars", !findChild<QToolBar*>()->isMovable());
         settings.sync();
     }
 }
