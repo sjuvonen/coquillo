@@ -9,7 +9,7 @@ namespace Coquillo {
             public:
                 Container();
                 Container(const QString & path);
-                
+
                 void addTag(const Tag & tag);
                 void setPrimaryTag(const QString & id);
                 QVariant value(const QString & field) const;
@@ -21,6 +21,7 @@ namespace Coquillo {
                 inline uint id() const { return _id; }
                 inline bool isNull() const { return _path.isNull(); }
 
+                bool hasTag(const QString & id) const;
                 const Tag tag(const QString & id) const;
                 Tag & tag(const QString & id);
                 QList<Tag> tags() const;

@@ -5,6 +5,7 @@
 #include <taglib/tfile.h>
 #include <taglib/vorbisfile.h>
 
+#include "crawler/tags.hpp"
 #include "tagwriter.hpp"
 #include "tagwriterjob.hpp"
 
@@ -37,7 +38,7 @@ namespace Coquillo {
 
             connect(job, SIGNAL(finished()), SLOT(processItem()));
 
-            QThreadPool::globalInstance()->start(job, 10);
+            QThreadPool::globalInstance()->start(job);
         }
 
         WriterJob::WriterJob(const Container & item)
@@ -46,7 +47,35 @@ namespace Coquillo {
         }
 
         void WriterJob::run() {
+            TagLib::FileRef ref(item.path().toUtf8().constData());
 
+            if (isFlacFile(ref.file())) {
+                auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
+
+                if (item.hasTag("id3v2")) {
+                    Crawler::Tag::Id3v2().write(file->ID3v2Tag(true), item.tag("id3v2").data());
+                }
+
+                if (item.hasTag("xiph")) {
+                    Crawler::Tag::XiphComment().write(file->xiphComment(true), item.tag("xiph").data());
+                }
+            } else if (isMpegFile(ref.file())) {
+                auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
+
+                if (item.hasTag("id3v2")) {
+                    Crawler::Tag::Id3v2().write(file->ID3v2Tag(true), item.tag("id3v2").data());
+                }
+            } else if (isVorbisFile(ref.file())) {
+                auto file = dynamic_cast<const TagLib::Ogg::Vorbis::File*>(ref.file());
+
+                if (item.hasTag("xiph")) {
+                    Crawler::Tag::XiphComment().write(file->tag(), item.tag("xiph").data());
+                }
+            }
+
+            ref.save();
+
+            emit finished();
         }
 
         bool WriterJob::isFlacFile(const TagLib::File * file) const {

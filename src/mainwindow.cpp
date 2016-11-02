@@ -68,8 +68,11 @@ namespace Coquillo {
         proxy->setSourceModel(_model);
 
         _ui->itemView->setModel(proxy);
+
         _ui->itemView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
         _ui->itemView->horizontalHeader()->setSectionsMovable(true);
+        _ui->itemView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+        _ui->itemView->horizontalHeader()->resizeSection(0, 20);
 
         connect(_ui->itemView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(showHeaderContextMenu(QPoint)));
@@ -140,10 +143,10 @@ namespace Coquillo {
         action->setChecked(!header->isSectionHidden(0));
         menu->addSeparator();
 
-        mapper.setMapping(action, 99);
+        mapper.setMapping(action, 0);
         connect(action, SIGNAL(triggered()), &mapper, SLOT(map()));
 
-        for (int i = 0; i < header->count(); i++) {
+        for (int i = 1; i < header->count(); i++) {
             const QString label = header->model()->headerData(i, Qt::Horizontal).toString();
             QAction * action = new QAction(label, menu);
             action->setCheckable(true);

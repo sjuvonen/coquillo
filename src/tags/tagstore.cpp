@@ -44,7 +44,7 @@ namespace Coquillo {
                     {"original_artist", "PERFORMER"},
                     {"title", "TITLE"},
                     {"total", "TRACKTOTAL"},
-                    {"url", "LICENSE"},
+                    {"url", "CONTACT"},
                     {"year", "DATE"},
                 }}
             };

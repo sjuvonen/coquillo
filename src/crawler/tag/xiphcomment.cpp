@@ -71,39 +71,44 @@ namespace Coquillo {
             //     return images;
             // }
 
-            // void XiphComment::write(const QVariantMap & orig) {
-            //     qDebug() << "write xiph" << orig;
-            //
-            //     QVariantMap data(orig);
-            //     const XiphMapper mapper;
-            //     const QVariantMap common = {
-            //         {"album", {mapper.take(data, "album")}},
-            //         {"artist", {mapper.take(data, "artist")}},
-            //         {"comment", {mapper.take(data, "comment")}},
-            //         {"genre", {mapper.take(data, "genre")}},
-            //         {"number", {mapper.take(data, "number")}},
-            //         {"title", {mapper.take(data, "title")}},
-            //         {"year", {mapper.take(data, "year")}},
-            //     };
-            //     Default::write(common);
-            //
-            //     auto tag = dynamic_cast<TagLib::Ogg::XiphComment*>(_tag);
-            //     const QStringList fields = {
-            //         "ALBUM ARTIST",
-            //         "COMPOSER",
-            //         "ENCODED-BY",
-            //         "DISCNUMBER",
-            //         "LICENSE",
-            //         "PERFORMER",
-            //         "TRACKTOTAL",
-            //     };
-            //
-            //     foreach (const QString & name, fields) {
-            //         if (data.contains(name)) {
-            //             tag->addField(Q2TString(name), Q2TString(data[name].value(0).toString()));
-            //         }
-            //     }
-            // }
+            void XiphComment::write(TagLib::Ogg::XiphComment * tag, const QVariantHash & values) {
+                const QHash<QString, QString> common_map = {
+                    {"album", "ALBUM"},
+                    {"artist", "ARTIST"},
+                    {"comment", "DESCRIPTION"},
+                    {"genre", "GENRE"},
+                    {"number", "TRACKNUMBER"},
+                    {"title", "TITLE"},
+                    {"year", "DATE"},
+                };
+
+                QVariantHash common;
+
+                for (auto i = common_map.constBegin(); i != common_map.constEnd(); i++) {
+                    if (values.contains(i.value())) {
+                        common.insert(i.key(), values[i.value()]);
+                    }
+                }
+
+                Generic::write(tag, common);
+
+                const QStringList supported = {
+                    "ALBUMARTIST",
+                    "COMPOSER",
+                    "CONTACT",
+                    "ENCODED-BY",
+                    "DISCNUMBER",
+                    "LICENSE",
+                    "PERFORMER",
+                    "TRACKTOTAL",
+                };
+
+                foreach (const QString & key, supported) {
+                    if (values.contains(key)) {
+                        tag->addField(Q2TString(key), Q2TString(values[key].toString()));
+                    }
+                }
+            }
 
             // Image XiphComment::parseImage(const QByteArray & data) {
             //     QDataStream s(data);
@@ -146,6 +151,7 @@ namespace Coquillo {
             //         image.setSource(QImage::fromData(QByteArray(pic, datalen)));
             //         image.setDescription(QString::fromUtf8(descr, descrlen));
             //         image.setMimeType(QString::fromUtf8(mime, mimelen));
+            //         FIXME: MEMORY LEAK UNLESS VARIABLES DELETED
             //         return image;
             //     } else {
             //         return Image();

@@ -1,7 +1,10 @@
 
 #include <taglib/tag.h>
+#include <taglib/tpropertymap.h>
 #include <QVariantMap>
 #include "generic.hpp"
+
+#include <QDebug>
 
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
@@ -21,8 +24,22 @@ namespace Coquillo {
                 };
             }
 
-            void Generic::write(TagLib::Tag * tag, const QVariantMap & values) {
-                Q_UNUSED(values)
+            void Generic::write(TagLib::Tag * tag, const QVariantHash & values) {
+                TagLib::PropertyMap properties;
+
+                for (auto i = values.constBegin(); i != values.constEnd(); i++) {
+                    properties[Q2TString(i.key())] = {Q2TString(i.value().toString())};
+                }
+
+                tag->setProperties(properties);
+
+                if (values.contains("year")) {
+                    tag->setYear(values["year"].toInt());
+                }
+
+                if (values.contains("number")) {
+                    tag->setTrack(values["number"].toInt());
+                }
             }
         }
     }

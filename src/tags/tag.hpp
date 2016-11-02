@@ -18,6 +18,7 @@ namespace Coquillo {
 
                 bool insert(const QString & field, const QVariant & value);
 
+                inline QVariantHash data() const { return _raw; }
                 inline bool isNull() const { return _id.isNull(); }
                 inline QString id() const { return _id; }
 

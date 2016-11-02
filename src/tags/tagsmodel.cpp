@@ -1,4 +1,6 @@
+#include <QBrush>
 #include <QDir>
+#include <QIcon>
 #include "crawler/crawler.hpp"
 #include "../progresslistener.hpp"
 #include "tag.hpp"
@@ -12,47 +14,51 @@ namespace Coquillo {
     namespace Tags {
         TagsModel::TagsModel(ProgressListener * progress, QObject * parent)
         : QAbstractItemModel(parent), _progress(progress), _recursive(false) {
-            _columns = QHash<int, QString>();
-            _columns[0] = tr("Title");
-            _columns[1] = tr("Artist");
-            _columns[2] = tr("Album");
-            _columns[3] = tr("Genre");
-            _columns[4] = tr("Comment");
-            _columns[5] = tr("Year");
-            _columns[6] = tr("#");
-            _columns[7] = tr("Total");
-            _columns[8] = tr("Disc");
-            _columns[9] = tr("Original Artist");
-            _columns[10] = tr("Album Artist");
-            _columns[11] = tr("Composer");
-            _columns[12] = tr("Url");
-            _columns[13] = tr("Encoder");
-            _columns[14] = tr("Filename");
-            _columns[15] = tr("Images");
+            _labels = QStringList({
+                "",
+                tr("Title"),
+                tr("Artist"),
+                tr("Album"),
+                tr("Genre"),
+                tr("Comment"),
+                tr("Year"),
+                tr("#"),
+                tr("Total"),
+                tr("Disc"),
+                tr("Original Artist"),
+                tr("Album Artist"),
+                tr("Composer"),
+                tr("URL"),
+                tr("Encoder"),
+                tr("Filename"),
+                tr("Images"),
+            });
 
-            _columnMap = QHash<int, QString>();
-            _columnMap[0] = "title";
-            _columnMap[1] = "artist";
-            _columnMap[2] = "album";
-            _columnMap[3] = "genre";
-            _columnMap[4] = "comment";
-            _columnMap[5] = "year";
-            _columnMap[6] = "number";
-            _columnMap[7] = "total";
-            _columnMap[8] = "disc";
-            _columnMap[9] = "original_artist";
-            _columnMap[10] = "album_artist";
-            _columnMap[11] = "composer";
-            _columnMap[12] = "url";
-            _columnMap[13] = "encoder";
-            _columnMap[14] = "filename";
-            _columnMap[15] = "images";
+            _fields = QStringList({
+                QString(),
+                "title",
+                "artist",
+                "album",
+                "genre",
+                "comment",
+                "year",
+                "number",
+                "total",
+                "disc",
+                "original_artist",
+                "album_artist",
+                "composer",
+                "url",
+                "encoder",
+                "filename",
+                "images",
+            });
 
             qRegisterMetaType<Coquillo::Tags::Container>("TagContainer");
         }
 
         int TagsModel::columnCount(const QModelIndex & parent) const {
-            return parent.isValid() ? 0 : _columns.size();
+            return parent.isValid() ? 0 : _labels.size();
         }
 
         int TagsModel::rowCount(const QModelIndex & parent) const {
@@ -61,27 +67,72 @@ namespace Coquillo {
 
         QVariant TagsModel::data(const QModelIndex & idx, int role) const {
             if (idx.isValid()) {
-                if (role == Qt::EditRole || role == Qt::DisplayRole) {
-                    const auto file = _store.at(idx.row());
-                    if (idx.column() == PathField) {
-                        if (role == Qt::EditRole) {
-                            return file.path();
-                        } else {
-                            const auto root = containedDirectoryForRow(idx.row());
-                            return file.path().midRef(root.length() + 1).toString();
+                // if (role == Qt::EditRole || role == Qt::DisplayRole) {
+                //     const auto file = _store.at(idx.row());
+                //     if (idx.column() == PathField) {
+                //         if (role == Qt::EditRole) {
+                //             return file.path();
+                //         } else {
+                //             const auto root = containedDirectoryForRow(idx.row());
+                //             return file.path().midRef(root.length() + 1).toString();
+                //         }
+                //     }
+                //     const auto field = _fields[idx.column()];
+                //     return file.value(field);
+                // } else if (role == ContainerRole) {
+                //     return QVariant::fromValue(_store.at(idx.row()));
+                // } else if (role == ItemModifiedStateRole) {
+                //     return _store.isModified(idx.row());
+                // } else if (role == FieldModifiedStateRole) {
+                //     const QString field = _fields[idx.column()];
+                //     return _store.isFieldModified(idx.row(), field);
+                // } else if (role == RootPathRole) {
+                //     return containedDirectoryForRow(idx.row());
+                // } else if (role == Qt::DecorationRole && idx.column() == FeedbackField) {
+                //
+                // }
+
+
+                switch (role) {
+                    case Qt::DisplayRole:
+                    case Qt::EditRole: {
+                        const auto file = _store.at(idx.row());
+                        if (idx.column() == PathField) {
+                            if (role == Qt::EditRole) {
+                                return file.path();
+                            } else {
+                                const auto root = containedDirectoryForRow(idx.row());
+                                return file.path().midRef(root.length() + 1).toString();
+                            }
                         }
+                        const auto field = _fields[idx.column()];
+                        return file.value(field);
                     }
-                    const auto field = _columnMap.value(idx.column());
-                    return file.value(field);
-                } else if (role == ContainerRole) {
-                    return QVariant::fromValue(_store.at(idx.row()));
-                } else if (role == ItemModifiedStateRole) {
-                    return _store.isModified(idx.row());
-                } else if (role == FieldModifiedStateRole) {
-                    const QString field = _columnMap[idx.column()];
-                    return _store.isFieldModified(idx.row(), field);
-                } else if (role == RootPathRole) {
-                    return containedDirectoryForRow(idx.row());
+
+                    case Qt::DecorationRole:
+                        if (idx.column() == FeedbackField && isRowChanged(idx)) {
+                            return QIcon::fromTheme("emblem-important");
+                        }
+                        break;
+
+                    case Qt::ForegroundRole:
+                        if (isRowChanged(idx)) {
+                            return QBrush(Qt::red);
+                        }
+                        break;
+
+                    case ContainerRole:
+                        return QVariant::fromValue(_store.at(idx.row()));
+
+                    case ItemModifiedStateRole:
+                        return _store.isModified(idx.row());
+
+                    case FieldModifiedStateRole:
+                        return _store.isFieldModified(idx.row(), _fields[idx.column()]);
+
+                    case RootPathRole:
+                        return containedDirectoryForRow(idx.row());
+
                 }
             }
 
@@ -103,7 +154,7 @@ namespace Coquillo {
                     return true;
                 }
             } else {
-                const QString field = _columnMap[idx.column()];
+                const QString field = _fields[idx.column()];
                 if (_store.setValue(idx.row(), field, value)) {
                     rowChanged(idx);
                     return true;
@@ -115,7 +166,7 @@ namespace Coquillo {
 
         QVariant TagsModel::headerData(int section, Qt::Orientation orientation, int role) const {
             if (orientation == Qt::Horizontal && (role == Qt::EditRole || role == Qt::DisplayRole)) {
-                return _columns.value(section);
+                return _labels.value(section);
             }
             return QAbstractItemModel::headerData(section, orientation, role);
         }
@@ -233,6 +284,10 @@ namespace Coquillo {
                 return _store.at(idx.row());
             }
             return Container();
+        }
+
+        bool TagsModel::isRowChanged(const QModelIndex & idx) const {
+            return _store.isModified(idx.row());
         }
 
         void TagsModel::rowChanged(const QModelIndex & idx) {

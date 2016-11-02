@@ -1,6 +1,8 @@
 #ifndef COQUILLO_CRAWLER_TAG_XIPHCOMMENT_H
 #define COQUILLO_CRAWLER_TAG_XIPHCOMMENT_H
 
+#include "generic.hpp"
+
 namespace TagLib {
     namespace Ogg {
         class XiphComment;
@@ -10,10 +12,10 @@ namespace TagLib {
 namespace Coquillo {
     namespace Crawler {
         namespace Tag {
-            class XiphComment {
+            class XiphComment : public Generic {
                 public:
                     QVariantHash read(const TagLib::Ogg::XiphComment * tag) const;
-                    // void write(const QVariantHash & data);
+                    void write(TagLib::Ogg::XiphComment * tag, const QVariantHash & data);
                     // QList<Image> readImages() const;
 
                 private:

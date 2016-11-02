@@ -25,6 +25,7 @@ namespace Coquillo {
                 bool isFlacFile(const TagLib::File * file) const;
                 bool isMpegFile(const TagLib::File * file) const;
                 bool isVorbisFile(const TagLib::File * file) const;
+                
                 Container item;
         };
     }

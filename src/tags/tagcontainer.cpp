@@ -28,6 +28,10 @@ namespace Coquillo {
             return _tags[_primary].value(field);
         }
 
+        bool Container::hasTag(const QString & id) const {
+            return _tags.contains(id);
+        }
+
         const Tag Container::tag(const QString & id) const {
             return _tags[id];
         }

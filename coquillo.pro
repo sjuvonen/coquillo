@@ -30,8 +30,9 @@ HEADERS += \
   src/stringstoremodel.hpp \
   src/togglewidgetbyaction.hpp \
   src/crawler/crawler.hpp \
+  src/crawler/tags.hpp \
   src/crawler/tag/generic.hpp \
-  src/crawler/tag/id3v2tag.hpp \
+  src/crawler/tag/id3v2.hpp \
   src/crawler/tag/xiphcomment.hpp \
   src/filebrowser/directorymodel.hpp \
   src/filebrowser/filebrowser.hpp \
@@ -57,7 +58,7 @@ SOURCES += \
   src/togglewidgetbyaction.cpp \
   src/crawler/crawler.cpp \
   src/crawler/tag/generic.cpp \
-  src/crawler/tag/id3v2tag.cpp \
+  src/crawler/tag/id3v2.cpp \
   src/crawler/tag/xiphcomment.cpp \
   src/filebrowser/directorymodel.cpp \
   src/filebrowser/filebrowser.cpp \

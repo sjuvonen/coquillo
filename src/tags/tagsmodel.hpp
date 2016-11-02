@@ -13,7 +13,7 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
-                enum Fields { PathField = 14, ImageField = 15 };
+                enum Fields { FeedbackField = 0, PathField = 15, ImageField = 16 };
 
                 TagsModel(ProgressListener * progress, QObject * parent = 0);
 
@@ -47,10 +47,11 @@ namespace Coquillo {
                 const Container tagContainer(const QModelIndex & idx) const;
                 const Container tagContainer(int row) const;
                 QString containedDirectoryForRow(int row) const;
+                bool isRowChanged(const QModelIndex & idx) const;
                 void rowChanged(const QModelIndex & idx);
 
-                QHash<int, QString> _columns;
-                QHash<int, QString> _columnMap;
+                QStringList _labels;
+                QStringList _fields;
                 Store _store;
                 QPointer<ProgressListener> _progress;
                 bool _recursive;

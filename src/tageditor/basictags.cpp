@@ -51,35 +51,35 @@ namespace Coquillo {
                 _labelMapper->setModel(model);
             }
 
-            _inputMapper->addMapping(_ui->tagTitle, 0);
-            _inputMapper->addMapping(_ui->tagArtist, 1);
-            _inputMapper->addMapping(_ui->tagAlbum, 2);
-            _inputMapper->addMapping(_ui->tagGenre, 3);
-            _inputMapper->addMapping(_ui->tagComment, 4);
-            _inputMapper->addMapping(_ui->tagYear, 5);
-            _inputMapper->addMapping(_ui->tagNumber, 6);
-            _inputMapper->addMapping(_ui->tagTotal, 7);
-            _inputMapper->addMapping(_ui->tagDisc, 8);
-            _inputMapper->addMapping(_ui->tagOriginalArtist, 9);
-            _inputMapper->addMapping(_ui->tagAlbumArtist, 10);
-            _inputMapper->addMapping(_ui->tagComposer, 11);
-            _inputMapper->addMapping(_ui->tagUrl, 12);
-            _inputMapper->addMapping(_ui->tagEncoder, 13);
+            _inputMapper->addMapping(_ui->tagTitle, 1);
+            _inputMapper->addMapping(_ui->tagArtist, 2);
+            _inputMapper->addMapping(_ui->tagAlbum, 3);
+            _inputMapper->addMapping(_ui->tagGenre, 4);
+            _inputMapper->addMapping(_ui->tagComment, 5);
+            _inputMapper->addMapping(_ui->tagYear, 6);
+            _inputMapper->addMapping(_ui->tagNumber, 7);
+            _inputMapper->addMapping(_ui->tagTotal, 8);
+            _inputMapper->addMapping(_ui->tagDisc, 9);
+            _inputMapper->addMapping(_ui->tagOriginalArtist, 10);
+            _inputMapper->addMapping(_ui->tagAlbumArtist, 11);
+            _inputMapper->addMapping(_ui->tagComposer, 12);
+            _inputMapper->addMapping(_ui->tagUrl, 13);
+            _inputMapper->addMapping(_ui->tagEncoder, 14);
 
-            _labelMapper->addMapping(_ui->labelTitle, 0);
-            _labelMapper->addMapping(_ui->labelArtist, 1);
-            _labelMapper->addMapping(_ui->labelAlbum, 2);
-            _labelMapper->addMapping(_ui->labelGenre, 3);
-            _labelMapper->addMapping(_ui->labelComment, 4);
-            _labelMapper->addMapping(_ui->labelYear, 5);
-            _labelMapper->addMapping(_ui->labelNumber, 6);
-            _labelMapper->addMapping(_ui->labelTotal, 7);
-            _labelMapper->addMapping(_ui->labelDisc, 8);
-            _labelMapper->addMapping(_ui->labelOriginalArtist, 9);
-            _labelMapper->addMapping(_ui->labelAlbumArtist, 10);
-            _labelMapper->addMapping(_ui->labelComposer, 11);
-            _labelMapper->addMapping(_ui->labelUrl, 12);
-            _labelMapper->addMapping(_ui->labelEncoder, 13);
+            _labelMapper->addMapping(_ui->labelTitle, 1);
+            _labelMapper->addMapping(_ui->labelArtist, 2);
+            _labelMapper->addMapping(_ui->labelAlbum, 3);
+            _labelMapper->addMapping(_ui->labelGenre, 4);
+            _labelMapper->addMapping(_ui->labelComment, 5);
+            _labelMapper->addMapping(_ui->labelYear, 6);
+            _labelMapper->addMapping(_ui->labelNumber, 7);
+            _labelMapper->addMapping(_ui->labelTotal, 8);
+            _labelMapper->addMapping(_ui->labelDisc, 9);
+            _labelMapper->addMapping(_ui->labelOriginalArtist, 10);
+            _labelMapper->addMapping(_ui->labelAlbumArtist, 11);
+            _labelMapper->addMapping(_ui->labelComposer, 12);
+            _labelMapper->addMapping(_ui->labelUrl, 13);
+            _labelMapper->addMapping(_ui->labelEncoder, 14);
         }
 
         QAbstractItemModel * BasicTags::model() const {

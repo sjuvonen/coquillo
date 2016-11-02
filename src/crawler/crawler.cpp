@@ -11,7 +11,7 @@
 
 #include "crawler.hpp"
 #include "tag/generic.hpp"
-#include "tag/id3v2tag.hpp"
+#include "tag/id3v2.hpp"
 #include "tag/xiphcomment.hpp"
 
 namespace Coquillo {
@@ -117,7 +117,7 @@ namespace Coquillo {
                 }
 
                 if (file->hasID3v2Tag()) {
-                    tags["id3v2"] = Tag::Id3v2Tag().read(file->ID3v2Tag());
+                    tags["id3v2"] = Tag::Id3v2().read(file->ID3v2Tag());
                     data["primary"] = "id3v2";
                 }
 
@@ -134,7 +134,7 @@ namespace Coquillo {
                 }
 
                 if (file->hasID3v2Tag()) {
-                    tags["id3v2"] = Tag::Id3v2Tag().read(file->ID3v2Tag());
+                    tags["id3v2"] = Tag::Id3v2().read(file->ID3v2Tag());
                     data["primary"] = "id3v2";
                 }
             } else if (isVorbisFile(ref.file())) {
