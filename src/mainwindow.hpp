@@ -23,6 +23,9 @@ namespace Coquillo {
             ~MainWindow();
             QMenu * createPopupMenu();
 
+        public slots:
+            void addPaths(const QStringList & paths);
+
         protected:
             void closeEvent(QCloseEvent * event);
 
@@ -33,6 +36,7 @@ namespace Coquillo {
             void showHeaderContextMenu(const QPoint & point) const;
 
         private:
+            void applyDefaultSettings();
             void setupFileBrowser();
             void setupMainView();
             void setupStatusBar();

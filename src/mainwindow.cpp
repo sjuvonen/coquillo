@@ -65,6 +65,10 @@ namespace Coquillo {
         return menu;
     }
 
+    void MainWindow::addPaths(const QStringList & paths) {
+        _model->addPaths(paths);
+    }
+
     void MainWindow::setupFileBrowser() {
         QSettings * storage = new QSettings("history");
         StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
@@ -78,6 +82,7 @@ namespace Coquillo {
         _files->setBookmarkModel(bookmarks);
         _files->setHistoryModel(path_history);
         _files->setDirectory(QSettings().value("DefaultLocation").toString());
+        _files->setRecursive(QSettings().value("RecursiveScan").toBool());
         _ui->toolBox->addTab(_files, tr("Files"));
 
         connect(_files, SIGNAL(recursionEnabled(bool)),
@@ -213,27 +218,44 @@ namespace Coquillo {
 
     void MainWindow::restoreSettings() {
         QSettings settings;
-        resize(settings.value("UI/MainWindow/Size").toSize());
-        restoreState(settings.value("UI/MainWindow/State").toByteArray());
-        _ui->splitter->restoreState(settings.value("UI/MainWindow/Splitter").toByteArray());
-        _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/MainWindow/Header").toByteArray());
+
+        resize(settings.value("UI/Size").toSize());
+        restoreState(settings.value("UI/State").toByteArray());
+        _ui->splitter->restoreState(settings.value("UI/Splitter").toByteArray());
+        _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
         _ui->itemView->horizontalHeader()->setSectionsMovable(true);
 
-        menuBar()->setVisible(settings.value("UI/MainWindow/MenuBar").toBool());
-        statusBar()->setVisible(settings.value("UI/MainWindow/StatusBar").toBool());
+        menuBar()->setVisible(settings.value("UI/MenuBar").toBool());
+        statusBar()->setVisible(settings.value("UI/StatusBar").toBool());
 
-        setInterfaceLocked(settings.value("UI/MainWindow/LockToolBars").toBool());
+        setInterfaceLocked(settings.value("UI/LockToolBars").toBool());
+
+        if (settings.value("UI/State").isNull()) {
+            applyDefaultSettings();
+        }
     }
 
     void MainWindow::saveSettings() {
         QSettings settings;
-        settings.setValue("UI/MainWindow/Size", size());
-        settings.setValue("UI/MainWindow/State", saveState());
-        settings.setValue("UI/MainWindow/Splitter", _ui->splitter->saveState());
-        settings.setValue("UI/MainWindow/Header", _ui->itemView->horizontalHeader()->saveState());
-        settings.setValue("UI/MainWindow/MenuBar", menuBar()->isVisible());
-        settings.setValue("UI/MainWindow/StatusBar", statusBar()->isVisible());
-        settings.setValue("UI/MainWindow/LockToolBars", !findChild<QToolBar*>()->isMovable());
+        settings.setValue("UI/Size", size());
+        settings.setValue("UI/State", saveState());
+        settings.setValue("UI/Splitter", _ui->splitter->saveState());
+        settings.setValue("UI/Header", _ui->itemView->horizontalHeader()->saveState());
+        settings.setValue("UI/MenuBar", menuBar()->isVisible());
+        settings.setValue("UI/StatusBar", statusBar()->isVisible());
+        settings.setValue("UI/LockToolBars", !findChild<QToolBar*>()->isMovable());
         settings.sync();
+    }
+
+    void MainWindow::applyDefaultSettings() {
+        auto * header = _ui->itemView->horizontalHeader();
+
+        header->setSortIndicator(Tags::TagsModel::PathField, Qt::AscendingOrder);
+
+        for (int i = 0; i < header->count(); i++) {
+            if (i != 0 && i != Tags::TagsModel::PathField) {
+                header->hideSection(i);
+            }
+        }
     }
 }

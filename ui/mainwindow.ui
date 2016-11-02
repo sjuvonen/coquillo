@@ -18,12 +18,6 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTabWidget" name="toolBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <property name="tabPosition">
         <enum>QTabWidget::West</enum>
        </property>
@@ -63,14 +57,7 @@
         <bool>false</bool>
        </attribute>
       </widget>
-      <widget class="Coquillo::TagEditor::TagEditor" name="tagEditor">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
+      <widget class="Coquillo::TagEditor::TagEditor" name="tagEditor"/>
      </widget>
     </item>
    </layout>
@@ -201,7 +188,8 @@
   </action>
   <action name="actionSelectAll">
    <property name="icon">
-    <iconset theme="edit-select-all"/>
+    <iconset theme="edit-select-all">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Select All</string>
