@@ -11,6 +11,7 @@ class QModelIndex;
 namespace Coquillo {
     namespace TagEditor {
         class BasicTags;
+        class ImageTags;
         class RawData;
 
         class TagEditor : public QTabWidget {
@@ -27,6 +28,7 @@ namespace Coquillo {
 
             private:
                 BasicTags * _tabBasic;
+                ImageTags * _tabImages;
                 RawData * _tabRaw;
                 QPointer<QItemSelectionModel> _selection;
         };

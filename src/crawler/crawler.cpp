@@ -124,12 +124,16 @@ namespace Coquillo {
                 }
 
                 if (file->hasID3v2Tag()) {
-                    tags["id3v2"] = Tag::Id3v2().read(file->ID3v2Tag());
+                    Tag::Id3v2 reader;
+                    tags["id3v2"] = reader.read(file->ID3v2Tag());
+                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->ID3v2Tag()));
                     data["primary"] = "id3v2";
                 }
 
                 if (file->hasXiphComment()) {
-                    tags["xiph"] = Tag::XiphComment().read(file->xiphComment());
+                    Tag::XiphComment reader;
+                    tags["xiph"] = reader.read(file->xiphComment());
+                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->xiphComment()));
                     data["primary"] = "xiph";
                 }
             } else if (isMpegFile(ref.file())) {
@@ -141,14 +145,18 @@ namespace Coquillo {
                 }
 
                 if (file->hasID3v2Tag()) {
-                    tags["id3v2"] = Tag::Id3v2().read(file->ID3v2Tag());
+                    Tag::Id3v2 reader;
+                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->ID3v2Tag()));
+                    tags["id3v2"] = reader.read(file->ID3v2Tag());
                     data["primary"] = "id3v2";
                 }
             } else if (isVorbisFile(ref.file())) {
                 auto file = dynamic_cast<const TagLib::Ogg::Vorbis::File*>(ref.file());
 
                 if (file->tag()) {
-                    tags["xiph"] = Tag::XiphComment().read(file->tag());
+                    Tag::XiphComment reader;
+                    tags["xiph"] = reader.read(file->tag());
+                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->tag()));
                     data["primary"] = "xiph";
                 }
             } else if (ref.tag()) {

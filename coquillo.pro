@@ -19,6 +19,7 @@ unix {
 FORMS += \
   ui/basictags.ui \
   ui/filebrowser.ui \
+  ui/imagetags.ui \
   ui/mainwindow.ui \
   ui/rawdata.ui \
   ui/settingsdialog.ui \
@@ -30,6 +31,7 @@ HEADERS += \
   src/stringstoremodel.hpp \
   src/togglewidgetbyaction.hpp \
   src/crawler/crawler.hpp \
+  src/crawler/imagetype.hpp \
   src/crawler/tags.hpp \
   src/crawler/tag/generic.hpp \
   src/crawler/tag/id3v2.hpp \
@@ -37,10 +39,14 @@ HEADERS += \
   src/filebrowser/directorymodel.hpp \
   src/filebrowser/filebrowser.hpp \
   src/settings/settingsdialog.hpp \
+  src/tageditor/autonumbers.hpp \
   src/tageditor/basictags.hpp \
+  src/tageditor/imagemodel.hpp \
+  src/tageditor/imagetags.hpp \
   src/tageditor/metadatachangeindicatordelegate.hpp \
   src/tageditor/rawdata.hpp \
   src/tageditor/tageditor.hpp \
+  src/tags/imagetypes.hpp \
   src/tags/tag.hpp \
   src/tags/tagdataroles.hpp \
   src/tags/tagcontainer.hpp \
@@ -63,10 +69,14 @@ SOURCES += \
   src/filebrowser/directorymodel.cpp \
   src/filebrowser/filebrowser.cpp \
   src/settings/settingsdialog.cpp \
+  src/tageditor/autonumbers.cpp \
   src/tageditor/basictags.cpp \
+  src/tageditor/imagemodel.cpp \
+  src/tageditor/imagetags.cpp \
   src/tageditor/metadatachangeindicatordelegate.cpp \
   src/tageditor/rawdata.cpp \
   src/tageditor/tageditor.cpp \
+  src/tags/imagetypes.cpp \
   src/tags/tag.cpp \
   src/tags/tagcontainer.cpp \
   src/tags/tagsmodel.cpp \

@@ -1,6 +1,7 @@
 #ifndef COQUILLO_CRAWLER_TAG_XIPHCOMMENT_H
 #define COQUILLO_CRAWLER_TAG_XIPHCOMMENT_H
 
+#include "../imagetype.hpp"
 #include "generic.hpp"
 
 namespace TagLib {
@@ -14,13 +15,13 @@ namespace Coquillo {
         namespace Tag {
             class XiphComment : public Generic {
                 public:
-                    QVariantHash read(const TagLib::Ogg::XiphComment * tag) const;
                     void write(TagLib::Ogg::XiphComment * tag, const QVariantHash & data);
-                    // QList<Image> readImages() const;
+                    QVariantHash read(const TagLib::Ogg::XiphComment * tag) const;
+                    ImageDataList readImages(const TagLib::Ogg::XiphComment * tag) const;
 
                 private:
-                    // static Image parseImage(const QByteArray & data);
-                    // QList<Image> readLegacyImages() const;
+                    static ImageData parseImage(const QByteArray & data);
+                    ImageDataList readLegacyImages(const TagLib::Ogg::XiphComment * tag) const;
             };
         }
     }

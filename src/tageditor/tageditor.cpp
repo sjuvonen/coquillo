@@ -1,4 +1,5 @@
 #include "basictags.hpp"
+#include "imagetags.hpp"
 #include "rawdata.hpp"
 #include "tageditor.hpp"
 
@@ -7,9 +8,11 @@ namespace Coquillo {
         TagEditor::TagEditor(QWidget * parent)
         : QTabWidget(parent) {
             _tabBasic = new BasicTags(this);
+            _tabImages = new ImageTags(this);
             _tabRaw = new RawData(this);
 
             addTab(_tabBasic, tr("Basic"));
+            addTab(_tabImages, tr("Images"));
             addTab(_tabRaw, tr("Raw"));
         }
 
