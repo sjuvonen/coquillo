@@ -54,7 +54,7 @@ namespace Coquillo {
                 "images",
             });
 
-            qRegisterMetaType<Coquillo::Tags::Container>("TagContainer");
+            qRegisterMetaType<Coquillo::Tags::Container>("container");
         }
 
         int TagsModel::columnCount(const QModelIndex & parent) const {
@@ -124,6 +124,13 @@ namespace Coquillo {
                 return QAbstractItemModel::setData(idx, value, role);
             }
 
+            if (idx.column() == ImageField) {
+                if (_store.setImages(idx.row(), value.value<QList<Image> >())) {
+                    rowChanged(idx);
+                    return true;
+                }
+            }
+
             if (idx.column() == PathField) {
                 if (_store.rename(idx.row(), value.toString())) {
                     rowChanged(idx);
@@ -156,12 +163,12 @@ namespace Coquillo {
         }
 
         bool TagsModel::removeRows(int row, int count, const QModelIndex & parent) {
-            if (row < 0 || row >= rowCount()) {
+            if (parent.isValid() || row < 0 || row >= rowCount()) {
                 return false;
             }
 
             count = qMin(row + count, _store.size()) - row;
-            beginRemoveRows(parent, row, row + count - 1);
+            beginRemoveRows(QModelIndex(), row, row + count - 1);
             while (count-- > 0) {
                 _store.remove(row);
             }
@@ -241,7 +248,7 @@ namespace Coquillo {
         }
 
         QString TagsModel::containedDirectoryForRow(int row) const {
-            QDir dir = QFileInfo(tagContainer(row).path()).absoluteDir();
+            QDir dir = QFileInfo(container(row).path()).absoluteDir();
             do {
                 if (_directories.contains(dir.absolutePath())) {
                     return dir.absolutePath();
@@ -251,11 +258,11 @@ namespace Coquillo {
             return QString();
         }
 
-        const Container TagsModel::tagContainer(int row) const {
-            return tagContainer(index(row, 0));
+        const Container TagsModel::container(int row) const {
+            return container(index(row, 0));
         }
 
-        const Container TagsModel::tagContainer(const QModelIndex & idx) const {
+        const Container TagsModel::container(const QModelIndex & idx) const {
             if (idx.isValid()) {
                 return _store.at(idx.row());
             }

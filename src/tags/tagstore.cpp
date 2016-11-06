@@ -78,7 +78,7 @@ namespace Coquillo {
             }
         }
 
-        const Container & Store::at(int pos) const {
+        const Container Store::at(int pos) const {
             return _items[pos];
         }
 
@@ -142,6 +142,14 @@ namespace Coquillo {
 
             return changed;
         }
+
+        bool Store::setImages(int pos, const QList<Image> & images) {
+            Container & item = at(pos);
+            backup(item);
+            item.setImages(images);
+            return true;
+        }
+
 
         void Store::backup(int pos) {
             const Container item = at(pos);

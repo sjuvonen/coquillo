@@ -29,6 +29,10 @@ namespace Coquillo {
             // }
         }
 
+        Tags::Image ImageModel::image(int pos) const {
+            return container().image(pos);
+        }
+
         QVariant ImageModel::data(const QModelIndex & idx, int role) const {
             if (!sourceModel()) {
                 return QVariant();
@@ -38,7 +42,7 @@ namespace Coquillo {
                 const auto size = container().image(idx.row()).scaled(QSize(128, 128)).size();
                 return size + QSize(0, 10);
             }
-            
+
             if (role == Qt::DecorationRole and (idx.column() == 0 or idx.column() == 3)) {
                 const auto image = container().image(idx.row());
                 return image.scaled(QSize(128, 128));
@@ -114,10 +118,16 @@ namespace Coquillo {
         }
 
         bool ImageModel::removeRows(int row, int count, const QModelIndex & parent) {
-            if (row < 0 || parent.isValid()) {
+            if (row < 0 || row + count > rowCount() || parent.isValid()) {
                 return false;
             } else {
-                return false;
+                qDebug() << "remove images";
+                beginRemoveRows(parent, row, row + count - 1);
+                QList<Tags::Image> images = container().images();
+                images.erase(images.begin() + row, images.begin() + row + count);
+                sourceModel()->setData(_index, QVariant::fromValue(images));
+                endRemoveRows();
+                return true;
             }
         }
 

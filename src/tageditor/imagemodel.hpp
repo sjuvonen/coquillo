@@ -9,8 +9,9 @@ class QNetworkAccessManager;
 namespace Coquillo {
     namespace Tags {
         class Container;
+        class Image;
     }
-    
+
     namespace TagEditor {
         class ImageModel : public QAbstractTableModel {
             Q_OBJECT
@@ -18,7 +19,8 @@ namespace Coquillo {
             public:
                 ImageModel(QObject * parent = 0);
                 void addImage(const QImage & image);
-                // MetaData::MetaData metaData() const;
+
+                Tags::Image image(int pos) const;
 
                 QVariant data(const QModelIndex & idx, int role=Qt::DisplayRole) const;
                 bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int col, const QModelIndex & p);

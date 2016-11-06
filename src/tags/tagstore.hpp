@@ -12,7 +12,7 @@ namespace Coquillo {
                 void add(const QVariantHash & file);
                 void add(const QList<QVariantHash> & files);
 
-                const Container & at(int pos) const;
+                const Container at(int pos) const;
 
                 bool isModified(int pos) const;
                 bool isFieldModified(int pos, const QString & field) const;
@@ -23,6 +23,7 @@ namespace Coquillo {
 
                 bool rename(int pos, const QString & new_path);
                 bool setValue(int pos, const QString & field, const QVariant & value);
+                bool setImages(int pos, const QList<Image> & images);
 
                 QList<Container> changedItems() const;
 

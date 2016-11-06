@@ -21,7 +21,9 @@ namespace Coquillo {
 
                 inline uint id() const { return _id; }
                 inline bool isNull() const { return _path.isNull(); }
-                inline QList<Image> images() const { return _images; }
+                inline const QList<Image> images() const { return _images; }
+                inline QList<Image> & images() { return _images; }
+                inline void setImages(const QList<Image> & images) { _images = images; }
 
                 bool hasTag(const QString & id) const;
                 const Tag tag(const QString & id) const;

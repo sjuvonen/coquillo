@@ -38,34 +38,34 @@ namespace Coquillo {
             delete _ui;
         }
 
-        void ImageTags::addImage() {
-            // const MetaData::MetaData data = metaData();
-            // const QStringList files = QFileDialog::getOpenFileNames(this,
-            //     tr("Import images"), _last_dir);
-            //
-            // foreach (const QString & path, files) {
-            //     _last_dir = QFileInfo(path).absolutePath();
-            //     const QImage image(path);
-            //
-            //     if (!image.isNull()) {
-            //         imageModel()->addImage(image);
-            //     }
-            // }
+        void ImageTags::on_buttonAdd_clicked() {
+            qDebug() << "ADD";
+
+            const QStringList files = QFileDialog::getOpenFileNames(this,
+                tr("Import images"), _last_dir);
+
+            foreach (const QString & path, files) {
+                const QImage image(path);
+                if (!image.isNull()) {
+                    imageModel()->addImage(image);
+                }
+                _last_dir = QFileInfo(path).absolutePath();
+            }
         }
 
-        void ImageTags::exportCurrentImage() {
-            // // TODO: Support multiple images at once
-            // if (!_ui->listImages->currentIndex().isValid()) {
-            //     return;
-            // }
-            // const MetaData::ImageList images = metaData().images();
-            // const MetaData::Image image = images[_ui->listImages->currentIndex().row()];
-            // const QString filename = QFileDialog::getSaveFileName(this,
-            //     tr("Export image to"), _last_dir);
-            //
-            // if (!filename.isEmpty()) {
-            //     image.source().save(filename);
-            // }
+        void ImageTags::on_buttonExport_clicked() {
+            // TODO: Support multiple images at once
+
+            if (!currentIndex().isValid()) {
+                return;
+            }
+
+            const auto image = _model->image(currentRow());
+            const auto filename = QFileDialog::getSaveFileName(this, tr("Export image to"), _last_dir);
+
+            if (!filename.isEmpty()) {
+                image.source().save(filename);
+            }
         }
 
         int ImageTags::imageCount() const {
@@ -76,10 +76,9 @@ namespace Coquillo {
             return _model->sourceModel();
         }
 
-        void ImageTags::removeCurrentRow() {
+        void ImageTags::on_buttonDelete_clicked() {
             // TODO: Support multiple rows at once
-            qDebug() << "remove row" << _ui->listImages->currentIndex().row() <<
-            _model->removeRow(_ui->listImages->currentIndex().row());
+            _model->removeRow(currentRow());
         }
 
         void ImageTags::setModel(QAbstractItemModel * model) {
@@ -89,14 +88,15 @@ namespace Coquillo {
         void ImageTags::setEditorIndex(const QModelIndex & idx) {
             const auto image_idx = idx.sibling(idx.row(), Tags::TagsModel::ImageField);
             _model->setSourceIndex(image_idx);
-            _ui->listImages->setCurrentIndex(image_idx);
+            _ui->listImages->setCurrentIndex(_model->index(0, 0));
 
-            // _ui->imageType->setEnabled(imgidx.isValid());
-            // _ui->imageDescription->setEnabled(imgidx.isValid());
-            // _ui->buttonDelete->setEnabled(imgidx.isValid());
+            _ui->imageType->setEnabled(image_idx.isValid());
+            _ui->imageDescription->setEnabled(image_idx.isValid());
+            _ui->buttonDelete->setEnabled(image_idx.isValid());
 
             if (idx.isValid()) {
-                // _last_dir = QFileInfo(metaData().path()).absolutePath();
+                const auto path = idx.sibling(idx.row(), Tags::TagsModel::PathField).data(Qt::EditRole).toString();
+                _last_dir = QFileInfo(path).absolutePath();
             } else {
                 _last_dir.clear();
             }
@@ -108,6 +108,14 @@ namespace Coquillo {
 
         void ImageTags::onImageSelect(const QModelIndex & idx) {
             _mapper->setCurrentModelIndex(idx);
+        }
+
+        QModelIndex ImageTags::currentIndex() const {
+            return _ui->listImages->currentIndex();
+        }
+
+        int ImageTags::currentRow() const {
+            return currentIndex().row();
         }
     }
 }

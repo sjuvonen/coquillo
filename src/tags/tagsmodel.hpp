@@ -48,8 +48,8 @@ namespace Coquillo {
                 void writeToDisk();
 
             private:
-                const Container tagContainer(const QModelIndex & idx) const;
-                const Container tagContainer(int row) const;
+                const Container container(const QModelIndex & idx) const;
+                const Container container(int row) const;
                 QString containedDirectoryForRow(int row) const;
                 bool isRowChanged(const QModelIndex & idx) const;
                 void rowChanged(const QModelIndex & idx);
