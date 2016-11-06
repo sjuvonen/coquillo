@@ -67,32 +67,6 @@ namespace Coquillo {
 
         QVariant TagsModel::data(const QModelIndex & idx, int role) const {
             if (idx.isValid()) {
-                // if (role == Qt::EditRole || role == Qt::DisplayRole) {
-                //     const auto file = _store.at(idx.row());
-                //     if (idx.column() == PathField) {
-                //         if (role == Qt::EditRole) {
-                //             return file.path();
-                //         } else {
-                //             const auto root = containedDirectoryForRow(idx.row());
-                //             return file.path().midRef(root.length() + 1).toString();
-                //         }
-                //     }
-                //     const auto field = _fields[idx.column()];
-                //     return file.value(field);
-                // } else if (role == ContainerRole) {
-                //     return QVariant::fromValue(_store.at(idx.row()));
-                // } else if (role == ItemModifiedStateRole) {
-                //     return _store.isModified(idx.row());
-                // } else if (role == FieldModifiedStateRole) {
-                //     const QString field = _fields[idx.column()];
-                //     return _store.isFieldModified(idx.row(), field);
-                // } else if (role == RootPathRole) {
-                //     return containedDirectoryForRow(idx.row());
-                // } else if (role == Qt::DecorationRole && idx.column() == FeedbackField) {
-                //
-                // }
-
-
                 switch (role) {
                     case Qt::DisplayRole:
                     case Qt::EditRole: {
@@ -104,6 +78,8 @@ namespace Coquillo {
                                 const auto root = containedDirectoryForRow(idx.row());
                                 return file.path().midRef(root.length() + 1).toString();
                             }
+                        } else if (idx.column() == ImageField) {
+                            return QString("%1 images").arg(file.images().size());
                         }
                         const auto field = _fields[idx.column()];
                         return file.value(field);
@@ -122,7 +98,7 @@ namespace Coquillo {
                         break;
 
                     case ContainerRole:
-                        return QVariant::fromValue(_store.at(idx.row()));
+                        return QVariant::fromValue<Container>(_store.at(idx.row()));
 
                     case ItemModifiedStateRole:
                         return _store.isModified(idx.row());

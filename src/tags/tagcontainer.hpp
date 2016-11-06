@@ -1,6 +1,7 @@
 #ifndef COQUILLO_TAGS_CONTAINER_H
 #define COQUILLO_TAGS_CONTAINER_H
 
+#include "image.hpp"
 #include "tag.hpp"
 
 namespace Coquillo {
@@ -20,6 +21,7 @@ namespace Coquillo {
 
                 inline uint id() const { return _id; }
                 inline bool isNull() const { return _path.isNull(); }
+                inline QList<Image> images() const { return _images; }
 
                 bool hasTag(const QString & id) const;
                 const Tag tag(const QString & id) const;
@@ -27,11 +29,16 @@ namespace Coquillo {
                 QList<Tag> tags() const;
                 QStringList tagNames() const;
 
+                void addImage(const Image & image);
+                const Image image(int pos) const { return _images.value(pos); }
+                Image & image(int pos) { return _images[pos]; }
+
             private:
                 uint _id;
                 QString _path;
                 QString _primary;
                 QHash<QString, Tag> _tags;
+                QList<Image> _images;
         };
     }
 }

@@ -47,5 +47,9 @@ namespace Coquillo {
         QStringList Container::tagNames() const {
             return _tags.keys();
         }
+
+        void Container::addImage(const Image & image) {
+            _images << image;
+        }
     }
 }

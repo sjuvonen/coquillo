@@ -31,7 +31,7 @@ HEADERS += \
   src/stringstoremodel.hpp \
   src/togglewidgetbyaction.hpp \
   src/crawler/crawler.hpp \
-  src/crawler/imagetype.hpp \
+  src/crawler/types.hpp \
   src/crawler/tags.hpp \
   src/crawler/tag/generic.hpp \
   src/crawler/tag/id3v2.hpp \
@@ -46,6 +46,8 @@ HEADERS += \
   src/tageditor/metadatachangeindicatordelegate.hpp \
   src/tageditor/rawdata.hpp \
   src/tageditor/tageditor.hpp \
+  src/tags/image.hpp \
+  src/tags/imagecache.hpp \
   src/tags/imagetypes.hpp \
   src/tags/tag.hpp \
   src/tags/tagdataroles.hpp \
@@ -76,6 +78,8 @@ SOURCES += \
   src/tageditor/metadatachangeindicatordelegate.cpp \
   src/tageditor/rawdata.cpp \
   src/tageditor/tageditor.cpp \
+  src/tags/image.cpp \
+  src/tags/imagecache.cpp \
   src/tags/imagetypes.cpp \
   src/tags/tag.cpp \
   src/tags/tagcontainer.cpp \

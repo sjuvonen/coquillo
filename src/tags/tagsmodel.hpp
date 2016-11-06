@@ -9,6 +9,10 @@ namespace Coquillo {
     class ProgressListener;
 
     namespace Tags {
+        namespace Mapper {
+            class TagMapper;
+        }
+
         class TagsModel : public QAbstractItemModel {
             Q_OBJECT
 

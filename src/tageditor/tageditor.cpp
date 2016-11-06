@@ -11,8 +11,8 @@ namespace Coquillo {
             _tabImages = new ImageTags(this);
             _tabRaw = new RawData(this);
 
-            addTab(_tabBasic, tr("Basic"));
             addTab(_tabImages, tr("Images"));
+            addTab(_tabBasic, tr("Basic"));
             addTab(_tabRaw, tr("Raw"));
         }
 
@@ -23,6 +23,7 @@ namespace Coquillo {
         void TagEditor::setModel(QAbstractItemModel * model) {
             // _tabBasic->setRole()
             _tabBasic->setModel(model);
+            _tabImages->setModel(model);
             _tabRaw->setModel(model);
         }
 
@@ -43,6 +44,9 @@ namespace Coquillo {
         void TagEditor::setEditorIndex(const QModelIndex & idx) {
             _tabBasic->setEditorIndex(idx);
             _tabBasic->setEnabled(idx.isValid());
+
+            _tabImages->setEditorIndex(idx);
+            _tabImages->setEnabled(idx.isValid());
 
             _tabRaw->setEditorIndex(idx);
             _tabRaw->setEnabled(idx.isValid());
