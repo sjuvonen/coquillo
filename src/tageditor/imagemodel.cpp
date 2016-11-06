@@ -50,10 +50,14 @@ namespace Coquillo {
                         return image.type();
                     case 2:
                         return image.mimeType();
-                    case 3:
-                        return image.description()
-                            + QString("\n%1x%2 px").arg(image.width()).arg(image.height())
-                            + image.mimeType().prepend("\n");
+                    case 3: {
+                        const QStringList info = {
+                            image.description(),
+                            QString("%1x%2 px").arg(image.width()).arg(image.height()),
+                            image.mimeType(),
+                        };
+                        return info.join('\n');
+                    }
                 }
             }
 
