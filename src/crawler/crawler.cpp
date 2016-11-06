@@ -101,6 +101,7 @@ namespace Coquillo {
             types << QString("*.%1").arg(types.takeFirst());
             return types;
         }
+
         QList<QVariantHash> FileReader::readFiles(const QStringList & paths) const {
             QList<QVariantHash> metadata;
             metadata.reserve(paths.count());
@@ -118,6 +119,12 @@ namespace Coquillo {
             if (isFlacFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
 
+                ImageDataList images;
+
+                #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                images << Tag::XiphComment().readFlacImages(file->pictureList());
+                #endif
+
                 if (file->hasID3v1Tag()) {
                     tags["id3v1"] = Tag::Generic().read(file->ID3v1Tag());
                     data["primary"] = "id3v1";
@@ -126,16 +133,25 @@ namespace Coquillo {
                 if (file->hasID3v2Tag()) {
                     Tag::Id3v2 reader;
                     tags["id3v2"] = reader.read(file->ID3v2Tag());
-                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->ID3v2Tag()));
                     data["primary"] = "id3v2";
+
+                    images << reader.readImages(file->ID3v2Tag());
                 }
 
                 if (file->hasXiphComment()) {
                     Tag::XiphComment reader;
                     tags["xiph"] = reader.read(file->xiphComment());
-                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->xiphComment()));
                     data["primary"] = "xiph";
+
+                    #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                    images << reader.readFlacImages(file->xiphComment()->pictureList());
+                    #endif
+
+                    images << reader.readImages(file->xiphComment())
+                        << reader.readLegacyImages(file->xiphComment());
                 }
+
+                data["images"] = QVariant::fromValue<ImageDataList>(images);
             } else if (isMpegFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
 
@@ -146,7 +162,8 @@ namespace Coquillo {
 
                 if (file->hasID3v2Tag()) {
                     Tag::Id3v2 reader;
-                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->ID3v2Tag()));
+                    ImageDataList images(reader.readImages(file->ID3v2Tag()));
+                    data["images"] = QVariant::fromValue<ImageDataList>(images);
                     tags["id3v2"] = reader.read(file->ID3v2Tag());
                     data["primary"] = "id3v2";
                 }
@@ -155,9 +172,20 @@ namespace Coquillo {
 
                 if (file->tag()) {
                     Tag::XiphComment reader;
+
                     tags["xiph"] = reader.read(file->tag());
-                    tags["images"] = QVariant::fromValue<ImageDataList>(reader.readImages(file->tag()));
                     data["primary"] = "xiph";
+
+                    ImageDataList images;
+
+                    #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                    images << reader.readFlacImages(file->tag()->pictureList());
+                    #endif
+
+                    images << reader.readImages(file->tag())
+                        << reader.readLegacyImages(file->tag());
+
+                    data["images"] = QVariant::fromValue<ImageDataList>(images);
                 }
             } else if (ref.tag()) {
                 tags["unknown"] = Tag::Generic().read(ref.tag());

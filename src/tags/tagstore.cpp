@@ -1,3 +1,4 @@
+#include "crawler/types.hpp"
 #include "tagstore.hpp"
 
 #include <QDebug>
@@ -64,6 +65,10 @@ namespace Coquillo {
                 item.addTag(tag);
             }
 
+            foreach (const QVariant data, file.value("images").value<ImageDataList>()) {
+                item.addImage(Image::fromValues(data.toHash()));
+            }
+
             _items << item;
         }
 
@@ -127,6 +132,8 @@ namespace Coquillo {
                 const Tag tag = item.tag(key);
 
                 if (!tag.equals(field, value)) {
+                    // qDebug() << "set" << field;
+
                     backup(item);
                     item.tag(key).insert(field, value);
                     changed = true;

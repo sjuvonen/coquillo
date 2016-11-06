@@ -3,6 +3,8 @@
 #include <QImage>
 #include "xiphcomment.hpp"
 
+#include <QDebug>
+
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
 
@@ -43,8 +45,30 @@ namespace Coquillo {
                     }
                 }
 
+                // qDebug() << "I" << images.size();
+
                 return images;
             }
+
+            #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+            ImageDataList XiphComment::readFlacImages(const TagLib::List<TagLib::FLAC::Picture *> pictures) const {
+                ImageDataList images;
+
+                for (auto i = pictures.begin(); i != pictures.end(); i++) {
+                    const TagLib::FLAC::Picture * pic = *i;
+                    const TagLib::ByteVector imgraw = pic->data();
+                    ImageData data;
+                    data["data"] = QImage::fromData((const uchar*)imgraw.data(), imgraw.size() );
+                    data["description"] = T2QString(pic->description());
+                    data["mime"] = T2QString(pic->mimeType());
+                    data["type"] = pic->type();
+
+                    images << data;
+                }
+
+                return images;
+            }
+            #endif
 
             void XiphComment::write(TagLib::Ogg::XiphComment * tag, const TagData & values) {
                 const QHash<QString, QString> common_map = {
@@ -86,6 +110,7 @@ namespace Coquillo {
             }
 
             ImageData XiphComment::parseImage(const QByteArray & data) {
+                qDebug() << "parse";
                 QDataStream s(data);
 
                 int type;
@@ -159,6 +184,8 @@ namespace Coquillo {
                         images << image;
                     }
                 }
+
+                // qDebug() << "L" << images.size();
 
                 return images;
             }

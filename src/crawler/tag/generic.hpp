@@ -2,6 +2,7 @@
 #define COQUILLO_CRAWLER_TAG_GENERIC_H
 
 #include <QVariantHash>
+#include "../types.hpp"
 
 namespace TagLib {
     class Tag;
@@ -13,8 +14,8 @@ namespace Coquillo {
             class Generic {
                 public:
                     Generic() {}
-                    QVariantHash read(const TagLib::Tag * tag) const;
-                    virtual void write(TagLib::Tag * tag, const QVariantHash & data);
+                    TagData read(const TagLib::Tag * tag) const;
+                    virtual void write(TagLib::Tag * tag, const TagData & data);
 
             };
         }

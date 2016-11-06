@@ -1,7 +1,6 @@
 #ifndef COQUILLO_CRAWLER_TAG_ID3V2TAG_H
 #define COQUILLO_CRAWLER_TAG_ID3V2TAG_H
 
-#include "../imagetype.hpp"
 #include "generic.hpp"
 
 namespace TagLib {

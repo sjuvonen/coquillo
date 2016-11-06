@@ -124,6 +124,8 @@ namespace Coquillo {
 
                     images << image;
                 }
+
+                // qDebug() << "I" << images.size();
                 return images;
             }
         }
