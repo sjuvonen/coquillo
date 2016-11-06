@@ -121,7 +121,6 @@ namespace Coquillo {
             if (row < 0 || row + count > rowCount() || parent.isValid()) {
                 return false;
             } else {
-                qDebug() << "remove images";
                 beginRemoveRows(parent, row, row + count - 1);
                 QList<Tags::Image> images = container().images();
                 images.erase(images.begin() + row, images.begin() + row + count);
