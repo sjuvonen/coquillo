@@ -38,6 +38,11 @@ namespace Coquillo {
                 const auto size = container().image(idx.row()).scaled(QSize(128, 128)).size();
                 return size + QSize(0, 10);
             }
+            
+            if (role == Qt::DecorationRole and (idx.column() == 0 or idx.column() == 3)) {
+                const auto image = container().image(idx.row());
+                return image.scaled(QSize(128, 128));
+            }
 
             if (role == Qt::DisplayRole or role == Qt::EditRole) {
                 const auto file = container();
@@ -59,11 +64,6 @@ namespace Coquillo {
                         return info.join('\n');
                     }
                 }
-            }
-
-            if (role == Qt::DecorationRole and (idx.column() == 0 or idx.column() == 3)) {
-                const auto image = container().image(idx.row());
-                return image.scaled(QSize(128, 128));
             }
 
             return QVariant();
