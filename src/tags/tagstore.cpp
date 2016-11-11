@@ -11,7 +11,7 @@ namespace Coquillo {
                 {"artist", "artist"},
                 {"comment", "comment"},
                 {"genre", "genre"},
-                {"number", "TRACKNUMBER"},
+                {"number", "number"},
                 {"title", "title"},
                 {"year", "year"},
             };
@@ -27,6 +27,7 @@ namespace Coquillo {
                     {"encoder", "TENC"},
                     {"genre", "TCON"},
                     {"number", "TRCK"},
+                    {"total", "TRCK[b]"},
                     {"original_artist", "TOPE"},
                     {"title", "TIT2"},
                     {"url", "WXXX"},
@@ -132,11 +133,12 @@ namespace Coquillo {
                 const Tag tag = item.tag(key);
 
                 if (!tag.equals(field, value)) {
-                    // qDebug() << "set" << field;
+                    const Container copy(item);
 
-                    backup(item);
-                    item.tag(key).insert(field, value);
-                    changed = true;
+                    if (item.tag(key).insert(field, value)) {
+                        backup(copy);
+                        changed = true;
+                    }
                 }
             }
 

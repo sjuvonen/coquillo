@@ -11,8 +11,8 @@ namespace Coquillo {
             _tabImages = new ImageTags(this);
             _tabRaw = new RawData(this);
 
-            addTab(_tabImages, tr("Images"));
             addTab(_tabBasic, tr("Basic"));
+            addTab(_tabImages, tr("Images"));
             addTab(_tabRaw, tr("Raw"));
         }
 

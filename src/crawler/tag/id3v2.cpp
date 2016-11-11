@@ -20,7 +20,6 @@ namespace Coquillo {
                     {"artist", "TPE1"},
                     {"comment", "COMM"},
                     {"genre", "TCON"},
-                    {"number", "TRCK"},
                     {"title", "TIT2"},
                     {"year", "TDRC"},
                 };
@@ -35,7 +34,7 @@ namespace Coquillo {
 
                 Generic::write(tag, common);
 
-                const QStringList text_frames = {"TCOM", "TENC", "TOPE", "TPE2", "TPOS"};
+                const QStringList text_frames = {"TCOM", "TENC", "TOPE", "TPE2"};
                 const QStringList supported = (QStringList){"WXXX"} + text_frames;
 
                 foreach (const QString & key, supported) {
@@ -47,9 +46,26 @@ namespace Coquillo {
                 foreach (const QString & key, text_frames) {
                     if (values.contains(key)) {
                         foreach (const QVariant & item, values.values(key)) {
-                            auto frame = new TagLib::ID3v2::TextIdentificationFrame(key.toUtf8().data());
+                            auto frame = new TagLib::ID3v2::TextIdentificationFrame(key.toUtf8().constData());
                             frame->setText(item.toString().toStdString());
                             tag->addFrame(frame);
+                        }
+                    }
+                }
+
+                foreach (const QString key, QStringList({"TRCK", "TPOS"})) {
+                    if (values.contains(key)) {
+                        const QVariant number = values.value(key);
+                        const QVariant total = values.value(key + "[b]");
+                        auto frame = new TagLib::ID3v2::TextIdentificationFrame(key.toUtf8().constData());
+
+                        tag->removeFrames(key.toUtf8().constData());
+
+                        if (total.isValid()) {
+                            const auto value = QString("%1/%2").arg(number.toInt()).arg(total.toInt());
+                            frame->setText(value.toStdString());
+                        } else {
+                            frame->setText(number.toString().toStdString());
                         }
                     }
                 }
@@ -69,13 +85,20 @@ namespace Coquillo {
                 const QStringList ignored = {"APIC"};
 
                 for (auto i = frames.begin(); i != frames.end(); i++) {
-                    const QString field = i->first.data();
+                    // Some apps seem to have added unicode trash at the end of tags.
+                    const QString field = QString(i->first.data()).mid(0, 4);
 
                     if (!ignored.contains(field)) {
                         for (auto j = i->second.begin(); j != i->second.end();j++) {
                             if (field == "WXXX") {
                                 const QRegExp prefix("^\\[\\] ");
                                 data.insertMulti(field, T2QString((*j)->toString()).remove(prefix));
+                            } else if (field == "TRCK" || field == "TPOS") {
+                                const auto parts = T2QString((*j)->toString()).split('/');
+                                data.insertMulti(field, parts.value(0));
+                                if (parts.size() > 1) {
+                                    data.insertMulti(field + "[b]", parts.value(1));
+                                }
                             } else {
                                 data.insertMulti(field, T2QString((*j)->toString()));
                             }

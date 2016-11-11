@@ -1,6 +1,8 @@
 
 #include "tag.hpp"
 
+#include <QDebug>
+
 namespace Coquillo {
     namespace Tags {
         Tag::Tag(const QString & type, const Mapping & mapping, const QVariantHash & values)
@@ -39,6 +41,9 @@ namespace Coquillo {
                     return false;
                 }
             }
+
+            qDebug() << "set" << id() << field << value.toString() << _raw.value(mapped).toString();
+
             _raw.insert(mapped, value);
             return true;
         }
