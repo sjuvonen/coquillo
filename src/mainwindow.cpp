@@ -5,6 +5,8 @@
 #include <QSignalMapper>
 
 #include "filebrowser/filebrowser.hpp"
+#include "processor/renamewidget.hpp"
+#include "processor/parserwidget.hpp"
 #include "settings/settingsdialog.hpp"
 #include "tags/tagsmodel.hpp"
 #include "itemcountlabel.hpp"
@@ -30,6 +32,8 @@ namespace Coquillo {
         setupStatusBar();
         setupTagEditor();
         setupFileBrowser();
+        setupParserWidget();
+        setupRenameWidget();
 
         restoreSettings();
     }
@@ -114,6 +118,28 @@ namespace Coquillo {
             SLOT(showHeaderContextMenu(QPoint)));
 
         new ToggleWidgetByAction(menuBar(), _ui->actionMenubar);
+    }
+
+    void MainWindow::setupParserWidget() {
+        StringStoreModel * history = new StringStoreModel("parser", this);
+        history->setStorage(new QSettings("history"));
+
+        _tag_parser = new Processor::ParserWidget(this);
+        _tag_parser->setHistoryModel(history);
+        _tag_parser->setModel(_ui->itemView->model());
+        _tag_parser->setSelectionModel(_ui->itemView->selectionModel());
+        _ui->toolBox->addTab(_tag_parser, tr("Parse tags"));
+    }
+
+    void MainWindow::setupRenameWidget() {
+        StringStoreModel * history = new StringStoreModel("parser", this);
+        history->setStorage(new QSettings("history"));
+
+        _file_rename = new Processor::RenameWidget(this);
+        _file_rename->setHistoryModel(history);
+        _file_rename->setModel(_ui->itemView->model());
+        _file_rename->setSelectionModel(_ui->itemView->selectionModel());
+        _ui->toolBox->addTab(_file_rename, tr("Rename files"));
     }
 
     void MainWindow::setupStatusBar() {

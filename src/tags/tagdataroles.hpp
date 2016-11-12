@@ -11,6 +11,7 @@ namespace Coquillo {
             ContainerRole,
             FieldModifiedStateRole,
             ItemModifiedStateRole,
+            ValuesMapRole,
             RootPathRole,
         };
     }

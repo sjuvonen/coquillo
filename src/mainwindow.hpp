@@ -8,6 +8,11 @@ namespace Ui {
 }
 
 namespace Coquillo {
+    namespace Processor {
+        class ParserWidget;
+        class RenameWidget;
+    }
+
     namespace Tags {
         class TagsModel;
     }
@@ -39,6 +44,8 @@ namespace Coquillo {
             void applyDefaultSettings();
             void setupFileBrowser();
             void setupMainView();
+            void setupParserWidget();
+            void setupRenameWidget();
             void setupStatusBar();
             void setupTagEditor();
             void setupToolBar();
@@ -47,6 +54,8 @@ namespace Coquillo {
 
             FileBrowser * _files;
             Tags::TagsModel * _model;
+            Processor::ParserWidget * _tag_parser;
+            Processor::RenameWidget * _file_rename;
             Ui::MainWindow * _ui;
             ProgressListener * _progress;
     };

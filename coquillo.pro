@@ -21,7 +21,9 @@ FORMS += \
   ui/filebrowser.ui \
   ui/imagetags.ui \
   ui/mainwindow.ui \
+  ui/parserwidget.ui \
   ui/rawdata.ui \
+  ui/renamewidget.ui \
   ui/settingsdialog.ui \
 
 HEADERS += \
@@ -38,6 +40,11 @@ HEADERS += \
   src/crawler/tag/xiphcomment.hpp \
   src/filebrowser/directorymodel.hpp \
   src/filebrowser/filebrowser.hpp \
+  src/processor/basewidget.hpp \
+  src/processor/parserwidget.hpp \
+  src/processor/patternwidget.hpp \
+  src/processor/patterns.hpp \
+  src/processor/renamewidget.hpp \
   src/settings/settingsdialog.hpp \
   src/tageditor/autonumbers.hpp \
   src/tageditor/basictags.hpp \
@@ -70,6 +77,11 @@ SOURCES += \
   src/crawler/tag/xiphcomment.cpp \
   src/filebrowser/directorymodel.cpp \
   src/filebrowser/filebrowser.cpp \
+  src/processor/basewidget.cpp \
+  src/processor/parserwidget.cpp \
+  src/processor/patternwidget.cpp \
+  src/processor/patterns.cpp \
+  src/processor/renamewidget.cpp \
   src/settings/settingsdialog.cpp \
   src/tageditor/autonumbers.cpp \
   src/tageditor/basictags.cpp \

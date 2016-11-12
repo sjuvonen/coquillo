@@ -109,6 +109,23 @@ namespace Coquillo {
                     case RootPathRole:
                         return containedDirectoryForRow(idx.row());
 
+                    case FilePathRole:
+                      return data(index(idx.row(), PathField), Qt::EditRole);
+
+                    case ValuesMapRole: {
+                        QVariantHash data;
+                        const auto file = _store.at(idx.row());
+
+                        for (auto i = _fields.constBegin() + 1; i != _fields.constEnd(); i++) {
+                            if (*i == "filename") {
+                                data[*i] = file.path();
+                            } else {
+                                data[*i] = file.value(*i);
+                            }
+                        }
+                        return data;
+                    }
+
                 }
             }
 
