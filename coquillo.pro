@@ -28,6 +28,7 @@ FORMS += \
 
 HEADERS += \
   src/itemcountlabel.hpp \
+  src/itemmodifiedproxy.hpp \
   src/mainwindow.hpp \
   src/progresslistener.hpp \
   src/stringstoremodel.hpp \
@@ -66,6 +67,7 @@ HEADERS += \
 
 SOURCES += \
   src/itemcountlabel.cpp \
+  src/itemmodifiedproxy.cpp \
   src/main.cpp \
   src/mainwindow.cpp \
   src/progresslistener.cpp \

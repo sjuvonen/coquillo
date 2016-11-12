@@ -42,8 +42,6 @@ namespace Coquillo {
 
             parts.sort(Qt::CaseInsensitive);
             setPreview(parts.join(", "));
-
-            qDebug() << parts;
         }
     }
 }

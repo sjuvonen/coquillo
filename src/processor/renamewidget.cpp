@@ -49,7 +49,6 @@ namespace Coquillo {
 
             Patterns patterns;
             QVariantHash values = sourceValues(currentIndex());
-            qDebug() << values;
             const QString suffix = QFileInfo(values["filename"].toString()).suffix();
             const QString text = patterns.compile(pattern(), values);
             const QString name = QString("%1.%2").arg(text, suffix);
