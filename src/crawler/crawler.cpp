@@ -23,6 +23,10 @@ namespace Coquillo {
             return DirectoryReader().read(path, recursive);
         }
 
+        QStringList process_dirs(const QStringList & paths, bool recursive) {
+            return DirectoryReader().read(paths, recursive);
+        }
+
         QVariantHash process_file(const QString & path) {
             return FileReader().read(path);
         }
@@ -42,10 +46,15 @@ namespace Coquillo {
             auto dirs_watcher = new QFutureWatcher<QStringList>(this);
             auto files_watcher = new QFutureWatcher<QVariantHash>(this);
 
-            std::function<QStringList(const QString &)> proc_d = std::bind(&process_dir, _1, _recursive);
 
             files_watcher->setPendingResultsLimit(50);
-            dirs_watcher->setFuture(QtConcurrent::mapped(paths, proc_d));
+
+            // std::function<QStringList(const QString &)> proc_d = std::bind(&process_dir, _1, _recursive);
+            // dirs_watcher->setFuture(QtConcurrent::mapped(paths, proc_d));
+
+            std::function<QStringList(const QStringList &)> proc_d = std::bind(&process_dirs, _1, _recursive);
+            dirs_watcher->setFuture(QtConcurrent::run(proc_d, paths));
+
 
             connect(files_watcher, SIGNAL(progressValueChanged(int)), SIGNAL(progress(int)));
             connect(files_watcher, SIGNAL(progressRangeChanged(int, int)), SIGNAL(rangeChanged(int, int)));
@@ -53,6 +62,7 @@ namespace Coquillo {
             connect(files_watcher, SIGNAL(finished()), SLOT(deleteLater()));
 
             connect(dirs_watcher, &QFutureWatcher<QStringList>::finished, [dirs_watcher, files_watcher]() {
+                qDebug() << dirs_watcher->future().result().size();
                 files_watcher->setFuture(QtConcurrent::mapped(dirs_watcher->future().result(), &process_file));
                 dirs_watcher->deleteLater();
             });
@@ -84,6 +94,8 @@ namespace Coquillo {
                 it.next();
                 files << it.fileInfo().absoluteFilePath();
             }
+            qDebug() << "read" << path << files[0];
+
             return files;
         }
 

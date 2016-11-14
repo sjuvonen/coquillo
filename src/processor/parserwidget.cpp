@@ -25,8 +25,6 @@ namespace Coquillo {
         }
 
         void ParserWidget::updatePreview() {
-            qDebug() << "preview";
-
             Patterns patterns;
             const QChar separator = QDir::separator();
             const QString pattern = this->pattern();

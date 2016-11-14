@@ -198,6 +198,8 @@ namespace Coquillo {
         }
 
         void TagsModel::addPaths(const QStringList & paths) {
+            qDebug() << "add" << paths.size() << _directories.size();
+
             QStringList copy(paths);
 
             for (int i = copy.size() - 1; i >= 0; i--) {
@@ -237,7 +239,11 @@ namespace Coquillo {
         }
 
         void TagsModel::reload() {
+            const QStringList dirs = _directories;
+            _directories.clear();
 
+            removeRows(0, rowCount());
+            addPaths(dirs);
         }
 
         void TagsModel::removeDirectory(const QString & path) {

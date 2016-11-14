@@ -18,6 +18,8 @@
 
 #include <QDebug>
 
+#include <QTimer>
+
 namespace Coquillo {
     MainWindow::MainWindow(Qt::WindowFlags flags)
     : QMainWindow(0, flags) {
@@ -26,6 +28,7 @@ namespace Coquillo {
 
         _progress = new ProgressListener(this);
         _model = new Tags::TagsModel(_progress, this);
+        _model->setRecursive(QSettings().value("RecursiveScan").toBool());
 
         setupMainView();
         setupToolBar();
@@ -36,6 +39,13 @@ namespace Coquillo {
         setupRenameWidget();
 
         restoreSettings();
+
+        QTimer::singleShot(1000, [this]{
+            _model->addPaths({
+                "/mnt/data/Music/#test/Swipe Me",
+                "/mnt/data/Music/#test/Chaos Theory",
+            });
+        });
     }
 
     MainWindow::~MainWindow() {
@@ -118,6 +128,24 @@ namespace Coquillo {
             SLOT(showHeaderContextMenu(QPoint)));
 
         new ToggleWidgetByAction(menuBar(), _ui->actionMenubar);
+
+        // auto * lock = & _model->operationLock();
+
+        connect(_progress, &ProgressListener::started, [this]{
+            _ui->actionAbort->setVisible(true);
+            _ui->actionReload->setVisible(false);
+
+            _ui->actionSave->setEnabled(false);
+            _ui->actionDiscard->setEnabled(false);
+        });
+
+        connect(_progress, &ProgressListener::finished, [this]{
+            _ui->actionAbort->setVisible(false);
+            _ui->actionReload->setVisible(true);
+
+            _ui->actionSave->setEnabled(true);
+            _ui->actionDiscard->setEnabled(true);
+        });
     }
 
     void MainWindow::setupParserWidget() {

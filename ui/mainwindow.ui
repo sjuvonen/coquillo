@@ -10,6 +10,9 @@
     <height>751</height>
    </rect>
   </property>
+  <property name="windowTitle">
+   <string>Coquillo</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -101,9 +104,10 @@
    </attribute>
    <addaction name="actionSelectAll"/>
    <addaction name="separator"/>
-   <addaction name="actionReload"/>
-   <addaction name="separator"/>
    <addaction name="actionSave"/>
+   <addaction name="actionReload"/>
+   <addaction name="actionAbort"/>
+   <addaction name="separator"/>
    <addaction name="actionDiscard"/>
   </widget>
   <action name="actionQuit">
@@ -198,6 +202,23 @@
     <string>Ctrl+A</string>
    </property>
   </action>
+  <action name="actionAbort">
+   <property name="icon">
+    <iconset theme="process-stop"/>
+   </property>
+   <property name="text">
+    <string>Abort</string>
+   </property>
+   <property name="toolTip">
+    <string>Abort current action</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -259,6 +280,8 @@
   </connection>
  </connections>
  <slots>
+  <signal>operationStarted()</signal>
+  <signal>operationFinished()</signal>
   <slot>openSettingsDialog()</slot>
   <slot>selectAll()</slot>
  </slots>
