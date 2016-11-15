@@ -22,28 +22,13 @@ namespace Coquillo {
         }
 
         bool Tag::insert(const QString & field, const QVariant & value) {
-            const QString mapped = _mapping.value(field);
-
-            if (mapped.isNull()) {
+            if (equals(field, value)) {
                 return false;
             }
 
-            if (_raw.contains(mapped)) {
-                const QVariant old = _raw.value(mapped);
-                bool int_changed = value.type() == QVariant::Int && (value.toInt() != old.toInt());
-                bool str_changed = value.type() != QVariant::Int && (value.toString() != old.toString());
+            const QString mapped = _mapping.value(field);
 
-                if (!int_changed && !str_changed) {
-                    return false;
-                }
-            } else {
-                if (value.isNull() || !value.isValid()) {
-                    return false;
-                }
-            }
-
-            qDebug() << "set" << id() << field << value.toString() << _raw.value(mapped).toString();
-
+            qDebug() << "set" << id() << field << _raw.value(mapped).toString() << value.toString();
             _raw.insert(mapped, value);
             return true;
         }
@@ -53,12 +38,19 @@ namespace Coquillo {
         }
 
         bool Tag::equals(const QString & field, const QVariant & value) const {
+            if (!_mapping.contains(field)) {
+                return true;
+            }
+
             const QString mapped = _mapping.value(field);
             const QVariant old = _raw.value(mapped);
-            bool int_changed = value.type() == QVariant::Int && (value.toInt() != old.toInt());
-            bool str_changed = value.type() != QVariant::Int && (value.toString() != old.toString());
+            const QList<QVariant::Type> number_types = {QVariant::Int, QVariant::UInt};
 
-            return !int_changed && !str_changed;
+            if (number_types.contains(old.type()) || number_types.contains(value.type())) {
+                return value.toInt() == old.toInt();
+            } else {
+                return value.toString() == old.toString();
+            }
         }
     }
 }

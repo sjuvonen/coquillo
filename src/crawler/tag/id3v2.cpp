@@ -95,9 +95,10 @@ namespace Coquillo {
                                 data.insertMulti(field, T2QString((*j)->toString()).remove(prefix));
                             } else if (field == "TRCK" || field == "TPOS") {
                                 const auto parts = T2QString((*j)->toString()).split('/');
-                                data.insertMulti(field, parts.value(0));
+                                data.insertMulti(field, QVariant(parts.value(0).toInt()));
+
                                 if (parts.size() > 1) {
-                                    data.insertMulti(field + "[b]", parts.value(1));
+                                    data.insertMulti(field + "[b]", QVariant(parts.value(1).toInt()));
                                 }
                             } else {
                                 data.insertMulti(field, T2QString((*j)->toString()));
