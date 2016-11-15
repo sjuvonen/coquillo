@@ -101,6 +101,20 @@ namespace Coquillo {
             return false;
         }
 
+        void Store::reset() {
+            for (int i = 0; i < _items.size(); i++) {
+                const auto file = _items.at(i);
+                if (_backup.contains(file.id())) {
+                    _items.replace(i, _backup[file.id()]);
+                }
+            }
+            commit();
+        }
+
+        void Store::commit() {
+            _backup.clear();
+        }
+
         void Store::remove(int pos) {
             if (pos >= 0 && pos < size()) {
                 const auto item = at(pos);

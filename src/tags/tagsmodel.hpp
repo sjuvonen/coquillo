@@ -44,6 +44,7 @@ namespace Coquillo {
                 void discardChanges();
                 void reload();
                 void removeDirectory(const QString & path);
+                void revert();
                 void setRecursive(bool state) { _recursive = state; }
                 void writeToDisk();
 

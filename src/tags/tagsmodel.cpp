@@ -146,9 +146,7 @@ namespace Coquillo {
                     rowChanged(idx);
                     return true;
                 }
-            }
-
-            if (idx.column() == PathField) {
+            } else if (idx.column() == PathField) {
                 if (_store.rename(idx.row(), value.toString())) {
                     rowChanged(idx);
                     return true;
@@ -255,6 +253,14 @@ namespace Coquillo {
             _directories.removeOne(path);
         }
 
+        void TagsModel::revert() {
+            qDebug() << "revert";
+
+            beginResetModel();
+            _store.reset();
+            endResetModel();
+        }
+
         void TagsModel::writeToDisk() {
             const QList<Container> items = _store.changedItems();
 
@@ -268,6 +274,8 @@ namespace Coquillo {
 
                 writer->write(items);
             }
+
+            _store.commit();
         }
 
         QString TagsModel::containedDirectoryForRow(int row) const {

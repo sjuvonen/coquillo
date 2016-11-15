@@ -39,13 +39,6 @@ namespace Coquillo {
         setupRenameWidget();
 
         restoreSettings();
-
-        QTimer::singleShot(1000, [this]{
-            _model->addPaths({
-                "/mnt/data/Music/#test/Swipe Me",
-                "/mnt/data/Music/#test/Chaos Theory",
-            });
-        });
     }
 
     MainWindow::~MainWindow() {
@@ -201,6 +194,7 @@ namespace Coquillo {
         connect(_ui->actionSave, SIGNAL(triggered()), _model, SLOT(writeToDisk()));
         connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(discardChanges()));
         connect(_ui->actionReload, SIGNAL(triggered()), _model, SLOT(reload()));
+        connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(revert()));
     }
 
     void MainWindow::closeEvent(QCloseEvent * event) {

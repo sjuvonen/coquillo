@@ -17,6 +17,8 @@ namespace Coquillo {
                 bool isModified(int pos) const;
                 bool isFieldModified(int pos, const QString & field) const;
 
+                void reset();
+                void commit();
                 void remove(int pos);
 
                 inline int size() const { return _items.size(); }
