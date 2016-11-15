@@ -22,16 +22,19 @@ namespace Coquillo {
 
         void ParserWidget::applyPattern(const QString & pattern) {
             Q_UNUSED(pattern)
+            const QString path = filePathSliceForPattern(pattern);
+            const QVariantHash tags = Patterns().extract(pattern, path);
+
+            foreach (const QModelIndex & idx, selectionModel()->selectedRows()) {
+                model()->setData(idx, tags, Tags::ValuesMapRole);
+            }
+
         }
 
         void ParserWidget::updatePreview() {
-            Patterns patterns;
-            const QChar separator = QDir::separator();
             const QString pattern = this->pattern();
-            QString path = currentIndex().data(Tags::FilePathRole).toString();
-            path = path.section(separator, -1 - pattern.count(separator));
-            path = path.left(path.length() - QFileInfo(path).suffix().length() - 1);
-            const QVariantHash tags = patterns.extract(pattern, path);
+            const QString path = filePathSliceForPattern(pattern);
+            const QVariantHash tags = Patterns().extract(pattern, path);
             QStringList parts;
 
             foreach (QString key, tags.keys()) {
@@ -40,6 +43,14 @@ namespace Coquillo {
 
             parts.sort(Qt::CaseInsensitive);
             setPreview(parts.join(", "));
+        }
+
+        QString ParserWidget::filePathSliceForPattern(const QString & pattern) const {
+            const QChar separator = QDir::separator();
+            QString path = currentIndex().data(Tags::FilePathRole).toString();
+            path = path.section(separator, -1 - pattern.count(separator));
+            path = path.left(path.length() - QFileInfo(path).suffix().length() - 1);
+            return path;
         }
     }
 }

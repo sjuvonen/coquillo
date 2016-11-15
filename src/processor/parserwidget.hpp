@@ -21,6 +21,7 @@ namespace Coquillo {
                 void updatePreview();
 
             private:
+                QString filePathSliceForPattern(const QString & pattern) const;
                 Ui::ParserWidget * _ui;
         };
     }

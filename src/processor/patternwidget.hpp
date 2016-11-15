@@ -16,8 +16,8 @@ namespace Coquillo {
                 PatternWidget(QWidget * parent = 0);
                 virtual ~PatternWidget() { }
                 QString pattern() const;
-                virtual void setSelectionModel(QItemSelectionModel * model);
-                virtual void setHistoryModel(QAbstractItemModel * history);
+                void setHistoryModel(QAbstractItemModel * history);
+                void setSelectionModel(QItemSelectionModel * model);
                 inline QAbstractItemModel * historyModel() const { return _history; }
 
             signals:

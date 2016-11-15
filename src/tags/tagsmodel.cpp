@@ -137,29 +137,39 @@ namespace Coquillo {
                 return false;
             }
 
-            if (role != Qt::EditRole && role != Qt::DisplayRole) {
-                return QAbstractItemModel::setData(idx, value, role);
+            if (role == Qt::EditRole || role == Qt::DisplayRole) {
+                if (idx.column() == ImageField) {
+                    if (_store.setImages(idx.row(), value.value<QList<Image> >())) {
+                        rowChanged(idx);
+                        return true;
+                    }
+                } else if (idx.column() == PathField) {
+                    if (_store.rename(idx.row(), value.toString())) {
+                        rowChanged(idx);
+                        return true;
+                    }
+                } else {
+                    const QString field = _fields[idx.column()];
+                    if (_store.setValue(idx.row(), field, value)) {
+                        rowChanged(idx);
+                        return true;
+                    }
+                }
+            } else if (role == ValuesMapRole) {
+                const QVariantHash values = value.value<QVariantHash>();
+                bool changed = false;
+
+                for (auto i = values.begin(); i != values.end(); i++) {
+                    if (_store.setValue(idx.row(), i.key(), i.value())) {
+                        changed = true;
+                    }
+                }
+
+                rowChanged(idx);
+                return changed;
             }
 
-            if (idx.column() == ImageField) {
-                if (_store.setImages(idx.row(), value.value<QList<Image> >())) {
-                    rowChanged(idx);
-                    return true;
-                }
-            } else if (idx.column() == PathField) {
-                if (_store.rename(idx.row(), value.toString())) {
-                    rowChanged(idx);
-                    return true;
-                }
-            } else {
-                const QString field = _fields[idx.column()];
-                if (_store.setValue(idx.row(), field, value)) {
-                    rowChanged(idx);
-                    return true;
-                }
-            }
-
-            return false;
+            return QAbstractItemModel::setData(idx, value, role);
         }
 
         QVariant TagsModel::headerData(int section, Qt::Orientation orientation, int role) const {
