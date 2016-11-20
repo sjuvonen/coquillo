@@ -167,6 +167,10 @@ namespace Coquillo {
 
                 rowChanged(idx);
                 return changed;
+            } else if (role == FilePathRole) {
+                return _store.rename(idx.row(), value.toString());
+            } else {
+                qWarning() << "Model does not support setting data for role" << role;
             }
 
             return QAbstractItemModel::setData(idx, value, role);

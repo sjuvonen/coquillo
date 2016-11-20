@@ -6,6 +6,7 @@
 #include <QTimer>
 
 #include "tags/tagdataroles.hpp"
+#include "paths.hpp"
 #include "patterns.hpp"
 #include "renamewidget.hpp"
 #include "ui_renamewidget.h"
@@ -26,9 +27,14 @@ namespace Coquillo {
         void RenameWidget::applyPattern(const QString & pattern) {
             qDebug() << "apply pattern" << pattern;
 
-            Patterns patterns;
+            const Patterns patterns;
+            const Paths paths;
             QList<QPersistentModelIndex> indices;
 
+            /**
+             * If the model has automatic sorting enabled, rows might change order in between renames.
+             * Use persistent indices to work around this problem.
+             */
             foreach (const QModelIndex idx, selectionModel()->selectedRows()) {
                 indices << QPersistentModelIndex(idx);
             }
@@ -37,8 +43,9 @@ namespace Coquillo {
                 const QVariantHash values = sourceValues(idx);
                 const QString suffix = QFileInfo(values["filename"].toString()).suffix();
                 const QString compiled = patterns.compile(this->pattern(), values);
-                const QString path = QString("%1.%2").arg(compiled, suffix);
-                model()->setData(idx, path, Tags::FileNameRole);
+                const QString filename = QString("%1.%2").arg(compiled, suffix);
+                const QString path = paths.mergeFileNames(idx.data(Tags::FilePathRole).toString(), filename);
+                model()->setData(idx, path, Tags::FilePathRole);
             }
         }
 
@@ -47,8 +54,8 @@ namespace Coquillo {
                 return;
             }
 
-            Patterns patterns;
-            QVariantHash values = sourceValues(currentIndex());
+            const Patterns patterns;
+            const QVariantHash values = sourceValues(currentIndex());
             const QString suffix = QFileInfo(values["filename"].toString()).suffix();
             const QString text = patterns.compile(pattern(), values);
             const QString name = QString("%1.%2").arg(text, suffix);

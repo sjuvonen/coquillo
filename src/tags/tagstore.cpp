@@ -127,7 +127,8 @@ namespace Coquillo {
             Container & item = at(pos);
 
             if (item.path() != new_path) {
-                backup(pos);
+                qDebug() << "rename" << item.path() << new_path;
+                backup(Container(item));
                 item.setPath(new_path);
                 return true;
             }

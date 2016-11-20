@@ -44,6 +44,7 @@ HEADERS += \
   src/processor/basewidget.hpp \
   src/processor/parserwidget.hpp \
   src/processor/patternwidget.hpp \
+  src/processor/paths.hpp \
   src/processor/patterns.hpp \
   src/processor/renamewidget.hpp \
   src/settings/settingsdialog.hpp \
@@ -82,6 +83,7 @@ SOURCES += \
   src/processor/basewidget.cpp \
   src/processor/parserwidget.cpp \
   src/processor/patternwidget.cpp \
+  src/processor/paths.cpp \
   src/processor/patterns.cpp \
   src/processor/renamewidget.cpp \
   src/settings/settingsdialog.cpp \
