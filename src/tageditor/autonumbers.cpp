@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include "autonumbers.hpp"
+#include "tags/tagdataroles.hpp"
 
 namespace Coquillo {
     namespace TagEditor {
@@ -39,8 +40,8 @@ namespace Coquillo {
         QHash<QString, QModelIndexList> AutoNumbers::groupByPath(const QModelIndexList & items) const {
             QHash<QString, QModelIndexList> paths;
             foreach (const QModelIndex idx, items) {
-                // const QString path = QFileInfo(idx.data(MetaData::ModelData::FilePathRole).toString()).absolutePath();
-                // paths[path].append(idx);
+                const QString path = QFileInfo(idx.data(Tags::FilePathRole).toString()).absolutePath();
+                paths[path].append(idx);
             }
             return paths;
         }

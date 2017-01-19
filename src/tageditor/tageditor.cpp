@@ -1,7 +1,10 @@
+#include "autonumbers.hpp"
 #include "basictags.hpp"
 #include "imagetags.hpp"
 #include "rawdata.hpp"
 #include "tageditor.hpp"
+
+#include <QDebug>
 
 namespace Coquillo {
     namespace TagEditor {
@@ -14,6 +17,8 @@ namespace Coquillo {
             addTab(_tabBasic, tr("Basic"));
             addTab(_tabImages, tr("Images"));
             addTab(_tabRaw, tr("Raw"));
+
+            connect(_tabBasic, SIGNAL(autoNumberingClicked()), SLOT(autoNumberTracks()));
         }
 
         QAbstractItemModel * TagEditor::model() const {
@@ -50,6 +55,11 @@ namespace Coquillo {
 
             _tabRaw->setEditorIndex(idx);
             _tabRaw->setEnabled(idx.isValid());
+        }
+
+        void TagEditor::autoNumberTracks() {
+            const QModelIndexList rows = selectionModel()->selectedRows();
+            AutoNumbers::autoNumberItems(model(), rows);
         }
     }
 }
