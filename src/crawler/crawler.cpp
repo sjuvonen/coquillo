@@ -46,7 +46,6 @@ namespace Coquillo {
             auto dirs_watcher = new QFutureWatcher<QStringList>(this);
             auto files_watcher = new QFutureWatcher<QVariantHash>(this);
 
-
             files_watcher->setPendingResultsLimit(50);
 
             // std::function<QStringList(const QString &)> proc_d = std::bind(&process_dir, _1, _recursive);
@@ -61,7 +60,7 @@ namespace Coquillo {
             connect(files_watcher, SIGNAL(finished()), SIGNAL(finished()));
             connect(files_watcher, SIGNAL(finished()), SLOT(deleteLater()));
 
-            connect(dirs_watcher, &QFutureWatcher<QStringList>::finished, [dirs_watcher, files_watcher]() {
+            connect(dirs_watcher, &QFutureWatcher<QStringList>::finished, [dirs_watcher, files_watcher] {
                 qDebug() << dirs_watcher->future().result().size();
                 files_watcher->setFuture(QtConcurrent::mapped(dirs_watcher->future().result(), &process_file));
                 dirs_watcher->deleteLater();
