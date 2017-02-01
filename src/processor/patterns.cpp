@@ -12,6 +12,7 @@ namespace Coquillo {
                 {"album", "%b"},
                 {"artist", "%a"},
                 {"comment", "%c"},
+                {"composer", "%p"},
                 {"disc", "%d"},
                 {"genre", "%g"},
                 {"ignore", "%i"},
