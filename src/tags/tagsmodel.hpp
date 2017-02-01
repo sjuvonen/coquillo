@@ -48,6 +48,10 @@ namespace Coquillo {
                 void setRecursive(bool state) { _recursive = state; }
                 void writeToDisk();
 
+            protected:
+                const Store & store() const { return _store; }
+                Store & store() { return _store; }
+
             private:
                 const Container container(const QModelIndex & idx) const;
                 const Container container(int row) const;
