@@ -1,4 +1,5 @@
-/build
-/Makefile
-.qmake.stash
 /coquillo
+/build
+.qmake.stash
+Makefile
+
