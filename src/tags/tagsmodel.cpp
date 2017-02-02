@@ -11,7 +11,7 @@
 #include <QDebug>
 
 namespace Coquillo {
-    namespace Tags {
+    namespace Tags {        
         TagsModel::TagsModel(ProgressListener * progress, QObject * parent)
         : QAbstractItemModel(parent), _progress(progress), _recursive(false) {
             _labels = QStringList({
@@ -111,6 +111,9 @@ namespace Coquillo {
 
                     case FilePathRole:
                       return data(index(idx.row(), PathField), Qt::EditRole);
+
+                    case FileNameRole:
+                        return QFileInfo(data(index(idx.row(), PathField), Qt::EditRole).toString()).fileName();
 
                     case ValuesMapRole: {
                         QVariantHash data;

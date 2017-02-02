@@ -28,7 +28,7 @@ namespace Coquillo {
 
             const QString mapped = _mapping.value(field);
 
-            qDebug() << "set" << id() << field << _raw.value(mapped).toString() << value.toString();
+            // qDebug() << "set" << id() << field << _raw.value(mapped).toString() << value.toString();
             _raw.insert(mapped, value);
             return true;
         }

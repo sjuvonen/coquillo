@@ -17,7 +17,15 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
-                enum Fields { FeedbackField = 0, PathField = 15, ImageField = 16 };
+                /**
+                 * @deprecated
+                 */
+                enum Fields {
+                    FeedbackField = 0,
+                    NumberField = 7,
+                    PathField = 15,
+                    ImageField = 16
+                };
 
                 TagsModel(ProgressListener * progress, QObject * parent = 0);
 
