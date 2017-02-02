@@ -58,8 +58,8 @@ namespace Coquillo {
         }
 
         void TagEditor::autoNumberTracks() {
-            const QModelIndexList rows = selectionModel()->selectedRows();
-            AutoNumbers::autoNumberItems(model(), rows);
+            AutoNumbers numbers(model());
+            numbers.autoNumberItems(selectionModel()->selectedRows());
         }
     }
 }

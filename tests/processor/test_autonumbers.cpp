@@ -5,10 +5,6 @@
 namespace Test {
     using namespace Coquillo::TagEditor::NumberStrategy;
 
-    void AutoNumbers::initTestCase() {
-        // _model = new TestTagsModel(nullptr);
-    }
-
     void AutoNumbers::itemOrderStrategyTest() {
         auto * model = new TestTagsModel;
         model->initializeTestData(testData());
@@ -77,21 +73,20 @@ namespace Test {
         model->initializeTestData(testData());
 
         const QModelIndexList items = {
-            model->index(0, 0),
-            model->index(1, 0),
-            model->index(2, 0),
-            model->index(3, 0),
-            model->index(4, 0),
+            model->index(0, Coquillo::Tags::NumberField),
+            model->index(1, Coquillo::Tags::NumberField),
+            model->index(2, Coquillo::Tags::NumberField),
+            model->index(3, Coquillo::Tags::NumberField),
+            model->index(4, Coquillo::Tags::NumberField),
         };
 
         Coquillo::TagEditor::AutoNumbers::autoNumberItems(model, items);
 
-        int col = Coquillo::Tags::NumberField;
-        QVERIFY(model->index(0, col).data().toInt() == 1);
-        QVERIFY(model->index(1, col).data().toInt() == 2);
-        QVERIFY(model->index(2, col).data().toInt() == 11);
-        QVERIFY(model->index(3, col).data().toInt() == 5);
-        QVERIFY(model->index(4, col).data().toInt() == 8);
+        QVERIFY(items[0].data().toInt() == 1);
+        QVERIFY(items[1].data().toInt() == 2);
+        QVERIFY(items[2].data().toInt() == 11);
+        QVERIFY(items[3].data().toInt() == 5);
+        QVERIFY(items[4].data().toInt() == 8);
     }
 
     QList<QVariantHash> AutoNumbers::testData() const {

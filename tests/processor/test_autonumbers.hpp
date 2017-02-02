@@ -10,13 +10,9 @@ namespace Test {
   class AutoNumbers : public QObject {
     Q_OBJECT
 
-    Coquillo::Tags::TagsModel * _model;
-
     QList<QVariantHash> testData() const;
 
     private slots:
-      void initTestCase();
-
       void itemOrderStrategyTest();
       void fileNumberStrategyTest();
       void originalNumbersStrategyTest();
@@ -32,7 +28,6 @@ namespace Test {
       : Coquillo::Tags::TagsModel(nullptr, parent) { }
 
       void initializeTestData(const QList<QVariantHash> & items);
-
   };
 }
 
