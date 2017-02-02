@@ -12,10 +12,16 @@ namespace Test {
 
     Coquillo::Tags::TagsModel * _model;
 
+    QList<QVariantHash> testData() const;
+
     private slots:
       void initTestCase();
-      void basicText();
-      void extendedTest();
+
+      void itemOrderStrategyTest();
+      void fileNumberStrategyTest();
+      void originalNumbersStrategyTest();
+
+      void trackNumberingTest();
   };
 
   class TestTagsModel : public Coquillo::Tags::TagsModel {
@@ -25,7 +31,7 @@ namespace Test {
       TestTagsModel(QObject * parent = nullptr)
       : Coquillo::Tags::TagsModel(nullptr, parent) { }
 
-      void initializeTestData();
+      void initializeTestData(const QList<QVariantHash> & items);
 
   };
 }
