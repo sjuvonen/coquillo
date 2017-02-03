@@ -72,6 +72,10 @@ namespace Test {
         auto * model = new TestTagsModel;
         model->initializeTestData(testData());
 
+        /*
+         * NOTE: AutoNumbers does not specifically require to use the right column for indices,
+         * but this is done in order to simplify result validation below.
+         */
         const QModelIndexList items = {
             model->index(0, Coquillo::Tags::NumberField),
             model->index(1, Coquillo::Tags::NumberField),
@@ -87,6 +91,37 @@ namespace Test {
         QVERIFY(items[2].data().toInt() == 11);
         QVERIFY(items[3].data().toInt() == 5);
         QVERIFY(items[4].data().toInt() == 8);
+    }
+
+    void AutoNumbers::complexTrackNumberingTest() {
+        auto * model = new TestTagsModel;
+        model->initializeTestData(complexTestData());
+
+        /*
+         * NOTE: AutoNumbers does not specifically require to use the right column for indices,
+         * but this is done in order to simplify result validation below.
+         */
+        const QModelIndexList items = {
+            model->index(0, Coquillo::Tags::NumberField),
+            model->index(1, Coquillo::Tags::NumberField),
+            model->index(2, Coquillo::Tags::NumberField),
+            model->index(3, Coquillo::Tags::NumberField),
+            model->index(4, Coquillo::Tags::NumberField),
+            model->index(5, Coquillo::Tags::NumberField),
+            model->index(6, Coquillo::Tags::NumberField),
+            model->index(7, Coquillo::Tags::NumberField),
+        };
+
+        Coquillo::TagEditor::AutoNumbers::autoNumberItems(model, items);
+
+        QVERIFY(items[0].data().toInt() == 1);
+        QVERIFY(items[1].data().toInt() == 4);
+        QVERIFY(items[2].data().toInt() == 3);
+        QVERIFY(items[3].data().toInt() == 2);
+        QVERIFY(items[4].data().toInt() == 11);
+        QVERIFY(items[5].data().toInt() == 5);
+        QVERIFY(items[6].data().toInt() == 8);
+        QVERIFY(items[7].data().toInt() == 11);
     }
 
     QList<QVariantHash> AutoNumbers::testData() const {
@@ -166,6 +201,57 @@ namespace Test {
                         {"TALB", "Dev Album"},
                         {"TCON", "Techno"},
                         {"TRCK", 8},
+                    })}
+                })}
+            }
+        }));
+
+        return items;
+    }
+
+    QList<QVariantHash> AutoNumbers::complexTestData() const {
+        QList<QVariantHash> items = testData();
+
+        items.insert(1, QVariantHash({
+            {
+                {"path", "/test/music/another/4 - file.mp3"},
+                {"primary", "id3v2"},
+                {"tags", QVariantHash({
+                    {"id3v2", QVariantHash({
+                        {"TPE1", "Foobar"},
+                        {"TIT2", "Demo #4"},
+                        {"TALB", "Second Album"},
+                        {"TCON", "Techno"},
+                    })}
+                })}
+            }
+        }));
+
+        items.insert(2, QVariantHash({
+            {
+                {"path", "/test/music/another/03. file.mp3"},
+                {"primary", "id3v2"},
+                {"tags", QVariantHash({
+                    {"id3v2", QVariantHash({
+                        {"TPE1", "Foobar"},
+                        {"TIT2", "Demo #3"},
+                        {"TALB", "Second Album"},
+                        {"TCON", "Techno"},
+                    })}
+                })}
+            }
+        }));
+
+        items.insert(7, QVariantHash({
+            {
+                {"path", "/test/music/another/11. file.mp3"},
+                {"primary", "id3v2"},
+                {"tags", QVariantHash({
+                    {"id3v2", QVariantHash({
+                        {"TPE1", "Foobar"},
+                        {"TIT2", "Demo #11"},
+                        {"TALB", "Second Album"},
+                        {"TCON", "Techno"},
                     })}
                 })}
             }
