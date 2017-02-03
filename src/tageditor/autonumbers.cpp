@@ -37,12 +37,14 @@ namespace Coquillo {
         }
 
         void AutoNumbers::generateNumbering(const QString & directory, const QModelIndexList & items) {
+            Q_UNUSED(directory)
+            
             QMap<int, int> numbers;
             numbers.unite(NumberStrategy::ItemOrderStrategy().suggestions(items));
             numbers.unite(NumberStrategy::FileNumberStrategy().suggestions(items));
             numbers.unite(NumberStrategy::PreserveOriginalNumbers().suggestions(items));
 
-            foreach (int i, numbers.keys()) {
+            foreach (int i, numbers.uniqueKeys()) {
                 const QModelIndex idx = items[i].sibling(items[i].row(), Tags::NumberField);
                 model()->setData(idx, numbers[i]);
             }
