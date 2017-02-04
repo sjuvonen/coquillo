@@ -86,11 +86,11 @@ namespace Test {
 
         Coquillo::TagEditor::AutoNumbers::autoNumberItems(model, items);
 
-        QVERIFY(items[0].data().toInt() == 1);
-        QVERIFY(items[1].data().toInt() == 2);
-        QVERIFY(items[2].data().toInt() == 11);
-        QVERIFY(items[3].data().toInt() == 5);
-        QVERIFY(items[4].data().toInt() == 8);
+        QVERIFY(items[0].data() == 1);
+        QVERIFY(items[1].data() == 2);
+        QVERIFY(items[2].data() == 11);
+        QVERIFY(items[3].data() == 5);
+        QVERIFY(items[4].data() == 8);
     }
 
     void AutoNumbers::complexTrackNumberingTest() {
@@ -114,14 +114,35 @@ namespace Test {
 
         Coquillo::TagEditor::AutoNumbers::autoNumberItems(model, items);
 
-        QVERIFY(items[0].data().toInt() == 1);
-        QVERIFY(items[1].data().toInt() == 4);
-        QVERIFY(items[2].data().toInt() == 3);
-        QVERIFY(items[3].data().toInt() == 2);
-        QVERIFY(items[4].data().toInt() == 11);
-        QVERIFY(items[5].data().toInt() == 5);
-        QVERIFY(items[6].data().toInt() == 8);
-        QVERIFY(items[7].data().toInt() == 11);
+        QVERIFY(items[0].data() == 1);
+        QVERIFY(items[1].data() == 4);
+        QVERIFY(items[2].data() == 3);
+        QVERIFY(items[3].data() == 2);
+        QVERIFY(items[4].data() == 11);
+        QVERIFY(items[5].data() == 5);
+        QVERIFY(items[6].data() == 8);
+        QVERIFY(items[7].data() == 11);
+    }
+
+    void AutoNumbers::fileDiscNumberStrategyTest() {
+        auto * model = new TestTagsModel;
+        model->initializeTestData(testData());
+
+        const QModelIndexList items = {
+            model->index(0, 0),
+            model->index(1, 0),
+            model->index(2, 0),
+            model->index(3, 0),
+            model->index(4, 0),
+        };
+
+        const auto result = FileNumberStrategy(FileNumberStrategy::DiscNumberMode).suggestions(items);
+
+        QVERIFY(result[0] == 0);
+        QVERIFY(result[1] == 1);
+        QVERIFY(result[2] == 2);
+        QVERIFY(result[3] == 2);
+        QVERIFY(result[4] == 1);
     }
 
     QList<QVariantHash> AutoNumbers::testData() const {
@@ -146,7 +167,7 @@ namespace Test {
 
         items.append(QVariantHash({
             {
-                {"path", "/test/music/foobar/02 - file2.mp3"},
+                {"path", "/test/music/foobar/102_file2.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -162,7 +183,7 @@ namespace Test {
 
         items.append(QVariantHash({
             {
-                {"path", "/test/music/foobar/11. file.mp3"},
+                {"path", "/test/music/foobar/211. file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -177,7 +198,7 @@ namespace Test {
 
         items.append(QVariantHash({
             {
-                {"path", "/test/music/foobar/5. file.mp3"},
+                {"path", "/test/music/foobar/205. file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -192,7 +213,7 @@ namespace Test {
 
         items.append(QVariantHash({
             {
-                {"path", "/test/music/foobar/8 - file.mp3"},
+                {"path", "/test/music/foobar/108 - file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -214,7 +235,7 @@ namespace Test {
 
         items.insert(1, QVariantHash({
             {
-                {"path", "/test/music/another/4 - file.mp3"},
+                {"path", "/test/music/another/04 - file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -229,7 +250,7 @@ namespace Test {
 
         items.insert(2, QVariantHash({
             {
-                {"path", "/test/music/another/03. file.mp3"},
+                {"path", "/test/music/another/3. file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -244,7 +265,7 @@ namespace Test {
 
         items.insert(7, QVariantHash({
             {
-                {"path", "/test/music/another/11. file.mp3"},
+                {"path", "/test/music/another/11_file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({

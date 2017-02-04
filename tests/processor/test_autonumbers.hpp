@@ -45,6 +45,11 @@ namespace Test {
        * Validates numbering of items from multiple albums at once.
        */
       void complexTrackNumberingTest();
+
+      /**
+       * Validates FileNumberStrategy for reading disc numbers.
+       */
+      void fileDiscNumberStrategyTest();
   };
 
   /**
