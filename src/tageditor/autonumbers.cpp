@@ -96,7 +96,7 @@ namespace Coquillo {
 
                         /*
                          * Sometimes number in filenames are presented so that the first digit
-                         * is disc number and last two the track number.
+                         * is disc number and last two digits the track number.
                          */
                         if (_mode == TrackNumberMode) {
                             if (num.length() == 3) {
@@ -108,7 +108,7 @@ namespace Coquillo {
                             if (num.length() == 3) {
                                 numbers.insert(i, num.mid(0, 1).toInt());
                             } else {
-                                // PASS
+                                // PASS: There is no disc number in this filename.
                                 // numbers.insert(i, 1);
                             }
                         }
