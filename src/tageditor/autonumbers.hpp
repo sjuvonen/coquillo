@@ -51,7 +51,13 @@ namespace Coquillo {
              */
             class FileNumberStrategy : public AbstractStrategy {
                 public:
+                    enum Mode { TrackNumberMode = 0, DiscNumberMode };
+
+                    FileNumberStrategy(int mode = TrackNumberMode);
                     QMap<int, int> suggestions(const QModelIndexList & items);
+
+                private:
+                    int _mode;
             };
 
             /**
@@ -59,9 +65,14 @@ namespace Coquillo {
              */
             class PreserveOriginalNumbers : public AbstractStrategy {
                 public:
-                    QMap<int, int> suggestions(const QModelIndexList & items);
-            };
+                    enum Mode { TrackNumberMode = 0, DiscNumberMode };
 
+                    PreserveOriginalNumbers(int mode = TrackNumberMode);
+                    QMap<int, int> suggestions(const QModelIndexList & items);
+
+                private:
+                    int _mode;
+            };
         }
     }
 }

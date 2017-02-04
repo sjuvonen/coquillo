@@ -38,7 +38,7 @@ namespace Coquillo {
 
         void AutoNumbers::generateNumbering(const QString & directory, const QModelIndexList & items) {
             Q_UNUSED(directory)
-            
+
             QMap<int, int> numbers;
             numbers.unite(NumberStrategy::ItemOrderStrategy().suggestions(items));
             numbers.unite(NumberStrategy::FileNumberStrategy().suggestions(items));
@@ -80,28 +80,59 @@ namespace Coquillo {
                 return numbers;
             }
 
+            FileNumberStrategy::FileNumberStrategy(int mode)
+            : _mode(mode) {
+
+            }
+
             QMap<int, int> FileNumberStrategy::suggestions(const QModelIndexList & items) {
                 QMap<int, int> numbers;
-                QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)]");
+                QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)_]");
 
                 for (int i = 0; i < items.size(); i++) {
                     const QString filename = items[i].data(TagDataRoles::FileNameRole).toString();
                     if (matcher.indexIn(filename.trimmed()) != -1) {
-                        numbers.insert(i, matcher.cap(1).toInt());
+                        const QString num = matcher.cap(1);
+
+                        /*
+                         * Sometimes number in filenames are presented so that the first digit
+                         * is disc number and last two the track number.
+                         */
+                        if (_mode == TrackNumberMode) {
+                            if (num.length() == 3) {
+                                numbers.insert(i, num.mid(1).toInt());
+                            } else {
+                                numbers.insert(i, num.toInt());
+                            }
+                        } else {
+                            if (num.length() == 3) {
+                                numbers.insert(i, num.mid(0, 1).toInt());
+                            } else {
+                                // PASS
+                                // numbers.insert(i, 1);
+                            }
+                        }
                     }
                 }
 
                 return numbers;
             }
 
+
+            PreserveOriginalNumbers::PreserveOriginalNumbers(int mode)
+            : _mode(mode) {
+
+            }
+
             QMap<int, int> PreserveOriginalNumbers::suggestions(const QModelIndexList & items) {
                 QMap<int, int> numbers;
+                const QString field = _mode == DiscNumberMode ? "disc" : "number";
 
                 for (int i = 0; i < items.size(); i++) {
                     const QVariantHash values = items[i].data(TagDataRoles::ValuesMapRole).toHash();
 
-                    if (values.contains("number")) {
-                        int number = values["number"].toInt();
+                    if (values.contains(field)) {
+                        int number = values[field].toInt();
 
                         if (number > 0) {
                             numbers.insert(i, number);
