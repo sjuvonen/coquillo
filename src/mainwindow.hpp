@@ -19,6 +19,7 @@ namespace Coquillo {
 
     class FileBrowser;
     class ProgressListener;
+    class SortPicker;
 
     class MainWindow : public QMainWindow {
         Q_OBJECT
@@ -30,11 +31,13 @@ namespace Coquillo {
 
         public slots:
             void addPaths(const QStringList & paths);
+            void sort(int column, Qt::SortOrder = Qt::AscendingOrder);
 
         protected:
             void closeEvent(QCloseEvent * event);
 
         private slots:
+            void onSortComboValueChanged(int value);
             void openSettingsDialog();
             void selectAll();
             void setInterfaceLocked(bool state);
@@ -58,6 +61,7 @@ namespace Coquillo {
             Processor::RenameWidget * _file_rename;
             Ui::MainWindow * _ui;
             ProgressListener * _progress;
+            SortPicker * _sort_picker;
     };
 }
 

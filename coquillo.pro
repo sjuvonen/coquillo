@@ -25,12 +25,15 @@ FORMS += \
   ui/rawdata.ui \
   ui/renamewidget.ui \
   ui/settingsdialog.ui \
+  ui/sortpicker.ui \
 
 HEADERS += \
+  src/headerdatamodel.hpp \
   src/itemcountlabel.hpp \
   src/itemmodifiedproxy.hpp \
   src/mainwindow.hpp \
   src/progresslistener.hpp \
+  src/sortpicker.hpp \
   src/stringstoremodel.hpp \
   src/togglewidgetbyaction.hpp \
   src/crawler/crawler.hpp \
@@ -67,11 +70,13 @@ HEADERS += \
   src/tags/tagwriterjob.hpp \
 
 SOURCES += \
+  src/headerdatamodel.cpp \
   src/itemcountlabel.cpp \
   src/itemmodifiedproxy.cpp \
   src/main.cpp \
   src/mainwindow.cpp \
   src/progresslistener.cpp \
+  src/sortpicker.cpp \
   src/stringstoremodel.cpp \
   src/togglewidgetbyaction.cpp \
   src/crawler/crawler.cpp \

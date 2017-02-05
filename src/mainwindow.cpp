@@ -3,15 +3,19 @@
 #include <QProgressBar>
 #include <QSettings>
 #include <QSignalMapper>
+#include <QWidgetAction>
 
 #include "filebrowser/filebrowser.hpp"
 #include "processor/renamewidget.hpp"
 #include "processor/parserwidget.hpp"
 #include "settings/settingsdialog.hpp"
 #include "tags/tagsmodel.hpp"
+
+#include "headerdatamodel.hpp"
 #include "itemcountlabel.hpp"
 #include "mainwindow.hpp"
 #include "progresslistener.hpp"
+#include "sortpicker.hpp"
 #include "stringstoremodel.hpp"
 #include "togglewidgetbyaction.hpp"
 #include "ui_mainwindow.h"
@@ -74,6 +78,12 @@ namespace Coquillo {
 
     void MainWindow::addPaths(const QStringList & paths) {
         _model->addPaths(paths);
+    }
+
+    void MainWindow::sort(int column, Qt::SortOrder order) {
+        qDebug() << "SORT" << column << order;
+        auto * proxy = qobject_cast<QSortFilterProxyModel*>(_ui->itemView->model());
+        proxy->sort(column, order);
     }
 
     void MainWindow::setupFileBrowser() {
@@ -195,11 +205,38 @@ namespace Coquillo {
         connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(discardChanges()));
         connect(_ui->actionReload, SIGNAL(triggered()), _model, SLOT(reload()));
         connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(revert()));
+
+
+        _sort_picker = new SortPicker(this);
+
+        auto * sort_action = new QWidgetAction(this);
+        sort_action->setDefaultWidget(_sort_picker);
+
+
+        auto * model = new HeaderDataModel(Qt::Horizontal, _sort_picker);
+        model->setSourceModel(_model);
+
+        auto * proxy = new QSortFilterProxyModel(this);
+        proxy->setSourceModel(model);
+        proxy->setDynamicSortFilter(true);
+        proxy->sort(0);
+
+        _sort_picker->setModel(proxy);
+        _ui->toolBar->addSeparator();
+        _ui->toolBar->addAction(sort_action);
+
+        connect(_sort_picker, SIGNAL(currentIndexChanged(int)), SLOT(onSortComboValueChanged(int)));
     }
 
     void MainWindow::closeEvent(QCloseEvent * event) {
         saveSettings();
         event->accept();
+    }
+
+    void MainWindow::onSortComboValueChanged(int value) {
+        auto * proxy = qobject_cast<QSortFilterProxyModel*>(_sort_picker->model());
+        int col = proxy->mapToSource(proxy->index(value, 0)).row();
+        sort(col);
     }
 
     void MainWindow::openSettingsDialog() {
@@ -273,6 +310,8 @@ namespace Coquillo {
         _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
         _ui->itemView->horizontalHeader()->setSectionsMovable(true);
 
+        _sort_picker->setCurrentIndex(settings.value("UI/Sorting", 15).toInt());
+
         menuBar()->setVisible(settings.value("UI/MenuBar").toBool());
         statusBar()->setVisible(settings.value("UI/StatusBar").toBool());
 
@@ -285,6 +324,7 @@ namespace Coquillo {
 
     void MainWindow::saveSettings() {
         QSettings settings;
+        settings.setValue("UI/Sorting", _sort_picker->currentIndex());
         settings.setValue("UI/Size", size());
         settings.setValue("UI/State", saveState());
         settings.setValue("UI/Splitter", _ui->splitter->saveState());

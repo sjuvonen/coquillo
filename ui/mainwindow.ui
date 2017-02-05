@@ -44,9 +44,6 @@
        <property name="showGrid">
         <bool>false</bool>
        </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
        <property name="wordWrap">
         <bool>false</bool>
        </property>
@@ -88,7 +85,13 @@
     <addaction name="actionMenubar"/>
     <addaction name="actionStatusbar"/>
    </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+   </widget>
    <addaction name="menu_Coquillo"/>
+   <addaction name="menu_View"/>
    <addaction name="menu_Settings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -204,7 +207,8 @@
   </action>
   <action name="actionAbort">
    <property name="icon">
-    <iconset theme="process-stop"/>
+    <iconset theme="process-stop">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Abort</string>
@@ -284,5 +288,6 @@
   <signal>operationFinished()</signal>
   <slot>openSettingsDialog()</slot>
   <slot>selectAll()</slot>
+  <slot>sort(int,Qt::SortOrder)</slot>
  </slots>
 </ui>

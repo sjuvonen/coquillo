@@ -55,6 +55,12 @@ namespace Coquillo {
 
             _tabRaw->setEditorIndex(idx);
             _tabRaw->setEnabled(idx.isValid());
+
+            if (_tabImages->imageCount()) {
+                setTabText(1, tr("Images") + QString(" (%1)").arg(_tabImages->imageCount()));
+            } else {
+                setTabText(1, tr("Images"));
+            }
         }
 
         void TagEditor::autoNumberTracks() {
