@@ -18,6 +18,8 @@ namespace Coquillo {
         enum TagModelField {
             FeedbackField = 0,
             NumberField = 7,
+            TrackCountField = 8,
+            DiscNumberField = 9,
             PathField = 15,
             ImageField = 16
         };
