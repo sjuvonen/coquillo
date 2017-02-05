@@ -1,5 +1,6 @@
 
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include "autonumbers.hpp"
 #include "tags/tagdataroles.hpp"
@@ -118,7 +119,6 @@ namespace Coquillo {
                 return numbers;
             }
 
-
             PreserveOriginalNumbers::PreserveOriginalNumbers(int mode)
             : _mode(mode) {
 
@@ -137,6 +137,22 @@ namespace Coquillo {
                         if (number > 0) {
                             numbers.insert(i, number);
                         }
+                    }
+                }
+
+                return numbers;
+            }
+
+            QMap<int, int> DiscNumberPathNameStrategy::suggestions(const QModelIndexList & items) {
+                QMap<int, int> numbers;
+                QRegExp matcher("(CD|Disc)\\s*(\\d{1,2})", Qt::CaseInsensitive);
+
+                for (int i = 0; i < items.size(); i++) {
+                    const QFileInfo info(items[i].data(TagDataRoles::FilePathRole).toString());
+                    const QString dirname = info.dir().dirName();
+
+                    if (matcher.indexIn(dirname) != -1) {
+                        numbers.insert(i, matcher.cap(2).toInt());
                     }
                 }
 

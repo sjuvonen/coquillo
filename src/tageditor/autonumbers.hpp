@@ -73,6 +73,11 @@ namespace Coquillo {
                 private:
                     int _mode;
             };
+
+            class DiscNumberPathNameStrategy : public AbstractStrategy {
+                public:
+                    QMap<int, int> suggestions(const QModelIndexList & items);
+            };
         }
     }
 }
