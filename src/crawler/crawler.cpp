@@ -36,6 +36,13 @@ namespace Coquillo {
 
         }
 
+        void Crawler::abort() {
+            qDebug() << "ABORT CRAWLER!";
+            _aborted = true;
+            emit aborted();
+            emit finished();
+        }
+
         void Crawler::searchPath(const QString & path) {
             searchPaths({path});
         }
@@ -46,6 +53,9 @@ namespace Coquillo {
             auto dirs_watcher = new QFutureWatcher<QStringList>(this);
             auto files_watcher = new QFutureWatcher<QVariantHash>(this);
 
+            connect(this, SIGNAL(aborted()), dirs_watcher, SLOT(cancel()));
+            connect(this, SIGNAL(aborted()), files_watcher, SLOT(cancel()));
+
             files_watcher->setPendingResultsLimit(50);
 
             // std::function<QStringList(const QString &)> proc_d = std::bind(&process_dir, _1, _recursive);
@@ -54,14 +64,16 @@ namespace Coquillo {
             std::function<QStringList(const QStringList &)> proc_d = std::bind(&process_dirs, _1, _recursive);
             dirs_watcher->setFuture(QtConcurrent::run(proc_d, paths));
 
-
             connect(files_watcher, SIGNAL(progressValueChanged(int)), SIGNAL(progress(int)));
             connect(files_watcher, SIGNAL(progressRangeChanged(int, int)), SIGNAL(rangeChanged(int, int)));
             connect(files_watcher, SIGNAL(finished()), SIGNAL(finished()));
             connect(files_watcher, SIGNAL(finished()), SLOT(deleteLater()));
 
-            connect(dirs_watcher, &QFutureWatcher<QStringList>::finished, [dirs_watcher, files_watcher] {
-                qDebug() << dirs_watcher->future().result().size();
+            connect(dirs_watcher, &QFutureWatcher<QStringList>::finished, [this, dirs_watcher, files_watcher] {
+                if (this->_aborted) {
+                    return;
+                }
+
                 files_watcher->setFuture(QtConcurrent::mapped(dirs_watcher->future().result(), &process_file));
                 dirs_watcher->deleteLater();
             });

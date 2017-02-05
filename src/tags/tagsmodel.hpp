@@ -42,11 +42,19 @@ namespace Coquillo {
                 }
 
             signals:
+                /**
+                 * @private
+                 *
+                 * Internal signal to kill jobs.
+                 */
+                void abortAllJobs();
+
                 void started();
                 void progress(int);
                 void finished();
 
             public slots:
+                void abort();
                 void addPath(const QString & path);
                 void addPaths(const QStringList & paths);
                 void discardChanges();

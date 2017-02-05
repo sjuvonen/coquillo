@@ -20,6 +20,7 @@ namespace Coquillo {
                 inline bool isRecursive() const { return _recursive; }
 
             signals:
+                void aborted();
                 void finished();
                 void progress(int value);
                 void rangeChanged(int, int);
@@ -27,10 +28,12 @@ namespace Coquillo {
                 void started();
 
             public slots:
+                void abort();
                 void searchPath(const QString & path);
                 void searchPaths(const QStringList & paths);
 
             private:
+                volatile bool _aborted = false;
                 bool _recursive;
         };
 

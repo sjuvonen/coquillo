@@ -27,7 +27,17 @@ namespace Coquillo {
             processItem();
         }
 
+        void Writer::abort() {
+            _aborted = true;
+            emit aborted();
+            emit this->finished();
+        }
+
         void Writer::processItem() {
+            if (_aborted) {
+                return;
+            }
+
             if (_items.isEmpty()) {
                 emit finished();
                 return;

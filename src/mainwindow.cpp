@@ -212,31 +212,23 @@ namespace Coquillo {
         auto * sort_action = new QWidgetAction(this);
         sort_action->setDefaultWidget(_sort_picker);
 
-
         auto * model = new HeaderDataModel(Qt::Horizontal, _sort_picker);
         model->setSourceModel(_model);
 
-        auto * proxy = new QSortFilterProxyModel(this);
-        proxy->setSourceModel(model);
-        proxy->setDynamicSortFilter(true);
-        proxy->sort(0);
-
-        _sort_picker->setModel(proxy);
+        _sort_picker->setModel(model);
         _ui->toolBar->addSeparator();
         _ui->toolBar->addAction(sort_action);
-
-        connect(_sort_picker, SIGNAL(currentIndexChanged(int)), SLOT(onSortComboValueChanged(int)));
     }
 
     void MainWindow::closeEvent(QCloseEvent * event) {
+        abort();
         saveSettings();
         event->accept();
     }
 
-    void MainWindow::onSortComboValueChanged(int value) {
-        auto * proxy = qobject_cast<QSortFilterProxyModel*>(_sort_picker->model());
-        int col = proxy->mapToSource(proxy->index(value, 0)).row();
-        sort(col);
+    void MainWindow::abort() {
+        qDebug() << "ABORT";
+        _model->abort();
     }
 
     void MainWindow::openSettingsDialog() {

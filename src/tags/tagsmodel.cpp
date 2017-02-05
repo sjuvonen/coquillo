@@ -1,8 +1,8 @@
 #include <QBrush>
 #include <QDir>
 #include <QIcon>
-#include "crawler/crawler.hpp"
 #include "../progresslistener.hpp"
+#include "crawler/crawler.hpp"
 #include "tag.hpp"
 #include "tagdataroles.hpp"
 #include "tagsmodel.hpp"
@@ -11,7 +11,7 @@
 #include <QDebug>
 
 namespace Coquillo {
-    namespace Tags {        
+    namespace Tags {
         TagsModel::TagsModel(ProgressListener * progress, QObject * parent)
         : QAbstractItemModel(parent), _progress(progress), _recursive(false) {
             _labels = QStringList({
@@ -208,13 +208,15 @@ namespace Coquillo {
             return true;
         }
 
+        void TagsModel::abort() {
+            emit abortAllJobs();
+        }
+
         void TagsModel::addPath(const QString & path) {
             addPaths({path});
         }
 
         void TagsModel::addPaths(const QStringList & paths) {
-            qDebug() << "add" << paths.size() << _directories.size();
-
             QStringList copy(paths);
 
             for (int i = copy.size() - 1; i >= 0; i--) {
@@ -233,6 +235,8 @@ namespace Coquillo {
 
             auto crawler = new Crawler::Crawler(this);
 
+            connect(this, SIGNAL(abortAllJobs()), crawler, SLOT(abort()));
+            
             connect(crawler, SIGNAL(started()), _progress, SIGNAL(started()));
             connect(crawler, SIGNAL(finished()), _progress, SIGNAL(finished()));
             connect(crawler, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
@@ -284,6 +288,7 @@ namespace Coquillo {
             if (items.size() > 0) {
                 auto * writer = new Writer(this);
 
+                connect(this, SIGNAL(abortAllJobs()), writer, SLOT(abort()));
                 connect(writer, SIGNAL(started()), _progress, SIGNAL(started()));
                 connect(writer, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
                 connect(writer, SIGNAL(finished()), _progress, SIGNAL(finished()));

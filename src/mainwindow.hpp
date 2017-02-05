@@ -37,7 +37,7 @@ namespace Coquillo {
             void closeEvent(QCloseEvent * event);
 
         private slots:
-            void onSortComboValueChanged(int value);
+            void abort();
             void openSettingsDialog();
             void selectAll();
             void setInterfaceLocked(bool state);

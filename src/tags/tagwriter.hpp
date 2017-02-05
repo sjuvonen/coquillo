@@ -16,7 +16,11 @@ namespace Coquillo {
                 void write(const Container & items);
                 void write(const QList<Container> & items);
 
+            public slots:
+                void abort();
+
             signals:
+                void aborted();
                 void finished();
                 void progress(int);
                 void started();
@@ -25,6 +29,7 @@ namespace Coquillo {
                 void processItem();
 
             private:
+                volatile bool _aborted = false;
                 QList<Container> _items;
         };
     }
