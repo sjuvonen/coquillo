@@ -138,7 +138,7 @@ namespace Test {
 
         const auto result = FileNumberStrategy(FileNumberStrategy::DiscNumberMode).suggestions(items);
 
-        QVERIFY(result[0] == 0);
+        QVERIFY(result.contains(0) == false);
         QVERIFY(result[1] == 1);
         QVERIFY(result[2] == 2);
         QVERIFY(result[3] == 2);
@@ -162,11 +162,11 @@ namespace Test {
 
         const auto result = DiscNumberPathNameStrategy().suggestions(items);
 
-        QVERIFY(!result.contains(0));
-        QVERIFY(!result.contains(3));
-        QVERIFY(!result.contains(4));
-        QVERIFY(!result.contains(5));
-        QVERIFY(!result.contains(6));
+        QVERIFY(result.contains(0) == false);
+        QVERIFY(result.contains(3) == false);
+        QVERIFY(result.contains(4) == false);
+        QVERIFY(result.contains(5) == false);
+        QVERIFY(result.contains(6) == false);
         QVERIFY(result[1] == 1);
         QVERIFY(result[2] == 1);
         QVERIFY(result[7] == 2);
