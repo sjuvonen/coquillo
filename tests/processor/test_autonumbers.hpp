@@ -52,9 +52,14 @@ namespace Test {
       void fileDiscNumberStrategyTest();
 
       /**
-       * Validates DiscNumberPathNameStrategy
+       * Validates DiscNumberPathNameStrategy.
        */
       void discNumberPathNameStrategyTest();
+
+      /**
+       * Validates TrackCountFromMetaData strategy.
+       */
+      void trackCountFromMetaDataTest();
   };
 
   /**

@@ -121,7 +121,7 @@ namespace Test {
         QVERIFY(items[4].data() == 11);
         QVERIFY(items[5].data() == 5);
         QVERIFY(items[6].data() == 8);
-        QVERIFY(items[7].data() == 11);
+        QVERIFY(items[7].data() == 12);
     }
 
     void AutoNumbers::fileDiscNumberStrategyTest() {
@@ -170,6 +170,78 @@ namespace Test {
         QVERIFY(result[1] == 1);
         QVERIFY(result[2] == 1);
         QVERIFY(result[7] == 2);
+    }
+
+    void AutoNumbers::trackCountFromMetaDataTest() {
+        /*
+         * NOTE: Test data needs to be grouped by folder in order to properly emulate the process
+         * that AutoNumbers utility executes.
+         */
+
+        auto * model = new TestTagsModel;
+        model->initializeTestData(complexTestData());
+
+        model->setData(model->index(0, Coquillo::Tags::NumberField), 1);
+        model->setData(model->index(0, Coquillo::Tags::DiscNumberField), 1);
+
+        model->setData(model->index(1, Coquillo::Tags::NumberField), 4);
+        model->setData(model->index(1, Coquillo::Tags::DiscNumberField), 1);
+
+        model->setData(model->index(2, Coquillo::Tags::NumberField), 3);
+        model->setData(model->index(2, Coquillo::Tags::DiscNumberField), 1);
+
+        model->setData(model->index(3, Coquillo::Tags::NumberField), 2);
+        model->setData(model->index(3, Coquillo::Tags::DiscNumberField), 1);
+
+        model->setData(model->index(4, Coquillo::Tags::NumberField), 11);
+        model->setData(model->index(4, Coquillo::Tags::DiscNumberField), 2);
+
+        model->setData(model->index(5, Coquillo::Tags::NumberField), 5);
+        model->setData(model->index(5, Coquillo::Tags::DiscNumberField), 2);
+
+        model->setData(model->index(6, Coquillo::Tags::NumberField), 8);
+        model->setData(model->index(6, Coquillo::Tags::DiscNumberField), 1);
+
+        model->setData(model->index(7, Coquillo::Tags::NumberField), 12);
+        model->setData(model->index(7, Coquillo::Tags::DiscNumberField), 2);
+
+        /*
+         * Group 1: folder 'foobar'
+         * NOTE: Contains two discs in the same folder!
+         */
+        auto result = TrackCountFromMetaData().suggestions({
+            model->index(0, 0),
+            model->index(3, 0),
+            model->index(4, 0),
+            model->index(5, 0),
+            model->index(6, 0),
+        });
+
+        QVERIFY(result[0] == 8);
+        QVERIFY(result[1] == 8);
+        QVERIFY(result[2] == 11);
+        QVERIFY(result[3] == 11);
+        QVERIFY(result[4] == 8);
+
+        /*
+         * Group 2: folder 'another/CD1'
+         */
+        result = TrackCountFromMetaData().suggestions({
+            model->index(1, 0),
+            model->index(2, 0),
+        });
+
+        QVERIFY(result[0] == 4);
+        QVERIFY(result[1] == 4);
+
+        /*
+         * Group 3: folder 'another/Disc 2'
+         */
+        result = TrackCountFromMetaData().suggestions({
+            model->index(7, 0),
+        });
+
+        QVERIFY(result[0] == 12);
     }
 
     QList<QVariantHash> AutoNumbers::testData() const {
@@ -292,12 +364,12 @@ namespace Test {
 
         items.insert(7, QVariantHash({
             {
-                {"path", "/test/music/another/Disc 2/11_file.mp3"},
+                {"path", "/test/music/another/Disc 2/12_file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
                         {"TPE1", "Foobar"},
-                        {"TIT2", "Demo #11"},
+                        {"TIT2", "Demo #12"},
                         {"TALB", "Second Album"},
                         {"TCON", "Techno"},
                     })}
