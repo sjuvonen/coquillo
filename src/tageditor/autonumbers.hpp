@@ -24,7 +24,10 @@ namespace Coquillo {
 
             private:
                 void generateCache();
-                void generateNumbering(const QString & directory, const QModelIndexList & items);
+                void trackNumbers(const QString & directory, const QModelIndexList & items);
+                void discNumbers(const QString & directory, const QModelIndexList & items);
+                void trackCounts(const QString & directory, const QModelIndexList & items);
+
                 QPointer<QAbstractItemModel> _model;
                 QHash<QString, QModelIndexList> groupByPath(const QModelIndexList & items) const;
 
@@ -53,6 +56,8 @@ namespace Coquillo {
                 public:
                     enum Mode { TrackNumberMode = 0, DiscNumberMode };
 
+                    static FileNumberStrategy discNumberMode();
+
                     FileNumberStrategy(int mode = TrackNumberMode);
                     QMap<int, int> suggestions(const QModelIndexList & items);
 
@@ -65,7 +70,10 @@ namespace Coquillo {
              */
             class PreserveOriginalNumbers : public AbstractStrategy {
                 public:
-                    enum Mode { TrackNumberMode = 0, DiscNumberMode };
+                    enum Mode { TrackNumberMode = 0, DiscNumberMode, TrackCountMode };
+
+                    static PreserveOriginalNumbers discNumberMode();
+                    static PreserveOriginalNumbers trackCountMode();
 
                     PreserveOriginalNumbers(int mode = TrackNumberMode);
                     QMap<int, int> suggestions(const QModelIndexList & items);
@@ -74,9 +82,32 @@ namespace Coquillo {
                     int _mode;
             };
 
+            /**
+             * Parse disc numbers from parent folder name.
+             */
             class DiscNumberPathNameStrategy : public AbstractStrategy {
                 public:
                     QMap<int, int> suggestions(const QModelIndexList & items);
+            };
+
+            /**
+             * Generate a fallback value for items.
+             */
+            class DiscNumberFallbackStrategy : public AbstractStrategy {
+                public:
+                    QMap<int, int> suggestions(const QModelIndexList & items);
+            };
+
+            /**
+             * Deduce album track count from track data.
+             */
+            class TrackCountFromMetaData : public AbstractStrategy {
+                public:
+                    QMap<int, int> suggestions(const QModelIndexList & items);
+
+                private:
+                    void buildCache(const QModelIndexList & items);
+                    QHash<int, int> _cache;
             };
         }
     }

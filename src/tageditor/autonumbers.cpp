@@ -8,6 +8,7 @@
 namespace Coquillo {
     namespace TagEditor {
         using Coquillo::Tags::TagDataRoles;
+        using Coquillo::Tags::TagModelField;
 
         AutoNumbers::AutoNumbers(QAbstractItemModel * model)
         : _model(model) {
@@ -33,11 +34,14 @@ namespace Coquillo {
             auto groups = groupByPath(items);
 
             foreach (const QString path, groups.keys()) {
-                generateNumbering(path, groups[path]);
+                const QModelIndexList items = groups[path];
+                trackNumbers(path, items);
+                discNumbers(path, items);
+                trackCounts(path, items);
             }
         }
 
-        void AutoNumbers::generateNumbering(const QString & directory, const QModelIndexList & items) {
+        void AutoNumbers::trackNumbers(const QString & directory, const QModelIndexList & items) {
             Q_UNUSED(directory)
 
             QMap<int, int> numbers;
@@ -47,6 +51,34 @@ namespace Coquillo {
 
             foreach (int i, numbers.uniqueKeys()) {
                 const QModelIndex idx = items[i].sibling(items[i].row(), Tags::NumberField);
+                model()->setData(idx, numbers[i]);
+            }
+        }
+
+        void AutoNumbers::discNumbers(const QString & directory, const QModelIndexList & items) {
+            Q_UNUSED(directory)
+
+            QMap<int, int> numbers;
+            numbers.unite(NumberStrategy::DiscNumberFallbackStrategy().suggestions(items));
+            numbers.unite(NumberStrategy::DiscNumberPathNameStrategy().suggestions(items));
+            numbers.unite(NumberStrategy::FileNumberStrategy::discNumberMode().suggestions(items));
+            numbers.unite(NumberStrategy::PreserveOriginalNumbers::discNumberMode().suggestions(items));
+
+            foreach (int i, numbers.uniqueKeys()) {
+                const QModelIndex idx = items[i].sibling(items[i].row(), Tags::DiscNumberField);
+                model()->setData(idx, numbers[i]);
+            }
+        }
+
+        void AutoNumbers::trackCounts(const QString & directory, const QModelIndexList & items) {
+            Q_UNUSED(directory)
+
+            QMap<int, int> numbers;
+            numbers.unite(NumberStrategy::TrackCountFromMetaData().suggestions(items));
+            numbers.unite(NumberStrategy::PreserveOriginalNumbers::trackCountMode().suggestions(items));
+
+            foreach (int i, numbers.uniqueKeys()) {
+                const QModelIndex idx = items[i].sibling(items[i].row(), Tags::TrackCountField);
                 model()->setData(idx, numbers[i]);
             }
         }
@@ -79,6 +111,10 @@ namespace Coquillo {
                 }
 
                 return numbers;
+            }
+
+            FileNumberStrategy FileNumberStrategy::discNumberMode() {
+                return FileNumberStrategy(DiscNumberMode);
             }
 
             FileNumberStrategy::FileNumberStrategy(int mode)
@@ -119,14 +155,27 @@ namespace Coquillo {
                 return numbers;
             }
 
+            PreserveOriginalNumbers PreserveOriginalNumbers::discNumberMode() {
+                return PreserveOriginalNumbers(DiscNumberMode);
+            }
+
+            PreserveOriginalNumbers PreserveOriginalNumbers::trackCountMode() {
+                return PreserveOriginalNumbers(TrackCountMode);
+            }
+
             PreserveOriginalNumbers::PreserveOriginalNumbers(int mode)
             : _mode(mode) {
 
             }
 
             QMap<int, int> PreserveOriginalNumbers::suggestions(const QModelIndexList & items) {
+                const QHash<int, QString> fields = {
+                    {TrackNumberMode, "number"},
+                    {DiscNumberMode, "disc"},
+                    {TrackCountMode, "total"},
+                };
+                const QString field = fields[_mode];
                 QMap<int, int> numbers;
-                const QString field = _mode == DiscNumberMode ? "disc" : "number";
 
                 for (int i = 0; i < items.size(); i++) {
                     const QVariantHash values = items[i].data(TagDataRoles::ValuesMapRole).toHash();
@@ -157,6 +206,45 @@ namespace Coquillo {
                 }
 
                 return numbers;
+            }
+
+
+            QMap<int, int> DiscNumberFallbackStrategy::suggestions(const QModelIndexList & items) {
+                QMap<int, int> numbers;
+
+                for (int i = 0; i < items.size(); i++) {
+                    numbers.insert(i, 1);
+                }
+
+                return numbers;
+            }
+
+            QMap<int, int> TrackCountFromMetaData::suggestions(const QModelIndexList & items) {
+                buildCache(items);
+                QMap<int, int> numbers;
+
+                for (int i = 0; i < items.size(); i++) {
+                    const QModelIndex & idx = items[i];
+                    int disc = idx.sibling(idx.row(), TagModelField::DiscNumberField).data().toInt();
+                    numbers.insert(i, _cache[disc]);
+                }
+
+                return numbers;
+            }
+
+            void TrackCountFromMetaData::buildCache(const QModelIndexList & items) {
+                _cache.clear();
+
+                foreach (const QModelIndex & idx, items) {
+                    int number = idx.sibling(idx.row(), TagModelField::NumberField).data().toInt();
+                    int disc = idx.sibling(idx.row(), TagModelField::DiscNumberField).data().toInt();
+                    int total = idx.sibling(idx.row(), TagModelField::TrackCountField).data().toInt();
+                    int value = qMax(qMax(number, total), 1);
+
+                    if (!_cache.contains(disc) || _cache[disc] < value) {
+                        _cache.insert(disc, value);
+                    }
+                }
             }
         }
     }
