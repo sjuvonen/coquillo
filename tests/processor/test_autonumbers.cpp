@@ -145,6 +145,33 @@ namespace Test {
         QVERIFY(result[4] == 1);
     }
 
+    void AutoNumbers::discNumberPathNameStrategyTest() {
+        auto * model = new TestTagsModel;
+        model->initializeTestData(complexTestData());
+
+        const QModelIndexList items = {
+            model->index(0, 0),
+            model->index(1, 0),
+            model->index(2, 0),
+            model->index(3, 0),
+            model->index(4, 0),
+            model->index(5, 0),
+            model->index(6, 0),
+            model->index(7, 0),
+        };
+
+        const auto result = DiscNumberPathNameStrategy().suggestions(items);
+
+        QVERIFY(!result.contains(0));
+        QVERIFY(!result.contains(3));
+        QVERIFY(!result.contains(4));
+        QVERIFY(!result.contains(5));
+        QVERIFY(!result.contains(6));
+        QVERIFY(result[1] == 1);
+        QVERIFY(result[2] == 1);
+        QVERIFY(result[7] == 2);
+    }
+
     QList<QVariantHash> AutoNumbers::testData() const {
         QList<QVariantHash> items;
 
@@ -235,7 +262,7 @@ namespace Test {
 
         items.insert(1, QVariantHash({
             {
-                {"path", "/test/music/another/04 - file.mp3"},
+                {"path", "/test/music/another/CD1/04 - file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -250,7 +277,7 @@ namespace Test {
 
         items.insert(2, QVariantHash({
             {
-                {"path", "/test/music/another/3. file.mp3"},
+                {"path", "/test/music/another/CD1/3. file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({
@@ -265,7 +292,7 @@ namespace Test {
 
         items.insert(7, QVariantHash({
             {
-                {"path", "/test/music/another/11_file.mp3"},
+                {"path", "/test/music/another/Disc 2/11_file.mp3"},
                 {"primary", "id3v2"},
                 {"tags", QVariantHash({
                     {"id3v2", QVariantHash({

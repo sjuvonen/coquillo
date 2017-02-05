@@ -50,6 +50,11 @@ namespace Test {
        * Validates FileNumberStrategy for reading disc numbers.
        */
       void fileDiscNumberStrategyTest();
+
+      /**
+       * Validates DiscNumberPathNameStrategy
+       */
+      void discNumberPathNameStrategyTest();
   };
 
   /**
