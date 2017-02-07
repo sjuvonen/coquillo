@@ -37,7 +37,6 @@ namespace Coquillo {
         }
 
         void Crawler::abort() {
-            qDebug() << "ABORT CRAWLER!";
             _aborted = true;
             emit aborted();
             emit finished();
@@ -105,8 +104,6 @@ namespace Coquillo {
                 it.next();
                 files << it.fileInfo().absoluteFilePath();
             }
-            qDebug() << "read" << path << files[0];
-
             return files;
         }
 

@@ -81,7 +81,6 @@ namespace Coquillo {
     }
 
     void MainWindow::sort(int column, Qt::SortOrder order) {
-        qDebug() << "SORT" << column << order;
         auto * proxy = qobject_cast<QSortFilterProxyModel*>(_ui->itemView->model());
         proxy->sort(column, order);
     }
@@ -206,7 +205,6 @@ namespace Coquillo {
         connect(_ui->actionReload, SIGNAL(triggered()), _model, SLOT(reload()));
         connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(revert()));
 
-
         _sort_picker = new SortPicker(this);
 
         auto * sort_action = new QWidgetAction(this);
@@ -216,8 +214,12 @@ namespace Coquillo {
         model->setSourceModel(_model);
 
         _sort_picker->setModel(model);
-        _ui->toolBar->addSeparator();
+        // _ui->toolBar->addSeparator();
         _ui->toolBar->addAction(sort_action);
+
+        connect(_sort_picker, SIGNAL(currentIndexChanged(int)), SLOT(sort(int)));
+
+        new ToggleWidgetByAction(_ui->toolBar, _ui->actionToolbar);
     }
 
     void MainWindow::closeEvent(QCloseEvent * event) {
@@ -227,7 +229,6 @@ namespace Coquillo {
     }
 
     void MainWindow::abort() {
-        qDebug() << "ABORT";
         _model->abort();
     }
 

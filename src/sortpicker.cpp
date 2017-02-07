@@ -1,4 +1,5 @@
 
+#include <QDebug>
 #include <QSortFilterProxyModel>
 
 #include "ui_sortpicker.h"
@@ -28,7 +29,9 @@ namespace Coquillo {
     }
 
     void SortPicker::setCurrentIndex(int index) {
-        _ui->comboBox->setCurrentIndex(index);
+        const QModelIndex source = _proxy->sourceModel()->index(index, 0);
+        const QModelIndex mapped = _proxy->mapFromSource(source);
+        _ui->comboBox->setCurrentIndex(mapped.row());
     }
 
     int SortPicker::currentIndex() const {
