@@ -81,9 +81,12 @@
     <property name="title">
      <string>&amp;Settings</string>
     </property>
-    <addaction name="actionConfigure"/>
     <addaction name="actionMenubar"/>
     <addaction name="actionStatusbar"/>
+    <addaction name="separator"/>
+    <addaction name="actionToolbar"/>
+    <addaction name="separator"/>
+    <addaction name="actionConfigure"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
@@ -117,6 +120,9 @@
    <property name="text">
     <string>&amp;Quit</string>
    </property>
+   <property name="toolTip">
+    <string>Exit application</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
    </property>
@@ -127,6 +133,9 @@
   <action name="actionConfigure">
    <property name="text">
     <string>&amp;Configure...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open settings dialog</string>
    </property>
    <property name="menuRole">
     <enum>QAction::PreferencesRole</enum>
@@ -139,6 +148,9 @@
    <property name="text">
     <string>&amp;Menubar</string>
    </property>
+   <property name="toolTip">
+    <string>Toggle menubar</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+M</string>
    </property>
@@ -149,6 +161,9 @@
    </property>
    <property name="text">
     <string>&amp;Statusbar</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle statusbar</string>
    </property>
   </action>
   <action name="actionSave">
@@ -187,7 +202,7 @@
     <string>Reload</string>
    </property>
    <property name="toolTip">
-    <string>Scan directories again</string>
+    <string>Reload selected directories and discard changes</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
@@ -200,6 +215,9 @@
    </property>
    <property name="text">
     <string>Select All</string>
+   </property>
+   <property name="toolTip">
+    <string>Select all items</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
@@ -221,6 +239,17 @@
    </property>
    <property name="visible">
     <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionToolbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Toolbar</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle toolbar</string>
    </property>
   </action>
  </widget>
