@@ -16,6 +16,7 @@
 #include "tag/xiphcomment.hpp"
 
 #include <QDebug>
+#include <QThread>
 
 namespace Coquillo {
     namespace Crawler {
@@ -33,7 +34,9 @@ namespace Coquillo {
 
         Crawler::Crawler(QObject * parent)
         : QObject(parent), _recursive(false) {
+            connect(&_stash, SIGNAL(results(const QList<QVariantHash> &)), SIGNAL(results(const QList<QVariantHash> &)));
 
+            connect(this, SIGNAL(finished()), &_stash, SLOT(flush()));
         }
 
         void Crawler::abort() {
@@ -55,7 +58,7 @@ namespace Coquillo {
             connect(this, SIGNAL(aborted()), dirs_watcher, SLOT(cancel()));
             connect(this, SIGNAL(aborted()), files_watcher, SLOT(cancel()));
 
-            files_watcher->setPendingResultsLimit(50);
+            files_watcher->setPendingResultsLimit(10);
 
             // std::function<QStringList(const QString &)> proc_d = std::bind(&process_dir, _1, _recursive);
             // dirs_watcher->setFuture(QtConcurrent::mapped(paths, proc_d));
@@ -65,6 +68,7 @@ namespace Coquillo {
 
             connect(files_watcher, SIGNAL(progressValueChanged(int)), SIGNAL(progress(int)));
             connect(files_watcher, SIGNAL(progressRangeChanged(int, int)), SIGNAL(rangeChanged(int, int)));
+
             connect(files_watcher, SIGNAL(finished()), SIGNAL(finished()));
             connect(files_watcher, SIGNAL(finished()), SLOT(deleteLater()));
 
@@ -79,13 +83,18 @@ namespace Coquillo {
 
             connect(files_watcher, &QFutureWatcher<QVariantHash>::resultsReadyAt, [this, files_watcher](int a, int b) {
                 QList<QVariantHash> items;
-                items.reserve(b - a);
+                items.reserve(b - a + 1);
 
                 for (; a < b; a++) {
-                    items << files_watcher->resultAt(a);
+                    // items << files_watcher->resultAt(a);
+                    _stash << files_watcher->resultAt(a);
                 }
 
-                emit(results(items));
+                // qDebug() << "RESULTS" << b - a;
+
+                // _stash->add(items);
+
+                // emit results(items);
             });
 
             emit started();
@@ -120,15 +129,6 @@ namespace Coquillo {
             QStringList types = QString::fromUtf8(exts.toString("%%*.").toCString(true)).split("%%");
             types << QString("*.%1").arg(types.takeFirst());
             return types;
-        }
-
-        QList<QVariantHash> FileReader::readFiles(const QStringList & paths) const {
-            QList<QVariantHash> metadata;
-            metadata.reserve(paths.count());
-            foreach (const QString & path, paths) {
-                metadata << read(path);
-            }
-            return metadata;
         }
 
         QVariantHash FileReader::read(const QString & path) const {
@@ -226,6 +226,44 @@ namespace Coquillo {
 
         bool FileReader::isVorbisFile(const TagLib::File * file) const {
             return dynamic_cast<const TagLib::Ogg::Vorbis::File*>(file) != 0;
+        }
+
+        ResultStash::ResultStash(int batch_size)
+        : QObject() {
+            setBatchSize(batch_size);
+        }
+
+        void ResultStash::add(const QList<QVariantHash> & results) {
+            _results << results;
+
+            if (_results.size() >= _limit) {
+                flush();
+            }
+        }
+
+        void ResultStash::add(const QVariantHash & result) {
+            _results << result;
+
+            if (_results.size() >= _limit) {
+                flush();
+            }
+        }
+
+        void ResultStash::flush() {
+            if (_results.size() > 0) {
+                emit results(_results);
+                _results.clear();
+            }
+        }
+
+        void ResultStash::setBatchSize(int batch_size) {
+            _limit = batch_size;
+            _results.reserve(_limit + 5);
+        }
+
+        ResultStash & ResultStash::operator<<(const QVariantHash & result) {
+            add(result);
+            return *this;
         }
     }
 }

@@ -8,7 +8,9 @@
 #include "tagsmodel.hpp"
 #include "tagwriter.hpp"
 
+#include <QDateTime>
 #include <QDebug>
+#include <QThread>
 
 namespace Coquillo {
     namespace Tags {
@@ -236,7 +238,7 @@ namespace Coquillo {
             auto crawler = new Crawler::Crawler(this);
 
             connect(this, SIGNAL(abortAllJobs()), crawler, SLOT(abort()));
-            
+
             connect(crawler, SIGNAL(started()), _progress, SIGNAL(started()));
             connect(crawler, SIGNAL(finished()), _progress, SIGNAL(finished()));
             connect(crawler, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));

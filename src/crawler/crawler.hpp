@@ -10,6 +10,29 @@ namespace TagLib {
 
 namespace Coquillo {
     namespace Crawler {
+        class ResultStash : public QObject {
+            Q_OBJECT
+
+            public:
+                ResultStash(int batch_size = 50);
+                void add(const QVariantHash & result);
+                void add(const QList<QVariantHash> & results);
+
+                void setBatchSize(int batch_size);
+
+                ResultStash & operator<<(const QVariantHash & result);
+
+            public slots:
+                void flush();
+
+            signals:
+                void results(const QList<QVariantHash> & results);
+
+            private:
+                int _limit;
+                QList<QVariantHash> _results;
+        };
+
         class Crawler : public QObject {
             Q_OBJECT
 
@@ -35,6 +58,7 @@ namespace Coquillo {
             private:
                 volatile bool _aborted = false;
                 bool _recursive;
+                ResultStash _stash;
         };
 
         class DirectoryReader {
