@@ -43,6 +43,8 @@ namespace Coquillo {
                 Tags::Container container() const;
 
                 void download(const QUrl & url);
+                void initializeImages(const QPersistentModelIndex & idx);
+
                 QPointer<QAbstractItemModel> _source;
                 QPersistentModelIndex _index;
                 QNetworkAccessManager * _nam;

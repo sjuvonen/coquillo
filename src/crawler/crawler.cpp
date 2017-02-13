@@ -131,7 +131,7 @@ namespace Coquillo {
             return types;
         }
 
-        QVariantHash FileReader::read(const QString & path) const {
+        QVariantHash FileReader::read(const QString & path, bool with_images) const {
             QVariantHash data = {{"path", path}};
             QVariantHash tags;
             const TagLib::FileRef ref(path.toUtf8().constData());
@@ -178,7 +178,27 @@ namespace Coquillo {
 
                 data["image_count"] = images;
 
-                // data["images"] = QVariant::fromValue<ImageDataList>(images);
+                if (with_images) {
+                    ImageDataList images;
+
+                    if (file->hasID3v2Tag()) {
+                        images << Tag::Id3v2().readImages(file->ID3v2Tag());
+                    }
+
+                    if (file->hasXiphComment()) {
+                        Tag::XiphComment reader;
+
+                        #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                        images << reader.readFlacImages(file->xiphComment()->pictureList());
+                        #endif
+
+                        images << reader.readImages(file->xiphComment())
+                            << reader.readLegacyImages(file->xiphComment());
+                    }
+
+                    data["images"] = QVariant::fromValue<ImageDataList>(images);
+                }
+
             } else if (isVorbisFile(ref.file())) {
                 auto file = dynamic_cast<const TagLib::Ogg::Vorbis::File*>(ref.file());
 
@@ -189,17 +209,18 @@ namespace Coquillo {
                     tags["xiph"] = reader.read(file->tag());
                     data["image_count"] = reader.imageCount(file->tag());
 
+                    if (with_images) {
+                        ImageDataList images;
 
-                    // ImageDataList images;
+                        #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                        images << reader.readFlacImages(file->tag()->pictureList());
+                        #endif
 
-                    #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
-                    // images << reader.readFlacImages(file->tag()->pictureList());
-                    #endif
+                        images << reader.readImages(file->tag())
+                            << reader.readLegacyImages(file->tag());
 
-                    // images << reader.readImages(file->tag())
-                    //     << reader.readLegacyImages(file->tag());
-
-                    // data["images"] = QVariant::fromValue<ImageDataList>(images);
+                        data["images"] = QVariant::fromValue<ImageDataList>(images);
+                    }
                 }
             } else if (isMpegFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
@@ -215,8 +236,11 @@ namespace Coquillo {
                     Tag::Id3v2 reader;
                     tags["id3v2"] = reader.read(file->ID3v2Tag());
                     data["image_count"] = reader.imageCount(file->ID3v2Tag());
-                    // ImageDataList images(reader.readImages(file->ID3v2Tag()));
-                    // data["images"] = QVariant::fromValue<ImageDataList>(images);
+
+                    if (with_images) {
+                        ImageDataList images(reader.readImages(file->ID3v2Tag()));
+                        data["images"] = QVariant::fromValue<ImageDataList>(images);
+                    }
                 }
             } else if (ref.tag()) {
                 data["primary"] = "unknown";

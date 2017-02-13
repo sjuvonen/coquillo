@@ -72,8 +72,8 @@ namespace Coquillo {
 
         class FileReader {
             public:
-                QList<QVariantHash> readFiles(const QStringList & paths) const;
-                QVariantHash read(const QString & path) const;
+                // QList<QVariantHash> readFiles(const QStringList & paths, bool with_images = false) const;
+                QVariantHash read(const QString & path, bool with_images = false) const;
 
             private:
                 bool isFlacFile(const TagLib::File * file) const;

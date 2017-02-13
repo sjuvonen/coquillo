@@ -6,6 +6,12 @@
 
 namespace Coquillo {
     namespace Tags {
+        class ImageList : public QList<Image> {
+            public:
+                ImageList();
+                ImageList(const QList<Image> & images);
+        };
+
         class Container {
             public:
                 Container();
@@ -43,7 +49,8 @@ namespace Coquillo {
                 QString _path;
                 QString _primary;
                 QHash<QString, Tag> _tags;
-                QList<Image> _images;
+                // QList<Image> _images;
+                ImageList _images;
                 int _image_count;
         };
     }

@@ -2,6 +2,20 @@
 
 namespace Coquillo {
     namespace Tags {
+
+        ImageList::ImageList()
+        : QList<Image>() {
+
+        }
+
+        ImageList::ImageList(const QList<Image> & images)
+        : QList<Image>(images) {
+
+        }
+
+
+
+
         Container::Container()
         : _id(0) {
 

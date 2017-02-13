@@ -1,3 +1,5 @@
+
+#include "tags/tagdataroles.hpp"
 #include "autonumbers.hpp"
 #include "basictags.hpp"
 #include "imagetags.hpp"
@@ -56,11 +58,20 @@ namespace Coquillo {
             _tabRaw->setEditorIndex(idx);
             _tabRaw->setEnabled(idx.isValid());
 
-            if (_tabImages->imageCount()) {
-                setTabText(1, tr("Images") + QString(" (%1)").arg(_tabImages->imageCount()));
-            } else {
+            const QString label = idx.sibling(idx.row(), Tags::ImageField).data().toString();
+
+            if (label[0] == "0") {
                 setTabText(1, tr("Images"));
+            } else {
+                setTabText(1, label);
             }
+
+            // if (_tabImages->imageCount()) {
+            //     // setTabText(1, tr("Images") + QString(" (%1)").arg(_tabImages->imageCount()));
+            //     setTabText(1, idx.sibling(idx.row(), Tags::ImageField).data().toString());
+            // } else {
+            //     setTabText(1, tr("Images"));
+            // }
         }
 
         void TagEditor::autoNumberTracks() {

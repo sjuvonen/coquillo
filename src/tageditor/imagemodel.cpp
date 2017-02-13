@@ -1,5 +1,7 @@
 
+#include <QtConcurrent>
 #include <QDebug>
+#include <QFutureWatcher>
 #include <QImage>
 #include <QMimeData>
 #include <QNetworkAccessManager>
@@ -7,12 +9,20 @@
 #include <QNetworkRequest>
 #include <QUrl>
 
+#include "crawler/crawler.hpp"
+#include "crawler/types.hpp"
+#include "tags/image.hpp"
 #include "tags/tagdataroles.hpp"
 #include "tags/tagcontainer.hpp"
 #include "imagemodel.hpp"
 
 namespace Coquillo {
     namespace TagEditor {
+
+        QVariantHash read_file(const QString & path) {
+            return Crawler::FileReader().read(path, true);
+        }
+
         ImageModel::ImageModel(QObject * parent)
         : QAbstractTableModel(parent), _source(0) {
             _nam = new QNetworkAccessManager(this);
@@ -148,7 +158,40 @@ namespace Coquillo {
             // Always take the column that contains images
             _index = idx;
             endResetModel();
+
+            initializeImages(idx);
         }
+
+        void ImageModel::initializeImages(const QPersistentModelIndex & idx) {
+            const auto file = container();
+
+            if (file.imageCount() > 0 && file.images().size() == 0) {
+                auto watcher = new QFutureWatcher<QVariantHash>(this);
+                const QString path = idx.data(Tags::FilePathRole).toString();
+
+                watcher->setFuture(QtConcurrent::run(&read_file, path));
+
+                connect(watcher, &QFutureWatcher<QVariantHash>::finished, watcher, [this, watcher, idx]{
+                    if (idx != _index) {
+                        return;
+                    }
+
+                    const ImageDataList result = watcher->result().value("images").value<ImageDataList>();
+                    QList<Tags::Image> images;
+
+                    foreach (const ImageData item, result) {
+                        images << Tags::Image::fromValues(item);
+                    }
+
+                    if (images.size() > 0) {
+                        sourceModel()->setData(idx, QVariant::fromValue(images));
+                        setSourceIndex(idx);
+                    }
+                    watcher->deleteLater();
+                });
+            }
+        }
+
 
         Tags::Container ImageModel::container() const {
             return _index.data(Tags::ContainerRole).value<Tags::Container>();
