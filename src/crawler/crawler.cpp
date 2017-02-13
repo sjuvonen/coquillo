@@ -187,7 +187,8 @@ namespace Coquillo {
 
                     Tag::XiphComment reader;
                     tags["xiph"] = reader.read(file->tag());
-                    tags["image_count"] = reader.imageCount(file->tag());
+                    data["image_count"] = reader.imageCount(file->tag());
+
 
                     // ImageDataList images;
 
