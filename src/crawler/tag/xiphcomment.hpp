@@ -16,6 +16,8 @@ namespace Coquillo {
                 public:
                     void write(TagLib::Ogg::XiphComment * tag, const TagData & data);
                     TagData read(const TagLib::Ogg::XiphComment * tag) const;
+                    int imageCount(const TagLib::Ogg::XiphComment * tag) const;
+
                     ImageDataList readImages(const TagLib::Ogg::XiphComment * tag) const;
                     ImageDataList readLegacyImages(const TagLib::Ogg::XiphComment * tag) const;
 

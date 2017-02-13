@@ -15,6 +15,8 @@ namespace Coquillo {
                 void setPrimaryTag(const QString & id);
                 QVariant value(const QString & field) const;
 
+                void setImages(const QList<Image> & images);
+
                 inline QString primaryTag() const { return _primary; }
                 inline QString path() const { return _path; }
                 inline void setPath(const QString & path) { _path = path; }
@@ -23,7 +25,8 @@ namespace Coquillo {
                 inline bool isNull() const { return _path.isNull(); }
                 inline const QList<Image> images() const { return _images; }
                 inline QList<Image> & images() { return _images; }
-                inline void setImages(const QList<Image> & images) { _images = images; }
+                inline int imageCount() const { return _image_count; }
+                inline void setImageCount(int count) { _image_count = count; }
 
                 bool hasTag(const QString & id) const;
                 const Tag tag(const QString & id) const;
@@ -41,6 +44,7 @@ namespace Coquillo {
                 QString _primary;
                 QHash<QString, Tag> _tags;
                 QList<Image> _images;
+                int _image_count;
         };
     }
 }

@@ -139,77 +139,87 @@ namespace Coquillo {
             if (isFlacFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
 
-                ImageDataList images;
+                int images = 0;
+                // ImageDataList images;
 
                 #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
-                images << Tag::XiphComment().readFlacImages(file->pictureList());
+                // images << Tag::XiphComment().readFlacImages(file->pictureList());
                 #endif
 
                 if (file->hasID3v1Tag()) {
-                    tags["id3v1"] = Tag::Generic().read(file->ID3v1Tag());
                     data["primary"] = "id3v1";
+                    tags["id3v1"] = Tag::Generic().read(file->ID3v1Tag());
                 }
 
                 if (file->hasID3v2Tag()) {
-                    Tag::Id3v2 reader;
-                    tags["id3v2"] = reader.read(file->ID3v2Tag());
                     data["primary"] = "id3v2";
 
-                    images << reader.readImages(file->ID3v2Tag());
+                    Tag::Id3v2 reader;
+                    tags["id3v2"] = reader.read(file->ID3v2Tag());
+                    images += reader.imageCount(file->ID3v2Tag());
+
+                    // images << reader.readImages(file->ID3v2Tag());
                 }
 
                 if (file->hasXiphComment()) {
-                    Tag::XiphComment reader;
-                    tags["xiph"] = reader.read(file->xiphComment());
                     data["primary"] = "xiph";
 
+                    Tag::XiphComment reader;
+                    tags["xiph"] = reader.read(file->xiphComment());
+                    images += reader.imageCount(file->xiphComment());
+
                     #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
-                    images << reader.readFlacImages(file->xiphComment()->pictureList());
+                    // images << reader.readFlacImages(file->xiphComment()->pictureList());
                     #endif
 
-                    images << reader.readImages(file->xiphComment())
-                        << reader.readLegacyImages(file->xiphComment());
+                    // images << reader.readImages(file->xiphComment())
+                    //     << reader.readLegacyImages(file->xiphComment());
                 }
 
-                data["images"] = QVariant::fromValue<ImageDataList>(images);
-            } else if (isMpegFile(ref.file())) {
-                auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
+                data["image_count"] = images;
 
-                if (file->hasID3v1Tag()) {
-                    tags["id3v1"] = Tag::Generic().read(file->ID3v1Tag());
-                    data["primary"] = "id3v1";
-                }
-
-                if (file->hasID3v2Tag()) {
-                    Tag::Id3v2 reader;
-                    ImageDataList images(reader.readImages(file->ID3v2Tag()));
-                    data["images"] = QVariant::fromValue<ImageDataList>(images);
-                    tags["id3v2"] = reader.read(file->ID3v2Tag());
-                    data["primary"] = "id3v2";
-                }
+                // data["images"] = QVariant::fromValue<ImageDataList>(images);
             } else if (isVorbisFile(ref.file())) {
                 auto file = dynamic_cast<const TagLib::Ogg::Vorbis::File*>(ref.file());
 
                 if (file->tag()) {
-                    Tag::XiphComment reader;
-
-                    tags["xiph"] = reader.read(file->tag());
                     data["primary"] = "xiph";
 
-                    ImageDataList images;
+                    Tag::XiphComment reader;
+                    tags["xiph"] = reader.read(file->tag());
+                    tags["image_count"] = reader.imageCount(file->tag());
+
+                    // ImageDataList images;
 
                     #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
-                    images << reader.readFlacImages(file->tag()->pictureList());
+                    // images << reader.readFlacImages(file->tag()->pictureList());
                     #endif
 
-                    images << reader.readImages(file->tag())
-                        << reader.readLegacyImages(file->tag());
+                    // images << reader.readImages(file->tag())
+                    //     << reader.readLegacyImages(file->tag());
 
-                    data["images"] = QVariant::fromValue<ImageDataList>(images);
+                    // data["images"] = QVariant::fromValue<ImageDataList>(images);
+                }
+            } else if (isMpegFile(ref.file())) {
+                auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
+
+                if (file->hasID3v1Tag()) {
+                    data["primary"] = "id3v1";
+                    tags["id3v1"] = Tag::Generic().read(file->ID3v1Tag());
+                }
+
+                if (file->hasID3v2Tag()) {
+                    data["primary"] = "id3v2";
+
+                    Tag::Id3v2 reader;
+                    tags["id3v2"] = reader.read(file->ID3v2Tag());
+                    data["image_count"] = reader.imageCount(file->ID3v2Tag());
+                    // ImageDataList images(reader.readImages(file->ID3v2Tag()));
+                    // data["images"] = QVariant::fromValue<ImageDataList>(images);
                 }
             } else if (ref.tag()) {
-                tags["unknown"] = Tag::Generic().read(ref.tag());
                 data["primary"] = "unknown";
+                tags["unknown"] = Tag::Generic().read(ref.tag());
             }
 
             data["tags"] = tags;

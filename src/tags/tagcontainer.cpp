@@ -50,6 +50,13 @@ namespace Coquillo {
 
         void Container::addImage(const Image & image) {
             _images << image;
+            _image_count = _images.size();
         }
+
+        void Container::setImages(const QList<Image> & images) {
+            _images = images;
+            _image_count = _images.size();
+        }
+
     }
 }

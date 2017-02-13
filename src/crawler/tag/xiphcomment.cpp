@@ -28,6 +28,25 @@ namespace Coquillo {
                 return data;
             }
 
+            int XiphComment::imageCount(const TagLib::Ogg::XiphComment * tag) const {
+                int count = 0;
+                const auto fields = tag->fieldListMap();
+
+                if (fields.contains("METADATA_BLOCK_PICTURE")) {
+                    count += fields["METADATA_BLOCK_PICTURE"].size();
+                }
+
+                if (fields.contains("COVERART")) {
+                    count += fields["COVERART"].size();
+                }
+
+                #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                count += const_cast<TagLib::Ogg::XiphComment*>(tag)->pictureList().size();
+                #endif
+
+                return count;
+            }
+
             ImageDataList XiphComment::readImages(const TagLib::Ogg::XiphComment * tag) const {
                 const auto fields = tag->fieldListMap();
                 const char * key = "METADATA_BLOCK_PICTURE";

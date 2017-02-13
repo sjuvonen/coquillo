@@ -39,8 +39,6 @@ namespace Coquillo {
         }
 
         void ImageTags::on_buttonAdd_clicked() {
-            qDebug() << "ADD";
-
             const QStringList files = QFileDialog::getOpenFileNames(this,
                 tr("Import images"), _last_dir);
 

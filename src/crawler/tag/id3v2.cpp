@@ -153,6 +153,10 @@ namespace Coquillo {
                 // qDebug() << "I" << images.size();
                 return images;
             }
+
+            int Id3v2::imageCount(const TagLib::ID3v2::Tag * tag) const {
+                return tag->frameList("APIC").size();
+            }
         }
     }
 }

@@ -66,8 +66,10 @@ namespace Coquillo {
                 item.addTag(tag);
             }
 
+            item.setImageCount(file.value("image_count").toInt());
+
             foreach (const QVariant data, file.value("images").value<ImageDataList>()) {
-                item.addImage(Image::fromValues(data.toHash()));
+                // item.addImage(Image::fromValues(data.toHash()));
             }
 
             _items << item;

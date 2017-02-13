@@ -17,6 +17,7 @@ namespace Coquillo {
                     void write(TagLib::ID3v2::Tag * tag, const TagData & values);
                     TagData read(const TagLib::ID3v2::Tag * tag) const;
                     ImageDataList readImages(const TagLib::ID3v2::Tag * tag) const;
+                    int imageCount(const TagLib::ID3v2::Tag * tag) const;
             };
         }
     }
