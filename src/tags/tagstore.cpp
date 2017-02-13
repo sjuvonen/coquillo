@@ -151,6 +151,7 @@ namespace Coquillo {
 
                 if (!tag.equals(field, value)) {
                     const Container copy(item);
+                    // qDebug() << "change" << field << tag.value(field) << value;
 
                     if (item.tag(key).insert(field, value)) {
                         backup(copy);
@@ -164,7 +165,14 @@ namespace Coquillo {
 
         bool Store::setImages(int pos, const QList<Image> & images) {
             Container & item = at(pos);
-            backup(item);
+
+            /*
+             * Do not backup when images are being initialized.
+             */
+            if (item.images().size() > 0 || item.imageCount() == 0) {
+                backup(item);
+            }
+
             item.setImages(images);
             return true;
         }
