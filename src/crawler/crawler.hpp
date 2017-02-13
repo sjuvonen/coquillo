@@ -14,7 +14,7 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
-                ResultStash(int batch_size = 50);
+                ResultStash(int batch_size = 10);
                 void add(const QVariantHash & result);
                 void add(const QList<QVariantHash> & results);
 
