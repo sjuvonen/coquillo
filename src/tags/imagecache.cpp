@@ -13,9 +13,12 @@ namespace Coquillo {
             return s_instance;
         }
 
-        quint16 ImageCache::insert(const QImage & image) {
-            const auto bits = reinterpret_cast<const char*>(image.bits());
-            quint16 id = qChecksum(bits, image.byteCount());
+        quint16 ImageCache::insert(const QImage & image, quint16 id) {
+            if (!id) {
+                const auto bits = reinterpret_cast<const char*>(image.bits());
+                id = qChecksum(bits, image.byteCount());
+            }
+
             if (id and !_images.contains(id)) {
                 _images[id] = image;
             }

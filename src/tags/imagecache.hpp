@@ -16,7 +16,7 @@ namespace Coquillo {
         class ImageCache {
             public:
                 static ImageCache * instance();
-                quint16 insert(const QImage & image);
+                quint16 insert(const QImage & image, quint16 id = 0);
                 void resize(quint16 id, const QSize & size);
 
                 bool contains(quint16 id) const { return _images.contains(id); }

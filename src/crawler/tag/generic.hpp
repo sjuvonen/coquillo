@@ -13,6 +13,7 @@ namespace Coquillo {
         namespace Tag {
             class Generic {
                 public:
+                    static quint16 imageId(const QImage & image);
                     Generic() {}
                     TagData read(const TagLib::Tag * tag) const;
                     virtual void write(TagLib::Tag * tag, const TagData & data);

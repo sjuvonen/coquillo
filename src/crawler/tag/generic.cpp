@@ -1,6 +1,7 @@
 
 #include <taglib/tag.h>
 #include <taglib/tpropertymap.h>
+#include <QImage>
 #include <QVariantMap>
 #include "generic.hpp"
 
@@ -12,6 +13,11 @@
 namespace Coquillo {
     namespace Crawler {
         namespace Tag {
+            quint16 Generic::imageId(const QImage & image) {
+                const auto bits = reinterpret_cast<const char*>(image.bits());
+                return qChecksum(bits, image.byteCount());
+            }
+
             QVariantHash Generic::read(const TagLib::Tag * tag) const {
                 return {
                     {"album", T2QString(tag->album())},

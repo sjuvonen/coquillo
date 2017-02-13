@@ -13,7 +13,7 @@ namespace Coquillo {
                 static Image fromValues(const QVariantHash & values);
 
                 Image();
-                Image(const QImage & source);
+                Image(const QImage & source, quint16 id);
 
                 bool isNull() const;
                 const QImage scaled(const QSize & size) const;

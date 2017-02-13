@@ -4,10 +4,12 @@
 #include "image.hpp"
 #include "imagecache.hpp"
 
+#include <QDebug>
+
 namespace Coquillo {
     namespace Tags {
         Image Image::fromValues(const QVariantHash & values) {
-            Image image(values["data"].value<QImage>());
+            Image image(values["data"].value<QImage>(), values["id"].toUInt());
             image.setDescription(values.value("description").toString());
             image.setMimeType(values.value("mime").toString());
             image.setType(values.value("type").toInt());
@@ -19,7 +21,8 @@ namespace Coquillo {
 
         }
 
-        Image::Image(const QImage & source) {
+        Image::Image(const QImage & source, quint16 id)
+        : _id(id) {
             setSource(source);
             setMimeType("image/jpeg");
         }
@@ -41,7 +44,7 @@ namespace Coquillo {
         }
 
         void Image::setSource(const QImage & image) {
-            _id = cache()->insert(image);
+            cache()->insert(image, _id);
         }
 
         int Image::width() const {

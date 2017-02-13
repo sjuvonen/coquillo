@@ -57,8 +57,11 @@ namespace Coquillo {
                 for (auto i = pictures.begin(); i != pictures.end(); i++) {
                     const TagLib::FLAC::Picture * pic = *i;
                     const TagLib::ByteVector imgraw = pic->data();
+                    const QImage source = QImage::fromData((const uchar*)imgraw.data(), imgraw.size());
+
                     ImageData data;
-                    data["data"] = QImage::fromData((const uchar*)imgraw.data(), imgraw.size() );
+                    data["id"] = imageId(source);
+                    data["data"] = source.copy();
                     data["description"] = T2QString(pic->description());
                     data["mime"] = T2QString(pic->mimeType());
                     data["type"] = pic->type();
@@ -147,8 +150,12 @@ namespace Coquillo {
                 if (datalen) {
                     pic = new char[datalen];
                     s.readRawData(pic, datalen);
+
+                    const QImage source = QImage::fromData(QByteArray(pic, datalen));
+
                     ImageData image;
-                    image["data"] = QImage::fromData(QByteArray(pic, datalen));
+                    image["id"] = imageId(source);
+                    image["data"] = source;
                     image["description"] = QString::fromUtf8(descr, descrlen);
                     image["mime"] = QString::fromUtf8(mime, mimelen);
 
@@ -178,6 +185,7 @@ namespace Coquillo {
                         const QImage source = QImage::fromData(QByteArray::fromBase64(data));
 
                         ImageData image;
+                        image["id"] = imageId(source);
                         image["data"] = source;
                         image["description"] = T2QString(descr[i]);
                         image["mime"] = T2QString(mimes[i]);

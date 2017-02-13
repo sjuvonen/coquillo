@@ -141,6 +141,7 @@ namespace Coquillo {
                     const QImage source = QImage::fromData(reinterpret_cast<uchar*>(frame->picture().data()), frame->picture().size());
 
                     ImageData image;
+                    image["id"] = imageId(source);
                     image["data"] = source.copy();
                     image["description"] = T2QString(frame->description());
                     image["type"] = frame->type();
