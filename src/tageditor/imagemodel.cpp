@@ -184,8 +184,11 @@ namespace Coquillo {
                     }
 
                     if (images.size() > 0) {
+                        // setSourceIndex(idx);
+
+                        beginInsertRows(QModelIndex(), 0, images.size() - 1);
                         sourceModel()->setData(idx, QVariant::fromValue(images));
-                        setSourceIndex(idx);
+                        endInsertRows();
                     }
                     watcher->deleteLater();
                 });
