@@ -15,6 +15,7 @@ namespace Coquillo {
                 Image();
                 Image(const QImage & source);
                 Image(const QImage & source, quint16 id);
+                Image(const QImage & source, const QString & mime, quint16 id);
 
                 bool isNull() const;
                 const QImage scaled(const QSize & size) const;

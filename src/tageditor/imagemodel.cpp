@@ -240,8 +240,6 @@ namespace Coquillo {
             }
 
             Tags::Image image(source);
-            image.setMimeType(QMimeDatabase().mimeTypeForUrl(path).name());
-
             addImage(image);
         }
 

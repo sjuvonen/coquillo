@@ -9,9 +9,9 @@
 namespace Coquillo {
     namespace Tags {
         Image Image::fromValues(const QVariantHash & values) {
-            Image image(values["data"].value<QImage>(), values["id"].toUInt());
+            Image image(values["data"].value<QImage>(), values.value("mime").toString(), values["id"].toUInt());
             image.setDescription(values.value("description").toString());
-            image.setMimeType(values.value("mime").toString());
+            // image.setMimeType(values.value("mime").toString());
             image.setType(values.value("type").toInt());
             return image;
         }
@@ -34,6 +34,12 @@ namespace Coquillo {
         : _id(id), _type(0) {
             setSource(source);
             setMimeType("image/jpeg");
+        }
+
+        Image::Image(const QImage & source, const QString & mime, quint16 id)
+        : _id(id), _type(0) {
+            setSource(source);
+            setMimeType(mime);
         }
 
         bool Image::isNull() const {
