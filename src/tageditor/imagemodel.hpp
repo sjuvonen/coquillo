@@ -18,7 +18,7 @@ namespace Coquillo {
 
             public:
                 ImageModel(QObject * parent = 0);
-                void addImage(const QImage & image);
+                void addRawImage(const QImage & image, const QUrl & path);
 
                 Tags::Image image(int pos) const;
 
@@ -41,6 +41,10 @@ namespace Coquillo {
 
             private:
                 Tags::Container container() const;
+                // void setImages(const QList<Tags::Image> & images);
+                void addImage(const Tags::Image & image);
+                // Tags::Image imageFromPath(const QImage & source, const QUrl & path) const;
+
 
                 void download(const QUrl & url);
                 void initializeImages(const QPersistentModelIndex & idx);

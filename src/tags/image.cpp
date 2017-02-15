@@ -21,8 +21,17 @@ namespace Coquillo {
 
         }
 
+        Image::Image(const QImage & source)
+        : _type(0) {
+            const auto bits = reinterpret_cast<const char*>(source.bits());
+            _id = qChecksum(bits, source.byteCount());
+
+            setSource(source);
+            setMimeType("image/jpeg");
+        }
+
         Image::Image(const QImage & source, quint16 id)
-        : _id(id) {
+        : _id(id), _type(0) {
             setSource(source);
             setMimeType("image/jpeg");
         }

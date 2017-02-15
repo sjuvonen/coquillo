@@ -4,6 +4,7 @@
 #include <QFutureWatcher>
 #include <QImage>
 #include <QMimeData>
+#include <QMimeDatabase>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -28,16 +29,22 @@ namespace Coquillo {
             _nam = new QNetworkAccessManager(this);
         }
 
-        void ImageModel::addImage(const QImage & image) {
-            // if (!image.isNull()) {
-            //     MetaData::ImageList images = metaData().images();
-            //     images << image;
-            //     const QVariant value = QVariant::fromValue<MetaData::ImageList>(images);
-            //     beginInsertRows(QModelIndex(), rowCount(), rowCount());
-            //     qDebug() << "add image" << sourceModel()->setData(sourceIndex(), value);
-            //     endInsertRows();
-            // }
-        }
+        // void ImageModel::addRawImage(const QImage & source) {
+        //     // if (!image.isNull()) {
+        //     //     MetaData::ImageList images = metaData().images();
+        //     //     images << image;
+        //     //     const QVariant value = QVariant::fromValue<MetaData::ImageList>(images);
+        //     //     beginInsertRows(QModelIndex(), rowCount(), rowCount());
+        //     //     qDebug() << "add image" << sourceModel()->setData(sourceIndex(), value);
+        //     //     endInsertRows();
+        //     // }
+        //     if (source.isNull()) {
+        //         return;
+        //     }
+        //
+        //     Tags::Image image(source);
+        //
+        // }
 
         Tags::Image ImageModel::image(int pos) const {
             return container().image(pos);
@@ -88,7 +95,7 @@ namespace Coquillo {
 
             connect(reply, &QNetworkReply::finished, [=]() {
                 if (reply->isReadable()) {
-                    addImage(QImage::fromData(reply->readAll()));
+                    addRawImage(QImage::fromData(reply->readAll()), url);
                     reply->deleteLater();
                 } else {
                     qWarning() << "Failed to read data" << reply->error();
@@ -99,14 +106,14 @@ namespace Coquillo {
         bool ImageModel::dropMimeData(const QMimeData * data, Qt::DropAction, int, int, const QModelIndex &) {
             foreach (const QUrl & url, data->urls()) {
                 if (url.isLocalFile()) {
-                    addImage(QImage(url.path()));
+                    addRawImage(QImage(url.path()), url);
                 } else {
                     download(url);
                 }
             }
 
             if (data->hasImage()) {
-                addImage(qvariant_cast<QImage>(data->imageData()));
+                addRawImage(qvariant_cast<QImage>(data->imageData()), data->urls().first());
             }
 
             return false;
@@ -223,9 +230,27 @@ namespace Coquillo {
             }
         }
 
-
         Tags::Container ImageModel::container() const {
             return _index.data(Tags::ContainerRole).value<Tags::Container>();
+        }
+
+        void ImageModel::addRawImage(const QImage & source, const QUrl & path) {
+            if (source.isNull()) {
+                return;
+            }
+
+            Tags::Image image(source);
+            image.setMimeType(QMimeDatabase().mimeTypeForUrl(path).name());
+
+            addImage(image);
+        }
+
+        void ImageModel::addImage(const Tags::Image & image) {
+            auto images = container().images() << image;
+
+            beginInsertRows(QModelIndex(), 0, images.size() - 1);
+            sourceModel()->setData(_index, QVariant::fromValue(images));
+            endInsertRows();
         }
     }
 }
