@@ -149,13 +149,41 @@ namespace Coquillo {
         }
 
         bool ImageModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
+            if (!idx.isValid() || role != Qt::EditRole) {
+                return false;
+            }
+
+            auto images = container().images();
+            auto & image = images[idx.row()];
+
+            // Dirty hack to filter the fake edits by data widget mapper.
+            switch (idx.column()) {
+                case 0:
+                    if (image.description() == value.toString()) {
+                        return false;
+                    }
+                    image.setDescription(value.toString());
+                    break;
+                case 1:
+                    if (image.type() == value.toInt()) {
+                        return false;
+                    }
+                    image.setType(value.toInt());
+                    break;
+                default:
+                    return false;
+            }
+
+            if (sourceModel()->setData(_index, QVariant::fromValue(images))) {
+                emit dataChanged(idx, idx);
+                return true;
+            }
 
             return false;
         }
 
         void ImageModel::setSourceIndex(const QModelIndex & idx) {
             beginResetModel();
-            // Always take the column that contains images
             _index = idx;
             endResetModel();
 
