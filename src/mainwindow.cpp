@@ -114,6 +114,8 @@ namespace Coquillo {
     void MainWindow::setupMainView() {
         addAction(_ui->actionQuit);
         addAction(_ui->actionMenubar);
+        addAction(_ui->actionSelectPrevious);
+        addAction(_ui->actionSelectNext);
 
         auto proxy = new QSortFilterProxyModel(this);
         proxy->setSortRole(Qt::EditRole);
@@ -337,6 +339,42 @@ namespace Coquillo {
             if (i != 0 && i != Tags::TagsModel::PathField) {
                 header->hideSection(i);
             }
+        }
+    }
+
+    void MainWindow::on_actionSelectNext_triggered() {
+        auto model = _ui->itemView->selectionModel();
+        const auto current = model->currentIndex();
+        const auto selection = model->selectedRows(current.column());
+
+        if (selection.size() > 1) {
+            int pos = (selection.indexOf(current) + 1) % selection.size();
+            const auto next = selection[pos];
+            model->setCurrentIndex(next, QItemSelectionModel::Rows);
+        } else {
+            int pos = (current.row() + 1) % model->model()->rowCount();
+            const auto next = model->model()->index(pos, current.column());
+            const auto flags = QItemSelectionModel::Rows | QItemSelectionModel::Clear | QItemSelectionModel::Select;
+            model->setCurrentIndex(next, flags);
+        }
+    }
+
+    void MainWindow::on_actionSelectPrevious_triggered() {
+        auto model = _ui->itemView->selectionModel();
+        const auto current = model->currentIndex();
+        const auto selection = model->selectedRows(current.column());
+
+        if (selection.size() > 1) {
+            int pos = selection.indexOf(current) - 1;
+            int max = selection.size() - 1;
+            const auto next = selection[pos < 0 ? max : pos];
+            model->setCurrentIndex(next, QItemSelectionModel::Rows);
+        } else {
+            int pos = current.row() - 1;
+            int max = model->model()->rowCount() - 1;
+            const auto next = model->model()->index(pos < 0 ? max : pos, current.column());
+            const auto flags = QItemSelectionModel::Rows | QItemSelectionModel::Clear | QItemSelectionModel::Select;
+            model->setCurrentIndex(next, flags);
         }
     }
 }

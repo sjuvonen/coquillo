@@ -43,6 +43,9 @@ namespace Coquillo {
             void setInterfaceLocked(bool state);
             void showHeaderContextMenu(const QPoint & point) const;
 
+            void on_actionSelectPrevious_triggered();
+            void on_actionSelectNext_triggered();
+
         private:
             void applyDefaultSettings();
             void setupFileBrowser();
