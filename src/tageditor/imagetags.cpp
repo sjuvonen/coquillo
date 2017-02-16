@@ -45,7 +45,7 @@ namespace Coquillo {
             foreach (const QString & path, files) {
                 const QImage image(path);
                 if (!image.isNull()) {
-                    imageModel()->addRawImage(image, path);
+                    imageModel()->addRawImage(image);
                 }
                 _last_dir = QFileInfo(path).absolutePath();
             }

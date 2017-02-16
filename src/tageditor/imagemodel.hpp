@@ -18,7 +18,7 @@ namespace Coquillo {
 
             public:
                 ImageModel(QObject * parent = 0);
-                void addRawImage(const QImage & image, const QUrl & path);
+                void addRawImage(const QImage & image);
 
                 Tags::Image image(int pos) const;
 

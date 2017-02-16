@@ -95,7 +95,7 @@ namespace Coquillo {
 
             connect(reply, &QNetworkReply::finished, [=]() {
                 if (reply->isReadable()) {
-                    addRawImage(QImage::fromData(reply->readAll()), url);
+                    addRawImage(QImage::fromData(reply->readAll()));
                     reply->deleteLater();
                 } else {
                     qWarning() << "Failed to read data" << reply->error();
@@ -106,14 +106,14 @@ namespace Coquillo {
         bool ImageModel::dropMimeData(const QMimeData * data, Qt::DropAction, int, int, const QModelIndex &) {
             foreach (const QUrl & url, data->urls()) {
                 if (url.isLocalFile()) {
-                    addRawImage(QImage(url.path()), url);
+                    addRawImage(QImage(url.path()));
                 } else {
                     download(url);
                 }
             }
 
             if (data->hasImage()) {
-                addRawImage(qvariant_cast<QImage>(data->imageData()), data->urls().first());
+                addRawImage(qvariant_cast<QImage>(data->imageData()));
             }
 
             return false;
@@ -234,7 +234,7 @@ namespace Coquillo {
             return _index.data(Tags::ContainerRole).value<Tags::Container>();
         }
 
-        void ImageModel::addRawImage(const QImage & source, const QUrl & path) {
+        void ImageModel::addRawImage(const QImage & source) {
             if (source.isNull()) {
                 return;
             }
