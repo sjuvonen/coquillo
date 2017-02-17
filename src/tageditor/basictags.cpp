@@ -2,14 +2,17 @@
 #include <QButtonGroup>
 #include <QDataWidgetMapper>
 
+#include "autonumbers.hpp"
 #include "basictags.hpp"
 #include "metadatachangeindicatordelegate.hpp"
 #include "ui_basictags.h"
 
+#include <QDebug>
+
 namespace Coquillo {
     namespace TagEditor {
         BasicTags::BasicTags(QWidget * parent)
-        : QWidget(parent) {
+        : EditorPageBase(parent) {
             _ui = new Ui::BasicTags;
             _ui->setupUi(this);
 
@@ -20,8 +23,9 @@ namespace Coquillo {
             _labelMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
             _labelMapper->setItemDelegate(new MetaDataChangeIndicatorDelegate);
 
+            setupMappings();
+
             QButtonGroup * clone_group = new QButtonGroup(this);
-            setModel(0);
 
             foreach (QWidget * input, findChildren<QWidget*>(QRegExp("^tag"))) {
                 if (input->inherits("QLineEdit")) {
@@ -37,8 +41,8 @@ namespace Coquillo {
                 clone_group->addButton(button, column);
             }
 
-            connect(clone_group, SIGNAL(buttonClicked(int)), SLOT(emitCloneField(int)));
-            connect(_ui->autoNumbers, SIGNAL(clicked()), SIGNAL(autoNumberingClicked()));
+            connect(clone_group, SIGNAL(buttonClicked(int)), SLOT(cloneField(int)));
+            connect(_ui->autoNumbers, SIGNAL(clicked()), SLOT(autoNumberItems()));
         }
 
         BasicTags::~BasicTags() {
@@ -46,11 +50,31 @@ namespace Coquillo {
         }
 
         void BasicTags::setModel(QAbstractItemModel * model) {
+            EditorPageBase::setModel(model);
+
             if (model) {
                 _inputMapper->setModel(model);
                 _labelMapper->setModel(model);
+                setupMappings();
             }
+        }
 
+        void BasicTags::setEditorIndex(const QModelIndex & idx) {
+            EditorPageBase::setEditorIndex(idx);
+
+            _inputMapper->setCurrentModelIndex(idx);
+            _labelMapper->setCurrentModelIndex(idx);
+        }
+
+        void BasicTags::cloneField(int column) {
+            const QVariant value = editorIndex().sibling(editorIndex().row(), column).data();
+
+            foreach (const QModelIndex idx, selectionModel()->selectedRows(column)) {
+                model()->setData(idx, value);
+            }
+        }
+
+        void BasicTags::setupMappings() {
             _inputMapper->addMapping(_ui->tagTitle, 1);
             _inputMapper->addMapping(_ui->tagArtist, 2);
             _inputMapper->addMapping(_ui->tagAlbum, 3);
@@ -82,20 +106,9 @@ namespace Coquillo {
             _labelMapper->addMapping(_ui->labelEncoder, 14);
         }
 
-        QAbstractItemModel * BasicTags::model() const {
-            return _inputMapper->model();
-        }
-
-        void BasicTags::setEditorIndex(const QModelIndex & idx) {
-            _inputMapper->setCurrentModelIndex(idx);
-            _labelMapper->setCurrentModelIndex(idx);
-
-            // _ui->audioProperties->setData(idx.data(MetaData::AudioPropertiesRole).toMap());
-        }
-
-        void BasicTags::emitCloneField(int column) {
-            const QVariant value = _inputMapper->model()->index(_inputMapper->currentIndex(), column).data();
-            emit cloneField(column, value);
+        void BasicTags::autoNumberItems() {
+            AutoNumbers numbers(model());
+            numbers.autoNumberItems(selectionModel()->selectedRows());
         }
     }
 }

@@ -87,6 +87,7 @@ namespace Coquillo {
                         return file.value(field);
                     }
 
+
                     case Qt::DecorationRole:
                         if (idx.column() == FeedbackField && isRowChanged(idx)) {
                             return QIcon::fromTheme("emblem-important");
@@ -101,6 +102,9 @@ namespace Coquillo {
 
                     case ContainerRole:
                         return QVariant::fromValue<Container>(_store.at(idx.row()));
+
+                    case ImageDataRole:
+                        return QVariant::fromValue(_store.at(idx.row()).images());
 
                     case ItemModifiedStateRole:
                         return _store.isModified(idx.row());

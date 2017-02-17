@@ -53,6 +53,7 @@ HEADERS += \
   src/settings/settingsdialog.hpp \
   src/tageditor/autonumbers.hpp \
   src/tageditor/basictags.hpp \
+  src/tageditor/editorpagebase.hpp \
   src/tageditor/imagemodel.hpp \
   src/tageditor/imagetags.hpp \
   src/tageditor/metadatachangeindicatordelegate.hpp \
@@ -94,6 +95,7 @@ SOURCES += \
   src/settings/settingsdialog.cpp \
   src/tageditor/autonumbers.cpp \
   src/tageditor/basictags.cpp \
+  src/tageditor/editorpagebase.cpp \
   src/tageditor/imagemodel.cpp \
   src/tageditor/imagetags.cpp \
   src/tageditor/metadatachangeindicatordelegate.cpp \

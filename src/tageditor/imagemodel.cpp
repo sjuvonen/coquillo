@@ -29,23 +29,6 @@ namespace Coquillo {
             _nam = new QNetworkAccessManager(this);
         }
 
-        // void ImageModel::addRawImage(const QImage & source) {
-        //     // if (!image.isNull()) {
-        //     //     MetaData::ImageList images = metaData().images();
-        //     //     images << image;
-        //     //     const QVariant value = QVariant::fromValue<MetaData::ImageList>(images);
-        //     //     beginInsertRows(QModelIndex(), rowCount(), rowCount());
-        //     //     qDebug() << "add image" << sourceModel()->setData(sourceIndex(), value);
-        //     //     endInsertRows();
-        //     // }
-        //     if (source.isNull()) {
-        //         return;
-        //     }
-        //
-        //     Tags::Image image(source);
-        //
-        // }
-
         Tags::Image ImageModel::image(int pos) const {
             return container().image(pos);
         }

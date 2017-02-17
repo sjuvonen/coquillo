@@ -24,11 +24,9 @@ namespace Coquillo {
                 void setSelectionModel(QItemSelectionModel * model);
 
                 QItemSelectionModel * selectionModel() const { return _selection; }
+
             public slots:
                 void setEditorIndex(const QModelIndex & idx);
-
-            private slots:
-                void autoNumberTracks();
 
             private:
                 BasicTags * _tabBasic;

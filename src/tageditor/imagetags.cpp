@@ -3,6 +3,7 @@
 #include <QDataWidgetMapper>
 #include <QFileDialog>
 #include "tags/imagetypes.hpp"
+#include "tags/tagdataroles.hpp"
 #include "tags/tagsmodel.hpp"
 #include "imagemodel.hpp"
 #include "imagetags.hpp"
@@ -11,19 +12,19 @@
 namespace Coquillo {
     namespace TagEditor {
         ImageTags::ImageTags(QWidget * parent)
-        : QWidget(parent) {
+        : EditorPageBase(parent) {
             _ui = new Ui::ImageTags;
             _ui->setupUi(this);
 
             _ui->imageType->addItems(Tags::ImageTypes::types());
 
-            _model = new ImageModel;
-            _ui->listImages->setModel(_model);
+            _images = new ImageModel;
+            _ui->listImages->setModel(_images);
             _ui->listImages->setModelColumn(3);
 
             _mapper = new QDataWidgetMapper(this);
             _mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-            _mapper->setModel(_model);
+            _mapper->setModel(_images);
             _mapper->addMapping(_ui->imageDescription, 0);
             _mapper->addMapping(_ui->imageType, 1, "currentIndex");
 
@@ -58,7 +59,7 @@ namespace Coquillo {
                 return;
             }
 
-            const auto image = _model->image(currentRow());
+            const auto image = _images->image(currentRow());
             const auto filename = QFileDialog::getSaveFileName(this, tr("Export image to"), _last_dir);
 
             if (!filename.isEmpty()) {
@@ -70,23 +71,31 @@ namespace Coquillo {
             return _ui->listImages->model()->rowCount();
         }
 
-        QAbstractItemModel * ImageTags::model() const {
-            return _model->sourceModel();
-        }
-
         void ImageTags::on_buttonDelete_clicked() {
             // TODO: Support multiple rows at once
-            _model->removeRow(currentRow());
+            _images->removeRow(currentRow());
+        }
+
+        void ImageTags::on_buttonCloneImages_clicked() {
+            const QModelIndex index = imageModel()->sourceIndex();
+            const QVariant value = index.data(Tags::ImageDataRole);
+
+            foreach (const QModelIndex idx, selectionModel()->selectedRows(index.column())) {
+                model()->setData(idx, value);
+            }
         }
 
         void ImageTags::setModel(QAbstractItemModel * model) {
-            _model->setSourceModel(model);
+            EditorPageBase::setModel(model);
+            _images->setSourceModel(model);
         }
 
         void ImageTags::setEditorIndex(const QModelIndex & idx) {
-            const auto image_idx = idx.sibling(idx.row(), Tags::TagsModel::ImageField);
-            _model->setSourceIndex(image_idx);
-            _ui->listImages->setCurrentIndex(_model->index(0, 0));
+            EditorPageBase::setEditorIndex(idx);
+
+                const auto image_idx = idx.sibling(idx.row(), Tags::TagsModel::ImageField);
+            _images->setSourceIndex(image_idx);
+            _ui->listImages->setCurrentIndex(_images->index(0, 0));
 
             _ui->imageType->setEnabled(image_idx.isValid());
             _ui->imageDescription->setEnabled(image_idx.isValid());
@@ -98,10 +107,6 @@ namespace Coquillo {
             } else {
                 _last_dir.clear();
             }
-        }
-
-        void ImageTags::on_cloneImages_clicked() {
-            qDebug() << "field cloning not yet implemented!";
         }
 
         void ImageTags::onImageSelect(const QModelIndex & idx) {

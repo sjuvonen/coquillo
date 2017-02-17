@@ -1,7 +1,7 @@
 #ifndef COQUILLO_TAGEDITOR_BASICTAGS_H
 #define COQUILLO_TAGEDITOR_BASICTAGS_H
 
-#include <QWidget>
+#include "editorpagebase.hpp"
 
 class QAbstractItemModel;
 class QDataWidgetMapper;
@@ -12,34 +12,28 @@ namespace Ui {
 
 namespace Coquillo {
     namespace TagEditor {
-        class BasicTags : public QWidget {
+        class BasicTags : public EditorPageBase {
             Q_OBJECT
 
             public:
-                BasicTags(QWidget * parent = 0);
+                BasicTags(QWidget * parent = nullptr);
                 ~BasicTags();
 
                 void setModel(QAbstractItemModel * model);
-                QAbstractItemModel * model() const;
-
-                inline void setRole(int role) { _role = role; }
-                inline int role() const { return _role; }
 
             public slots:
                 void setEditorIndex(const QModelIndex & idx);
 
-            signals:
-                void autoNumberingClicked();
-                void cloneField(int column, const QVariant & value);
-
             private slots:
-                void emitCloneField(int column);
+                void autoNumberItems();
+                void cloneField(int column);
 
             private:
+                void setupMappings();
+
+                Ui::BasicTags * _ui;
                 QDataWidgetMapper * _inputMapper;
                 QDataWidgetMapper * _labelMapper;
-                Ui::BasicTags * _ui;
-                int _role;
         };
     }
 }

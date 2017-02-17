@@ -13,6 +13,7 @@ namespace Coquillo {
             ItemModifiedStateRole,
             ValuesMapRole,
             RootPathRole,
+            ImageDataRole,
         };
 
         enum TagModelField {

@@ -130,7 +130,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="cloneImages">
+      <widget class="QToolButton" name="buttonCloneImages">
        <property name="toolTip">
         <string>Apply image set to all selected files</string>
        </property>
@@ -166,7 +166,7 @@
   <tabstop>buttonExport</tabstop>
   <tabstop>buttonAdd</tabstop>
   <tabstop>buttonDelete</tabstop>
-  <tabstop>cloneImages</tabstop>
+  <tabstop>buttonCloneImages</tabstop>
  </tabstops>
  <resources/>
  <connections/>
