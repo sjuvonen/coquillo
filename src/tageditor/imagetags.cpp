@@ -33,6 +33,8 @@ namespace Coquillo {
 
             connect(_ui->imageType, SIGNAL(currentIndexChanged(int)), _mapper, SLOT(submit()));
             connect(_ui->imageDescription, SIGNAL(textChanged(QString)), _mapper, SLOT(submit()));
+
+            connect(_images, SIGNAL(rowsInserted(QModelIndex, int, int)), SLOT(ensureRowSelected()));            connect(_ui->listImages->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), SLOT(ensureRowSelected()));
         }
 
         ImageTags::~ImageTags() {
@@ -65,10 +67,6 @@ namespace Coquillo {
             if (!filename.isEmpty()) {
                 image.source().save(filename);
             }
-        }
-
-        int ImageTags::imageCount() const {
-            return _ui->listImages->model()->rowCount();
         }
 
         void ImageTags::on_buttonDelete_clicked() {
@@ -119,6 +117,17 @@ namespace Coquillo {
 
         int ImageTags::currentRow() const {
             return currentIndex().row();
+        }
+
+        void ImageTags::ensureRowSelected() {
+            if (currentRow() == -1) {
+                int column = _ui->listImages->modelColumn();
+                _ui->listImages->setCurrentIndex(_images->index(0, column));
+            }
+        }
+
+        int ImageTags::imageCount() const {
+            return _ui->listImages->model()->rowCount();
         }
     }
 }

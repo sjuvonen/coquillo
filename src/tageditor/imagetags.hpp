@@ -27,6 +27,7 @@ namespace Coquillo {
                 void setEditorIndex(const QModelIndex & idx);
 
             private slots:
+                void ensureRowSelected();
                 void on_buttonExport_clicked();
                 void on_buttonAdd_clicked();
                 void on_buttonDelete_clicked();
