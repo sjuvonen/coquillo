@@ -91,7 +91,7 @@ namespace Coquillo {
         void ImageTags::setEditorIndex(const QModelIndex & idx) {
             EditorPageBase::setEditorIndex(idx);
 
-                const auto image_idx = idx.sibling(idx.row(), Tags::TagsModel::ImageField);
+            const auto image_idx = idx.sibling(idx.row(), Tags::TagsModel::ImageField);
             _images->setSourceIndex(image_idx);
             _ui->listImages->setCurrentIndex(_images->index(0, 0));
 
