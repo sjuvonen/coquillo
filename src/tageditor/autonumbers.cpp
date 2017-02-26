@@ -78,8 +78,6 @@ namespace Coquillo {
             numbers.unite(NumberStrategy::TrackCountFromFolderContents().suggestions(items));
             numbers.unite(NumberStrategy::PreserveOriginalNumbers::trackCountMode().suggestions(items));
 
-            qDebug() << numbers;
-
             foreach (int i, numbers.uniqueKeys()) {
                 const QModelIndex idx = items[i].sibling(items[i].row(), Tags::TrackCountField);
                 model()->setData(idx, numbers[i]);
@@ -281,7 +279,6 @@ namespace Coquillo {
                 _cache.clear();
 
                 QMap<int, int> suggestions;
-                QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)_]");
 
                 for (int i = 0; i < items.size(); i++) {
                     const QModelIndex & idx = items[i];
@@ -290,20 +287,16 @@ namespace Coquillo {
                     const QString dirname = info.absolutePath();
 
                     if (!_cache.contains(dirname)) {
-                        if (matcher.indexIn(filename) != -1) {
-                            const QString num = matcher.cap(1);
+                        int discnum = FileNumberStrategy::numberFromPath(filename, FileNumberStrategy::DiscNumberMode);
+                        if (discnum > 0) {
+                            const QString filter = QString("%1*.%2").arg(discnum).arg(info.suffix());
+                            const QString cid = QString("%1:%2").arg(dirname).arg(discnum);
 
-                            if (num.length() == 3) {
-                                const QString filter = QString("%1*.%2").arg(num[0], info.suffix());
-                                const QString cid = dirname + ':' + num[0];
-
-                                if (!_cache.contains(cid)) {
-                                    // const QStringList files =
-                                    _cache[cid] = fileCount(dirname, info.suffix(), num[0]);
-                                }
-                                suggestions[i] = _cache[cid];
-                                continue;
+                            if (!_cache.contains(cid)) {
+                                _cache[cid] = fileCount(dirname, info.suffix(), QString::number(discnum));
                             }
+                            suggestions[i] = _cache[cid];
+                            continue;
                         }
 
                         _cache[dirname] = fileCount(dirname, info.suffix());
