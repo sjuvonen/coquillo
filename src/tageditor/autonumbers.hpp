@@ -58,6 +58,8 @@ namespace Coquillo {
 
                     static FileNumberStrategy discNumberMode();
 
+                    static int numberFromPath(const QString & filename, int mode = -1);
+
                     FileNumberStrategy(int mode = TrackNumberMode);
                     QMap<int, int> suggestions(const QModelIndexList & items);
 
@@ -108,6 +110,15 @@ namespace Coquillo {
                 private:
                     void buildCache(const QModelIndexList & items);
                     QHash<int, int> _cache;
+            };
+
+            class TrackCountFromFolderContents : public AbstractStrategy {
+                public:
+                    static int fileCount(const QString & dirname, const QString & suffix, const QString & prefix = QString());
+                    QMap<int, int> suggestions(const QModelIndexList & items);
+
+                private:
+                    QHash<QString, int> _cache;
             };
         }
     }

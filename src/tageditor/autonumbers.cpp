@@ -74,8 +74,11 @@ namespace Coquillo {
             Q_UNUSED(directory)
 
             QMap<int, int> numbers;
-            numbers.unite(NumberStrategy::TrackCountFromMetaData().suggestions(items));
+            // numbers.unite(NumberStrategy::TrackCountFromMetaData().suggestions(items));
+            numbers.unite(NumberStrategy::TrackCountFromFolderContents().suggestions(items));
             numbers.unite(NumberStrategy::PreserveOriginalNumbers::trackCountMode().suggestions(items));
+
+            qDebug() << numbers;
 
             foreach (int i, numbers.uniqueKeys()) {
                 const QModelIndex idx = items[i].sibling(items[i].row(), Tags::TrackCountField);
@@ -124,35 +127,62 @@ namespace Coquillo {
 
             QMap<int, int> FileNumberStrategy::suggestions(const QModelIndexList & items) {
                 QMap<int, int> numbers;
-                QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)_]");
+                // QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)_]");
 
                 for (int i = 0; i < items.size(); i++) {
                     const QString filename = items[i].data(TagDataRoles::FileNameRole).toString();
-                    if (matcher.indexIn(filename.trimmed()) != -1) {
-                        const QString num = matcher.cap(1);
+                    int number = numberFromPath(filename.trimmed(), _mode);
 
-                        /*
-                         * Sometimes number in filenames are presented so that the first digit
-                         * is disc number and last two digits the track number.
-                         */
-                        if (_mode == TrackNumberMode) {
-                            if (num.length() == 3) {
-                                numbers.insert(i, num.mid(1).toInt());
-                            } else {
-                                numbers.insert(i, num.toInt());
-                            }
-                        } else {
-                            if (num.length() == 3) {
-                                numbers.insert(i, num.mid(0, 1).toInt());
-                            } else {
-                                // PASS: There is no disc number in this filename.
-                                // numbers.insert(i, 1);
-                            }
-                        }
+                    if (number > 0) {
+                        numbers[i] = number;
                     }
+
+                    // if (number > 0) {
+                    //     const QString num = QString::number(number);
+                    //
+                    //     /*
+                    //      * Sometimes number in filenames are presented so that the first digit
+                    //      * is disc number and last two digits the track number.
+                    //      */
+                    //     if (_mode == TrackNumberMode) {
+                    //         if (num.length() == 3) {
+                    //             numbers.insert(i, num.mid(1).toInt());
+                    //         } else {
+                    //             numbers.insert(i, num.toInt());
+                    //         }
+                    //     } else {
+                    //         if (num.length() == 3) {
+                    //             numbers.insert(i, num.mid(0, 1).toInt());
+                    //         } else {
+                    //             // PASS: There is no disc number in this filename.
+                    //             // numbers.insert(i, 1);
+                    //         }
+                    //     }
+                    // }
                 }
 
                 return numbers;
+            }
+
+            int FileNumberStrategy::numberFromPath(const QString & filename, int mode) {
+                static QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)_]");
+
+                if (matcher.indexIn(filename) != -1) {
+                    int number = matcher.cap(1).toInt();
+
+                    switch (mode) {
+                        case TrackNumberMode:
+                            return number % 100;
+
+                        case DiscNumberMode:
+                            return number / 100;
+
+                        default:
+                            return number;
+                    }
+                }
+
+                return 0;
             }
 
             PreserveOriginalNumbers PreserveOriginalNumbers::discNumberMode() {
@@ -245,6 +275,53 @@ namespace Coquillo {
                         _cache.insert(disc, value);
                     }
                 }
+            }
+
+            QMap<int, int> TrackCountFromFolderContents::suggestions(const QModelIndexList & items) {
+                _cache.clear();
+
+                QMap<int, int> suggestions;
+                QRegExp matcher("^(\\d+)[(\\.)(\\s-\\s)_]");
+
+                for (int i = 0; i < items.size(); i++) {
+                    const QModelIndex & idx = items[i];
+                    const QFileInfo info = QFileInfo(idx.data(Tags::FilePathRole).toString());
+                    const QString filename = info.fileName();
+                    const QString dirname = info.absolutePath();
+
+                    if (!_cache.contains(dirname)) {
+                        if (matcher.indexIn(filename) != -1) {
+                            const QString num = matcher.cap(1);
+
+                            if (num.length() == 3) {
+                                const QString filter = QString("%1*.%2").arg(num[0], info.suffix());
+                                const QString cid = dirname + ':' + num[0];
+
+                                if (!_cache.contains(cid)) {
+                                    // const QStringList files =
+                                    _cache[cid] = fileCount(dirname, info.suffix(), num[0]);
+                                }
+                                suggestions[i] = _cache[cid];
+                                continue;
+                            }
+                        }
+
+                        _cache[dirname] = fileCount(dirname, info.suffix());
+                    }
+
+                    suggestions[i] = _cache[dirname];
+                }
+
+                return suggestions;
+            }
+
+            int TrackCountFromFolderContents::fileCount(const QString & dirname, const QString & suffix, const QString & prefix) {
+                const QString filter = QString("%1*.%2").arg(prefix, suffix);
+                const QStringList files = QDir(dirname).entryList({filter}, QDir::Files);
+                int count = files.size();
+                int last_num = FileNumberStrategy::numberFromPath(files.last(), FileNumberStrategy::TrackNumberMode);
+
+                return qMax(count, last_num);
             }
         }
     }
