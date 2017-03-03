@@ -1,0 +1,10 @@
+Source: coquillo
+Section: multimedia
+Priority: optional
+Maintainer: Samu Juvonen <samu.juvonen@gmail.com>
+Build-Depends: debhelper (>= 4.1.16), qt4-qmake, libqt4-dev, libtag1-dev (>= 1.6.0)
+
+Package: coquillo
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Metadata editor for various audio file formats
