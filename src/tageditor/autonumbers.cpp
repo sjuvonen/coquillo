@@ -277,7 +277,6 @@ namespace Coquillo {
 
             QMap<int, int> TrackCountFromFolderContents::suggestions(const QModelIndexList & items) {
                 _cache.clear();
-
                 QMap<int, int> suggestions;
 
                 for (int i = 0; i < items.size(); i++) {

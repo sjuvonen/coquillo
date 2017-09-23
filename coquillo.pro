@@ -26,6 +26,7 @@ FORMS += \
   ui/renamewidget.ui \
   ui/settingsdialog.ui \
   ui/sortpicker.ui \
+  ui/tagsearchdialog.ui \
 
 HEADERS += \
   src/headerdatamodel.hpp \
@@ -69,6 +70,8 @@ HEADERS += \
   src/tags/tagstore.hpp \
   src/tags/tagwriter.hpp \
   src/tags/tagwriterjob.hpp \
+  src/webtags/albumdetailsmodel.hpp \
+  src/webtags/tagsearchdialog.hpp \
 
 SOURCES += \
   src/headerdatamodel.cpp \
@@ -109,3 +112,26 @@ SOURCES += \
   src/tags/tagsmodel.cpp \
   src/tags/tagstore.cpp \
   src/tags/tagwriter.cpp \
+  src/webtags/albumdetailsmodel.cpp \
+  src/webtags/tagsearchdialog.cpp \
+
+
+HEADERS += \
+  src/searcher/abstractsearcher.hpp \
+  src/searcher/musicbrainz.hpp \
+  src/searcher/fetchresultjob.hpp \
+  src/searcher/searchjob.hpp \
+
+SOURCES += \
+  src/searcher/abstractsearcher.cpp \
+  src/searcher/musicbrainz.cpp \
+  src/searcher/fetchresultjob.cpp \
+  src/searcher/searchjob.cpp \
+
+HEADERS += \
+  src/varianthashmodel.hpp \
+  src/webtags/selectionfiltermodel.hpp \
+
+SOURCES += \
+  src/varianthashmodel.cpp \
+  src/webtags/selectionfiltermodel.cpp \

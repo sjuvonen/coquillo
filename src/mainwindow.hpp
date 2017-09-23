@@ -39,6 +39,7 @@ namespace Coquillo {
         private slots:
             void abort();
             void openSettingsDialog();
+            void openTagSearchDialog();
             void selectAll();
             void setInterfaceLocked(bool state);
             void showHeaderContextMenu(const QPoint & point) const;

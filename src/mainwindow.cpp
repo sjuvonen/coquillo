@@ -10,6 +10,8 @@
 #include "processor/parserwidget.hpp"
 #include "settings/settingsdialog.hpp"
 #include "tags/tagsmodel.hpp"
+#include "tags/tagdataroles.hpp"
+#include "webtags/tagsearchdialog.hpp"
 
 #include "headerdatamodel.hpp"
 #include "itemcountlabel.hpp"
@@ -237,6 +239,27 @@ namespace Coquillo {
     void MainWindow::openSettingsDialog() {
         Settings::SettingsDialog dialog(this);
         dialog.exec();
+    }
+
+    void MainWindow::openTagSearchDialog() {
+        if (_ui->actionOpenTagSearch->isChecked()) {
+            auto dialog = new WebTags::TagSearchDialog(this);
+            dialog->setModel(_ui->itemView->model());
+            dialog->setSelectedRows(_ui->itemView->selectionModel()->selectedRows(Tags::PathField));
+
+            dialog->setModal(true);
+            dialog->show();
+
+            connect(dialog, &QDialog::finished, [=](int result) {
+                if (result == QDialog::Accepted) {
+                    auto data = dialog->resultData();
+
+                    qDebug() << data;
+                }
+                dialog->deleteLater();
+                _ui->actionOpenTagSearch->setChecked(false);
+            });
+        }
     }
 
     void MainWindow::selectAll() {

@@ -115,6 +115,8 @@
    <addaction name="separator"/>
    <addaction name="actionSelectPrevious"/>
    <addaction name="actionSelectNext"/>
+   <addaction name="separator"/>
+   <addaction name="actionOpenTagSearch"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -254,7 +256,8 @@
   </action>
   <action name="actionSelectNext">
    <property name="icon">
-    <iconset theme="go-next"/>
+    <iconset theme="go-next">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Next item</string>
@@ -268,7 +271,8 @@
   </action>
   <action name="actionSelectPrevious">
    <property name="icon">
-    <iconset theme="go-previous"/>
+    <iconset theme="go-previous">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Previous item</string>
@@ -278,6 +282,20 @@
    </property>
    <property name="shortcut">
     <string>PgUp</string>
+   </property>
+  </action>
+  <action name="actionOpenTagSearch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="system-search"/>
+   </property>
+   <property name="text">
+    <string>Open tag search</string>
+   </property>
+   <property name="toolTip">
+    <string>Search for tags on the internet</string>
    </property>
   </action>
  </widget>
@@ -355,6 +373,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionOpenTagSearch</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openTagSearchDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>560</x>
+     <y>375</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>operationStarted()</signal>
@@ -363,5 +397,6 @@
   <slot>selectAll()</slot>
   <slot>sort(int,Qt::SortOrder)</slot>
   <slot>abort()</slot>
+  <slot>openTagSearchDialog()</slot>
  </slots>
 </ui>

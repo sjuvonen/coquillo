@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "togglewidgetbyaction.hpp"
 
+#include <QDebug>
+
 namespace Coquillo {
     ToggleWidgetByAction::ToggleWidgetByAction(QWidget * widget, QAction * action)
     : QObject(widget), _widget(widget), _action(action) {
@@ -15,10 +17,8 @@ namespace Coquillo {
     }
 
     bool ToggleWidgetByAction::eventFilter(QObject * watched, QEvent * event) {
-        Q_UNUSED(watched)
-
         if (watched == _widget) {
-            if (event->type() == QEvent::Hide) {
+            if (event->type() == QEvent::Hide || event->type() == QEvent::Close) {
                 _action->setChecked(false);
             } else if (event->type() == QEvent::Show) {
                 _action->setChecked(true);
