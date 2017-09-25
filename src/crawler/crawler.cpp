@@ -228,6 +228,8 @@ namespace Coquillo {
                 if (file->hasID3v1Tag()) {
                     data["primary"] = "id3v1";
                     tags["id3v1"] = Tag::Generic().read(file->ID3v1Tag());
+
+                    // qDebug() << "id3v1" << tags["id3v1"];
                 }
 
                 if (file->hasID3v2Tag()) {
@@ -245,6 +247,18 @@ namespace Coquillo {
             } else if (ref.tag()) {
                 data["primary"] = "unknown";
                 tags["unknown"] = Tag::Generic().read(ref.tag());
+            }
+
+            if (tags.contains("id3v1") && data["primary"].toString() != "id3v1") {
+                /* In ID3v1, genre is defined as an integer that maps to a set of pre-defined
+                 * genre names, otherwise it will be nulled. This will cause Coquillo to mark
+                 * every file with an 'invalid' genre as modified every time they are accessed.
+                 * To avoid this issue, simply copy whatever value has been read from other tags.
+                 */
+
+                QVariantHash id3v1 = tags["id3v1"].toHash();
+                id3v1["genre"] = QString::fromUtf8((ref.tag()->genre()).toCString(true));
+                tags["id3v1"] = id3v1;
             }
 
             data["tags"] = tags;
