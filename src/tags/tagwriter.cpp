@@ -4,12 +4,14 @@
 #include <taglib/oggfile.h>
 #include <taglib/tfile.h>
 #include <taglib/vorbisfile.h>
+#include <taglib/id3v1tag.h>
 
 #include "crawler/tags.hpp"
 #include "tagwriter.hpp"
 #include "tagwriterjob.hpp"
 
 #include <QThreadPool>
+#include <QDebug>
 
 namespace Coquillo {
     namespace Tags {
@@ -24,6 +26,9 @@ namespace Coquillo {
 
         void Writer::write(const QList<Container> & items) {
             _items = items;
+            _progress = 0;
+
+            emit started();
             processItem();
         }
 
@@ -34,13 +39,21 @@ namespace Coquillo {
         }
 
         void Writer::processItem() {
+            _progress++;
+
             if (_aborted) {
                 return;
             }
 
             if (_items.isEmpty()) {
+                emit progress(_progress);
                 emit finished();
                 return;
+            }
+
+
+            if (_progress % 10 == 0) {
+                emit progress(_progress);
             }
 
             const Container item = _items.takeLast();
@@ -62,6 +75,10 @@ namespace Coquillo {
             if (isFlacFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
 
+                if (item.hasTag("id3v1")) {
+                    Crawler::Tag::Generic().write(file->ID3v1Tag(true), item.tag("id3v1").data());
+                }
+
                 if (item.hasTag("id3v2")) {
                     Crawler::Tag::Id3v2().write(file->ID3v2Tag(true), item.tag("id3v2").data());
                 }
@@ -72,6 +89,10 @@ namespace Coquillo {
             } else if (isMpegFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
 
+                if (item.hasTag("id3v1")) {
+                    Crawler::Tag::Generic().write(file->ID3v1Tag(true), item.tag("id3v1").data());
+                }
+
                 if (item.hasTag("id3v2")) {
                     Crawler::Tag::Id3v2().write(file->ID3v2Tag(true), item.tag("id3v2").data());
                 }
@@ -81,6 +102,8 @@ namespace Coquillo {
                 if (item.hasTag("xiph")) {
                     Crawler::Tag::XiphComment().write(file->tag(), item.tag("xiph").data());
                 }
+            } else if (!item.primaryTag().isEmpty()) {
+                Crawler::Tag::Generic().write(ref.tag(), item.tag(item.primaryTag()).data());
             }
 
             ref.save();

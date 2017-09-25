@@ -30,6 +30,7 @@ namespace Coquillo {
 
             private:
                 volatile bool _aborted = false;
+                int _progress = 0;
                 QList<Container> _items;
         };
     }

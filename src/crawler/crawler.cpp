@@ -250,7 +250,8 @@ namespace Coquillo {
             }
 
             if (tags.contains("id3v1") && data["primary"].toString() != "id3v1") {
-                /* In ID3v1, genre is defined as an integer that maps to a set of pre-defined
+                /*
+                 * In ID3v1, genre is defined as an integer that maps to a set of pre-defined
                  * genre names, otherwise it will be nulled. This will cause Coquillo to mark
                  * every file with an 'invalid' genre as modified every time they are accessed.
                  * To avoid this issue, simply copy whatever value has been read from other tags.

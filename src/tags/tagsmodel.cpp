@@ -304,6 +304,8 @@ namespace Coquillo {
             }
 
             _store.commit();
+
+            emit dataChanged(index(0, 0), index(rowCount()-1, columnCount()-1), {ItemModifiedStateRole});
         }
 
         QString TagsModel::containedDirectoryForRow(int row) const {

@@ -374,7 +374,7 @@ namespace Coquillo {
             int pos = (selection.indexOf(current) + 1) % selection.size();
             const auto next = selection[pos];
             model->setCurrentIndex(next, QItemSelectionModel::Rows);
-        } else {
+        } else if (model->model()->rowCount() > 0) {
             int pos = (current.row() + 1) % model->model()->rowCount();
             const auto next = model->model()->index(pos, current.column());
             const auto flags = QItemSelectionModel::Rows | QItemSelectionModel::Clear | QItemSelectionModel::Select;
@@ -392,7 +392,7 @@ namespace Coquillo {
             int max = selection.size() - 1;
             const auto next = selection[pos < 0 ? max : pos];
             model->setCurrentIndex(next, QItemSelectionModel::Rows);
-        } else {
+        } else if (model->model()->rowCount() > 0) {
             int pos = current.row() - 1;
             int max = model->model()->rowCount() - 1;
             const auto next = model->model()->index(pos < 0 ? max : pos, current.column());

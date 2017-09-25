@@ -126,7 +126,6 @@ namespace Coquillo {
                 return data;
             }
 
-
             ImageDataList Id3v2::readImages(const TagLib::ID3v2::Tag * tag) const {
                 const auto frames = tag->frameList("APIC");
                 ImageDataList images;

@@ -151,7 +151,7 @@ namespace Coquillo {
 
                 if (!tag.equals(field, value)) {
                     const Container copy(item);
-                    // qDebug() << "change" << field << tag.value(field) << value;
+                    // qDebug() << "change" << tag.id() << field << tag.value(field) << value;
 
                     if (item.tag(key).insert(field, value)) {
                         backup(copy);
