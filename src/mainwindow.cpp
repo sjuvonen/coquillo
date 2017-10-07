@@ -220,7 +220,7 @@ namespace Coquillo {
         model->setSourceModel(_model);
 
         _sort_picker->setModel(model);
-        // _ui->toolBar->addSeparator();
+        _ui->toolBar->addSeparator();
         _ui->toolBar->addAction(sort_action);
 
         connect(_sort_picker, SIGNAL(currentIndexChanged(int)), SLOT(sort(int)));
