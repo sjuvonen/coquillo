@@ -6,9 +6,12 @@
 
 namespace Coquillo {
     namespace Tags {
-        class Store {
+        class Store : public QObject {
+            Q_OBJECT
+
             public:
-                Store();
+                Store(QObject * parent = nullptr);
+
                 void add(const QVariantHash & file);
                 void add(const QList<QVariantHash> & files);
 
@@ -29,10 +32,17 @@ namespace Coquillo {
 
                 QList<Container> changedItems() const;
 
+            signals:
+                void aboutToCommit();
+                void committed();
+                void progress(int);
+
             private:
-                Container & at(int pos);
+                Container & ref(int pos);
                 void backup(int pos);
                 void backup(const Container & item);
+
+                void writeToDisk();
 
                 Tag::Mapping _fallback;
                 QHash< QString, Tag::Mapping> _mappings;

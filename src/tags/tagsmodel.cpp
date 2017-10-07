@@ -6,7 +6,6 @@
 #include "tag.hpp"
 #include "tagdataroles.hpp"
 #include "tagsmodel.hpp"
-#include "tagwriter.hpp"
 
 #include <QDateTime>
 #include <QDebug>
@@ -14,8 +13,8 @@
 
 namespace Coquillo {
     namespace Tags {
-        TagsModel::TagsModel(ProgressListener * progress, QObject * parent)
-        : QAbstractItemModel(parent), _progress(progress), _recursive(false) {
+        TagsModel::TagsModel(Store * store, ProgressListener * progress, QObject * parent)
+        : QAbstractItemModel(parent), _store(store), _progress(progress), _recursive(false) {
             _labels = QStringList({
                 "",
                 tr("Title"),
@@ -64,7 +63,7 @@ namespace Coquillo {
         }
 
         int TagsModel::rowCount(const QModelIndex & parent) const {
-            return parent.isValid() ? 0 : _store.size();
+            return parent.isValid() ? 0 : _store->size();
         }
 
         QVariant TagsModel::data(const QModelIndex & idx, int role) const {
@@ -72,7 +71,7 @@ namespace Coquillo {
                 switch (role) {
                     case Qt::DisplayRole:
                     case Qt::EditRole: {
-                        const auto file = _store.at(idx.row());
+                        const Container file = _store->at(idx.row());
                         if (idx.column() == PathField) {
                             if (role == Qt::EditRole) {
                                 return file.path();
@@ -101,16 +100,16 @@ namespace Coquillo {
                         break;
 
                     case ContainerRole:
-                        return QVariant::fromValue<Container>(_store.at(idx.row()));
+                        return QVariant::fromValue<Container>(_store->at(idx.row()));
 
                     case ImageDataRole:
-                        return QVariant::fromValue(_store.at(idx.row()).images());
+                        return QVariant::fromValue(_store->at(idx.row()).images());
 
                     case ItemModifiedStateRole:
-                        return _store.isModified(idx.row());
+                        return _store->isModified(idx.row());
 
                     case FieldModifiedStateRole:
-                        return _store.isFieldModified(idx.row(), _fields[idx.column()]);
+                        return _store->isFieldModified(idx.row(), _fields[idx.column()]);
 
                     case RootPathRole:
                         return containedDirectoryForRow(idx.row());
@@ -123,7 +122,7 @@ namespace Coquillo {
 
                     case ValuesMapRole: {
                         QVariantHash data;
-                        const auto file = _store.at(idx.row());
+                        const auto file = _store->at(idx.row());
 
                         for (auto i = _fields.constBegin() + 1; i != _fields.constEnd(); i++) {
                             if (*i == "filename") {
@@ -148,18 +147,18 @@ namespace Coquillo {
 
             if (role == Qt::EditRole || role == Qt::DisplayRole) {
                 if (idx.column() == ImageField) {
-                    if (_store.setImages(idx.row(), value.value<QList<Image> >())) {
+                    if (_store->setImages(idx.row(), value.value<QList<Image> >())) {
                         rowChanged(idx);
                         return true;
                     }
                 } else if (idx.column() == PathField) {
-                    if (_store.rename(idx.row(), value.toString())) {
+                    if (_store->rename(idx.row(), value.toString())) {
                         rowChanged(idx);
                         return true;
                     }
                 } else {
                     const QString field = _fields[idx.column()];
-                    if (_store.setValue(idx.row(), field, value)) {
+                    if (_store->setValue(idx.row(), field, value)) {
                         rowChanged(idx);
                         return true;
                     }
@@ -169,7 +168,7 @@ namespace Coquillo {
                 bool changed = false;
 
                 for (auto i = values.begin(); i != values.end(); i++) {
-                    if (_store.setValue(idx.row(), i.key(), i.value())) {
+                    if (_store->setValue(idx.row(), i.key(), i.value())) {
                         changed = true;
                     }
                 }
@@ -177,7 +176,7 @@ namespace Coquillo {
                 rowChanged(idx);
                 return changed;
             } else if (role == FilePathRole) {
-                return _store.rename(idx.row(), value.toString());
+                return _store->rename(idx.row(), value.toString());
             } else {
                 qWarning() << "Model does not support setting data for role" << role;
             }
@@ -194,7 +193,7 @@ namespace Coquillo {
 
         QModelIndex TagsModel::index(int row, int col, const QModelIndex & parent) const {
             if (row >= 0 && row < rowCount() && col >= 0 && col < columnCount() && !parent.isValid()) {
-                return createIndex(row, col, qHash(_store.at(row).id(), col));
+                return createIndex(row, col, qHash(_store->at(row).id(), col));
             } else {
                 return QModelIndex();
             }
@@ -205,10 +204,10 @@ namespace Coquillo {
                 return false;
             }
 
-            count = qMin(row + count, _store.size()) - row;
+            count = qMin(row + count, _store->size()) - row;
             beginRemoveRows(QModelIndex(), row, row + count - 1);
             while (count-- > 0) {
-                _store.remove(row);
+                _store->remove(row);
             }
             endRemoveRows();
             return true;
@@ -250,8 +249,8 @@ namespace Coquillo {
             connect(crawler, SIGNAL(finished()), crawler, SLOT(deleteLater()));
 
             crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
-                beginInsertRows(QModelIndex(), _store.size(), _store.size() + results.size() - 1);
-                _store.add(results);
+                beginInsertRows(QModelIndex(), _store->size(), _store->size() + results.size() - 1);
+                _store->add(results);
                 endInsertRows();
             });
 
@@ -284,26 +283,26 @@ namespace Coquillo {
             qDebug() << "revert";
 
             beginResetModel();
-            _store.reset();
+            _store->reset();
             endResetModel();
         }
 
         void TagsModel::writeToDisk() {
-            const QList<Container> items = _store.changedItems();
-
-            if (items.size() > 0) {
-                auto * writer = new Writer(this);
-
-                connect(this, SIGNAL(abortAllJobs()), writer, SLOT(abort()));
-                connect(writer, SIGNAL(started()), _progress, SIGNAL(started()));
-                connect(writer, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
-                connect(writer, SIGNAL(finished()), _progress, SIGNAL(finished()));
-                connect(writer, SIGNAL(finished()), writer, SLOT(deleteLater()));
-
-                writer->write(items);
-            }
-
-            _store.commit();
+            // const QList<Container> items = _store->changedItems();
+            //
+            // if (items.size() > 0) {
+            //     auto * writer = new Writer(this);
+            //
+            //     connect(this, SIGNAL(abortAllJobs()), writer, SLOT(abort()));
+            //     connect(writer, SIGNAL(started()), _progress, SIGNAL(started()));
+            //     connect(writer, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
+            //     connect(writer, SIGNAL(finished()), _progress, SIGNAL(finished()));
+            //     connect(writer, SIGNAL(finished()), writer, SLOT(deleteLater()));
+            //
+            //     writer->write(items);
+            // }
+            //
+            _store->commit();
 
             emit dataChanged(index(0, 0), index(rowCount()-1, columnCount()-1), {ItemModifiedStateRole});
         }
@@ -325,13 +324,13 @@ namespace Coquillo {
 
         const Container TagsModel::container(const QModelIndex & idx) const {
             if (idx.isValid()) {
-                return _store.at(idx.row());
+                return _store->at(idx.row());
             }
             return Container();
         }
 
         bool TagsModel::isRowChanged(const QModelIndex & idx) const {
-            return _store.isModified(idx.row());
+            return _store->isModified(idx.row());
         }
 
         void TagsModel::rowChanged(const QModelIndex & idx) {

@@ -2,6 +2,7 @@
 #define COQUILLO_MAINWINDOW_H
 
 #include <QMainWindow>
+#include "tags/tagstore.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -66,6 +67,7 @@ namespace Coquillo {
             Ui::MainWindow * _ui;
             ProgressListener * _progress;
             SortPicker * _sort_picker;
+            Tags::Store * _store;
     };
 }
 

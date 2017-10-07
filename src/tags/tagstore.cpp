@@ -1,11 +1,12 @@
 #include "crawler/types.hpp"
 #include "tagstore.hpp"
+#include "tagwriter.hpp"
 
 #include <QDebug>
 
 namespace Coquillo {
     namespace Tags {
-        Store::Store() {
+        Store::Store(QObject * parent) : QObject(parent) {
             _fallback = {
                 {"album", "album"},
                 {"artist", "artist"},
@@ -85,7 +86,7 @@ namespace Coquillo {
             return _items[pos];
         }
 
-        Container & Store::at(int pos) {
+        Container & Store::ref(int pos) {
             return _items[pos];
         }
 
@@ -114,6 +115,7 @@ namespace Coquillo {
         }
 
         void Store::commit() {
+            writeToDisk();
             _backup.clear();
         }
 
@@ -126,7 +128,7 @@ namespace Coquillo {
         }
 
         bool Store::rename(int pos, const QString & new_path) {
-            Container & item = at(pos);
+            Container & item = ref(pos);
 
             if (item.path() != new_path) {
                 qDebug() << "rename" << item.path() << new_path;
@@ -139,7 +141,7 @@ namespace Coquillo {
         }
 
         bool Store::setValue(int pos, const QString & field, const QVariant & value) {
-            Container & item = at(pos);
+            Container & item = ref(pos);
             bool changed = false;
 
             foreach (const QString key, item.tagNames()) {
@@ -164,7 +166,7 @@ namespace Coquillo {
         }
 
         bool Store::setImages(int pos, const QList<Image> & images) {
-            Container & item = at(pos);
+            Container & item = ref(pos);
 
             /*
              * Do not backup when images are being initialized.
@@ -176,7 +178,6 @@ namespace Coquillo {
             item.setImages(images);
             return true;
         }
-
 
         void Store::backup(int pos) {
             const Container item = at(pos);
@@ -202,6 +203,30 @@ namespace Coquillo {
             }
 
             return changed;
+        }
+
+        void Store::writeToDisk() {
+            qDebug() << "WRITE";
+
+            emit aboutToCommit();
+
+            const QList<Container> items = changedItems();
+
+            if (items.size() > 0) {
+                auto * writer = new Writer(this);
+
+                // connect(this, SIGNAL(abortAllJobs()), this, SLOT(abort()));
+                // connect(writer, SIGNAL(started()), _progress, SIGNAL(started()));
+                // connect(writer, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
+                // connect(writer, SIGNAL(finished()), _progress, SIGNAL(finished()));
+                // connect(writer, SIGNAL(finished()), writer, SLOT(deleteLater()));
+
+                connect(writer, &Writer::progress, this, &Store::progress);
+                connect(writer, &Writer::finished, this, &Store::committed);
+                connect(writer, &Writer::finished, writer, &Writer::deleteLater);
+
+                writer->write(items);
+            }
         }
     }
 }

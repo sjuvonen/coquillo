@@ -27,7 +27,7 @@ namespace Coquillo {
                     ImageField = 16
                 };
 
-                TagsModel(ProgressListener * progress, QObject * parent = 0);
+                TagsModel(Store * store, ProgressListener * progress, QObject * parent = 0);
 
                 int columnCount(const QModelIndex & parent = QModelIndex()) const;
                 int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -64,10 +64,6 @@ namespace Coquillo {
                 void setRecursive(bool state) { _recursive = state; }
                 void writeToDisk();
 
-            protected:
-                const Store & store() const { return _store; }
-                Store & store() { return _store; }
-
             private:
                 const Container container(const QModelIndex & idx) const;
                 const Container container(int row) const;
@@ -77,7 +73,7 @@ namespace Coquillo {
 
                 QStringList _labels;
                 QStringList _fields;
-                Store _store;
+                QPointer<Store> _store;
                 QPointer<ProgressListener> _progress;
                 bool _recursive;
                 QStringList _directories;

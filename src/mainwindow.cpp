@@ -32,8 +32,9 @@ namespace Coquillo {
         _ui = new Ui::MainWindow;
         _ui->setupUi(this);
 
+        _store = new Tags::Store(this);
         _progress = new ProgressListener(this);
-        _model = new Tags::TagsModel(_progress, this);
+        _model = new Tags::TagsModel(_store, _progress, this);
         _model->setRecursive(QSettings().value("RecursiveScan").toBool());
 
         setupMainView();
