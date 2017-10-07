@@ -56,6 +56,10 @@ namespace Coquillo {
             });
 
             qRegisterMetaType<Coquillo::Tags::Container>("container");
+
+            connect(_store, &Store::committed, [this] {
+                emit dataChanged(index(0, 0), index(rowCount()-1, columnCount()-1), {ItemModifiedStateRole});
+            });
         }
 
         int TagsModel::columnCount(const QModelIndex & parent) const {
@@ -285,26 +289,6 @@ namespace Coquillo {
             beginResetModel();
             _store->reset();
             endResetModel();
-        }
-
-        void TagsModel::writeToDisk() {
-            // const QList<Container> items = _store->changedItems();
-            //
-            // if (items.size() > 0) {
-            //     auto * writer = new Writer(this);
-            //
-            //     connect(this, SIGNAL(abortAllJobs()), writer, SLOT(abort()));
-            //     connect(writer, SIGNAL(started()), _progress, SIGNAL(started()));
-            //     connect(writer, SIGNAL(progress(int)), _progress, SIGNAL(progress(int)));
-            //     connect(writer, SIGNAL(finished()), _progress, SIGNAL(finished()));
-            //     connect(writer, SIGNAL(finished()), writer, SLOT(deleteLater()));
-            //
-            //     writer->write(items);
-            // }
-            //
-            _store->commit();
-
-            emit dataChanged(index(0, 0), index(rowCount()-1, columnCount()-1), {ItemModifiedStateRole});
         }
 
         QString TagsModel::containedDirectoryForRow(int row) const {

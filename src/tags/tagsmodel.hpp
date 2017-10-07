@@ -62,7 +62,6 @@ namespace Coquillo {
                 void removeDirectory(const QString & path);
                 void revert();
                 void setRecursive(bool state) { _recursive = state; }
-                void writeToDisk();
 
             private:
                 const Container container(const QModelIndex & idx) const;

@@ -205,10 +205,11 @@ namespace Coquillo {
     }
 
     void MainWindow::setupToolBar() {
-        connect(_ui->actionSave, SIGNAL(triggered()), _model, SLOT(writeToDisk()));
         connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(discardChanges()));
         connect(_ui->actionReload, SIGNAL(triggered()), _model, SLOT(reload()));
         connect(_ui->actionDiscard, SIGNAL(triggered()), _model, SLOT(revert()));
+
+        connect(_ui->actionSave, &QAction::triggered, _store, &Tags::Store::commit);
 
         _sort_picker = new SortPicker(this);
 
