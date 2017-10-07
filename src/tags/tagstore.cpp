@@ -193,6 +193,10 @@ namespace Coquillo {
             }
         }
 
+        const QList<Container> Store::items() const {
+            return _items;
+        }
+
         QList<Container> Store::changedItems() const {
             QList<Container> changed;
 
@@ -206,10 +210,6 @@ namespace Coquillo {
         }
 
         void Store::writeToDisk() {
-            qDebug() << "WRITE";
-
-            emit aboutToCommit();
-
             const QList<Container> items = changedItems();
 
             if (items.size() > 0) {
@@ -225,6 +225,7 @@ namespace Coquillo {
                 connect(writer, &Writer::finished, this, &Store::committed);
                 connect(writer, &Writer::finished, writer, &Writer::deleteLater);
 
+                emit aboutToCommit();
                 writer->write(items);
             }
         }

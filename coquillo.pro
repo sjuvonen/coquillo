@@ -115,7 +115,6 @@ SOURCES += \
   src/webtags/albumdetailsmodel.cpp \
   src/webtags/tagsearchdialog.cpp \
 
-
 HEADERS += \
   src/searcher/abstractsearcher.hpp \
   src/searcher/musicbrainz.hpp \
@@ -135,3 +134,9 @@ HEADERS += \
 SOURCES += \
   src/varianthashmodel.cpp \
   src/webtags/selectionfiltermodel.cpp \
+
+HEADERS += \
+  src/misc/purgedirsaftercommit.hpp \
+
+SOURCES += \
+  src/misc/purgedirsaftercommit.cpp \

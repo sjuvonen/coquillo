@@ -25,6 +25,9 @@
 #include <QDebug>
 
 #include <QTimer>
+#include <QDir>
+
+#include "misc/purgedirsaftercommit.hpp"
 
 namespace Coquillo {
     MainWindow::MainWindow(Qt::WindowFlags flags)
@@ -46,6 +49,8 @@ namespace Coquillo {
         setupRenameWidget();
 
         restoreSettings();
+
+        connect(_store, &Tags::Store::aboutToCommit, this, &MainWindow::preStoreCommit);
     }
 
     MainWindow::~MainWindow() {
@@ -400,6 +405,22 @@ namespace Coquillo {
             const auto next = model->model()->index(pos < 0 ? max : pos, current.column());
             const auto flags = QItemSelectionModel::Rows | QItemSelectionModel::Clear | QItemSelectionModel::Select;
             model->setCurrentIndex(next, flags);
+        }
+    }
+
+    void MainWindow::preStoreCommit() {
+        if (QSettings().value("DeleteEmptyDirs").toBool()) {
+            const auto items = _store->items();
+            QStringList dirs;
+
+            for (const auto item : items) {
+                dirs << QFileInfo(item.path()).absolutePath();
+            }
+
+            auto * purge = new PurgeDirsAfterCommit(dirs, this);
+
+            connect(_store, &Tags::Store::committed, purge, &PurgeDirsAfterCommit::purge);
+            connect(_store, &Tags::Store::committed, purge, &PurgeDirsAfterCommit::deleteLater);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace Coquillo {
                 bool setValue(int pos, const QString & field, const QVariant & value);
                 bool setImages(int pos, const QList<Image> & images);
 
+                const QList<Container> items() const;
                 QList<Container> changedItems() const;
 
             signals:

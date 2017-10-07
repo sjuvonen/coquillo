@@ -48,6 +48,8 @@ namespace Coquillo {
             void on_actionSelectPrevious_triggered();
             void on_actionSelectNext_triggered();
 
+            void preStoreCommit();
+
         private:
             void applyDefaultSettings();
             void setupFileBrowser();
