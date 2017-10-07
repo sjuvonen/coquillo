@@ -33,9 +33,10 @@ namespace Coquillo {
 
         QString Patterns::compile(const QString & pattern, const QVariantHash & data) const {
             QString result(pattern);
+            const QRegularExpression dir_separator("[\\\\/]");
 
             foreach (const QString key, _symbols.keys()) {
-                const QString value = data.value(key).toString();
+                const QString value = data.value(key).toString().replace(dir_separator, "");
                 const QString rx_pattern = QString("(?<!%)%1").arg(_symbols[key]);
                 const QRegularExpression rx(rx_pattern);
                 result.replace(rx, value);
