@@ -16,8 +16,6 @@ namespace Coquillo {
         QString name;
         QDir dir;
 
-        // for (QString path : _dirs) {
-
         for (auto i = _dirs.rbegin(); i != _dirs.rend(); i++) {
             dir.setPath(*i);
 

@@ -5,6 +5,9 @@
 #include <QStringList>
 
 namespace Coquillo {
+    /**
+     * Removes directories that are left empty after moving files around.
+     */
     class PurgeDirsAfterCommit : public QObject {
         Q_OBJECT
 
