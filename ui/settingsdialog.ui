@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>612</width>
-    <height>417</height>
+    <height>427</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -40,8 +40,7 @@
             </property>
             <property name="icon">
              <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
+              <normaloff>.</normaloff>.</iconset>
             </property>
            </widget>
           </item>
@@ -100,14 +99,14 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QCheckBox" name="conf_Filter_ScalePictures">
+             <widget class="QCheckBox" name="conf_Filter_ScaleImages">
               <property name="text">
                <string>Scale pictures to</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="conf_PictureScaleWidth">
+             <widget class="QSpinBox" name="conf_Filter_ScaleImagesWidth">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -133,7 +132,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="conf_PictureScaleHeight">
+             <widget class="QSpinBox" name="conf_Filter_ScaleImagesHeight">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -367,6 +366,38 @@
     <hint type="destinationlabel">
      <x>305</x>
      <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>conf_Filter_ScaleImages</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>conf_Filter_ScaleImagesWidth</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>92</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>conf_Filter_ScaleImages</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>conf_Filter_ScaleImagesHeight</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>290</x>
+     <y>92</y>
     </hint>
    </hints>
   </connection>

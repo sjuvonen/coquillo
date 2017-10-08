@@ -13,7 +13,9 @@ void prepare_settings() {
         {"Compat/FlacEnableId3v2", false},
         {"Compat/MpegEnableId3v1", false},
         {"Filter/SafeFilenames", false},
-        {"Filter/ScalePictures", false},
+        {"Filter/ScaleImages", false},
+        {"Filter/ScaleImagesWidth", 200},
+        {"Filter/ScaleImagesHeight", 200},
         {"Filter/ParseDiscNumber", false},
         {"UI/Size", QSize(1200, 800)},
     };

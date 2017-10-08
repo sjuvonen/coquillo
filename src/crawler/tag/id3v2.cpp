@@ -10,6 +10,7 @@
 #include <QDebug>
 
 #define T2QString(str) QString::fromUtf8((str).toCString(true))
+#define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
 
 namespace Coquillo {
     namespace Crawler {
@@ -151,6 +152,23 @@ namespace Coquillo {
 
                 // qDebug() << "I" << images.size();
                 return images;
+            }
+
+            void Id3v2::writeImages(TagLib::ID3v2::Tag * tag, const ImageDataList & images) {
+                tag->removeFrames("APIC");
+
+                for (const ImageData image : images) {
+                    const QString format(image["mime"].toString());
+                    const QByteArray data(Generic::imageToBytes(image["data"].value<QImage>(), format));
+                    auto * frame = new TagLib::ID3v2::AttachedPictureFrame;
+                    frame->setPicture(TagLib::ByteVector(data.data(), data.size()));
+
+                    frame->setType((TagLib::ID3v2::AttachedPictureFrame::Type)image["type"].toInt());
+                    frame->setMimeType(Q2TString(format));
+                    frame->setDescription(Q2TString(image["description"].toString()));
+
+                    tag->addFrame(frame);
+                }
             }
 
             int Id3v2::imageCount(const TagLib::ID3v2::Tag * tag) const {

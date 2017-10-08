@@ -5,6 +5,9 @@
 #include <QVariantMap>
 #include "generic.hpp"
 
+#include <QBuffer>
+#include <QImageWriter>
+
 #include <QDebug>
 
 #define Q2TString(str) TagLib::String((str).toUtf8().data(), TagLib::String::UTF8)
@@ -16,6 +19,16 @@ namespace Coquillo {
             quint16 Generic::imageId(const QImage & image) {
                 const auto bits = reinterpret_cast<const char*>(image.bits());
                 return qChecksum(bits, image.byteCount());
+            }
+
+            QByteArray Generic::imageToBytes(const QImage & image, const QString & format) {
+                QByteArray data;
+                QBuffer buffer(&data);
+                buffer.open(QIODevice::WriteOnly);
+                QImageWriter writer(&buffer, format.split('/').last().toLocal8Bit());
+                writer.write(image);
+
+                return data;
             }
 
             QVariantHash Generic::read(const TagLib::Tag * tag) const {

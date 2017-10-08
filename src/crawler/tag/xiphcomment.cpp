@@ -70,6 +70,7 @@ namespace Coquillo {
             }
 
             #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+
             ImageDataList XiphComment::readFlacImages(const TagLib::List<TagLib::FLAC::Picture *> pictures) const {
                 ImageDataList images;
 
@@ -90,6 +91,24 @@ namespace Coquillo {
 
                 return images;
             }
+
+            void XiphComment::writeFlacImages(TagLib::Ogg::XiphComment * tag, const ImageDataList & images) {
+                tag->removeAllPictures();
+
+                for (const ImageData image : images) {
+                    auto * pic = new TagLib::FLAC::Picture;
+
+                    const QByteArray data(Generic::imageToBytes(image["data"].value<QImage>()));
+                    pic->setData(TagLib::ByteVector(data.data(), data.size()));
+
+                    pic->setType((TagLib::FLAC::Picture::Type)image["type"].toInt());
+                    pic->setDescription(Q2TString(image["description"].toString()));
+                    pic->setMimeType("image/jpeg");
+
+                    tag->addPicture(pic);
+                }
+            }
+
             #endif
 
             void XiphComment::write(TagLib::Ogg::XiphComment * tag, const TagData & values) {

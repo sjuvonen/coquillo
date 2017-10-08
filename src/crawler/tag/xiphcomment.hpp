@@ -23,6 +23,7 @@ namespace Coquillo {
 
                     #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
                     ImageDataList readFlacImages(const TagLib::List<TagLib::FLAC::Picture *> pictures) const;
+                    void writeFlacImages(TagLib::Ogg::XiphComment * tag, const ImageDataList & images);
                     #endif
 
                 private:

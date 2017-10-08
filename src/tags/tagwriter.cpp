@@ -10,6 +10,7 @@
 #include "tagwriter.hpp"
 #include "tagwriterjob.hpp"
 
+#include <QSettings>
 #include <QThreadPool>
 #include <QDebug>
 
@@ -71,6 +72,27 @@ namespace Coquillo {
 
         void WriterJob::run() {
             TagLib::FileRef ref(item.path().toUtf8().constData());
+            QList<QVariantHash> images;
+            QSettings settings;
+
+            for (const Image image : item.images()) {
+                QVariantHash data({
+                    {"type", QVariant(image.type())},
+                    {"mime", QVariant(image.mimeType())},
+                    {"description", QVariant(image.description())},
+                });
+
+                if (settings.value("Filter/ScaleImages").toBool()) {
+                    int w = settings.value("Filter/ScaleImagesWidth", 200).toInt();
+                    int h = settings.value("Filter/ScaleImagesHeight", 200).toInt();
+                    const QImage imgdata(image.scaled(QSize(w, h)));
+                    data.insert("data", QVariant::fromValue<QImage>(imgdata));
+                } else {
+                    data.insert("data", image.source());
+                }
+
+                images << data;
+            }
 
             if (isFlacFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::FLAC::File*>(ref.file());
@@ -80,11 +102,25 @@ namespace Coquillo {
                 }
 
                 if (item.hasTag("id3v2")) {
-                    Crawler::Tag::Id3v2().write(file->ID3v2Tag(true), item.tag("id3v2").data());
+                    Crawler::Tag::Id3v2 id3v2;
+                    id3v2.write(file->ID3v2Tag(true), item.tag("id3v2").data());
+
+                    #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                    if (!item.hasTag("xiph")) {
+                        id3v2.writeImages(file->ID3v2Tag(true), images);
+                    }
+                    #else
+                        id3v2.writeImages(file->ID3v2Tag(true), images);
+                    #endif
                 }
 
                 if (item.hasTag("xiph")) {
-                    Crawler::Tag::XiphComment().write(file->xiphComment(true), item.tag("xiph").data());
+                    Crawler::Tag::XiphComment xiph;
+                    xiph.write(file->xiphComment(true), item.tag("xiph").data());
+
+                    #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                    xiph.writeFlacImages(file->xiphComment(true), images);
+                    #endif
                 }
             } else if (isMpegFile(ref.file())) {
                 auto file = dynamic_cast<TagLib::MPEG::File*>(ref.file());
@@ -94,13 +130,20 @@ namespace Coquillo {
                 }
 
                 if (item.hasTag("id3v2")) {
-                    Crawler::Tag::Id3v2().write(file->ID3v2Tag(true), item.tag("id3v2").data());
+                    Crawler::Tag::Id3v2 id3v2;
+                    id3v2.write(file->ID3v2Tag(true), item.tag("id3v2").data());
+                    id3v2.writeImages(file->ID3v2Tag(true), images);
                 }
             } else if (isVorbisFile(ref.file())) {
                 auto file = dynamic_cast<const TagLib::Ogg::Vorbis::File*>(ref.file());
 
                 if (item.hasTag("xiph")) {
-                    Crawler::Tag::XiphComment().write(file->tag(), item.tag("xiph").data());
+                    Crawler::Tag::XiphComment xiph;
+                    xiph.write(file->tag(), item.tag("xiph").data());
+
+                    #if TAGLIB_MINOR_VERSION >= 7 || TAGLIB_MAJOR_VERSION > 1
+                    xiph.writeFlacImages(file->tag(), images);
+                    #endif
                 }
             } else if (!item.primaryTag().isEmpty()) {
                 Crawler::Tag::Generic().write(ref.tag(), item.tag(item.primaryTag()).data());
