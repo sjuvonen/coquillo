@@ -96,14 +96,15 @@ namespace Coquillo {
                 tag->removeAllPictures();
 
                 for (const ImageData image : images) {
+                    const QString format(image["mime"].toString());
                     auto * pic = new TagLib::FLAC::Picture;
 
-                    const QByteArray data(Generic::imageToBytes(image["data"].value<QImage>()));
+                    const QByteArray data(Generic::imageToBytes(image["data"].value<QImage>(), format));
                     pic->setData(TagLib::ByteVector(data.data(), data.size()));
 
                     pic->setType((TagLib::FLAC::Picture::Type)image["type"].toInt());
                     pic->setDescription(Q2TString(image["description"].toString()));
-                    pic->setMimeType("image/jpeg");
+                    pic->setMimeType(Q2TString(format));
 
                     tag->addPicture(pic);
                 }
