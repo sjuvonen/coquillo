@@ -136,7 +136,9 @@ SOURCES += \
   src/webtags/selectionfiltermodel.cpp \
 
 HEADERS += \
-  src/misc/purgedirsaftercommit.hpp \
+  src/tags/misc/purgedirsaftercommit.hpp \
+  src/tags/misc/renamechangedfiles.hpp \
 
 SOURCES += \
-  src/misc/purgedirsaftercommit.cpp \
+  src/tags/misc/purgedirsaftercommit.cpp \
+  src/tags/misc/renamechangedfiles.cpp \

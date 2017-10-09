@@ -27,8 +27,6 @@
 #include <QTimer>
 #include <QDir>
 
-#include "misc/purgedirsaftercommit.hpp"
-
 namespace Coquillo {
     MainWindow::MainWindow(Qt::WindowFlags flags)
     : QMainWindow(0, flags) {
@@ -409,18 +407,18 @@ namespace Coquillo {
     }
 
     void MainWindow::preStoreCommit() {
-        if (QSettings().value("DeleteEmptyDirs").toBool()) {
-            const auto items = _store->items();
-            QStringList dirs;
-
-            for (const auto item : items) {
-                dirs << QFileInfo(item.path()).absolutePath();
-            }
-
-            auto * purge = new PurgeDirsAfterCommit(dirs, this);
-
-            connect(_store, &Tags::Store::committed, purge, &PurgeDirsAfterCommit::purge);
-            connect(_store, &Tags::Store::committed, purge, &PurgeDirsAfterCommit::deleteLater);
-        }
+        // if (QSettings().value("DeleteEmptyDirs").toBool()) {
+        //     const auto changed = _store->changedItemsMap();
+        //     QStringList dirs;
+        //
+        //     for (const auto & path : changed.keys()) {
+        //         dirs << QFileInfo(path).absolutePath();
+        //     }
+        //
+        //     auto * purge = new PurgeDirsAfterCommit(dirs, this);
+        //
+        //     connect(_store, &Tags::Store::committed, purge, &PurgeDirsAfterCommit::purge);
+        //     connect(_store, &Tags::Store::committed, purge, &PurgeDirsAfterCommit::deleteLater);
+        // }
     }
 }

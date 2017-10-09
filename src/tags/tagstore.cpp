@@ -1,4 +1,9 @@
+#include <QFileInfo>
+#include <QSettings>
+
 #include "crawler/types.hpp"
+#include "misc/purgedirsaftercommit.hpp"
+#include "misc/renamechangedfiles.hpp"
 #include "tagstore.hpp"
 #include "tagwriter.hpp"
 
@@ -51,6 +56,8 @@ namespace Coquillo {
                     {"year", "DATE"},
                 }}
             };
+
+            connect(this, &Store::aboutToCommit, this, &Store::preCommit);
         }
 
         void Store::add(const QVariantHash & file) {
@@ -200,7 +207,7 @@ namespace Coquillo {
         QList<Container> Store::changedItems() const {
             QList<Container> changed;
 
-            foreach (const Container & item, _items) {
+            for (const Container & item : _items) {
                 if (_backup.contains(item.id())) {
                     changed << item;
                 }
@@ -209,10 +216,23 @@ namespace Coquillo {
             return changed;
         }
 
-        void Store::writeToDisk() {
-            const QList<Container> items = changedItems();
+        QMap<QString, Container> Store::changedItemsMap() const {
+            QMap<QString, Container> changed;
 
-            if (items.size() > 0) {
+            for (const Container & item : _items) {
+                if (_backup.contains(item.id())) {
+                    changed.insert(_backup[item.id()].path(), item);
+                }
+            }
+
+            return changed;
+        }
+
+
+        void Store::writeToDisk() {
+            const auto changed = changedItemsMap();
+
+            if (changed.size() > 0) {
                 auto * writer = new Writer(this);
 
                 // connect(this, SIGNAL(abortAllJobs()), this, SLOT(abort()));
@@ -226,7 +246,26 @@ namespace Coquillo {
                 connect(writer, &Writer::finished, writer, &Writer::deleteLater);
 
                 emit aboutToCommit();
-                writer->write(items);
+                writer->write(changed.values());
+            }
+        }
+
+        void Store::preCommit() {
+            const auto changed = changedItemsMap();
+
+            RenameChangedFiles().run(changed);
+
+            if (QSettings().value("DeleteEmptyDirs").toBool()) {
+                QStringList dirs;
+
+                for (const auto & path : changed.keys()) {
+                    dirs << QFileInfo(path).absolutePath();
+                }
+
+                auto * purge = new PurgeDirsAfterCommit(dirs, this);
+
+                connect(this, &Store::committed, purge, &PurgeDirsAfterCommit::purge);
+                connect(this, &Store::committed, purge, &PurgeDirsAfterCommit::deleteLater);
             }
         }
     }

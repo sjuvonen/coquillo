@@ -32,11 +32,15 @@ namespace Coquillo {
 
                 const QList<Container> items() const;
                 QList<Container> changedItems() const;
+                QMap<QString, Container> changedItemsMap() const;
 
             signals:
                 void aboutToCommit();
                 void committed();
                 void progress(int);
+
+            private slots:
+                void preCommit();
 
             private:
                 Container & ref(int pos);
