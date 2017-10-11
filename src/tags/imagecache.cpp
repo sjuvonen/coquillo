@@ -37,11 +37,17 @@ namespace Coquillo {
         const QImage ImageCache::scaled(quint16 id, const QSize & size) {
             const QString key = QString("%1x%2").arg(size.width()).arg(size.height());
             if (contains(id)) {
-                if (!_scaled[id].contains(key)) {
-                    _scaled[id][key] = image(id).scaled(size, Qt::KeepAspectRatio,
-                        Qt::SmoothTransformation);
+                const QImage source(image(id));
+
+                if (source.size().width() > size.width() || source.size().height() > size.height()) {
+                    if (!_scaled[id].contains(key)) {
+                        const QImage smaller(image(id).scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                        _scaled[id].insert(key, smaller);
+                    }
+                    return _scaled[id][key];
+                } else {
+                    return source;
                 }
-                return _scaled[id][key];
             } else {
                 return QImage();
             }
