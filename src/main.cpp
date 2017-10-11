@@ -39,7 +39,7 @@ int main(int argc, char ** args) {
     QApplication::setOrganizationName("Juvonet");
     QApplication::setOrganizationDomain("juvonet.fi");
     QApplication::setApplicationName("Coquillo");
-    QApplication::setApplicationVersion("1.9");
+    QApplication::setApplicationVersion("2.0");
 
     prepare_settings();
 
@@ -49,7 +49,7 @@ int main(int argc, char ** args) {
     qDebug() << translator.load(":/tr/en.qm");
 
     app.installTranslator(&translator);
-    
+
     Coquillo::MainWindow window;
     window.show();
 
