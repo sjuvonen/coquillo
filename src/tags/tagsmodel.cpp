@@ -181,7 +181,9 @@ namespace Coquillo {
                 rowChanged(idx);
                 return changed;
             } else if (role == FilePathRole) {
-                return _store->rename(idx.row(), value.toString());
+                bool status = _store->rename(idx.row(), value.toString());
+                rowChanged(idx);
+                return status;
             } else {
                 qWarning() << "Model does not support setting data for role" << role;
             }

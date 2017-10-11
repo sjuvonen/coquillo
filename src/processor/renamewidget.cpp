@@ -25,8 +25,6 @@ namespace Coquillo {
         }
 
         void RenameWidget::applyPattern(const QString & pattern) {
-            qDebug() << "apply pattern" << pattern;
-
             const Patterns patterns;
             const Paths paths;
             QList<QPersistentModelIndex> indices;
