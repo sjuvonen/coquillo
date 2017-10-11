@@ -1,12 +1,9 @@
-
 #include <QApplication>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QTranslator>
 
 #include "mainwindow.hpp"
-
-#include <QDebug>
 
 void prepare_settings() {
     const QVariantHash defaults = {
@@ -45,8 +42,8 @@ int main(int argc, char ** args) {
 
     QApplication app(argc, args);
 
-    QTranslator translator;
-    qDebug() << translator.load(":/tr/en.qm");
+    QTranslator translator(&app);
+    translator.load(":/tr/en.qm");
 
     app.installTranslator(&translator);
 
