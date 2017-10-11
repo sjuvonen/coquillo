@@ -85,7 +85,7 @@ namespace Coquillo {
                                 return file.path().midRef(root_length).toString();
                             }
                         } else if (idx.column() == ImageField) {
-                            return QString("%1 images").arg(file.imageCount());
+                            return tr("%n image(s)", "", file.imageCount());
                         }
                         const auto field = _fields[idx.column()];
                         return file.value(field);

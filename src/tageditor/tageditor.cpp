@@ -57,7 +57,7 @@ namespace Coquillo {
 
             const QString label = idx.sibling(idx.row(), Tags::ImageField).data().toString();
 
-            if (label[0] == "0") {
+            if (label.isEmpty() || label[0] == "0") {
                 setTabText(1, tr("Images"));
             } else {
                 setTabText(1, label);
