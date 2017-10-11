@@ -62,7 +62,6 @@ namespace Coquillo {
 
             connect(pattern, SIGNAL(editTextChanged(QString)), SLOT(updatePreview()));
             connect(apply, SIGNAL(clicked()), SLOT(applyCurrentPattern()));
-            connect(pattern, SIGNAL(activated(QString)), SIGNAL(patternAccepted(QString)));
         }
 
         void PatternWidget::setPreview(const QString & text) {
