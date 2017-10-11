@@ -43,8 +43,8 @@ namespace Coquillo {
         setupStatusBar();
         setupTagEditor();
         setupFileBrowser();
-        setupParserWidget();
         setupRenameWidget();
+        setupParserWidget();
 
         restoreSettings();
 
@@ -105,7 +105,7 @@ namespace Coquillo {
         _files->setHistoryModel(path_history);
         _files->setDirectory(QSettings().value("DefaultLocation").toString());
         _files->setRecursive(QSettings().value("RecursiveScan").toBool());
-        _ui->toolBox->addTab(_files, tr("Files"));
+        _ui->toolBox->addTab(_files, tr("Browse"));
 
         connect(_files, SIGNAL(recursionEnabled(bool)),
             _model, SLOT(setRecursive(bool)));
