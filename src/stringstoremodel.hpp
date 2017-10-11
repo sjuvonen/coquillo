@@ -21,8 +21,6 @@ namespace Coquillo {
             inline int limit() const { return _limit; }
             void setDuplicatesAllowed(bool state);
             inline bool allowDuplicates() const { return _duplicates; }
-            void setStorage(QSettings * settings);
-            QSettings * storage() const;
 
             bool setData(const QModelIndex & idx, const QVariant & value, int role = Qt::EditRole);
 
@@ -39,7 +37,6 @@ namespace Coquillo {
             void init(int cols);
             bool _duplicates;
             int _limit;
-            QPointer<QSettings> _storage;
             QString _key;
     };
 }

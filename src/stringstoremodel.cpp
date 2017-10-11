@@ -33,10 +33,7 @@ namespace Coquillo {
     void StringStoreModel::setKey(const QString & key) {
         if (key != _key) {
             _key = key;
-
-            if (storage()) {
-                read();
-            }
+            read();
         }
     }
 
@@ -55,18 +52,6 @@ namespace Coquillo {
         _duplicates = state;
     }
 
-    void StringStoreModel::setStorage(QSettings * settings) {
-        _storage = QPointer<QSettings>(settings);
-
-        if (settings && !key().isNull()) {
-            read();
-        }
-    }
-
-    QSettings * StringStoreModel::storage() const {
-        return _storage.data();
-    }
-
     bool StringStoreModel::setData(const QModelIndex & idx, const QVariant & value, int role) {
         bool state = QIdentityProxyModel::setData(idx, value, role);
         if (!allowDuplicates()) {
@@ -76,48 +61,47 @@ namespace Coquillo {
     }
 
     void StringStoreModel::read() {
-        if (!storage() || key().isNull()) {
+        if (key().isNull()) {
             return;
         }
 
-        QSettings * settings = storage();
-        int size = settings->beginReadArray(key());
+        QSettings settings;
+        int size = settings.beginReadArray(key());
 
         for (int i = 0; i < size; i++) {
-            settings->setArrayIndex(i);
+            const QString key("%1");
+            settings.setArrayIndex(i);
             insertRow(i);
 
             for (int j = 0; j < columnCount(); j++) {
-                const QString key = QString("item-%1").arg(j);
-                setData(index(i, j), settings->value(key));
+                setData(index(i, j), settings.value(key.arg(j)));
             }
         }
 
-        settings->endArray();
+        settings.endArray();
     }
 
     bool StringStoreModel::submit() {
-        if (!storage() || key().isNull()) {
+        if (key().isNull()) {
             return false;
         }
 
-        QSettings * settings = storage();
-        settings->beginWriteArray(key());
-        settings->remove("");
+        QSettings settings;
+        settings.beginWriteArray(key());
+        settings.remove("");
 
         for (int i = 0; i < rowCount(); i++) {
-            settings->setArrayIndex(i);
-
+            const QString key("%1");
+            settings.setArrayIndex(i);
             for (int j = 0; j < columnCount(); j++) {
-                const QString key = QString("item-%1").arg(j);
-                settings->setValue(key, index(i, j).data());
+                settings.setValue(key.arg(j), index(i, j).data());
             }
         }
 
-        settings->endArray();
-        settings->sync();
+        settings.endArray();
+        settings.sync();
 
-        return settings->status() == QSettings::NoError;
+        return settings.status() == QSettings::NoError;
     }
 
     void StringStoreModel::filterDuplicates(const QModelIndex & new_idx) {

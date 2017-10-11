@@ -98,12 +98,9 @@ namespace Coquillo {
     }
 
     void MainWindow::setupFileBrowser() {
-        QSettings * storage = new QSettings("history");
-        StringStoreModel * bookmarks = new StringStoreModel("bookmarks", 2, this);
-        bookmarks->setStorage(storage);
+        StringStoreModel * bookmarks = new StringStoreModel("history/bookmarks", 2, this);
 
-        StringStoreModel * path_history = new StringStoreModel("directories", this);
-        path_history->setStorage(storage);
+        StringStoreModel * path_history = new StringStoreModel("history/directories", this);
         path_history->setLimit(100);
 
         _files = new FileBrowser;
@@ -165,8 +162,7 @@ namespace Coquillo {
     }
 
     void MainWindow::setupParserWidget() {
-        StringStoreModel * history = new StringStoreModel("parser", this);
-        history->setStorage(new QSettings("history"));
+        StringStoreModel * history = new StringStoreModel("history/parser", this);
 
         _tag_parser = new Processor::ParserWidget(this);
         _tag_parser->setHistoryModel(history);
@@ -176,8 +172,7 @@ namespace Coquillo {
     }
 
     void MainWindow::setupRenameWidget() {
-        StringStoreModel * history = new StringStoreModel("parser", this);
-        history->setStorage(new QSettings("history"));
+        StringStoreModel * history = new StringStoreModel("history/rename", this);
 
         _file_rename = new Processor::RenameWidget(this);
         _file_rename->setHistoryModel(history);
