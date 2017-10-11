@@ -58,6 +58,16 @@ namespace Coquillo {
             qRegisterMetaType<Coquillo::Tags::Container>("container");
 
             connect(_store, &Store::committed, [this] {
+                _directories.clear();
+
+                for (const auto & item : _store->items()) {
+                    _directories << QFileInfo(item.path()).absolutePath();
+                }
+
+                _directories.removeDuplicates();
+            });
+
+            connect(_store, &Store::committed, [this] {
                 emit dataChanged(index(0, 0), index(rowCount()-1, columnCount()-1), {ItemModifiedStateRole});
             });
         }
@@ -287,8 +297,6 @@ namespace Coquillo {
         }
 
         void TagsModel::revert() {
-            qDebug() << "revert";
-
             beginResetModel();
             _store->reset();
             endResetModel();

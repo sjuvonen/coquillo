@@ -115,7 +115,9 @@ namespace Coquillo {
 
     void FileBrowser::setSelectedDirectories(const QStringList & dirs) {
         uncheckAll();
-        setDirectory(commonParentDirectory(dirs));
+        const QString p = commonParentDirectory(dirs);
+        qDebug() << "cd up" << p;
+        setDirectory(p);
         _directories->selectPaths(dirs);
     }
 
@@ -253,11 +255,19 @@ namespace Coquillo {
                 paths.replace(i, QFileInfo(paths[i]).absoluteFilePath());
             }
 
-            QDir ref = QDir(paths.takeFirst());
-            ref.cdUp();
+            QDir ref(paths.takeFirst());
 
-            foreach (const QString path, paths) {
-                if (path.indexOf(ref.path() + '/') == 0) {
+            while (ref.cdUp()) {
+                bool valid = true;
+                
+                foreach (const QString path, paths) {
+                    if (path.indexOf(ref.path() + '/') != 0) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (valid) {
                     return ref.path();
                 }
             }

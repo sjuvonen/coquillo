@@ -29,6 +29,8 @@ namespace Coquillo {
 
                 TagsModel(Store * store, ProgressListener * progress, QObject * parent = 0);
 
+                inline QStringList directories() const { return _directories; }
+
                 int columnCount(const QModelIndex & parent = QModelIndex()) const;
                 int rowCount(const QModelIndex & parent = QModelIndex()) const;
                 QVariant data(const QModelIndex & idx, int role = Qt::DisplayRole) const;
@@ -72,10 +74,10 @@ namespace Coquillo {
 
                 QStringList _labels;
                 QStringList _fields;
+                QStringList _directories;
                 QPointer<Store> _store;
                 QPointer<ProgressListener> _progress;
                 bool _recursive;
-                QStringList _directories;
         };
     }
 }

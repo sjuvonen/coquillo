@@ -49,6 +49,12 @@ namespace Coquillo {
         restoreSettings();
 
         connect(_store, &Tags::Store::aboutToCommit, this, &MainWindow::preStoreCommit);
+
+        connect(_store, &Tags::Store::committed, [this] {
+            _files->blockSignals(true);
+            _files->setSelectedDirectories(_model->directories());
+            _files->blockSignals(false);
+        });
     }
 
     MainWindow::~MainWindow() {
