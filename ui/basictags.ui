@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>330</width>
-    <height>372</height>
+    <height>396</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -53,6 +53,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="tagTotal">
+       <property name="accessibleName">
+        <string>Track total</string>
+       </property>
        <property name="maximum">
         <number>9999</number>
        </property>
@@ -67,7 +70,10 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatic numbering of selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>Generate numbering to selected tracks</string>
+       </property>
+       <property name="accessibleName">
+        <string>Automatic numbering</string>
        </property>
        <property name="text">
         <string>#</string>
@@ -99,7 +105,7 @@
    <item row="8" column="2">
     <widget class="QToolButton" name="cloneComment">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -119,7 +125,7 @@
    <item row="9" column="2">
     <widget class="QToolButton" name="cloneUrl">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -139,7 +145,7 @@
    <item row="2" column="2">
     <widget class="QToolButton" name="cloneAlbum">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -195,7 +201,7 @@
    <item row="5" column="2">
     <widget class="QToolButton" name="cloneGenre">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -244,7 +250,7 @@
    <item row="13" column="2">
     <widget class="QToolButton" name="cloneEncoder">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -284,7 +290,7 @@
    <item row="0" column="2">
     <widget class="QToolButton" name="cloneTitle">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -307,7 +313,7 @@
    <item row="12" column="2">
     <widget class="QToolButton" name="cloneComposer">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -400,7 +406,7 @@
    <item row="4" column="2">
     <widget class="QToolButton" name="cloneTotal">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -423,7 +429,7 @@
    <item row="6" column="2">
     <widget class="QToolButton" name="cloneAlbumArtist">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -456,7 +462,7 @@
    <item row="1" column="2">
     <widget class="QToolButton" name="cloneArtist">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -522,7 +528,7 @@
      <item>
       <widget class="QToolButton" name="cloneYear">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>Copy value to selected files</string>
        </property>
        <property name="text">
         <string/>
@@ -598,7 +604,7 @@
    <item row="3" column="2">
     <widget class="QToolButton" name="cloneDisc">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
@@ -648,7 +654,7 @@
    <item row="7" column="2">
     <widget class="QToolButton" name="cloneOriginalArtist">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy value to other selected files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Copy value to selected files</string>
      </property>
      <property name="text">
       <string/>
