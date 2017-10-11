@@ -10,11 +10,17 @@ INCLUDEPATH += src
 MOC_DIR = build
 OBJECTS_DIR = build
 UI_DIR = build
+RCC_DIR = build
 
 unix {
   LIBS += -ltag
   LIBS += -lmusicbrainz5
 }
+
+TRANSLATIONS = \
+  resources/tr/en.ts \
+
+RESOURCES = resources/translations.qrc
 
 FORMS += \
   ui/basictags.ui \
