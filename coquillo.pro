@@ -4,6 +4,8 @@ TARGET = coquillo
 CONFIG += c++11
 QT += network widgets concurrent
 
+QT += multimedia
+
 DEPENDPATH += src
 INCLUDEPATH += src
 
@@ -148,3 +150,7 @@ HEADERS += \
 SOURCES += \
   src/tags/misc/purgedirsaftercommit.cpp \
   src/tags/misc/renamechangedfiles.cpp \
+
+HEADERS += src/player.hpp
+SOURCES += src/player.cpp
+FORMS += ui/player.ui

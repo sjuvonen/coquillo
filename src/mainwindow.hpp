@@ -55,6 +55,7 @@ namespace Coquillo {
             void setupFileBrowser();
             void setupMainView();
             void setupParserWidget();
+            void setupPlayer();
             void setupRenameWidget();
             void setupStatusBar();
             void setupTagEditor();

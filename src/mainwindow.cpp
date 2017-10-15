@@ -22,6 +22,9 @@
 #include "togglewidgetbyaction.hpp"
 #include "ui_mainwindow.h"
 
+#include "player.hpp"
+#include <QDockWidget>
+
 #include <QDebug>
 
 #include <QTimer>
@@ -45,6 +48,7 @@ namespace Coquillo {
         setupFileBrowser();
         setupRenameWidget();
         setupParserWidget();
+        setupPlayer();
 
         restoreSettings();
 
@@ -118,6 +122,8 @@ namespace Coquillo {
 
         connect(_files, SIGNAL(pathUnselected(QString, bool)),
             _model, SLOT(removeDirectory(QString)));
+
+        _ui->dockTools->setTitleBarWidget(new QWidget);
     }
 
     void MainWindow::setupMainView() {
@@ -171,6 +177,13 @@ namespace Coquillo {
         _ui->toolBox->addTab(_tag_parser, tr("Parse tags"));
     }
 
+    void MainWindow::setupPlayer() {
+        connect(_ui->itemView, &QAbstractItemView::doubleClicked, this, [this](const QModelIndex & idx) {
+            const QString path(idx.data(Tags::FilePathRole).toString());
+            _ui->player->play(path);
+        });
+    }
+
     void MainWindow::setupRenameWidget() {
         StringStoreModel * history = new StringStoreModel("history/rename", this);
 
@@ -206,6 +219,7 @@ namespace Coquillo {
     void MainWindow::setupTagEditor() {
         _ui->tagEditor->setModel(_ui->itemView->model());
         _ui->tagEditor->setSelectionModel(_ui->itemView->selectionModel());
+        _ui->dockEditor->setTitleBarWidget(new QWidget);
     }
 
     void MainWindow::setupToolBar() {
@@ -330,7 +344,7 @@ namespace Coquillo {
 
         resize(settings.value("UI/Size").toSize());
         restoreState(settings.value("UI/State").toByteArray());
-        _ui->splitter->restoreState(settings.value("UI/Splitter").toByteArray());
+        // _ui->splitter->restoreState(settings.value("UI/Splitter").toByteArray());
         _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
         _ui->itemView->horizontalHeader()->setSectionsMovable(true);
 
@@ -351,7 +365,7 @@ namespace Coquillo {
         settings.setValue("UI/Sorting", _sort_picker->currentIndex());
         settings.setValue("UI/Size", size());
         settings.setValue("UI/State", saveState());
-        settings.setValue("UI/Splitter", _ui->splitter->saveState());
+        // settings.setValue("UI/Splitter", _ui->splitter->saveState());
         settings.setValue("UI/Header", _ui->itemView->horizontalHeader()->saveState());
         settings.setValue("UI/MenuBar", menuBar()->isVisible());
         settings.setValue("UI/StatusBar", statusBar()->isVisible());
