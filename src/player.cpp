@@ -36,7 +36,7 @@ namespace Coquillo {
 
         connect(_ui->sliderSeek, &QSlider::valueChanged, this, [this](int value) {
             qint64 duration = _player->duration();
-            qint64 position = (float)(_ui->sliderSeek->sliderPosition()) / 100 * duration;
+            qint64 position = (float)(value) / 100 * duration;
 
             _player->setPosition(position);
         });
@@ -50,7 +50,7 @@ namespace Coquillo {
         state ? _player->play() : _player->pause();
     }
 
-    void Player::play(const QString & file) {
+    void Player::playFile(const QString & file) {
         _player->setMedia(QUrl::fromLocalFile(file));
         _player->play();
     }

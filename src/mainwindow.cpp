@@ -180,7 +180,14 @@ namespace Coquillo {
     void MainWindow::setupPlayer() {
         connect(_ui->itemView, &QAbstractItemView::doubleClicked, this, [this](const QModelIndex & idx) {
             const QString path(idx.data(Tags::FilePathRole).toString());
-            _ui->player->play(path);
+            _ui->player->playFile(path);
+            _ui->dockPlayer->show();
+        });
+
+        connect(_ui->dockPlayer, &QDockWidget::visibilityChanged, this, [this](bool state) {
+            if (!state) {
+                _ui->player->play(false);
+            }
         });
     }
 

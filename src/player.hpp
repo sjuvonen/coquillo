@@ -19,7 +19,7 @@ namespace Coquillo {
 
         public slots:
             void play(bool state = true);
-            void play(const QString & file);
+            void playFile(const QString & file);
 
         private:
             Ui::Player * _ui;
