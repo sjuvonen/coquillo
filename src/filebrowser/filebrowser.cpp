@@ -117,7 +117,11 @@ namespace Coquillo {
         uncheckAll();
         const QString p = commonParentDirectory(dirs);
         qDebug() << "cd up" << p;
-        setDirectory(p);
+
+        if (p.indexOf(directory()) != 0) {
+          setDirectory(p);
+        }
+        
         _directories->selectPaths(dirs);
     }
 
@@ -259,7 +263,7 @@ namespace Coquillo {
 
             while (ref.cdUp()) {
                 bool valid = true;
-                
+
                 foreach (const QString path, paths) {
                     if (path.indexOf(ref.path() + '/') != 0) {
                         valid = false;
