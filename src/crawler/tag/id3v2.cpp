@@ -61,6 +61,7 @@ namespace Coquillo {
                         auto frame = new TagLib::ID3v2::TextIdentificationFrame(key.toUtf8().constData());
 
                         tag->removeFrames(key.toUtf8().constData());
+                        tag->addFrame(frame);
 
                         if (total.isValid()) {
                             const auto value = QString("%1/%2").arg(number.toInt()).arg(total.toInt());
