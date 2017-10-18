@@ -50,6 +50,8 @@ namespace Coquillo {
         setupParserWidget();
         setupPlayer();
 
+        setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::West);
+
         restoreSettings();
 
         connect(_store, &Tags::Store::aboutToCommit, this, &MainWindow::preStoreCommit);
@@ -107,12 +109,13 @@ namespace Coquillo {
         StringStoreModel * path_history = new StringStoreModel("history/directories", this);
         path_history->setLimit(100);
 
-        _files = new FileBrowser;
+        // _files = new FileBrowser;
+        _files = _ui->fileBrowser;
         _files->setBookmarkModel(bookmarks);
         _files->setHistoryModel(path_history);
         _files->setDirectory(QSettings().value("DefaultLocation").toString());
         _files->setRecursive(QSettings().value("RecursiveScan").toBool());
-        _ui->toolBox->addTab(_files, tr("Browse"));
+        // _ui->toolBox->addTab(_files, tr("Browse"));
 
         connect(_files, SIGNAL(recursionEnabled(bool)),
             _model, SLOT(setRecursive(bool)));
@@ -123,7 +126,7 @@ namespace Coquillo {
         connect(_files, SIGNAL(pathUnselected(QString, bool)),
             _model, SLOT(removeDirectory(QString)));
 
-        _ui->dockTools->setTitleBarWidget(new QWidget);
+        _ui->dockFiles->setTitleBarWidget(new QWidget);
     }
 
     void MainWindow::setupMainView() {
@@ -170,11 +173,17 @@ namespace Coquillo {
     void MainWindow::setupParserWidget() {
         StringStoreModel * history = new StringStoreModel("history/parser", this);
 
-        _tag_parser = new Processor::ParserWidget(this);
+        // _tag_parser = new Processor::ParserWidget(this);
+        _tag_parser = _ui->parserWidget;
         _tag_parser->setHistoryModel(history);
         _tag_parser->setModel(_ui->itemView->model());
         _tag_parser->setSelectionModel(_ui->itemView->selectionModel());
-        _ui->toolBox->addTab(_tag_parser, tr("Parse tags"));
+        // _ui->toolBox->addTab(_tag_parser, tr("Parse tags"));
+
+        _ui->dockParseTags->setWidget(_tag_parser);
+        _ui->dockParseTags->setTitleBarWidget(new QWidget);
+
+        tabifyDockWidget(_ui->dockFiles, _ui->dockParseTags);
     }
 
     void MainWindow::setupPlayer() {
@@ -194,11 +203,17 @@ namespace Coquillo {
     void MainWindow::setupRenameWidget() {
         StringStoreModel * history = new StringStoreModel("history/rename", this);
 
-        _file_rename = new Processor::RenameWidget(this);
+        // _file_rename = new Processor::RenameWidget(this);
+        _file_rename = _ui->renameWidget;
         _file_rename->setHistoryModel(history);
         _file_rename->setModel(_ui->itemView->model());
         _file_rename->setSelectionModel(_ui->itemView->selectionModel());
-        _ui->toolBox->addTab(_file_rename, tr("Rename files"));
+        // _ui->toolBox->addTab(_file_rename, tr("Rename files"));
+
+        _ui->dockRenameFiles->setWidget(_file_rename);
+        _ui->dockRenameFiles->setTitleBarWidget(new QWidget);
+
+        tabifyDockWidget(_ui->dockFiles, _ui->dockRenameFiles);
     }
 
     void MainWindow::setupStatusBar() {

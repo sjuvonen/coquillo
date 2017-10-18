@@ -25,7 +25,7 @@
      <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>1</number>
     </property>
     <item>
      <widget class="QTableView" name="itemView">
@@ -119,7 +119,7 @@
    <addaction name="separator"/>
    <addaction name="actionOpenTagSearch"/>
   </widget>
-  <widget class="QDockWidget" name="dockTools">
+  <widget class="QDockWidget" name="dockFiles">
    <property name="features">
     <set>QDockWidget::NoDockWidgetFeatures</set>
    </property>
@@ -127,31 +127,12 @@
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Tools</string>
+    <string>Browse</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="topMargin">
-      <number>1</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QTabWidget" name="toolBox">
-       <property name="tabPosition">
-        <enum>QTabWidget::West</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+   <widget class="Coquillo::FileBrowser" name="fileBrowser"/>
   </widget>
   <widget class="QDockWidget" name="dockEditor">
    <property name="features">
@@ -172,7 +153,10 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>1</number>
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
      </property>
      <property name="bottomMargin">
       <number>0</number>
@@ -189,6 +173,12 @@
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>35</width>
+     <height>58</height>
+    </size>
    </property>
    <property name="windowIcon">
     <iconset theme="media-playback-start">
@@ -207,6 +197,27 @@
     <number>2</number>
    </attribute>
    <widget class="Coquillo::Player" name="player"/>
+  </widget>
+  <widget class="QDockWidget" name="dockRenameFiles">
+   <property name="windowTitle">
+    <string>Rename files</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="Coquillo::Processor::RenameWidget" name="renameWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="dockParseTags">
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Parse tags</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="Coquillo::Processor::ParserWidget" name="parserWidget"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -401,6 +412,24 @@
    <class>Coquillo::Player</class>
    <extends>QWidget</extends>
    <header>player.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Coquillo::FileBrowser</class>
+   <extends>QWidget</extends>
+   <header>filebrowser/filebrowser.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Coquillo::Processor::RenameWidget</class>
+   <extends>QWidget</extends>
+   <header>processor/renamewidget.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Coquillo::Processor::ParserWidget</class>
+   <extends>QWidget</extends>
+   <header>processor/parserwidget.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
