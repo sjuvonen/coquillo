@@ -193,12 +193,6 @@ namespace Coquillo {
             _ui->player->playFile(path);
             _ui->dockPlayer->show();
         });
-
-        connect(_ui->dockPlayer, &QDockWidget::visibilityChanged, this, [this](bool state) {
-            if (!state) {
-                _ui->player->play(false);
-            }
-        });
     }
 
     void MainWindow::setupRenameWidget() {
