@@ -78,9 +78,6 @@
        <property name="text">
         <string>#</string>
        </property>
-       <property name="icon">
-        <iconset theme="document-page-setup"/>
-       </property>
        <property name="autoRaise">
         <bool>true</bool>
        </property>
