@@ -79,8 +79,7 @@
         <string>#</string>
        </property>
        <property name="icon">
-        <iconset theme="view-sort-ascending">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="document-page-setup"/>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
