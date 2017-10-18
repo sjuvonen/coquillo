@@ -180,7 +180,7 @@ namespace Coquillo {
         _tag_parser->setSelectionModel(_ui->itemView->selectionModel());
         // _ui->toolBox->addTab(_tag_parser, tr("Parse tags"));
 
-        _ui->dockParseTags->setWidget(_tag_parser);
+        // _ui->dockParseTags->setWidget(_tag_parser);
         _ui->dockParseTags->setTitleBarWidget(new QWidget);
 
         tabifyDockWidget(_ui->dockFiles, _ui->dockParseTags);
@@ -210,7 +210,7 @@ namespace Coquillo {
         _file_rename->setSelectionModel(_ui->itemView->selectionModel());
         // _ui->toolBox->addTab(_file_rename, tr("Rename files"));
 
-        _ui->dockRenameFiles->setWidget(_file_rename);
+        // _ui->dockRenameFiles->setWidget(_file_rename);
         _ui->dockRenameFiles->setTitleBarWidget(new QWidget);
 
         tabifyDockWidget(_ui->dockFiles, _ui->dockRenameFiles);
