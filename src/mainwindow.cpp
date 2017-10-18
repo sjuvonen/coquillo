@@ -50,6 +50,7 @@ namespace Coquillo {
         setupParserWidget();
         setupPlayer();
 
+        _ui->dockFiles->raise();
         setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::West);
 
         restoreSettings();
@@ -126,7 +127,7 @@ namespace Coquillo {
         connect(_files, SIGNAL(pathUnselected(QString, bool)),
             _model, SLOT(removeDirectory(QString)));
 
-        _ui->dockFiles->setTitleBarWidget(new QWidget);
+        // _ui->dockFiles->setTitleBarWidget(new QWidget);
     }
 
     void MainWindow::setupMainView() {
@@ -181,7 +182,7 @@ namespace Coquillo {
         // _ui->toolBox->addTab(_tag_parser, tr("Parse tags"));
 
         // _ui->dockParseTags->setWidget(_tag_parser);
-        _ui->dockParseTags->setTitleBarWidget(new QWidget);
+        // _ui->dockParseTags->setTitleBarWidget(new QWidget);
 
         tabifyDockWidget(_ui->dockFiles, _ui->dockParseTags);
     }
@@ -211,7 +212,7 @@ namespace Coquillo {
         // _ui->toolBox->addTab(_file_rename, tr("Rename files"));
 
         // _ui->dockRenameFiles->setWidget(_file_rename);
-        _ui->dockRenameFiles->setTitleBarWidget(new QWidget);
+        // _ui->dockRenameFiles->setTitleBarWidget(new QWidget);
 
         tabifyDockWidget(_ui->dockFiles, _ui->dockRenameFiles);
     }
@@ -241,7 +242,7 @@ namespace Coquillo {
     void MainWindow::setupTagEditor() {
         _ui->tagEditor->setModel(_ui->itemView->model());
         _ui->tagEditor->setSelectionModel(_ui->itemView->selectionModel());
-        _ui->dockEditor->setTitleBarWidget(new QWidget);
+        // _ui->dockEditor->setTitleBarWidget(new QWidget);
     }
 
     void MainWindow::setupToolBar() {
@@ -372,8 +373,8 @@ namespace Coquillo {
 
         _sort_picker->setCurrentIndex(settings.value("UI/Sorting", 15).toInt());
 
-        menuBar()->setVisible(settings.value("UI/MenuBar").toBool());
-        statusBar()->setVisible(settings.value("UI/StatusBar").toBool());
+        menuBar()->setVisible(settings.value("UI/MenuBar", true).toBool());
+        statusBar()->setVisible(settings.value("UI/StatusBar", true).toBool());
 
         setInterfaceLocked(settings.value("UI/LockToolBars").toBool());
 

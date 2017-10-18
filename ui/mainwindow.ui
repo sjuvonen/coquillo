@@ -120,9 +120,6 @@
    <addaction name="actionOpenTagSearch"/>
   </widget>
   <widget class="QDockWidget" name="dockFiles">
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
@@ -135,9 +132,6 @@
    <widget class="Coquillo::FileBrowser" name="fileBrowser"/>
   </widget>
   <widget class="QDockWidget" name="dockEditor">
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
@@ -188,7 +182,7 @@
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetVerticalTitleBar</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::RightDockWidgetArea</set>
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Player</string>
