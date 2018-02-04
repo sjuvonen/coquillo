@@ -2,8 +2,8 @@
 #include <QSettings>
 
 #include "crawler/types.hpp"
-#include "misc/purgedirsaftercommit.hpp"
-#include "misc/renamechangedfiles.hpp"
+#include "purgedirsaftercommit.hpp"
+#include "renamechangedfiles.hpp"
 #include "tagstore.hpp"
 #include "tagwriter.hpp"
 
@@ -138,9 +138,14 @@ namespace Coquillo {
             Container & item = ref(pos);
 
             if (item.path() != new_path) {
-                qDebug() << "rename" << item.path() << new_path;
+                bool use_safe = QSettings().value("Filter/SafeFilenames", true).toBool();
+                const QString target = use_safe ? RenameChangedFiles::safeFilePath(new_path) : new_path;
+
+                qDebug() << "Rename" << item.path() << "to" << target;
+
                 backup(Container(item));
-                item.setPath(new_path);
+                item.setPath(target);
+
                 return true;
             }
 

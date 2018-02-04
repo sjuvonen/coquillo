@@ -6,7 +6,7 @@
 #include <QTimer>
 
 #include "tags/tagdataroles.hpp"
-#include "paths.hpp"
+#include "utils/filepaths.hpp"
 #include "patterns.hpp"
 #include "renamewidget.hpp"
 #include "ui_renamewidget.h"
@@ -26,7 +26,6 @@ namespace Coquillo {
 
         void RenameWidget::applyPattern(const QString & pattern) {
             const Patterns patterns;
-            const Paths paths;
             QList<QPersistentModelIndex> indices;
 
             /**
@@ -42,7 +41,7 @@ namespace Coquillo {
                 const QString suffix = QFileInfo(values["filename"].toString()).suffix();
                 const QString compiled = patterns.compile(this->pattern(), values);
                 const QString filename = QString("%1.%2").arg(compiled, suffix);
-                const QString path = paths.mergeFileNames(idx.data(Tags::FilePathRole).toString(), filename);
+                const QString path = Utils::FilePaths::mergeFileNames(idx.data(Tags::FilePathRole).toString(), filename);
                 model()->setData(idx, path, Tags::FilePathRole);
             }
         }
@@ -57,7 +56,12 @@ namespace Coquillo {
             const QString suffix = QFileInfo(values["filename"].toString()).suffix();
             const QString text = patterns.compile(pattern(), values);
             const QString name = QString("%1.%2").arg(text, suffix);
-            setPreview(name);
+
+            if (QSettings().value("Filter/SafeFilenames").toBool()) {
+                setPreview(Utils::FilePaths::safeFilePath(name));
+            } else {
+                setPreview(name);
+            }
         }
 
         QVariantHash RenameWidget::sourceValues(const QModelIndex & idx) const {

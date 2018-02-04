@@ -56,7 +56,6 @@ HEADERS += \
   src/processor/basewidget.hpp \
   src/processor/parserwidget.hpp \
   src/processor/patternwidget.hpp \
-  src/processor/paths.hpp \
   src/processor/patterns.hpp \
   src/processor/renamewidget.hpp \
   src/settings/settingsdialog.hpp \
@@ -100,7 +99,6 @@ SOURCES += \
   src/processor/basewidget.cpp \
   src/processor/parserwidget.cpp \
   src/processor/patternwidget.cpp \
-  src/processor/paths.cpp \
   src/processor/patterns.cpp \
   src/processor/renamewidget.cpp \
   src/settings/settingsdialog.cpp \
@@ -144,12 +142,18 @@ SOURCES += \
   src/webtags/selectionfiltermodel.cpp \
 
 HEADERS += \
-  src/tags/misc/purgedirsaftercommit.hpp \
-  src/tags/misc/renamechangedfiles.hpp \
+  src/tags/purgedirsaftercommit.hpp \
+  src/tags/renamechangedfiles.hpp \
 
 SOURCES += \
-  src/tags/misc/purgedirsaftercommit.cpp \
-  src/tags/misc/renamechangedfiles.cpp \
+  src/tags/purgedirsaftercommit.cpp \
+  src/tags/renamechangedfiles.cpp \
+
+HEADERS += \
+  src/utils/filepaths.hpp \
+
+SOURCES += \
+  src/utils/filepaths.cpp \
 
 HEADERS += src/player.hpp
 SOURCES += src/player.cpp

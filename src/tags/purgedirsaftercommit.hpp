@@ -6,6 +6,7 @@
 
 namespace Coquillo {
     namespace Tags {
+
         /**
          * Removes directories that are left empty after moving files around.
          */
