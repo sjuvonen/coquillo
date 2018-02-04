@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QPointer>
+#include <QVariantMap>
 
 class QAbstractItemModel;
 
@@ -23,12 +24,7 @@ namespace Coquillo {
                 TagSearchDialog(QWidget * parent = nullptr);
                 ~TagSearchDialog();
 
-                void setModel(QAbstractItemModel * model);
-                QAbstractItemModel * model() const;
-
-                void setSelectedRows(const QList<QModelIndex> & rows);
-
-                QList<QVariantHash> resultData() const;
+                QVariantMap resultData() const;
                 void search(const QVariantMap & values);
 
             private slots:
@@ -37,9 +33,10 @@ namespace Coquillo {
 
             private:
                 Ui::TagSearchDialog * _ui;
-                QPointer<QAbstractItemModel> _model;
                 VariantHashModel * _results;
                 AlbumDetailsModel * _details;
+
+                QVariantMap _lastResult;
         };
     }
 }

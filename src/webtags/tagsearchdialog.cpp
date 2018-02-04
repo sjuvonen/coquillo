@@ -63,21 +63,8 @@ namespace Coquillo {
             delete _ui;
         }
 
-        QList<QVariantHash> TagSearchDialog::resultData() const {
-            return QList<QVariantHash>();
-        }
-
-        void TagSearchDialog::setModel(QAbstractItemModel * model) {
-            _model = model;
-            qobject_cast<SelectionFilterModel*>(_ui->listSelectedFiles->model())->setSourceModel(model);
-        }
-
-        QAbstractItemModel * TagSearchDialog::model() const {
-            return _model;
-        }
-
-        void TagSearchDialog::setSelectedRows(const QList<QModelIndex> & rows) {
-            qobject_cast<SelectionFilterModel*>(_ui->listSelectedFiles->model())->setSelection(rows);
+        QVariantMap TagSearchDialog::resultData() const {
+            return _lastResult;
         }
 
         void TagSearchDialog::on_buttonSearch_clicked() {
@@ -117,8 +104,9 @@ namespace Coquillo {
 
                 connect(job, &Searcher::FetchResultJob::finished, this, [=] {
                     _ui->progressBar->hide();
+                    _lastResult = job->result();
 
-                    auto index = _details->appendResult(job->result());
+                    auto index = _details->appendResult(_lastResult);
                     _ui->listResultView->setRootIndex(index);
                     _ui->listResultViewAlt->setRootIndex(index);
                     job->deleteLater();

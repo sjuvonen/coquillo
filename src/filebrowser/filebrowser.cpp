@@ -1,5 +1,5 @@
-
 #include <QAbstractItemModel>
+#include <QCompleter>
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileSystemModel>
@@ -40,6 +40,7 @@ namespace Coquillo {
         _ui->bookmarks->hide();
         _ui->bookmarks->hide();
         _ui->browser->viewport()->installEventFilter(this);
+        _ui->directory->completer()->setCaseSensitivity(Qt::CaseSensitive);
     }
 
     void FileBrowser::keyReleaseEvent(QKeyEvent * event) {
@@ -121,7 +122,7 @@ namespace Coquillo {
         if (p.indexOf(directory()) != 0) {
           setDirectory(p);
         }
-        
+
         _directories->selectPaths(dirs);
     }
 
@@ -158,6 +159,7 @@ namespace Coquillo {
     }
 
     void FileBrowser::addToHistory(const QString & directory) {
+        qDebug() << "ADD";
         _ui->directory->insertItem(0, directory);
     }
 

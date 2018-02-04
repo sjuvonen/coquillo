@@ -51,10 +51,9 @@ namespace Coquillo {
                 return;
             }
 
-            const Patterns patterns;
             const QVariantHash values = sourceValues(currentIndex());
             const QString suffix = QFileInfo(values["filename"].toString()).suffix();
-            const QString text = patterns.compile(pattern(), values);
+            const QString text = Patterns().compile(pattern(), values);
             const QString name = QString("%1.%2").arg(text, suffix);
 
             if (QSettings().value("Filter/SafeFilenames").toBool()) {
