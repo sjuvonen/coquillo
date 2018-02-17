@@ -1,8 +1,6 @@
 
-#include "albumdetailsmodel.hpp"
-
-#include <QDebug>
 #include <QThreadPool>
+#include "albumdetailsmodel.hpp"
 
 namespace Coquillo {
     namespace WebTags {
@@ -46,7 +44,6 @@ namespace Coquillo {
             const QString disc_id = QString("%1::%2").arg(album_id).arg(disc_nr);
             const QModelIndexList matches = match(index(0, 0), DiscIdRole, disc_id);
 
-            qDebug() << "MATCH" << disc_id << matches;
             return matches.value(0);
         }
 
@@ -60,6 +57,21 @@ namespace Coquillo {
                 return section + 1;
             }
             return QStandardItemModel::headerData(section, orientation, role);
+        }
+
+        void AlbumDetailsModel::setItemsCheckable(const QModelIndex & parent, bool state) {
+            auto root = itemFromIndex(parent);
+
+            if (root) {
+                for (int i = 0; i < root->rowCount(); i++) {
+                    root->child(i)->setCheckable(state);
+
+                    if (!state) {
+                        // Clear CheckState so that the view will hide checkboxes.
+                        root->child(i)->setData(QVariant(), Qt::CheckStateRole);
+                    }
+                }
+            }
         }
     }
 }

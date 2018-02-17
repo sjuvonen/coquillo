@@ -2,10 +2,12 @@
 #define COQUILLO_WEBTAGS_TAGSEARCHDIALOG_H
 
 #include <QDialog>
+#include <QModelIndex>
 #include <QPointer>
 #include <QVariantMap>
 
 class QAbstractItemModel;
+class QItemSelectionModel;
 
 namespace Ui {
     class TagSearchDialog;
@@ -21,7 +23,7 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
-                TagSearchDialog(QWidget * parent = nullptr);
+                TagSearchDialog(QItemSelectionModel * selection, QWidget * parent = nullptr);
                 ~TagSearchDialog();
 
                 QVariantMap resultData() const;

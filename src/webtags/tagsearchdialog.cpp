@@ -1,10 +1,11 @@
 #include <QAbstractItemModel>
+#include <QPersistentModelIndex>
 #include <QThreadPool>
 
 #include "searcher/fetchresultjob.hpp"
 #include "searcher/searchjob.hpp"
 #include "albumdetailsmodel.hpp"
-#include "selectionfiltermodel.hpp"
+#include "selectionproxymodel.hpp"
 #include "tagsearchdialog.hpp"
 #include "varianthashmodel.hpp"
 #include "ui_tagsearchdialog.h"
@@ -14,12 +15,10 @@
 
 namespace Coquillo {
     namespace WebTags {
-        TagSearchDialog::TagSearchDialog(QWidget * parent)
+        TagSearchDialog::TagSearchDialog(QItemSelectionModel * selection, QWidget * parent)
         : QDialog(parent) {
             _ui = new Ui::TagSearchDialog;
             _ui->setupUi(this);
-
-            _ui->tabs->removeTab(1);
 
             _ui->progressBar->hide();
             _ui->textAlbum->setFocus();
@@ -48,15 +47,73 @@ namespace Coquillo {
 
             connect(_ui->listSearchResults->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), SLOT(showSearchResult(QModelIndex)));
 
-            _ui->listResultViewAlt->setModel(_details);
-            _ui->listResultViewAlt->setRootIndex(QModelIndex());
-            _ui->listResultViewAlt->horizontalHeader()->hideSection(2);
-            _ui->listResultViewAlt->horizontalHeader()->hideSection(3);
-            _ui->listResultViewAlt->horizontalHeader()->hideSection(4);
-            _ui->listResultViewAlt->horizontalHeader()->hideSection(5);
-            _ui->listResultViewAlt->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+            _ui->listAlbumDetails->setModel(_details);
+            _ui->listAlbumDetails->setRootIndex(QModelIndex());
+            _ui->listAlbumDetails->horizontalHeader()->hideSection(2);
+            _ui->listAlbumDetails->horizontalHeader()->hideSection(3);
+            _ui->listAlbumDetails->horizontalHeader()->hideSection(4);
+            _ui->listAlbumDetails->horizontalHeader()->hideSection(5);
+            _ui->listAlbumDetails->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
-            _ui->listSelectedFiles->setModel(new SelectionFilterModel);
+            _ui->listSelectedFiles->setModel(new SelectionProxyModel(selection));
+
+            _ui->buttonBox->setStandardButtons(QDialogButtonBox::Cancel);
+            _ui->buttonBack->setDisabled(true);
+
+            connect(_ui->buttonBack, &QPushButton::clicked, [this]{
+                _ui->buttonBox->setStandardButtons(QDialogButtonBox::Cancel);
+                _ui->tabs->setCurrentIndex(0);
+                _ui->buttonBack->setDisabled(true);
+                _ui->buttonNext->setDisabled(false);
+                _details->setItemsCheckable(_ui->listResultView->rootIndex(), false);
+            });
+
+            connect(_ui->buttonNext, &QPushButton::clicked, [this]{
+                _ui->buttonBox->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
+                _ui->tabs->setCurrentIndex(1);
+                _ui->buttonBack->setDisabled(false);
+                _ui->buttonNext->setDisabled(true);
+                _details->setItemsCheckable(_ui->listResultView->rootIndex(), true);
+            });
+
+            connect(_ui->buttonMoveUp, &QPushButton::clicked, this, [=]{
+                auto view = _ui->listSelectedFiles;
+                auto header = view->verticalHeader();
+                int mapped = header->visualIndex(view->currentIndex().row());
+                header->moveSection(mapped, mapped - 1);
+            });
+
+            connect(_ui->buttonMoveDown, &QPushButton::clicked, this, [=]{
+                auto view = _ui->listSelectedFiles;
+                auto header = view->verticalHeader();
+                int mapped = header->visualIndex(view->currentIndex().row());
+                header->moveSection(mapped, mapped + 1);
+            });
+
+            connect(this, &QDialog::accepted, this, [=]{
+                auto result_model = _ui->listAlbumDetails->model();
+                auto result_root = _ui->listAlbumDetails->rootIndex();
+
+                const auto result_rows = result_model->match(result_root.child(0, 0), Qt::CheckStateRole, QVariant(Qt::Checked), -1);
+
+                auto source_model = _ui->listSelectedFiles->model();
+                auto source_header = _ui->listSelectedFiles->verticalHeader();
+                QList<QPersistentModelIndex> source_rows;
+
+                for (int i = 0; i < source_header->count(); i++) {
+                    int row = source_header->logicalIndex(i);
+                    source_rows << source_model->index(row, 15);
+                }
+
+                for (int i = 0; i < result_rows.size(); i++) {
+                    if (i < source_rows.size()) {
+                        const auto idx = result_rows[i];
+                        const auto src_idx = source_rows[i];
+
+                        // FIXME: Implement setting data!
+                    }
+                }
+            });
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -91,6 +148,8 @@ namespace Coquillo {
         }
 
         void TagSearchDialog::showSearchResult(const QModelIndex & idx) {
+            _ui->buttonNext->setEnabled(true);
+
             const QString disc_id = idx.sibling(idx.row(), 3).data().toString();
             int disc_nr = idx.sibling(idx.row(), 2).data().toInt();
             const QModelIndex index = _details->findResult(disc_id, disc_nr);
@@ -108,7 +167,7 @@ namespace Coquillo {
 
                     auto index = _details->appendResult(_lastResult);
                     _ui->listResultView->setRootIndex(index);
-                    _ui->listResultViewAlt->setRootIndex(index);
+                    _ui->listAlbumDetails->setRootIndex(index);
                     job->deleteLater();
                 });
 

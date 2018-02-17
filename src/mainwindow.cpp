@@ -280,7 +280,7 @@ namespace Coquillo {
 
     void MainWindow::openTagSearchDialog() {
         if (_ui->actionOpenTagSearch->isChecked()) {
-            auto dialog = new WebTags::TagSearchDialog(this);
+            auto dialog = new WebTags::TagSearchDialog(_ui->itemView->selectionModel(), this);
             // dialog->setModel(_ui->itemView->model());
             // dialog->setSelectedRows(_ui->itemView->selectionModel()->selectedRows(Tags::PathField));
 
@@ -288,11 +288,6 @@ namespace Coquillo {
             dialog->show();
 
             connect(dialog, &QDialog::finished, dialog, [=](int result) {
-                if (result == QDialog::Accepted) {
-                    auto data = dialog->resultData();
-
-                    qDebug() << data;
-                }
                 dialog->deleteLater();
                 _ui->actionOpenTagSearch->setChecked(false);
             });
@@ -361,7 +356,6 @@ namespace Coquillo {
 
         resize(settings.value("UI/Size").toSize());
         restoreState(settings.value("UI/State").toByteArray());
-        // _ui->splitter->restoreState(settings.value("UI/Splitter").toByteArray());
         _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
         _ui->itemView->horizontalHeader()->setSectionsMovable(true);
 

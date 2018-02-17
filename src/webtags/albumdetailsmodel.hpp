@@ -18,6 +18,8 @@ namespace Coquillo {
 
                 QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+                void setItemsCheckable(const QModelIndex & parent, bool state);
+
         };
     }
 }

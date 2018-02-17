@@ -42,6 +42,7 @@ HEADERS += \
   src/itemmodifiedproxy.hpp \
   src/mainwindow.hpp \
   src/progresslistener.hpp \
+  src/selectionproxymodel.hpp \
   src/sortpicker.hpp \
   src/stringstoremodel.hpp \
   src/togglewidgetbyaction.hpp \
@@ -87,6 +88,7 @@ SOURCES += \
   src/main.cpp \
   src/mainwindow.cpp \
   src/progresslistener.cpp \
+  src/selectionproxymodel.cpp \
   src/sortpicker.cpp \
   src/stringstoremodel.cpp \
   src/togglewidgetbyaction.cpp \
@@ -135,11 +137,9 @@ SOURCES += \
 
 HEADERS += \
   src/varianthashmodel.hpp \
-  src/webtags/selectionfiltermodel.hpp \
 
 SOURCES += \
   src/varianthashmodel.cpp \
-  src/webtags/selectionfiltermodel.cpp \
 
 HEADERS += \
   src/tags/purgedirsaftercommit.hpp \
