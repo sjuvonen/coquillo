@@ -11,7 +11,6 @@
 #include "varianthashmodel.hpp"
 #include "ui_tagsearchdialog.h"
 
-#include <QDebug>
 #include <QTimer>
 
 namespace Coquillo {
@@ -112,15 +111,8 @@ namespace Coquillo {
                     if (i < source_rows.size()) {
                         const auto idx = result_rows[i];
                         const auto src_idx = source_rows[i];
-                        const auto result_data = tracks[idx.row()];
-
-                        QVariantMap data({
-                            {"x-musicbrainz-id", _lastResult["x-musicbrainz-id"]}
-                        });
-
-                        for (auto i = result_data.constBegin(); i != result_data.constEnd(); i++) {
-                            data[i.key()] = *i;
-                        }
+                        auto data = tracks[idx.row()];
+                        data["x-musicbrainz-id"] = _lastResult["x-musicbrainz-id"];
 
                         source_model->setData(src_idx, data, Tags::ContainerRole);
                     }

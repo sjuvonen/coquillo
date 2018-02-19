@@ -113,7 +113,7 @@ namespace Coquillo {
             #endif
 
             void XiphComment::write(TagLib::Ogg::XiphComment * tag, const TagData & values) {
-                const QHash<QString, QString> common_map = {
+                const QMap<QString, QString> common_map = {
                     {"album", "ALBUM"},
                     {"artist", "ARTIST"},
                     {"comment", "DESCRIPTION"},

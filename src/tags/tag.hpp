@@ -7,7 +7,7 @@ namespace Coquillo {
     namespace Tags {
         class Tag {
             public:
-                typedef QHash<QString, QString> Mapping;
+                typedef QMap<QString, QString> Mapping;
 
                 Tag() { }
                 Tag(const QString & type, const Mapping & mapping, const QVariantMap & values);

@@ -16,7 +16,7 @@ namespace Coquillo {
     namespace Crawler {
         namespace Tag {
             void Id3v2::write(TagLib::ID3v2::Tag * tag, const TagData & values) {
-                const QHash<QString, QString> common_map = {
+                const QMap<QString, QString> common_map = {
                     {"album", "TALB"},
                     {"artist", "TPE1"},
                     {"comment", "COMM"},
