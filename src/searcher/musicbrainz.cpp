@@ -36,7 +36,7 @@ namespace Coquillo {
             if (medium) {
                 for (int i = 0; i < medium->TrackList()->NumItems(); i++) {
                     MusicBrainz5::CTrack * track = medium->TrackList()->Item(i);
-                    QVariantMap row = {
+                    const QVariantMap row = {
                         {"number", track->Position()},
                         {"title", QString::fromStdString(track->Recording()->Title())},
                         {"artist", parseNameCredits(track->Recording()->ArtistCredit()->NameCreditList())},
@@ -53,6 +53,7 @@ namespace Coquillo {
                 {"disc", disc},
                 {"source", this->id()},
                 {"id", id},
+                {"x-musicbrainz-id", id},
             };
 
             return album;

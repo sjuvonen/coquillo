@@ -194,6 +194,10 @@ namespace Coquillo {
                 bool status = _store->rename(idx.row(), value.toString());
                 rowChanged(idx);
                 return status;
+            } else if (role == ContainerRole) {
+                qDebug() << value.value<QVariantHash>();
+                _store->setValues(idx.row(), value.value<QVariantHash>());
+
             } else {
                 qWarning() << "Model does not support setting data for role" << role;
             }

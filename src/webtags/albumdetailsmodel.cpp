@@ -1,4 +1,5 @@
 
+#include <QDebug>
 #include <QThreadPool>
 #include "albumdetailsmodel.hpp"
 
@@ -12,6 +13,7 @@ namespace Coquillo {
         }
 
         QModelIndex AlbumDetailsModel::appendResult(const QVariantMap & result) {
+            qDebug() << "DATA" << result;
             const QList<QVariantMap> tracks = result["tracks"].value<QList<QVariantMap> >();
             const QList<QStandardItem*> items = {
                 new QStandardItem(result["id"].toString()),

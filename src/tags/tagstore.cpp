@@ -177,6 +177,33 @@ namespace Coquillo {
             return changed;
         }
 
+        bool Store::setValues(int pos, const QVariantHash & values) {
+            Container & item = ref(pos);
+            bool changed = false;
+
+            for (auto i = values.constBegin(); i != values.constEnd(); i++) {
+                foreach (const QString key, item.tagNames()) {
+                    /*
+                     * NOTE: Using a const copy here to prevent the backup also changing upon writing
+                     * into the field.
+                     */
+                    const Tag tag = item.tag(key);
+
+                    if (!tag.equals(i.key(), *i)) {
+                        const Container copy(item);
+                        // qDebug() << "change" << tag.id() << field << tag.value(field) << value;
+
+                        if (item.tag(key).insert(i.key(), *i)) {
+                            backup(copy);
+                            changed = true;
+                        }
+                    }
+                }
+            }
+
+            return changed;
+        }
+
         bool Store::setImages(int pos, const QList<Image> & images) {
             Container & item = ref(pos);
 

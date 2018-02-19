@@ -4,6 +4,7 @@
 
 #include "searcher/fetchresultjob.hpp"
 #include "searcher/searchjob.hpp"
+#include "tags/tagdataroles.hpp"
 #include "albumdetailsmodel.hpp"
 #include "selectionproxymodel.hpp"
 #include "tagsearchdialog.hpp"
@@ -105,12 +106,23 @@ namespace Coquillo {
                     source_rows << source_model->index(row, 15);
                 }
 
+                const QList<QVariantMap> tracks = _lastResult["tracks"].value<QList<QVariantMap> >();
+
                 for (int i = 0; i < result_rows.size(); i++) {
                     if (i < source_rows.size()) {
                         const auto idx = result_rows[i];
                         const auto src_idx = source_rows[i];
+                        const auto result_data = tracks[idx.row()];
 
-                        // FIXME: Implement setting data!
+                        QVariantHash data({
+                            {"x-musicbrainz-id", _lastResult["x-musicbrainz-id"]}
+                        });
+
+                        for (auto i = result_data.constBegin(); i != result_data.constEnd(); i++) {
+                            data[i.key()] = *i;
+                        }
+
+                        source_model->setData(src_idx, data, Tags::ContainerRole);
                     }
                 }
             });

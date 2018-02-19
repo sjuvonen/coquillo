@@ -28,6 +28,7 @@ namespace Coquillo {
 
                 bool rename(int pos, const QString & new_path);
                 bool setValue(int pos, const QString & field, const QVariant & value);
+                bool setValues(int pos, const QVariantHash & values);
                 bool setImages(int pos, const QList<Image> & images);
 
                 const QList<Container> items() const;
