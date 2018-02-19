@@ -87,6 +87,12 @@ namespace Coquillo {
                 header->moveSection(mapped, mapped + 1);
             });
 
+            connect(_details, &QStandardItemModel::itemChanged, this, [=]{
+                const auto checked = this->checkedResultRows();
+                bool valid = selection->selectedRows().size() == checked.size();
+                _ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
+            });
+
             connect(this, &QDialog::accepted, this, [=]{
                 const auto result_rows = this->checkedResultRows();
 
@@ -107,12 +113,6 @@ namespace Coquillo {
                         // FIXME: Implement setting data!
                     }
                 }
-            });
-
-            connect(_details, &QStandardItemModel::itemChanged, this, [=]{
-                const auto checked = this->checkedResultRows();
-                bool valid = selection->selectedRows().size() == checked.size();
-                _ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
             });
 
             auto header = _ui->listSelectedFiles->horizontalHeader();

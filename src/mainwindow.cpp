@@ -387,10 +387,10 @@ namespace Coquillo {
     void MainWindow::applyDefaultSettings() {
         auto * header = _ui->itemView->horizontalHeader();
 
-        header->setSortIndicator(Tags::TagsModel::PathField, Qt::AscendingOrder);
+        header->setSortIndicator(Tags::PathField, Qt::AscendingOrder);
 
         for (int i = 0; i < header->count(); i++) {
-            if (i != 0 && i != Tags::TagsModel::PathField) {
+            if (i != 0 && i != Tags::PathField) {
                 header->hideSection(i);
             }
         }

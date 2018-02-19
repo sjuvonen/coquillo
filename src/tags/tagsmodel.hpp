@@ -17,16 +17,6 @@ namespace Coquillo {
             Q_OBJECT
 
             public:
-                /**
-                 * @deprecated
-                 */
-                enum Fields {
-                    FeedbackField = 0,
-                    NumberField = 7,
-                    PathField = 15,
-                    ImageField = 16
-                };
-
                 TagsModel(Store * store, ProgressListener * progress, QObject * parent = 0);
 
                 inline QStringList directories() const { return _directories; }

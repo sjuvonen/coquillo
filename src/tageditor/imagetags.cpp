@@ -91,7 +91,7 @@ namespace Coquillo {
         void ImageTags::setEditorIndex(const QModelIndex & idx) {
             EditorPageBase::setEditorIndex(idx);
 
-            const auto image_idx = idx.sibling(idx.row(), Tags::TagsModel::ImageField);
+            const auto image_idx = idx.sibling(idx.row(), Tags::ImageField);
             _images->setSourceIndex(image_idx);
             _ui->listImages->setCurrentIndex(_images->index(0, 0));
 
@@ -100,7 +100,7 @@ namespace Coquillo {
             _ui->buttonDelete->setEnabled(image_idx.isValid());
 
             if (idx.isValid()) {
-                const auto path = idx.sibling(idx.row(), Tags::TagsModel::PathField).data(Qt::EditRole).toString();
+                const auto path = idx.sibling(idx.row(), Tags::PathField).data(Qt::EditRole).toString();
                 _last_dir = QFileInfo(path).absolutePath();
             } else {
                 _last_dir.clear();
