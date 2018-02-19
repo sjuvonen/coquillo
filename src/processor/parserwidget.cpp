@@ -23,7 +23,7 @@ namespace Coquillo {
         void ParserWidget::applyPattern(const QString & pattern) {
             Q_UNUSED(pattern)
             const QString path = filePathSliceForPattern(pattern);
-            const QVariantHash tags = Patterns().extract(pattern, path);
+            const QVariantMap tags = Patterns().extract(pattern, path);
 
             foreach (const QModelIndex & idx, selectionModel()->selectedRows()) {
                 model()->setData(idx, tags, Tags::ValuesMapRole);
@@ -34,7 +34,7 @@ namespace Coquillo {
         void ParserWidget::updatePreview() {
             const QString pattern = this->pattern();
             const QString path = filePathSliceForPattern(pattern);
-            const QVariantHash tags = Patterns().extract(pattern, path);
+            const QVariantMap tags = Patterns().extract(pattern, path);
             QStringList parts;
 
             foreach (QString key, tags.keys()) {

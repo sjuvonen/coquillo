@@ -2,7 +2,7 @@
 #define COQUILLO_CRAWLER_CRAWLERMANAGER_H
 
 #include <QObject>
-#include <QVariantHash>
+#include <QVariantMap>
 
 namespace TagLib {
     class File;
@@ -15,22 +15,22 @@ namespace Coquillo {
 
             public:
                 ResultStash(int batch_size = 10);
-                void add(const QVariantHash & result);
-                void add(const QList<QVariantHash> & results);
+                void add(const QVariantMap & result);
+                void add(const QList<QVariantMap> & results);
 
                 void setBatchSize(int batch_size);
 
-                ResultStash & operator<<(const QVariantHash & result);
+                ResultStash & operator<<(const QVariantMap & result);
 
             public slots:
                 void flush();
 
             signals:
-                void results(const QList<QVariantHash> & results);
+                void results(const QList<QVariantMap> & results);
 
             private:
                 int _limit;
-                QList<QVariantHash> _results;
+                QList<QVariantMap> _results;
         };
 
         class Crawler : public QObject {
@@ -47,7 +47,7 @@ namespace Coquillo {
                 void finished();
                 void progress(int value);
                 void rangeChanged(int, int);
-                void results(const QList<QVariantHash> & results);
+                void results(const QList<QVariantMap> & results);
                 void started();
 
             public slots:
@@ -72,8 +72,8 @@ namespace Coquillo {
 
         class FileReader {
             public:
-                // QList<QVariantHash> readFiles(const QStringList & paths, bool with_images = false) const;
-                QVariantHash read(const QString & path, bool with_images = false) const;
+                // QList<QVariantMap> readFiles(const QStringList & paths, bool with_images = false) const;
+                QVariantMap read(const QString & path, bool with_images = false) const;
 
             private:
                 bool isFlacFile(const TagLib::File * file) const;

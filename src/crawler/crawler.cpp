@@ -28,13 +28,13 @@ namespace Coquillo {
             return DirectoryReader().read(paths, recursive);
         }
 
-        QVariantHash process_file(const QString & path) {
+        QVariantMap process_file(const QString & path) {
             return FileReader().read(path);
         }
 
         Crawler::Crawler(QObject * parent)
         : QObject(parent), _recursive(false) {
-            connect(&_stash, SIGNAL(results(const QList<QVariantHash> &)), SIGNAL(results(const QList<QVariantHash> &)));
+            connect(&_stash, SIGNAL(results(const QList<QVariantMap> &)), SIGNAL(results(const QList<QVariantMap> &)));
 
             connect(this, SIGNAL(finished()), &_stash, SLOT(flush()));
         }
@@ -53,7 +53,7 @@ namespace Coquillo {
             using namespace std::placeholders;
 
             auto dirs_watcher = new QFutureWatcher<QStringList>(this);
-            auto files_watcher = new QFutureWatcher<QVariantHash>(this);
+            auto files_watcher = new QFutureWatcher<QVariantMap>(this);
 
             connect(this, SIGNAL(aborted()), dirs_watcher, SLOT(cancel()));
             connect(this, SIGNAL(aborted()), files_watcher, SLOT(cancel()));
@@ -81,8 +81,8 @@ namespace Coquillo {
                 dirs_watcher->deleteLater();
             });
 
-            connect(files_watcher, &QFutureWatcher<QVariantHash>::resultsReadyAt, [this, files_watcher](int a, int b) {
-                QList<QVariantHash> items;
+            connect(files_watcher, &QFutureWatcher<QVariantMap>::resultsReadyAt, [this, files_watcher](int a, int b) {
+                QList<QVariantMap> items;
                 items.reserve(b - a + 1);
 
                 for (; a < b; a++) {
@@ -131,9 +131,9 @@ namespace Coquillo {
             return types;
         }
 
-        QVariantHash FileReader::read(const QString & path, bool with_images) const {
-            QVariantHash data = {{"path", path}};
-            QVariantHash tags;
+        QVariantMap FileReader::read(const QString & path, bool with_images) const {
+            QVariantMap data = {{"path", path}};
+            QVariantMap tags;
             const TagLib::FileRef ref(path.toUtf8().constData());
 
             if (isFlacFile(ref.file())) {
@@ -257,7 +257,7 @@ namespace Coquillo {
                  * To avoid this issue, simply copy whatever value has been read from other tags.
                  */
 
-                QVariantHash id3v1 = tags["id3v1"].toHash();
+                QVariantMap id3v1 = tags["id3v1"].toMap();
                 id3v1["genre"] = QString::fromUtf8((ref.tag()->genre()).toCString(true));
                 tags["id3v1"] = id3v1;
             }
@@ -283,7 +283,7 @@ namespace Coquillo {
             setBatchSize(batch_size);
         }
 
-        void ResultStash::add(const QList<QVariantHash> & results) {
+        void ResultStash::add(const QList<QVariantMap> & results) {
             _results << results;
 
             if (_results.size() >= _limit) {
@@ -291,7 +291,7 @@ namespace Coquillo {
             }
         }
 
-        void ResultStash::add(const QVariantHash & result) {
+        void ResultStash::add(const QVariantMap & result) {
             _results << result;
 
             if (_results.size() >= _limit) {
@@ -311,7 +311,7 @@ namespace Coquillo {
             _results.reserve(_limit + 5);
         }
 
-        ResultStash & ResultStash::operator<<(const QVariantHash & result) {
+        ResultStash & ResultStash::operator<<(const QVariantMap & result) {
             add(result);
             return *this;
         }

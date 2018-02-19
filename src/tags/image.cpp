@@ -8,7 +8,7 @@
 
 namespace Coquillo {
     namespace Tags {
-        Image Image::fromValues(const QVariantHash & values) {
+        Image Image::fromValues(const QVariantMap & values) {
             Image image(values["data"].value<QImage>(), values.value("mime").toString(), values["id"].toUInt());
             image.setDescription(values.value("description").toString());
             // image.setMimeType(values.value("mime").toString());

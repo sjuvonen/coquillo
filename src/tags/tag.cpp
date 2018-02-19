@@ -5,7 +5,7 @@
 
 namespace Coquillo {
     namespace Tags {
-        Tag::Tag(const QString & type, const Mapping & mapping, const QVariantHash & values)
+        Tag::Tag(const QString & type, const Mapping & mapping, const QVariantMap & values)
         : _id(type), _mapping(mapping), _raw(values) {
 
         }

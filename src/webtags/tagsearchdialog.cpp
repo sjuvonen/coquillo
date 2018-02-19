@@ -114,7 +114,7 @@ namespace Coquillo {
                         const auto src_idx = source_rows[i];
                         const auto result_data = tracks[idx.row()];
 
-                        QVariantHash data({
+                        QVariantMap data({
                             {"x-musicbrainz-id", _lastResult["x-musicbrainz-id"]}
                         });
 

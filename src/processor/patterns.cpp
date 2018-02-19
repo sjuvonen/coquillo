@@ -31,7 +31,7 @@ namespace Coquillo {
 
         }
 
-        QString Patterns::compile(const QString & pattern, const QVariantHash & data) const {
+        QString Patterns::compile(const QString & pattern, const QVariantMap & data) const {
             QString result(pattern);
             const QRegularExpression dir_separator("[\\\\/]");
 
@@ -45,12 +45,12 @@ namespace Coquillo {
             return result;
         }
 
-        QVariantHash Patterns::extract(const QString & pattern, const QString & string) const {
+        QVariantMap Patterns::extract(const QString & pattern, const QString & string) const {
             const QString rx_pattern = patternToRegex(pattern);
             const QRegularExpression rx(rx_pattern, QRegularExpression::CaseInsensitiveOption);
             const QStringList matches = rx.match(string).capturedTexts();
             const QStringList symbols = extractSymbols(pattern);
-            QVariantHash values;
+            QVariantMap values;
 
             for (int i = 1; i < matches.count(); i++) {
                 const QString key = _symbols.key(symbols[i-1]);

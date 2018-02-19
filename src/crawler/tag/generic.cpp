@@ -31,7 +31,7 @@ namespace Coquillo {
                 return data;
             }
 
-            QVariantHash Generic::read(const TagLib::Tag * tag) const {
+            QVariantMap Generic::read(const TagLib::Tag * tag) const {
                 return {
                     {"album", T2QString(tag->album())},
                     {"artist", T2QString(tag->artist())},
@@ -43,7 +43,7 @@ namespace Coquillo {
                 };
             }
 
-            void Generic::write(TagLib::Tag * tag, const QVariantHash & values) {
+            void Generic::write(TagLib::Tag * tag, const QVariantMap & values) {
                 TagLib::PropertyMap properties;
 
                 for (auto i = values.constBegin(); i != values.constEnd(); i++) {

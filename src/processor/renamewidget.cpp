@@ -37,7 +37,7 @@ namespace Coquillo {
             }
 
             foreach (const QPersistentModelIndex idx, indices) {
-                const QVariantHash values = sourceValues(idx);
+                const QVariantMap values = sourceValues(idx);
                 const QString suffix = QFileInfo(values["filename"].toString()).suffix();
                 const QString compiled = patterns.compile(this->pattern(), values);
                 const QString filename = QString("%1.%2").arg(compiled, suffix);
@@ -51,7 +51,7 @@ namespace Coquillo {
                 return;
             }
 
-            const QVariantHash values = sourceValues(currentIndex());
+            const QVariantMap values = sourceValues(currentIndex());
             const QString suffix = QFileInfo(values["filename"].toString()).suffix();
             const QString text = Patterns().compile(pattern(), values);
             const QString name = QString("%1.%2").arg(text, suffix);
@@ -63,9 +63,9 @@ namespace Coquillo {
             }
         }
 
-        QVariantHash RenameWidget::sourceValues(const QModelIndex & idx) const {
+        QVariantMap RenameWidget::sourceValues(const QModelIndex & idx) const {
             int pad_width = QSettings().value("NumberPadWidth").toInt();
-            QVariantHash values = idx.data(Tags::ValuesMapRole).toHash();
+            QVariantMap values = idx.data(Tags::ValuesMapRole).toMap();
             values["padded_disc"] = values["disc"].toString().rightJustified(pad_width, '0');
             values["padded_number"] = values["number"].toString().rightJustified(pad_width, '0');
             values["padded_year"] = values["year"].toString().rightJustified(pad_width, '0');

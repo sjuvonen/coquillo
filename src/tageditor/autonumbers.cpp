@@ -206,7 +206,7 @@ namespace Coquillo {
                 QMap<int, int> numbers;
 
                 for (int i = 0; i < items.size(); i++) {
-                    const QVariantHash values = items[i].data(TagDataRoles::ValuesMapRole).toHash();
+                    const QVariantMap values = items[i].data(TagDataRoles::ValuesMapRole).toMap();
 
                     if (values.contains(field)) {
                         int number = values[field].toInt();

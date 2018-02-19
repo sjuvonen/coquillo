@@ -60,16 +60,16 @@ namespace Coquillo {
             connect(this, &Store::aboutToCommit, this, &Store::preCommit);
         }
 
-        void Store::add(const QVariantHash & file) {
+        void Store::add(const QVariantMap & file) {
             const QString path = file.value("path").toString();
             const QString primary = file.value("primary").toString();
-            const QVariantHash taghash = file.value("tags").toHash();
+            const QVariantMap taghash = file.value("tags").toMap();
             Container item(path);
             item.setPrimaryTag(primary);
 
             foreach (const QString type, taghash.keys()) {
                 const Tag::Mapping mapping = _mappings.contains(type) ? _mappings.value(type) : _fallback;
-                const QVariantHash values = taghash[type].toHash();
+                const QVariantMap values = taghash[type].toMap();
                 const Tag tag(type, mapping, values);
                 item.addTag(tag);
             }
@@ -77,14 +77,14 @@ namespace Coquillo {
             item.setImageCount(file.value("image_count").toInt());
 
             foreach (const QVariant data, file.value("images").value<ImageDataList>()) {
-                // item.addImage(Image::fromValues(data.toHash()));
+                // item.addImage(Image::fromValues(data.toMap()));
             }
 
             _items << item;
         }
 
-        void Store::add(const QList<QVariantHash> & files) {
-            foreach (const QVariantHash & file, files) {
+        void Store::add(const QList<QVariantMap> & files) {
+            foreach (const QVariantMap & file, files) {
                 add(file);
             }
         }
@@ -177,7 +177,7 @@ namespace Coquillo {
             return changed;
         }
 
-        bool Store::setValues(int pos, const QVariantHash & values) {
+        bool Store::setValues(int pos, const QVariantMap & values) {
             Container & item = ref(pos);
             bool changed = false;
 

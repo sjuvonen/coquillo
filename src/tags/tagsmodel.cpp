@@ -136,7 +136,7 @@ namespace Coquillo {
                         return QFileInfo(data(index(idx.row(), PathField), Qt::EditRole).toString()).fileName();
 
                     case ValuesMapRole: {
-                        QVariantHash data;
+                        QVariantMap data;
                         const auto file = _store->at(idx.row());
 
                         for (auto i = _fields.constBegin() + 1; i != _fields.constEnd(); i++) {
@@ -179,7 +179,7 @@ namespace Coquillo {
                     }
                 }
             } else if (role == ValuesMapRole) {
-                const QVariantHash values = value.value<QVariantHash>();
+                const QVariantMap values = value.value<QVariantMap>();
                 bool changed = false;
 
                 for (auto i = values.begin(); i != values.end(); i++) {
@@ -195,8 +195,8 @@ namespace Coquillo {
                 rowChanged(idx);
                 return status;
             } else if (role == ContainerRole) {
-                qDebug() << value.value<QVariantHash>();
-                _store->setValues(idx.row(), value.value<QVariantHash>());
+                qDebug() << value.value<QVariantMap>();
+                _store->setValues(idx.row(), value.value<QVariantMap>());
 
             } else {
                 qWarning() << "Model does not support setting data for role" << role;
@@ -269,7 +269,7 @@ namespace Coquillo {
             connect(crawler, SIGNAL(rangeChanged(int, int)), _progress, SIGNAL(rangeChanged(int, int)));
             connect(crawler, SIGNAL(finished()), crawler, SLOT(deleteLater()));
 
-            crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantHash> & results) {
+            crawler->connect(crawler, &Crawler::Crawler::results, [this](const QList<QVariantMap> & results) {
                 beginInsertRows(QModelIndex(), _store->size(), _store->size() + results.size() - 1);
                 _store->add(results);
                 endInsertRows();

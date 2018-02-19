@@ -18,12 +18,12 @@ namespace Coquillo {
                  *
                  * Use for e.g. creating filenames from patterns
                  */
-                QString compile(const QString & pattern, const QVariantHash & data) const;
+                QString compile(const QString & pattern, const QVariantMap & data) const;
 
                 /**
                  * Read values from a string
                  */
-                QVariantHash extract(const QString & pattern, const QString & string) const;
+                QVariantMap extract(const QString & pattern, const QString & string) const;
 
             private:
                 QString patternToRegex(QString pattern) const;

@@ -20,7 +20,7 @@
 namespace Coquillo {
     namespace TagEditor {
 
-        QVariantHash read_file(const QString & path) {
+        QVariantMap read_file(const QString & path) {
             return Crawler::FileReader().read(path, true);
         }
 
@@ -184,12 +184,12 @@ namespace Coquillo {
             const auto file = container();
 
             if (file.imageCount() > 0 && file.images().size() == 0) {
-                auto watcher = new QFutureWatcher<QVariantHash>(this);
+                auto watcher = new QFutureWatcher<QVariantMap>(this);
                 const QString path = idx.data(Tags::FilePathRole).toString();
 
                 watcher->setFuture(QtConcurrent::run(&read_file, path));
 
-                connect(watcher, &QFutureWatcher<QVariantHash>::finished, watcher, [this, watcher, idx]{
+                connect(watcher, &QFutureWatcher<QVariantMap>::finished, watcher, [this, watcher, idx]{
                     if (idx != _index) {
                         return;
                     }

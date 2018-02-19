@@ -10,7 +10,7 @@ namespace Coquillo {
 
         class Image {
             public:
-                static Image fromValues(const QVariantHash & values);
+                static Image fromValues(const QVariantMap & values);
 
                 Image();
                 Image(const QImage & source);

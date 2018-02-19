@@ -12,8 +12,8 @@ namespace Coquillo {
             public:
                 Store(QObject * parent = nullptr);
 
-                void add(const QVariantHash & file);
-                void add(const QList<QVariantHash> & files);
+                void add(const QVariantMap & file);
+                void add(const QList<QVariantMap> & files);
 
                 const Container at(int pos) const;
 
@@ -28,7 +28,7 @@ namespace Coquillo {
 
                 bool rename(int pos, const QString & new_path);
                 bool setValue(int pos, const QString & field, const QVariant & value);
-                bool setValues(int pos, const QVariantHash & values);
+                bool setValues(int pos, const QVariantMap & values);
                 bool setImages(int pos, const QList<Image> & images);
 
                 const QList<Container> items() const;
@@ -51,7 +51,7 @@ namespace Coquillo {
                 void writeToDisk();
 
                 Tag::Mapping _fallback;
-                QHash< QString, Tag::Mapping> _mappings;
+                QMap< QString, Tag::Mapping> _mappings;
                 QList<Container> _items;
                 QHash<uint, Container> _backup;
         };

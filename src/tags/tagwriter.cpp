@@ -72,11 +72,11 @@ namespace Coquillo {
 
         void WriterJob::run() {
             TagLib::FileRef ref(item.path().toUtf8().constData());
-            QList<QVariantHash> images;
+            QList<QVariantMap> images;
             QSettings settings;
 
             for (const Image image : item.images()) {
-                QVariantHash data({
+                QVariantMap data({
                     {"type", QVariant(image.type())},
                     {"mime", QVariant(image.mimeType())},
                     {"description", QVariant(image.description())},

@@ -1,7 +1,7 @@
 #ifndef COQUILLO_CRAWLER_TAG_GENERIC_H
 #define COQUILLO_CRAWLER_TAG_GENERIC_H
 
-#include <QVariantHash>
+#include <QVariantMap>
 #include "../types.hpp"
 
 namespace TagLib {

@@ -6,7 +6,7 @@
 #include "mainwindow.hpp"
 
 void prepare_settings() {
-    const QVariantHash defaults = {
+    const QVariantMap defaults = {
         {"DefaultLocation", QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()},
         {"DeleteEmptyDirs", true},
         {"NumberPadWidth", 2},

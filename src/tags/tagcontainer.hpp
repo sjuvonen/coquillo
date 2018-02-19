@@ -48,7 +48,7 @@ namespace Coquillo {
                 uint _id;
                 QString _path;
                 QString _primary;
-                QHash<QString, Tag> _tags;
+                QMap<QString, Tag> _tags;
                 // QList<Image> _images;
                 ImageList _images;
                 int _image_count;

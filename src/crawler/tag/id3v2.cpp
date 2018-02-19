@@ -25,7 +25,7 @@ namespace Coquillo {
                     {"year", "TDRC"},
                 };
 
-                QVariantHash common;
+                QVariantMap common;
 
                 for (auto i = common_map.constBegin(); i != common_map.constEnd(); i++) {
                     if (values.contains(i.value())) {

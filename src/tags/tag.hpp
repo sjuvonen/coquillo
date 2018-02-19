@@ -1,7 +1,7 @@
 #ifndef COQUILLO_TAGS_TAGCONTAINER_H
 #define COQUILLO_TAGS_TAGCONTAINER_H
 
-#include <QVariantHash>
+#include <QVariantMap>
 
 namespace Coquillo {
     namespace Tags {
@@ -10,7 +10,7 @@ namespace Coquillo {
                 typedef QHash<QString, QString> Mapping;
 
                 Tag() { }
-                Tag(const QString & type, const Mapping & mapping, const QVariantHash & values);
+                Tag(const QString & type, const Mapping & mapping, const QVariantMap & values);
 
                 QStringList keys() const;
                 QVariant value(const QString & field) const;
@@ -18,7 +18,7 @@ namespace Coquillo {
 
                 bool insert(const QString & field, const QVariant & value);
 
-                inline QVariantHash data() const { return _raw; }
+                inline QVariantMap data() const { return _raw; }
                 inline bool isNull() const { return _id.isNull(); }
                 inline QString id() const { return _id; }
 
@@ -27,7 +27,7 @@ namespace Coquillo {
             private:
                 QString _id;
                 Mapping _mapping;
-                QVariantHash _raw;
+                QVariantMap _raw;
         };
     }
 }
