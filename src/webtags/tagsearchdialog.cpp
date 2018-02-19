@@ -43,7 +43,6 @@ namespace Coquillo {
             _ui->listResultView->horizontalHeader()->hideSection(4);
             _ui->listResultView->horizontalHeader()->hideSection(5);
             _ui->listResultView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-            // _ui->listResultView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 
             connect(_ui->listSearchResults->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), SLOT(showSearchResult(QModelIndex)));
 
@@ -57,11 +56,10 @@ namespace Coquillo {
 
             _ui->listSelectedFiles->setModel(new SelectionProxyModel(selection));
 
-            _ui->buttonBox->setStandardButtons(QDialogButtonBox::Cancel);
             _ui->buttonBack->setDisabled(true);
+            _ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
 
             connect(_ui->buttonBack, &QPushButton::clicked, [this]{
-                _ui->buttonBox->setStandardButtons(QDialogButtonBox::Cancel);
                 _ui->tabs->setCurrentIndex(0);
                 _ui->buttonBack->setDisabled(true);
                 _ui->buttonNext->setDisabled(false);
@@ -69,7 +67,6 @@ namespace Coquillo {
             });
 
             connect(_ui->buttonNext, &QPushButton::clicked, [this]{
-                _ui->buttonBox->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
                 _ui->tabs->setCurrentIndex(1);
                 _ui->buttonBack->setDisabled(false);
                 _ui->buttonNext->setDisabled(true);
@@ -91,10 +88,7 @@ namespace Coquillo {
             });
 
             connect(this, &QDialog::accepted, this, [=]{
-                auto result_model = _ui->listAlbumDetails->model();
-                auto result_root = _ui->listAlbumDetails->rootIndex();
-
-                const auto result_rows = result_model->match(result_root.child(0, 0), Qt::CheckStateRole, QVariant(Qt::Checked), -1);
+                const auto result_rows = this->checkedResultRows();
 
                 auto source_model = _ui->listSelectedFiles->model();
                 auto source_header = _ui->listSelectedFiles->verticalHeader();
@@ -114,6 +108,19 @@ namespace Coquillo {
                     }
                 }
             });
+
+            connect(_details, &QStandardItemModel::itemChanged, this, [=]{
+                const auto checked = this->checkedResultRows();
+                bool valid = selection->selectedRows().size() == checked.size();
+                _ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
+            });
+
+            auto header = _ui->listSelectedFiles->horizontalHeader();
+            for (int i = 0; i < header->count(); i++) {
+                if (i != 15) {
+                    header->hideSection(i);
+                }
+            }
         }
 
         TagSearchDialog::~TagSearchDialog() {
@@ -173,6 +180,12 @@ namespace Coquillo {
 
                 QThreadPool::globalInstance()->start(job);
             }
+        }
+
+        QModelIndexList TagSearchDialog::checkedResultRows() const {
+            const QModelIndex root = _ui->listAlbumDetails->rootIndex();
+            auto model = _ui->listAlbumDetails->model();
+            return model->match(root.child(0, 0), Qt::CheckStateRole, QVariant(Qt::Checked), -1);
         }
     }
 }

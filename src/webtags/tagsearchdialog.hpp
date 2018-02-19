@@ -34,6 +34,8 @@ namespace Coquillo {
                 void showSearchResult(const QModelIndex & idx);
 
             private:
+                QModelIndexList checkedResultRows() const;
+                
                 Ui::TagSearchDialog * _ui;
                 VariantHashModel * _results;
                 AlbumDetailsModel * _details;
