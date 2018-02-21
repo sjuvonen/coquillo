@@ -29,9 +29,10 @@ namespace Coquillo {
 
             foreach (QWidget * input, findChildren<QWidget*>(QRegExp("^tag"))) {
                 if (input->inherits("QLineEdit")) {
-                    connect(input, SIGNAL(textChanged(QString)), _inputMapper, SLOT(submit()));
+                    connect(qobject_cast<QLineEdit*>(input), &QLineEdit::textEdited, _inputMapper, &QDataWidgetMapper::submit);
                 } else if (input->inherits("QSpinBox")) {
-                    connect(input, SIGNAL(valueChanged(int)), _inputMapper, SLOT(submit()));
+                    auto emitter = static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged);
+                    connect(qobject_cast<QSpinBox*>(input), emitter, _inputMapper, &QDataWidgetMapper::submit);
                 }
             }
 
@@ -62,8 +63,14 @@ namespace Coquillo {
         void BasicTags::setEditorIndex(const QModelIndex & idx) {
             EditorPageBase::setEditorIndex(idx);
 
+            _inputMapper->submit();
             _inputMapper->setCurrentModelIndex(idx);
             _labelMapper->setCurrentModelIndex(idx);
+        }
+
+        void BasicTags::autoNumberItems() {
+            AutoNumbers numbers(model());
+            numbers.autoNumberItems(selectionModel()->selectedRows());
         }
 
         void BasicTags::cloneField(int column) {
@@ -104,11 +111,6 @@ namespace Coquillo {
             _labelMapper->addMapping(_ui->labelComposer, 12);
             _labelMapper->addMapping(_ui->labelUrl, 13);
             _labelMapper->addMapping(_ui->labelEncoder, 14);
-        }
-
-        void BasicTags::autoNumberItems() {
-            AutoNumbers numbers(model());
-            numbers.autoNumberItems(selectionModel()->selectedRows());
         }
     }
 }

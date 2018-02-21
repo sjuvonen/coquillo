@@ -287,7 +287,7 @@ namespace Coquillo {
             dialog->setModal(true);
             dialog->show();
 
-            connect(dialog, &QDialog::finished, dialog, [=](int result) {
+            connect(dialog, &QDialog::finished, dialog, [=]{
                 dialog->deleteLater();
                 _ui->actionOpenTagSearch->setChecked(false);
             });
