@@ -15,8 +15,16 @@ RCC_DIR = build
 
 unix {
   LIBS += -ltag
-  LIBS += -lmusicbrainz5
+
+  exists(/etc/arch-release) {
+    LIBS += -lmusicbrainz5
+  }
+
+  exists(/etc/debian_version) {
+    LIBS += -lmusicbrainz5cc
+  }
 }
+
 
 TRANSLATIONS = \
   resources/tr/en.ts \
