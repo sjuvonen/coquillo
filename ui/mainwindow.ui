@@ -14,7 +14,7 @@
    <string>Coquillo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <property name="leftMargin">
      <number>3</number>
     </property>
@@ -90,15 +90,24 @@
         <bool>false</bool>
        </attribute>
       </widget>
-      <widget class="Coquillo::TagEditor::TagEditor" name="tagEditor">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="tab_4">
-        <attribute name="title">
-         <string>Dummy</string>
-        </attribute>
-       </widget>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="Coquillo::TagEditor::TagEditor" name="tagEditor">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab_4">
+           <attribute name="title">
+            <string>Dummy</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="Coquillo::Player" name="player" native="true"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -134,37 +143,6 @@
    <addaction name="menu_Settings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockPlayer">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>58</width>
-     <height>58</height>
-    </size>
-   </property>
-   <property name="windowIcon">
-    <iconset theme="media-playback-start">
-     <normaloff>.</normaloff>.</iconset>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetFeatureMask</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Player</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="Coquillo::Player" name="player"/>
-  </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>Main Toolbar</string>

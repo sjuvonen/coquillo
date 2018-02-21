@@ -23,6 +23,11 @@ namespace Coquillo {
         _directories = new DirectoryModel(this);
         _ui->browser->setModel(_directories);
 
+
+        QFileSystemModel * filesystem = new QFileSystemModel(this);
+        filesystem->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+        _directories->setSourceModel(filesystem);
+
         QMenu * menu = new QMenu(this);
         menu->addAction("Nothing here");
         _ui->bookmarks->setMenu(menu);
@@ -143,8 +148,8 @@ namespace Coquillo {
 
             _ui->path->setText(path);
             _ui->directory->setCurrentText(path);
-            _directories->sourceModel()->setRootPath(path);
             _ui->browser->setRootIndex(_directories->index(path));
+            _directories->sourceModel()->setRootPath(path);
 
             emit directoryChanged(path);
         }
@@ -159,7 +164,6 @@ namespace Coquillo {
     }
 
     void FileBrowser::addToHistory(const QString & directory) {
-        qDebug() << "ADD";
         _ui->directory->insertItem(0, directory);
     }
 

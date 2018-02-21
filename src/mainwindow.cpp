@@ -191,7 +191,7 @@ namespace Coquillo {
         connect(_ui->itemView, &QAbstractItemView::doubleClicked, this, [this](const QModelIndex & idx) {
             const QString path(idx.data(Tags::FilePathRole).toString());
             _ui->player->playFile(path);
-            _ui->dockPlayer->show();
+            _ui->player->show();
         });
     }
 
@@ -234,6 +234,7 @@ namespace Coquillo {
     }
 
     void MainWindow::setupTagEditor() {
+        _ui->tagEditor->removeTab(3);
         _ui->tagEditor->setModel(_ui->itemView->model());
         _ui->tagEditor->setSelectionModel(_ui->itemView->selectionModel());
         // _ui->dockEditor->setTitleBarWidget(new QWidget);

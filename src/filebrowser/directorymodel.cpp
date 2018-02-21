@@ -6,9 +6,9 @@
 namespace Coquillo {
     DirectoryModel::DirectoryModel(QObject * parent)
     : QSortFilterProxyModel(parent), _recursive(false) {
-        QFileSystemModel * filesystem = new QFileSystemModel(this);
-        filesystem->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-        setSourceModel(filesystem);
+        // QFileSystemModel * filesystem = new QFileSystemModel(this);
+        // filesystem->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+        // setSourceModel(filesystem);
     }
 
     QFileSystemModel * DirectoryModel::sourceModel() const {
