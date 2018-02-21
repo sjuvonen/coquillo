@@ -3,7 +3,6 @@ TARGET = coquillo
 
 CONFIG += c++11
 QT += network widgets concurrent
-
 QT += multimedia
 
 DEPENDPATH += src

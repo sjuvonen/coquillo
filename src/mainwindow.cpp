@@ -50,7 +50,7 @@ namespace Coquillo {
         setupParserWidget();
         setupPlayer();
 
-        _ui->dockFiles->raise();
+        // _ui->dockFiles->raise();
         setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::West);
 
         restoreSettings();
@@ -184,7 +184,7 @@ namespace Coquillo {
         // _ui->dockParseTags->setWidget(_tag_parser);
         // _ui->dockParseTags->setTitleBarWidget(new QWidget);
 
-        tabifyDockWidget(_ui->dockFiles, _ui->dockParseTags);
+        // tabifyDockWidget(_ui->dockFiles, _ui->dockParseTags);
     }
 
     void MainWindow::setupPlayer() {
@@ -208,7 +208,7 @@ namespace Coquillo {
         // _ui->dockRenameFiles->setWidget(_file_rename);
         // _ui->dockRenameFiles->setTitleBarWidget(new QWidget);
 
-        tabifyDockWidget(_ui->dockFiles, _ui->dockRenameFiles);
+        // tabifyDockWidget(_ui->dockFiles, _ui->dockRenameFiles);
     }
 
     void MainWindow::setupStatusBar() {
