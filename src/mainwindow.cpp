@@ -357,6 +357,7 @@ namespace Coquillo {
 
         resize(settings.value("UI/Size").toSize());
         restoreState(settings.value("UI/State").toByteArray());
+        _ui->splitter->restoreState(settings.value("UI/Splitter").toByteArray());
         // _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
         // _ui->itemView->horizontalHeader()->setSectionsMovable(true);
 
@@ -390,7 +391,7 @@ namespace Coquillo {
         settings.setValue("UI/Sorting", _sort_picker->currentIndex());
         settings.setValue("UI/Size", size());
         settings.setValue("UI/State", saveState());
-        // settings.setValue("UI/Splitter", _ui->splitter->saveState());
+        settings.setValue("UI/Splitter", _ui->splitter->saveState());
         settings.setValue("UI/Header", _ui->itemView->horizontalHeader()->saveState());
         settings.setValue("UI/MenuBar", menuBar()->isVisible());
         settings.setValue("UI/StatusBar", statusBar()->isVisible());

@@ -23,7 +23,6 @@ namespace Coquillo {
         _directories = new DirectoryModel(this);
         _ui->browser->setModel(_directories);
 
-
         QFileSystemModel * filesystem = new QFileSystemModel(this);
         filesystem->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
         _directories->setSourceModel(filesystem);
