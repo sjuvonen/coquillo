@@ -353,14 +353,14 @@ namespace Coquillo {
     }
 
     void MainWindow::restoreSettings() {
-        QSettings settings;
+        const QSettings settings;
 
         resize(settings.value("UI/Size").toSize());
         restoreState(settings.value("UI/State").toByteArray());
-        _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
-        _ui->itemView->horizontalHeader()->setSectionsMovable(true);
+        // _ui->itemView->horizontalHeader()->restoreState(settings.value("UI/Header").toByteArray());
+        // _ui->itemView->horizontalHeader()->setSectionsMovable(true);
 
-        _sort_picker->setCurrentIndex(settings.value("UI/Sorting", 15).toInt());
+        _sort_picker->setCurrentIndex(settings.value("UI/Sorting", Tags::PathField).toInt());
 
         menuBar()->setVisible(settings.value("UI/MenuBar", true).toBool());
         statusBar()->setVisible(settings.value("UI/StatusBar", true).toBool());
@@ -369,6 +369,19 @@ namespace Coquillo {
 
         if (settings.value("UI/State").isNull()) {
             applyDefaultSettings();
+        }
+
+        const QByteArray state = settings.value("UI/Header").toByteArray();
+
+        if (!state.isNull()) {
+            /*
+             * FIXME: Somewhere there is a bug that prevents restoring the header unless we postpone
+             * that with a timer.
+             */
+            QTimer::singleShot(1, [state, this]{
+                _ui->itemView->horizontalHeader()->restoreState(state);
+                _ui->itemView->horizontalHeader()->setSectionsMovable(true);
+            });
         }
     }
 
