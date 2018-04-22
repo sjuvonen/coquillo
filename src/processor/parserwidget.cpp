@@ -1,6 +1,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QItemSelectionModel>
 
 #include "tags/tagdataroles.hpp"
 #include "parserwidget.hpp"
