@@ -1,0 +1,9 @@
+[] Should include basename of selected folders in item list. (Helps when multiple selected folders.)
+[] Subfolders of old selection are being selected after saving changes.
+[] List view loses relative paths and has only filenames after saving changes.
+[] Images tab should keep format when it contains images (use: "Images (n)").
+[] Dialog for saving images has no default filename.
+[] Cannot hide the quick player.
+[] Folders unselected during scan operation still get scanned and added to the item list.
+[] QComboBox autocomplete is case-INsensitive and does not allow typing the same pattern in two different casings [rename tab]
+[] Musicbrainz dialog is missing information about which tags are being written and with what data.
