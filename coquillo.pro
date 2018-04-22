@@ -2,7 +2,13 @@ TEMPLATE = app
 TARGET = coquillo
 
 CONFIG += c++11
-QT += network widgets concurrent
+
+QT += widgets concurrent
+
+# Required by Musicbrainz search and DnD in images tab.
+QT += network
+
+# Needed only for the mini player.
 QT += multimedia
 
 DEPENDPATH += src
@@ -16,12 +22,11 @@ RCC_DIR = build
 unix {
   LIBS += -ltag
 
-  exists(/etc/arch-release) {
-    LIBS += -lmusicbrainz5
-  }
-
+  # NOTE: New conditions can be added by "else:exists { }"
   exists(/etc/debian_version) {
     LIBS += -lmusicbrainz5cc
+  } else {
+    LIBS += -lmusicbrainz5
   }
 }
 
@@ -29,7 +34,8 @@ unix {
 TRANSLATIONS = \
   resources/tr/en.ts \
 
-RESOURCES = resources/translations.qrc
+RESOURCES = \
+  resources/translations.qrc \
 
 FORMS += \
   ui/basictags.ui \
