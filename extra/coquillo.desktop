@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Coquillo
+GenericName=Audio Metadata Editor
+Icon=coquillo
+Exec=coquillo
+Type=Application
+Categories=AudioVideo;Music;
+Comment=Edit metadata of audio files
+Comment[fi_FI.UTF-8]=Äänitiedostojen metatietojen editori
+
