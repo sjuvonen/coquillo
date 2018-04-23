@@ -28,8 +28,25 @@ unix {
   } else {
     LIBS += -lmusicbrainz5
   }
-}
 
+	isEmpty(PREFIX) {
+		PREFIX = /usr
+	}
+
+	DATADIR = $$PREFIX/share
+	ICON = extra/coquillo.png
+
+	icons.path = $$DATADIR/pixmaps
+	icons.files = extra/coquillo.png
+
+	launcher.path = $$DATADIR/applications
+	launcher.files = extra/coquillo.desktop
+
+	target.path = $$PREFIX/bin
+
+	INSTALLS += target
+	INSTALLS += icons launcher
+}
 
 TRANSLATIONS = \
   resources/tr/en.ts \
