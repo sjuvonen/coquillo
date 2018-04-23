@@ -18,10 +18,10 @@
 # norootforbuild
 
 Name:           coquillo
-Version:        1.12
-Release:        2
+Version:        2.0.0
+Release:        1
 License:        GPLv2
-Summary:        Audio Metadata Editor
+Summary:        Utility for editing metadata contained in audio files
 Url:            http://qt-apps.org/content/show.php/Coquillo?content=141896
 Group:          Productivity/Multimedia/Sound/Utilities
 Source0:        %{name}.tar.gz
@@ -32,7 +32,14 @@ BuildRequires:  taglib-devel >= 1.6
 BuildRequires:  qt-devel
 BuildRequires:  gcc-c++
 %else
-BuildRequires:  libqt4-devel
+BuildRequires:  libqt5-qttools-devel >= 5.4
+BuildRequires:  libmusicbrainz5-devel
+BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(Qt5Concurrent) >= 5.4
+BuildRequires:  pkgconfig(Qt5Core) >= 5.4
+BuildRequires:  pkgconfig(Qt5Multimedia) >= 5.4
+BuildRequires:  pkgconfig(Qt5Network) >= 5.4
+BuildRequires:  pkgconfig(Qt5Widgets) >= 5.4
 %endif
 
 %if 0%{?suse_version}
@@ -40,22 +47,18 @@ BuildRequires:  update-desktop-files
 %endif
 
 Requires:       taglib >= 1.6
+Requires:       libmusicbrainz5
 
 %description
 Coquillo is a utility with which one can edit audio file metadata, so-called tags.
-It is based on TagLib and tries to support the fileformats TagLib does. Most 
+It is based on TagLib and tries to support the fileformats TagLib does. Most
 important file formats supported are MP3, Ogg/Vorbis and FLAC.
 
 %prep
 %setup -q
 
 %build
-%if %{defined fedora_version}
-  qmake-qt4
-%else
-  qmake
-%endif
-
+%qmake5
 make %{?_smp_mflags}
 
 %install
