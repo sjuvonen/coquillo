@@ -1,10 +1,9 @@
 Format: 1.0
 Source: coquillo
-Version: 1.12-2
+Version: 2.0-beta1
 Binary: coquillo
 Maintainer: Samu Juvonen <samu.juvonen@gmail.com>
 Architecture: any
-Build-Depends: debhelper (>= 4.1.16), qt4-qmake, libqt4-dev, libtag1-dev (>= 1.6.0)
+Build-Depends: debhelper (>= 9), qt5-qmake, qt5-default, qtmultimedia5-dev, libtag1-dev (>= 1.6.0), libmusicbrainz5-dev
 Files:
- d57283ebb8157ae919762c58419353c8 133282 coquillo_1.12.orig.tar.gz
- 2fecf324a32123b08cefc0f047bca5ee 63176 coquillo_1.12_33.diff.tar.gz
+ 422cc79340938fe049587994e5a3c023 96075 coquillo.tar.gz
