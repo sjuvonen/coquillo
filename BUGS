@@ -1,6 +1,4 @@
 [] Should include basename of selected folders in item list. (Helps when multiple selected folders.)
-[] Subfolders of old selection are being selected after saving changes.
-[] List view loses relative paths and has only filenames after saving changes.
 [] Images tab should keep format when it contains images (use: "Images (n)").
 [] Dialog for saving images has no default filename.
 [] Cannot hide the quick player.

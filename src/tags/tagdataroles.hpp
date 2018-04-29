@@ -14,6 +14,7 @@ namespace Coquillo {
             ValuesMapRole,
             RootPathRole,
             ImageDataRole,
+            ImageCountRole,
         };
 
         enum TagModelField {

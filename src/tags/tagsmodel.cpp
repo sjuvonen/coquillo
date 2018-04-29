@@ -120,6 +120,9 @@ namespace Coquillo {
                     case ImageDataRole:
                         return QVariant::fromValue(_store->at(idx.row()).images());
 
+                    case ImageCountRole:
+                      return _store->at(idx.row()).imageCount();
+
                     case ItemModifiedStateRole:
                         return _store->isModified(idx.row());
 

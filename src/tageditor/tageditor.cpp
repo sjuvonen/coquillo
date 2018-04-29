@@ -55,12 +55,12 @@ namespace Coquillo {
             _tabImages->setEnabled(idx.isValid());
             _tabRaw->setEnabled(idx.isValid());
 
-            const QString label = idx.sibling(idx.row(), Tags::ImageField).data().toString();
+            int rows = idx.data(Tags::ImageCountRole).toInt();
 
-            if (label.isEmpty() || label[0] == '0') {
-                setTabText(1, tr("Images"));
+            if (rows) {
+                setTabText(1, tr("Images (%1)").arg(rows));
             } else {
-                setTabText(1, label);
+                setTabText(1, tr("Images"));
             }
         }
     }
