@@ -1,4 +1,3 @@
-[submodule "AUR"]
-  path = extra/archlinux
-  url = ssh://aur@aur.archlinux.org/coquillo.git
-
+[submodule "extra/archlinux-test"]
+	path = extra/archlinux
+	url = ssh://aur@aur.archlinux.org/coquillo.git
