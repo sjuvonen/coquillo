@@ -1,5 +1,4 @@
 [] Dialog for saving images has no default filename.
 [] Cannot hide the quick player.
 [] Folders unselected during scan operation still get scanned and added to the item list.
-[] QComboBox autocomplete is case-INsensitive and does not allow typing the same pattern in two different casings [rename tab]
 [] Musicbrainz dialog is missing information about which tags are being written and with what data.
