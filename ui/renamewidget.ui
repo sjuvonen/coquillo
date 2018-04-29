@@ -25,9 +25,6 @@
         <property name="editable">
          <bool>true</bool>
         </property>
-        <property name="insertPolicy">
-         <enum>QComboBox::InsertAlphabetically</enum>
-        </property>
        </widget>
       </item>
       <item>

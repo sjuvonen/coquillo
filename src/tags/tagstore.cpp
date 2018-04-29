@@ -141,8 +141,6 @@ namespace Coquillo {
                 bool use_safe = QSettings().value("Filter/SafeFilenames", true).toBool();
                 const QString target = use_safe ? RenameChangedFiles::safeFilePath(new_path) : new_path;
 
-                qDebug() << "Rename" << item.path() << "to" << target;
-
                 backup(Container(item));
                 item.setPath(target);
 
@@ -165,7 +163,6 @@ namespace Coquillo {
 
                 if (!tag.equals(field, value)) {
                     const Container copy(item);
-                    // qDebug() << "change" << tag.id() << field << tag.value(field) << value;
 
                     if (item.tag(key).insert(field, value)) {
                         backup(copy);
@@ -191,7 +188,6 @@ namespace Coquillo {
 
                     if (!tag.equals(i.key(), *i)) {
                         const Container copy(item);
-                        // qDebug() << "change" << tag.id() << field << tag.value(field) << value;
 
                         if (item.tag(key).insert(i.key(), *i)) {
                             backup(copy);

@@ -1,4 +1,5 @@
 
+#include <QCompleter>
 #include <QDebug>
 #include <QFileInfo>
 #include <QItemSelectionModel>
@@ -18,6 +19,8 @@ namespace Coquillo {
             _ui = new Ui::RenameWidget;
             _ui->setupUi(this);
             setupUi();
+
+            _ui->pattern->completer()->setCaseSensitivity(Qt::CaseSensitive);
         }
 
         RenameWidget::~RenameWidget() {

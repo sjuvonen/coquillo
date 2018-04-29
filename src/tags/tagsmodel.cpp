@@ -101,7 +101,6 @@ namespace Coquillo {
                         return file.value(field);
                     }
 
-
                     case Qt::DecorationRole:
                         if (idx.column() == FeedbackField && isRowChanged(idx)) {
                             return QIcon::fromTheme("emblem-important");

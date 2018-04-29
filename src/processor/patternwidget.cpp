@@ -76,6 +76,7 @@ namespace Coquillo {
             if (_history) {
                 const QString pattern = this->pattern();
                 QComboBox * widget = findChild<QComboBox*>("pattern");
+
                 if (pattern.length() && widget->findText(pattern) == -1) {
                     widget->addItem(pattern);
                     _history->submit();

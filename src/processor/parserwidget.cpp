@@ -1,4 +1,5 @@
 
+#include <QCompleter>
 #include <QDebug>
 #include <QDir>
 #include <QItemSelectionModel>
@@ -15,6 +16,8 @@ namespace Coquillo {
             _ui = new Ui::ParserWidget;
             _ui->setupUi(this);
             setupUi();
+
+            _ui->pattern->completer()->setCaseSensitivity(Qt::CaseSensitive);
         }
 
         ParserWidget::~ParserWidget() {
