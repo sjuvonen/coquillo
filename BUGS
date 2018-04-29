@@ -1,5 +1,3 @@
-[] Should include basename of selected folders in item list. (Helps when multiple selected folders.)
-[] Images tab should keep format when it contains images (use: "Images (n)").
 [] Dialog for saving images has no default filename.
 [] Cannot hide the quick player.
 [] Folders unselected during scan operation still get scanned and added to the item list.

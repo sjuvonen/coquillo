@@ -90,7 +90,7 @@ namespace Coquillo {
                             if (role == Qt::EditRole) {
                                 return file.path();
                             } else {
-                                const auto root = containedDirectoryForRow(idx.row());
+                                const auto root = QFileInfo(containedDirectoryForRow(idx.row())).dir().absolutePath();
                                 const int root_length = root.length() ? root.length() + 1 : 0;
                                 return file.path().midRef(root_length).toString();
                             }
