@@ -1,6 +1,6 @@
 Format: 1.0
 Source: coquillo
-Version: 2.0.0
+Version: 2.0.1
 Binary: coquillo
 Maintainer: Samu Juvonen <samu.juvonen@gmail.com>
 Architecture: any

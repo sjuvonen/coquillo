@@ -18,7 +18,7 @@
 # norootforbuild
 
 Name:           coquillo
-Version:        2.0.0
+Version:        2.0.1
 Release:        1
 License:        LGPL-3.0-only
 Summary:        Utility for editing metadata contained in audio files
@@ -85,6 +85,8 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/coquillo.png
 
 %changelog
+* Sat Jul 28 2018 Samu Juvonen <samu.juvonen@gmail.com> - 2.0.1
+- Fixed issue with renaming files when "safe filenames" setting is enabled.
 * Tue Apr 24 2018 Samu Juvonen <samu.juvonen@gmail.com> - 2.0.0
 - Rewritten for Qt 5.
 - Improved user interface.
