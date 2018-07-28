@@ -1,5 +1,11 @@
+coquillo (2.0.1-2) unstable; urgency=low
+  * Remove .git from sources.
+ -- Samu Juvonen <samu.juvonen@gmail.com>  Sun, 28 Jul 2018 20:30:00 +0300
+
 coquillo (2.0.1-1) unstable; urgency=low
+  * Fix renaming files when "safe filenames" is enabled.
+ -- Samu Juvonen <samu.juvonen@gmail.com>  Sun, 28 Jul 2018 20:00:00 +0300
 
+coquillo (2.0.0-1) unstable; urgency=low
   * Rewritten for Qt 5.
-
  -- Samu Juvonen <samu.juvonen@gmail.com>  Sun, 22 Apr 2018 22:00:00 +0300

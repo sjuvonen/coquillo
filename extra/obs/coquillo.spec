@@ -19,7 +19,7 @@
 
 Name:           coquillo
 Version:        2.0.1
-Release:        1
+Release:        2
 License:        LGPL-3.0-only
 Summary:        Utility for editing metadata contained in audio files
 Url:            http://qt-apps.org/content/show.php/Coquillo?content=141896
