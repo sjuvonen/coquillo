@@ -3,6 +3,7 @@
 #include <QFileInfo>
 
 #include "renamechangedfiles.hpp"
+#include "utils/filepaths.hpp"
 
 namespace Coquillo {
     namespace Tags {
@@ -18,14 +19,11 @@ namespace Coquillo {
         }
 
         QString RenameChangedFiles::safeFilePath(const QString & path) {
-            const QRegExp filter("[^\\/a-z \\.\\-_\\$&\\(\\)\\[\\]]", Qt::CaseInsensitive);
-            return QDir::toNativeSeparators(QDir::fromNativeSeparators(path).replace(filter, ""));
+            return Utils::FilePaths::safeFilePath(path);
         }
 
         QString RenameChangedFiles::safeFileName(const QString & name) {
-            // NOTE: Same filter as in safeFilePath except for forward slash.
-            const QRegExp filter("[^a-z \\.\\-_\\$&\\(\\)\\[\\]]", Qt::CaseInsensitive);
-            return QDir::toNativeSeparators(QDir::fromNativeSeparators(name).replace(filter, ""));
+            return Utils::FilePaths::safeFileName(name);
         }
     }
 }

@@ -141,6 +141,8 @@ namespace Coquillo {
                 bool use_safe = QSettings().value("Filter/SafeFilenames", true).toBool();
                 const QString target = use_safe ? RenameChangedFiles::safeFilePath(new_path) : new_path;
 
+                qDebug() << "RENAME" << new_path << target;
+
                 backup(Container(item));
                 item.setPath(target);
 
