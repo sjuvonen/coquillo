@@ -12,7 +12,7 @@ This is the all-new Coquillo. After years of hibernation, it has been updated fo
 - If files initially contain images in multiple tags, all images will be moved to one tag only when written again.
 
 ## The Future
-This release will hopefully be followed by a few bugfix releases if necessary. Otherwise I am undecided how to proced. Having switched to Gnome years ago and given the divergence of GTK from 'generic desktop feel', Coquillo might one day be ported to the GTK toolkit.
+This release will hopefully be followed by a few bug fix releases if necessary. Otherwise I am undecided how to proceed. Having switched to Gnome years ago and given the divergence of GTK from 'generic desktop feel', Coquillo might one day be ported to the GTK toolkit.
 
 ## Packages
 Official packages for Coquillo can be found for Arch Linux, Debian, Fedora, OpenSuse and Ubuntu.
