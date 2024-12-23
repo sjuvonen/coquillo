@@ -1,4 +1,5 @@
 
+#include <taglib/taglib.h>
 #include <taglib/xiphcomment.h>
 #include <QImage>
 #include "xiphcomment.hpp"
