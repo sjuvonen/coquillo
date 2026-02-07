@@ -1,58 +1,27 @@
+#include "app/mainwindow.h"
+
 #include <QApplication>
-#include <QSettings>
-#include <QStandardPaths>
+#include <QLocale>
 #include <QTranslator>
 
-#include "mainwindow.hpp"
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
 
-void prepare_settings() {
-    const QVariantMap defaults = {
-        {"DefaultLocation", QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()},
-        {"DeleteEmptyDirs", true},
-        {"NumberPadWidth", 2},
-        {"RecursiveScan", true},
-        {"Compat/FlacEnableId3v2", false},
-        {"Compat/MpegEnableId3v1", false},
-        {"Filter/SafeFilenames", false},
-        {"Filter/ScaleImages", false},
-        {"Filter/ScaleImagesWidth", 200},
-        {"Filter/ScaleImagesHeight", 200},
-        {"Filter/ParseDiscNumber", false},
-        {"UI/Size", QSize(1200, 800)},
-    };
+    QTranslator translator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
 
-    QSettings settings;
+    for (const QString &locale : uiLanguages) {
+        const QString baseName = "Coquillo_" + QLocale(locale).name();
 
-    foreach (const QString key, defaults.keys()) {
-        if (!settings.contains(key)) {
-            settings.setValue(key, defaults[key]);
+        if (translator.load(":/i18n/" + baseName)) {
+            a.installTranslator(&translator);
+            break;
         }
     }
 
-    settings.sync();
-}
+    MainWindow w;
+    w.show();
 
-int main(int argc, char ** args) {
-    QApplication::setOrganizationName("Juvonet");
-    QApplication::setOrganizationDomain("juvonet.fi");
-    QApplication::setApplicationName("Coquillo");
-    QApplication::setApplicationVersion("2.0");
-
-    prepare_settings();
-
-    QApplication app(argc, args);
-
-    QTranslator translator(&app);
-    translator.load(":/tr/en.qm");
-
-    app.installTranslator(&translator);
-
-    Coquillo::MainWindow window;
-    window.show();
-
-    if (QApplication::arguments().count() > 1) {
-        window.addPaths(QApplication::arguments().mid(1));
-    }
-
-    return app.exec();
+    return a.exec();
 }

@@ -1,5 +1,0 @@
-Version 2.0.1:
-- Fixed renaming files when "safe filenames" is enabled.
-
-Version 2.0.0:
-- Rewritten for Qt 5
