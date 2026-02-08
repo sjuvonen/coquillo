@@ -4,24 +4,23 @@
 #include <QLocale>
 #include <QTranslator>
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+int main(int argc, char *argv[]) {
+  QApplication a(argc, argv);
 
-    QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
+  QTranslator translator;
+  const QStringList uiLanguages = QLocale::system().uiLanguages();
 
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "Coquillo_" + QLocale(locale).name();
+  for (const QString &locale : uiLanguages) {
+    const QString baseName = "Coquillo_" + QLocale(locale).name();
 
-        if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
-            break;
-        }
+    if (translator.load(":/i18n/" + baseName)) {
+      a.installTranslator(&translator);
+      break;
     }
+  }
 
-    MainWindow w;
-    w.show();
+  Coquillo::MainWindow w;
+  w.show();
 
-    return a.exec();
+  return a.exec();
 }

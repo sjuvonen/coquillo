@@ -20,8 +20,27 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/app/mainwindow.cpp
         src/app/mainwindow.h
+        src/app/filebrowser/filebrowser.cpp
+        src/app/filebrowser/filebrowser.h
+        src/app/filebrowser/filebrowsermodel.cpp
+        src/app/filebrowser/filebrowsermodel.h
+        src/app/processor/patternparse.cpp
+        src/app/processor/patternparse.h
+        src/app/processor/patternrename.cpp
+        src/app/processor/patternrename.h
+        src/app/tagseditor/mediaimages.cpp
+        src/app/tagseditor/mediaimages.h
+        src/app/tagseditor/mediametadata.cpp
+        src/app/tagseditor/mediametadata.h
+        src/app/tagseditor/mediatags.cpp
+        src/app/tagseditor/mediatags.h
         src/ui/filebrowser.ui
         src/ui/mainwindow.ui
+        src/ui/patternparse.ui
+        src/ui/patternrename.ui
+        src/ui/mediaimages.ui
+        src/ui/mediametadata.ui
+        src/ui/mediatags.ui
         ${TS_FILES}
 )
 
@@ -54,7 +73,7 @@ endif()
 
 target_link_libraries(Coquillo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-target_include_directories(Coquillo PUBLIC src/app src/ui)
+target_include_directories(Coquillo PUBLIC . src/app src/ui)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

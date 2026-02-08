@@ -9,15 +9,17 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+namespace Coquillo {
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  MainWindow(QWidget *parent = nullptr);
+  ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+  void setup();
+  Ui::MainWindow *ui;
 };
+} // namespace Coquillo
 #endif // MAINWINDOW_H
