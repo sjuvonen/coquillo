@@ -17,7 +17,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0" colspan="2">
-      <widget class="QListView" name="images">
+      <widget class="QListView" name="imagesView">
        <property name="selectionMode">
         <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
        </property>
@@ -40,7 +40,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QComboBox" name="comboBox"/>
+      <widget class="QComboBox" name="type"/>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_2">
@@ -50,14 +50,14 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="description"/>
      </item>
     </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QToolButton" name="toolButton_2">
+      <widget class="QToolButton" name="add">
        <property name="toolTip">
         <string>Add images</string>
        </property>
@@ -86,7 +86,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="applyAll">
        <property name="text">
         <string>Apply to all</string>
        </property>
