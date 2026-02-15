@@ -89,29 +89,28 @@ read_job *read_files(const media_paths &files) {
 
 void read_files_job(const media_paths &&files, read_job *job) {
     // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    std::lock_guard<std::mutex> guard(job->mutex);
-
-    job->jobsFinished++;
-    int foo = 0;
 
     const auto readers = {&files::try_read_mpeg, &files::try_read_flac, &files::try_read_vorbis,
                           &files::try_read_common};
 
     for (const auto path : files) {
         const TagLib::FileRef file_ref(path.c_str());
-        Media media(path);
 
-        for (auto read_fn : readers) {
-            if (read_fn(*file_ref.file(), media)) {
-                foo++;
-                break;
+        if (!file_ref.isNull()) {
+            Media media(path);
+
+            for (auto read_fn : readers) {
+                if (read_fn(*file_ref.file(), media)) {
+                    std::lock_guard<std::mutex> guard(job->mutex);
+                    job->media.push(std::move(media));
+
+                    break;
+                }
             }
         }
     }
 
-    std::cout << "    thread read " << foo << " entries" << std::endl;
-
-    if (job->jobsFinished == job->futures.size()) {
+    if (++job->jobsFinished == job->futures.size()) {
         job->completed.store(true);
     }
 }

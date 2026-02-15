@@ -40,7 +40,7 @@ void MediaStorageWorker::readFiles(const coquillo::finder::media_paths &files) {
 
     connect(timer, &QTimer::timeout, [this, timer, job]() {
         if (job->completed) {
-            qDebug() << "reading files completed";
+            qDebug() << "reading files completed" << job->media.size();
 
             timer->stop();
             timer->deleteLater();

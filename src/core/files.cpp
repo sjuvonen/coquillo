@@ -25,6 +25,6 @@ bool try_read_vorbis(const TagLib::File &source, Media &target) {
     return dynamic_cast<const TagLib::Ogg::Vorbis::File *>(&source) != 0;
 }
 
-bool try_read_common(const TagLib::File &source, Media &target) { return false; }
+bool try_read_common(const TagLib::File &source, Media &target) { return source.tag() != 0; }
 
 } // namespace coquillo::files
