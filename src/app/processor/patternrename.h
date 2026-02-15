@@ -1,5 +1,5 @@
-#ifndef PATTERNRENAME_H
-#define PATTERNRENAME_H
+#ifndef COQUILLO_PATTERNRENAME_H
+#define COQUILLO_PATTERNRENAME_H
 
 #include <QWidget>
 
@@ -12,14 +12,14 @@ QT_END_NAMESPACE
 namespace Coquillo {
 
 class PatternRename : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  PatternRename(QWidget *parent = nullptr);
-  ~PatternRename();
+  public:
+    PatternRename(QWidget *parent = nullptr);
+    ~PatternRename();
 
-private:
-  Ui::PatternRename *ui;
+  private:
+    Ui::PatternRename *ui;
 };
 } // namespace Coquillo
 

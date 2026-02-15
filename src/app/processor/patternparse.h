@@ -1,5 +1,5 @@
-#ifndef PATTERNPARSE_H
-#define PATTERNPARSE_H
+#ifndef COQUILLO_PATTERNPARSE_H
+#define COQUILLO_PATTERNPARSE_H
 
 #include <QWidget>
 
@@ -12,14 +12,14 @@ QT_END_NAMESPACE
 namespace Coquillo {
 
 class PatternParse : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  PatternParse(QWidget *parent = nullptr);
-  ~PatternParse();
+  public:
+    PatternParse(QWidget *parent = nullptr);
+    ~PatternParse();
 
-private:
-  Ui::PatternParse *ui;
+  private:
+    Ui::PatternParse *ui;
 };
 } // namespace Coquillo
 

@@ -20,6 +20,10 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/app/mainwindow.cpp
         src/app/mainwindow.h
+        src/app/mediastorage.cpp
+        src/app/mediastorage.h
+        src/app/mediastorageworker.cpp
+        src/app/mediastorageworker.h
         src/app/filebrowser/filebrowser.cpp
         src/app/filebrowser/filebrowser.h
         src/app/filebrowser/filebrowsermodel.cpp
@@ -34,6 +38,14 @@ set(PROJECT_SOURCES
         src/app/tagseditor/mediametadata.h
         src/app/tagseditor/mediatags.cpp
         src/app/tagseditor/mediatags.h
+        src/core/files.cpp
+        src/core/files.h
+        src/core/finder.cpp
+        src/core/finder.h
+        src/core/media.cpp
+        src/core/media.h
+        src/core/tag.cpp
+        src/core/tag.h
         src/ui/filebrowser.ui
         src/ui/mainwindow.ui
         src/ui/patternparse.ui
@@ -71,7 +83,7 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(Coquillo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Coquillo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets tag)
 
 target_include_directories(Coquillo PUBLIC . src/app src/ui)
 

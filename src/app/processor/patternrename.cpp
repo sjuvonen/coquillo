@@ -3,9 +3,8 @@
 #include <qcheckbox.h>
 
 namespace Coquillo {
-PatternRename::PatternRename(QWidget *parent)
-    : QWidget(parent), ui(new Ui::PatternRename) {
-  ui->setupUi(this);
+PatternRename::PatternRename(QWidget *parent) : QWidget(parent), ui(new Ui::PatternRename) {
+    ui->setupUi(this);
 }
 
 PatternRename::~PatternRename() { delete ui; }

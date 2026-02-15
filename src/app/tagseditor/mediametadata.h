@@ -1,5 +1,5 @@
-#ifndef MEDIAMETADATA_H
-#define MEDIAMETADATA_H
+#ifndef COQUILLO_MEDIAMETADATA_H
+#define COQUILLO_MEDIAMETADATA_H
 
 #include <QWidget>
 
@@ -12,14 +12,14 @@ QT_END_NAMESPACE
 namespace Coquillo {
 
 class MediaMetadata : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  MediaMetadata(QWidget *parent = nullptr);
-  ~MediaMetadata();
+  public:
+    MediaMetadata(QWidget *parent = nullptr);
+    ~MediaMetadata();
 
-private:
-  Ui::MediaMetadata *ui;
+  private:
+    Ui::MediaMetadata *ui;
 };
 } // namespace Coquillo
 

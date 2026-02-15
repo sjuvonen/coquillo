@@ -1,5 +1,5 @@
-#ifndef MEDIATAGS_H
-#define MEDIATAGS_H
+#ifndef COQUILLO_MEDIATAGS_H
+#define COQUILLO_MEDIATAGS_H
 
 #include <QWidget>
 
@@ -12,14 +12,14 @@ QT_END_NAMESPACE
 namespace Coquillo {
 
 class MediaTags : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  MediaTags(QWidget *parent = nullptr);
-  ~MediaTags();
+  public:
+    MediaTags(QWidget *parent = nullptr);
+    ~MediaTags();
 
-private:
-  Ui::MediaTags *ui;
+  private:
+    Ui::MediaTags *ui;
 };
 } // namespace Coquillo
 

@@ -1,5 +1,5 @@
-#ifndef MEDIAIMAGES_H
-#define MEDIAIMAGES_H
+#ifndef COQUILLO_MEDIAIMAGES_H
+#define COQUILLO_MEDIAIMAGES_H
 
 #include <QWidget>
 
@@ -12,14 +12,14 @@ QT_END_NAMESPACE
 namespace Coquillo {
 
 class MediaImages : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  MediaImages(QWidget *parent = nullptr);
-  ~MediaImages();
+  public:
+    MediaImages(QWidget *parent = nullptr);
+    ~MediaImages();
 
-private:
-  Ui::MediaImages *ui;
+  private:
+    Ui::MediaImages *ui;
 };
 } // namespace Coquillo
 

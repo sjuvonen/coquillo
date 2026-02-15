@@ -3,7 +3,7 @@
 
 namespace Coquillo {
 MediaTags::MediaTags(QWidget *parent) : QWidget(parent), ui(new Ui::MediaTags) {
-  ui->setupUi(this);
+    ui->setupUi(this);
 }
 
 MediaTags::~MediaTags() { delete ui; }
