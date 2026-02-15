@@ -68,14 +68,14 @@ read_job *read_files(const media_paths &files) {
     for (int i = 0; i < job_count; i++) {
         auto ibegin = batch_size * i;
         auto iend = std::min(ibegin + batch_size, files.size());
-        auto begin = files.begin() + ibegin;
-        media_paths::const_iterator end = files.begin() + iend;
+        auto begin = files.cbegin() + ibegin;
+        media_paths::const_iterator end = files.cbegin() + iend;
 
         std::cout << "Reader thread for slice " << ibegin << " " << iend << std::endl;
 
         media_paths slice;
 
-        std::copy(begin, end - 1, std::back_inserter(slice));
+        std::copy(begin, end, std::back_inserter(slice));
 
         auto future = std::async(std::launch::async, read_files_job, std::move(slice), job);
 
