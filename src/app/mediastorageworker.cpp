@@ -1,6 +1,7 @@
 #include "mediastorageworker.h"
 #include "src/core/finder.h"
 #include <QDebug>
+#include <QObject>
 #include <QTimer>
 
 namespace Coquillo {
