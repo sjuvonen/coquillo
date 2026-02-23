@@ -3,9 +3,16 @@
 #include <QApplication>
 #include <QDebug>
 #include <QLocale>
+#include <QSettings>
+#include <QStandardPaths>
 #include <QTranslator>
 
 int main(int argc, char *argv[]) {
+    QApplication::setOrganizationName("Juvonet");
+    QApplication::setOrganizationDomain("juvonet.fi");
+    QApplication::setApplicationName("Coquillo");
+    QApplication::setApplicationVersion("3.0");
+
     QApplication a(argc, argv);
 
     QTranslator translator;

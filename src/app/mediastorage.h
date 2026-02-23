@@ -15,6 +15,9 @@ class MediaStorage : public QObject {
     MediaStorage(QObject *parent = nullptr);
     ~MediaStorage();
 
+    int size() const;
+    const Media &at(int index) const;
+
   public slots:
     void addPath(const QString &path);
     void removePath(const QString &path);
@@ -30,7 +33,10 @@ class MediaStorage : public QObject {
     bool aborted;
     QStringList paths;
     QHash<QString, MediaStorageWorker *> workers;
-    QList<coquillo::Media> media;
+    QList<Media> media;
+
+    int currentTotal;
+    int currentProgress;
 };
 } // namespace Coquillo
 

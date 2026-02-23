@@ -22,8 +22,7 @@ void MediaStorageWorker::findMedia(const QString &path, bool recursive) {
             timer->stop();
             timer->deleteLater();
 
-            auto files = job->future.get();
-            qDebug() << "reading directory completed" << files.size();
+            const auto files = job->future.get();
 
             readFiles(files);
         }
@@ -31,23 +30,39 @@ void MediaStorageWorker::findMedia(const QString &path, bool recursive) {
 }
 
 void MediaStorageWorker::readFiles(const coquillo::finder::media_paths &files) {
-    qDebug() << "read tags from files" << files.size();
-
     auto job = coquillo::finder::read_files(files);
 
     auto timer = new QTimer();
-    timer->start(100);
+    timer->start(50);
+
+    emit discover(files.size());
 
     connect(timer, &QTimer::timeout, [this, timer, job]() {
+        const auto batch = job->flush();
+
+        for (const auto item : batch) {
+            buffer << std::move(item);
+        }
+
+        qDebug() << "PROGRESS" << job->progress;
+        emit progress(job->progress);
+
         if (job->completed) {
             qDebug() << "reading files completed" << job->media.size();
 
             timer->stop();
             timer->deleteLater();
 
-            emit ready({});
+            emit ready();
         }
     });
+}
+
+QList<Media> MediaStorageWorker::takeBuffer() {
+    QList<Media> empty;
+    std::swap(buffer, empty);
+
+    return empty;
 }
 
 } // namespace Coquillo

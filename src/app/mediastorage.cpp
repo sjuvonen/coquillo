@@ -6,24 +6,54 @@
 
 namespace Coquillo {
 
-MediaStorage::MediaStorage(QObject *parent) : QObject(parent), recursive(false), aborted(false) {
+MediaStorage::MediaStorage(QObject *parent)
+    : QObject(parent), recursive(false), aborted(false), currentTotal(0), currentProgress(0) {
     qDebug() << "media storage created" << recursive;
 }
 
 MediaStorage::~MediaStorage() {}
 
+int MediaStorage::size() const { return media.size(); }
+
+const Media &MediaStorage::at(int index) const { return media.at(index); }
+
 void MediaStorage::addPath(const QString &path) {
-    paths << path;
+    if (workers.contains(path)) {
+        return;
+    }
+
+    if (workers.empty()) {
+        emit started();
+    }
 
     auto worker = new MediaStorageWorker(this);
     worker->findMedia(path, recursive);
 
-    emit started();
+    paths << path;
+    workers[path] = worker;
 
-    connect(worker, &MediaStorageWorker::ready, [this, worker](const QStringList &files) {
+    connect(worker, &MediaStorageWorker::discover, [this](int count) {
+        currentTotal += count;
+
+        emit progress(currentProgress, currentTotal);
+    });
+
+    connect(worker, &MediaStorageWorker::progress, [this, worker](int slice) {
+        media << worker->takeBuffer();
+        currentProgress += slice;
+
+        emit progress(currentProgress, currentTotal);
+    });
+
+    connect(worker, &MediaStorageWorker::ready, [this, worker, path]() {
+        workers.remove(path);
         worker->deleteLater();
 
-        emit finished();
+        if (workers.empty()) {
+            currentTotal = 0;
+            currentProgress = 0;
+            emit finished();
+        }
     });
 }
 

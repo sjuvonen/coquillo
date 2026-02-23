@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
+    <width>523</width>
     <height>496</height>
    </rect>
   </property>
@@ -38,6 +38,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="1" column="0">
@@ -63,6 +66,9 @@
      </property>
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -90,6 +96,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="3" column="0">
@@ -103,7 +112,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,2,1">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,2,0">
      <item>
       <widget class="QSpinBox" name="spinBox">
        <property name="maximum">
@@ -121,6 +130,9 @@
        </property>
        <property name="icon">
         <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -154,6 +166,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="4" column="0">
@@ -167,11 +182,11 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,1,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,1">
      <item>
       <widget class="QSpinBox" name="spinBox_3">
        <property name="maximum">
-        <number>999</number>
+        <number>9999</number>
        </property>
       </widget>
      </item>
@@ -200,16 +215,41 @@
      <item>
       <widget class="QSpinBox" name="spinBox_4">
        <property name="maximum">
-        <number>999</number>
+        <number>9999</number>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QToolButton" name="toolButton">
+       <property name="toolTip">
+        <string>Generate numbering to selected tracks</string>
+       </property>
+       <property name="statusTip">
+        <string>Hello, world!</string>
+       </property>
+       <property name="whatsThis">
+        <string>Hello, again, world!</string>
+       </property>
        <property name="text">
         <string>#</string>
        </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -223,6 +263,9 @@
      </property>
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -250,6 +293,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="6" column="0">
@@ -275,6 +321,9 @@
      </property>
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -302,6 +351,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="8" column="0">
@@ -327,6 +379,9 @@
      </property>
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -354,6 +409,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="10" column="0">
@@ -380,6 +438,9 @@
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
      </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="11" column="0">
@@ -405,6 +466,9 @@
      </property>
      <property name="icon">
       <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

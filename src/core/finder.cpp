@@ -1,5 +1,4 @@
 #include "finder.h"
-#include "src/core/files.h"
 #include "src/core/media.h"
 #include <algorithm>
 #include <cmath>
@@ -7,15 +6,25 @@
 #include <future>
 #include <iostream>
 #include <iterator>
+#include <queue>
 #include <taglib/fileref.h>
 #include <taglib/tstring.h>
-#include <thread>
+#include <utility>
 
 namespace coquillo::finder {
 void read_files_job(const media_paths &&files, read_job *job);
 
 find_job::find_job() : aborted(false), completed(false) {}
 read_job::read_job() : aborted(false), completed(false), jobsFinished(0), progress(0) {}
+
+const std::list<Coquillo::Media> read_job::flush() {
+    std::lock_guard<std::mutex> guard(mutex);
+
+    std::list<Coquillo::Media> batch;
+    std::swap(media, batch);
+
+    return batch;
+};
 
 media_paths read_directory(const std::string &directory, bool recursive, find_job *job) {
     std::queue<std::string> directories;
@@ -50,9 +59,7 @@ media_paths read_directory(const std::string &directory, bool recursive, find_jo
 
 find_job *find_files(const std::string &directory, bool recursive) {
     auto job = new find_job();
-
     auto future = std::async(std::launch::async, read_directory, directory, recursive, job);
-
     job->future = std::move(future);
 
     return job;
@@ -88,25 +95,18 @@ read_job *read_files(const media_paths &files) {
 }
 
 void read_files_job(const media_paths &&files, read_job *job) {
-    // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
-    const auto readers = {&files::try_read_mpeg, &files::try_read_flac, &files::try_read_vorbis,
-                          &files::try_read_common};
-
     for (const auto path : files) {
         const TagLib::FileRef file_ref(path.c_str());
 
         if (!file_ref.isNull()) {
-            Media media(path);
+            Coquillo::Media media = std::move(Coquillo::Media::fromFileRef(file_ref));
 
-            for (auto read_fn : readers) {
-                if (read_fn(*file_ref.file(), media)) {
-                    std::lock_guard<std::mutex> guard(job->mutex);
-                    job->media.push(std::move(media));
-
-                    break;
-                }
-            }
+            std::lock_guard<std::mutex> guard(job->mutex);
+            job->media.push_back(std::move(media));
+            job->progress++;
+        } else {
+            std::lock_guard<std::mutex> guard(job->mutex);
+            job->progress++;
         }
     }
 

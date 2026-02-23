@@ -2,9 +2,10 @@
 #define COQUILLO_MAINWINDOW_H
 
 #include "mediastorage.h"
+#include "mediastoragemodel.h"
+#include "settings.h"
 #include <QMainWindow>
 #include <QPointer>
-#include <QProgressBar>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,10 +21,14 @@ class MainWindow : public QMainWindow {
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+  protected:
+    void resizeEvent(QResizeEvent *event);
+
   private:
     Ui::MainWindow *ui;
-    QPointer<QProgressBar> progressBar;
+    QPointer<Settings> settings;
     QPointer<MediaStorage> storage;
+    QPointer<MediaStorageModel> model;
 
     void setup();
 };

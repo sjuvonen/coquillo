@@ -3,7 +3,7 @@
 
 #include "media.h"
 #include <future>
-#include <queue>
+#include <list>
 #include <vector>
 
 namespace coquillo::finder {
@@ -21,13 +21,15 @@ struct find_job {
 struct read_job {
     read_job();
 
+    const std::list<Coquillo::Media> flush();
+
     std::mutex mutex;
     std::vector<std::future<void>> futures;
     std::atomic<int> jobsFinished;
     std::atomic<bool> aborted;
     std::atomic<bool> completed;
     std::atomic<int> progress;
-    std::queue<Media> media;
+    std::list<Coquillo::Media> media;
 };
 
 find_job *find_files(const std::string &directory, bool recursive);

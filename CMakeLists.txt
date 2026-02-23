@@ -22,8 +22,12 @@ set(PROJECT_SOURCES
         src/app/mainwindow.h
         src/app/mediastorage.cpp
         src/app/mediastorage.h
+        src/app/mediastoragemodel.cpp
+        src/app/mediastoragemodel.h
         src/app/mediastorageworker.cpp
         src/app/mediastorageworker.h
+        src/app/settings.cpp
+        src/app/settings.h
         src/app/filebrowser/filebrowser.cpp
         src/app/filebrowser/filebrowser.h
         src/app/filebrowser/filebrowsermodel.cpp
@@ -44,8 +48,7 @@ set(PROJECT_SOURCES
         src/core/finder.h
         src/core/media.cpp
         src/core/media.h
-        src/core/tag.cpp
-        src/core/tag.h
+        src/core/type.h
         src/ui/filebrowser.ui
         src/ui/mainwindow.ui
         src/ui/patternparse.ui
