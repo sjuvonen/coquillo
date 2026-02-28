@@ -1,50 +1,11 @@
 #include "mediastoragemodel.h"
+#include "mediastoragemodelcolumns.h"
 #include <QDebug>
 #include <QSize>
 #include <QVariant>
 
 namespace Coquillo {
-MediaStorageModel::MediaStorageModel(QObject *parent)
-    : QAbstractItemModel(parent), size(0),
-
-      labels({
-          QString(),
-          tr("Filename"),
-          tr("Title"),
-          tr("Artist"),
-          tr("Album"),
-          tr("Genre"),
-          tr("Comment"),
-          tr("Year"),
-          tr("#"),
-          tr("Total"),
-          tr("Disc"),
-          tr("Original Artist"),
-          tr("Album Artist"),
-          tr("Composer"),
-          tr("URL"),
-          tr("Encoder"),
-          tr("Images"),
-      }),
-      fields({
-          QString(),
-          QString(),
-          "TITLE",
-          "ARTIST",
-          "ALBUM",
-          "GENRE",
-          "COMMENT",
-          "YEAR",
-          "TRACKNUMBER",
-          "TRACKTOTAL",
-          "DISCNUMBER",
-          "PERFORMER",
-          "ALBUMARTIST",
-          "COMPOSER",
-          "URL",
-          "ENCODER",
-          QString(),
-      }) {}
+MediaStorageModel::MediaStorageModel(QObject *parent) : QAbstractItemModel(parent), size(0) {}
 
 void MediaStorageModel::setStorage(MediaStorage *storage) {
     this->storage = QPointer(storage);
@@ -64,7 +25,7 @@ int MediaStorageModel::columnCount(const QModelIndex &parent) const {
     if (parent.isValid()) {
         return 0;
     } else {
-        return fields.size();
+        return MediaStorageModelColumns::size();
     }
 }
 QModelIndex MediaStorageModel::index(int row, int col, const QModelIndex &parent) const {
@@ -91,7 +52,7 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
     int column = idx.column();
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        const auto field = fields.at(column);
+        const auto field = MediaStorageModelColumns::field(column);
         const auto media = storage->at(idx.row());
 
         if (field.isNull()) {
@@ -131,11 +92,11 @@ QVariant MediaStorageModel::headerData(int section, Qt::Orientation orientation,
         return section + 1;
     }
 
-    if (section < 0 || section >= labels.size()) {
+    if (section < 0 || section >= MediaStorageModelColumns::size()) {
         return QVariant();
     }
 
-    return labels.at(section);
+    return MediaStorageModelColumns::label(section);
 }
 
 void MediaStorageModel::update() {

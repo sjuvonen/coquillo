@@ -18,14 +18,20 @@ set(TS_FILES Coquillo_fi_FI.ts)
 
 set(PROJECT_SOURCES
         src/main.cpp
+        src/app/currentmediapathdelegate.cpp
+        src/app/currentmediapathdelegate.h
         src/app/mainwindow.cpp
         src/app/mainwindow.h
         src/app/mediastorage.cpp
         src/app/mediastorage.h
         src/app/mediastoragemodel.cpp
         src/app/mediastoragemodel.h
+        src/app/mediastoragemodelcolumns.cpp
+        src/app/mediastoragemodelcolumns.h
         src/app/mediastorageworker.cpp
         src/app/mediastorageworker.h
+        src/app/selectionnotifier.cpp
+        src/app/selectionnotifier.h
         src/app/settings.cpp
         src/app/settings.h
         src/app/filebrowser/filebrowser.cpp

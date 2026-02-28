@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>294</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="mediaTabs">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>280</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="Coquillo::MediaTags" name="mediaTags_2">
+      <attribute name="title">
+       <string>Tags</string>
+      </attribute>
+     </widget>
+     <widget class="Coquillo::MediaImages" name="mediaImages_2">
+      <attribute name="title">
+       <string>Images</string>
+      </attribute>
+     </widget>
+     <widget class="Coquillo::MediaMetadata" name="mediaRaw_2">
+      <attribute name="title">
+       <string>Raw</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="currentMediaPath"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Coquillo::MediaTags</class>
+   <extends>QWidget</extends>
+   <header>tagseditor/mediatags.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Coquillo::MediaImages</class>
+   <extends>QWidget</extends>
+   <header>tagseditor/mediaimages.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Coquillo::MediaMetadata</class>
+   <extends>QWidget</extends>
+   <header>tagseditor/mediametadata.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

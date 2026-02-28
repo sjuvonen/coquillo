@@ -20,13 +20,13 @@
    <string>Coquillo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Orientation::Horizontal</enum>
       </property>
-      <widget class="QTabWidget" name="leftSidebar">
+      <widget class="QTabWidget" name="toolBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -74,6 +74,9 @@
          <height>0</height>
         </size>
        </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
        </property>
@@ -81,43 +84,59 @@
         <bool>true</bool>
        </attribute>
        <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-        <bool>true</bool>
+        <bool>false</bool>
        </attribute>
        <attribute name="horizontalHeaderStretchLastSection">
         <bool>true</bool>
        </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
       </widget>
-      <widget class="QTabWidget" name="rightSidebar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="baseSize">
-        <size>
-         <width>280</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="Coquillo::MediaTags" name="tab_3">
-        <attribute name="title">
-         <string>Tags</string>
-        </attribute>
-       </widget>
-       <widget class="Coquillo::MediaImages" name="tab_4">
-        <attribute name="title">
-         <string>Images</string>
-        </attribute>
-       </widget>
-       <widget class="Coquillo::MediaMetadata" name="tab_6">
-        <attribute name="title">
-         <string>Raw</string>
-        </attribute>
-       </widget>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QTabWidget" name="mediaTabs">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>280</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="Coquillo::MediaTags" name="mediaTags">
+           <attribute name="title">
+            <string>Tags</string>
+           </attribute>
+          </widget>
+          <widget class="Coquillo::MediaImages" name="mediaImages">
+           <attribute name="title">
+            <string>Images</string>
+           </attribute>
+          </widget>
+          <widget class="Coquillo::MediaMetadata" name="mediaRaw">
+           <attribute name="title">
+            <string>Raw</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="currentMediaPath">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -177,6 +196,9 @@
    <property name="toolTip">
     <string>Save changes</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
@@ -191,6 +213,9 @@
    <property name="toolTip">
     <string>Scan directories again</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
@@ -204,6 +229,9 @@
    </property>
    <property name="toolTip">
     <string>Select all files</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -250,6 +278,9 @@
    <property name="toolTip">
     <string>Search albums online</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
@@ -257,6 +288,9 @@
   <action name="actionQuit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>

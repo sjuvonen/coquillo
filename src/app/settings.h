@@ -10,7 +10,8 @@ class Settings : public QObject {
     Settings(QObject *parent = nullptr);
     ~Settings();
 
-    QSize uiSize() const;
+    QSize mainWindowSize() const;
+    bool mainWindowMaximized() const;
 
     void set(const QString key, const QVariant &value);
 

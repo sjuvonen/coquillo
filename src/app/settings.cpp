@@ -22,6 +22,7 @@ Settings::Settings(QObject *parent)
           {"Filter/ScaleImagesHeight", 200},
           {"Filter/ParseDiscNumber", false},
           {"UI/Size", QSize(1200, 800)},
+          {"UI/Maximized", false},
       }) {
     read();
 }
@@ -32,7 +33,8 @@ Settings::~Settings() {
     }
 }
 
-QSize Settings::uiSize() const { return values["UI/Size"].toSize(); }
+QSize Settings::mainWindowSize() const { return values["UI/Size"].toSize(); }
+bool Settings::mainWindowMaximized() const { return values["UI/Maximized"].toBool(); }
 
 void Settings::set(const QString key, const QVariant &value) {
     if (!values.contains(key)) {

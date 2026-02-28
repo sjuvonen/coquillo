@@ -26,8 +26,6 @@ class MediaStorageModel : public QAbstractItemModel {
 
   private:
     QPointer<MediaStorage> storage;
-    const QStringList labels;
-    const QStringList fields;
     int size;
 };
 } // namespace Coquillo
