@@ -2,11 +2,18 @@
 #include "mediastoragemodelcolumns.h"
 #include "selectionnotifier.h"
 #include "ui_mediatags.h"
+#include <QLineEdit>
+#include <QSpinBox>
 
 namespace Coquillo {
 MediaTags::MediaTags(QWidget *parent)
     : QWidget(parent), ui(new Ui::MediaTags), mapper(new QDataWidgetMapper(this)) {
     ui->setupUi(this);
+
+    /**
+     * NOTE: Qt Designer does not allow setting spinboxes empty (only 0) so we clear manually.
+     */
+    clear();
 }
 
 MediaTags::~MediaTags() { delete ui; }
@@ -36,11 +43,26 @@ void MediaTags::setSelectionNotifier(SelectionNotifier *selectionNotifier) {
     mapper->setCurrentIndex(selectionNotifier->current());
 
     connect(selection, &SelectionNotifier::currentChanged, [=](int row) {
-        mapper->setCurrentIndex(row);
+        /**
+         * NOTE: Must clear every time because the data widget mapper will not clear inputs when a
+         * field is null.
+         */
+        clear();
 
-        if (row == -1) {
-            // mapper->revert();
-        }
+        mapper->setCurrentIndex(row);
     });
+}
+
+void MediaTags::clear() {
+    const auto inputs = findChildren<QLineEdit *>();
+    const auto spinners = findChildren<QSpinBox *>();
+
+    for (auto input : inputs) {
+        input->clear();
+    }
+
+    for (auto spinner : spinners) {
+        spinner->clear();
+    }
 }
 } // namespace Coquillo

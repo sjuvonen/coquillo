@@ -24,6 +24,8 @@ class MediaTags : public QWidget {
     void setSelectionNotifier(SelectionNotifier *selectionNotifier);
 
   private:
+    void clear();
+
     Ui::MediaTags *ui;
     QPointer<QDataWidgetMapper> mapper;
     QPointer<SelectionNotifier> selection;
