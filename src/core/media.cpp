@@ -17,10 +17,14 @@ class Media::MediaPrivate {
     QString path;
     QString rename;
     const QStringHash data;
+    QStringHash updates;
 };
 
 Media::MediaPrivate::MediaPrivate(Type type, const QString &path, const QStringHash &data)
     : type(type), path(path), data(data) {}
+
+Media::Media(Type type, const QString &path, const QStringHash &data)
+    : d(std::make_shared<Media::MediaPrivate>(type, path, data)) {}
 
 Media Media::fromFileRef(const TagLib::FileRef &ref) {
     /**
@@ -41,8 +45,14 @@ Media Media::fromFileRef(const TagLib::FileRef &ref) {
 
 const QString Media::path() const { return d->path; }
 
-const QString Media::get(const QString &field) const { return d->data[field]; }
+const QString Media::get(const QString &field) const {
+    if (d->updates.contains(field)) {
+        return d->updates[field];
+    } else {
+        return d->data[field];
+    }
+}
 
-Media::Media(Type type, const QString &path, const QStringHash &data)
-    : d(std::make_shared<Media::MediaPrivate>(type, path, data)) {}
+void Media::set(const QString &field, const QString &value) { d->updates[field] = value; }
+
 } // namespace Coquillo

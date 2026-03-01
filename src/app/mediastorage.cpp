@@ -17,6 +17,8 @@ int MediaStorage::size() const { return media.size(); }
 
 const Media &MediaStorage::at(int index) const { return media.at(index); }
 
+Media &MediaStorage::at(int index) { return media[index]; }
+
 void MediaStorage::addPath(const QString &path) {
     if (workers.contains(path)) {
         return;

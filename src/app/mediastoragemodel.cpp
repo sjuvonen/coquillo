@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QSize>
 #include <QVariant>
+#include <qlogging.h>
+#include <qnamespace.h>
 
 namespace Coquillo {
 MediaStorageModel::MediaStorageModel(QObject *parent) : QAbstractItemModel(parent), size(0) {}
@@ -81,6 +83,27 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
     } else {
         return QVariant();
     }
+}
+
+bool MediaStorageModel::setData(const QModelIndex &idx, const QVariant &value, int role) {
+
+    if (role != Qt::EditRole) {
+        return false;
+    }
+
+    int column = idx.column();
+    const auto field = MediaStorageModelColumns::field(column);
+    auto media = storage->at(idx.row());
+
+    if (!field.isNull()) {
+        media.set(field, value.toString());
+
+        emit dataChanged(idx, idx, {Qt::EditRole, Qt::DisplayRole});
+
+        return true;
+    }
+
+    return false;
 }
 
 QVariant MediaStorageModel::headerData(int section, Qt::Orientation orientation, int role) const {

@@ -17,6 +17,7 @@ class MediaStorage : public QObject {
 
     int size() const;
     const Media &at(int index) const;
+    Media &at(int index);
 
   public slots:
     void addPath(const QString &path);
