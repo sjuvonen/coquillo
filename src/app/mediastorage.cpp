@@ -54,6 +54,7 @@ void MediaStorage::addPath(const QString &path) {
         if (workers.empty()) {
             currentTotal = 0;
             currentProgress = 0;
+
             emit finished();
         }
     });

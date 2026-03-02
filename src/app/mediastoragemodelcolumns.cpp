@@ -31,15 +31,15 @@ QStringList MediaStorageModelColumns::fields({
     "ALBUM",
     "GENRE",
     "COMMENT",
-    "YEAR",
+    "DATE",
     "TRACKNUMBER",
     "TRACKTOTAL",
     "DISCNUMBER",
     "PERFORMER",
     "ALBUMARTIST",
     "COMPOSER",
-    "URL",
-    "ENCODER",
+    "CONTACT",
+    "ENCODED-BY",
     QString(),
 });
 

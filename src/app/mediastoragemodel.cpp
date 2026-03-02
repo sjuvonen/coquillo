@@ -58,13 +58,14 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
         const auto media = storage->at(idx.row());
 
         if (field.isNull()) {
+            if (column == MediaStorageModelColumns::pathColumn()) {
+                return media.path();
+            }
+
             switch (column) {
             case 0:
                 // FIXME: Modification status.
                 return QVariant();
-
-            case 1:
-                return media.path();
 
             case 16:
                 return 0;
@@ -86,7 +87,6 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
 }
 
 bool MediaStorageModel::setData(const QModelIndex &idx, const QVariant &value, int role) {
-
     if (role != Qt::EditRole) {
         return false;
     }

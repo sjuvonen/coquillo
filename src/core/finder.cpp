@@ -66,7 +66,7 @@ find_job *find_files(const std::string &directory, bool recursive) {
 }
 
 read_job *read_files(const media_paths &files) {
-    auto job_count = 4;
+    auto job_count = files.size() > 20 ? 4 : 1;
     size_t batch_size = std::ceil(files.size() / (float)job_count);
 
     auto job = new read_job();

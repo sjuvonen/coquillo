@@ -74,7 +74,7 @@ void MainWindow::setup() {
 
     QTimer::singleShot(1000, [this]() {
         storage->setRecursive(true);
-        storage->addPath("/home/samu/Music");
+        storage->addPath("/home/samu/Music/examples");
 
         qDebug() << "SCAN INITIATED";
     });

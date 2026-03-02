@@ -31,14 +31,14 @@ void MediaTags::setSelectionNotifier(SelectionNotifier *selectionNotifier) {
     mapper->addMapping(ui->tagComment, MediaStorageModelColumns::column("COMMENT"));
     mapper->addMapping(ui->tagComposer, MediaStorageModelColumns::column("COMPOSER"));
     mapper->addMapping(ui->tagDisc, MediaStorageModelColumns::column("DISCNUMBER"));
-    mapper->addMapping(ui->tagEncoder, MediaStorageModelColumns::column("ENCODER"));
+    mapper->addMapping(ui->tagEncoder, MediaStorageModelColumns::column("ENCODED-BY"));
     mapper->addMapping(ui->tagGenre, MediaStorageModelColumns::column("GENRE"));
     mapper->addMapping(ui->tagOriginalArtist, MediaStorageModelColumns::column("PERFORMER"));
     mapper->addMapping(ui->tagTitle, MediaStorageModelColumns::column("TITLE"));
     mapper->addMapping(ui->tagTrack, MediaStorageModelColumns::column("TRACKNUMBER"));
     mapper->addMapping(ui->tagTrackTotal, MediaStorageModelColumns::column("TRACKTOTAL"));
-    mapper->addMapping(ui->tagUrl, MediaStorageModelColumns::column("URL"));
-    mapper->addMapping(ui->tagYear, MediaStorageModelColumns::column("YEAR"));
+    mapper->addMapping(ui->tagUrl, MediaStorageModelColumns::column("CONTACT"));
+    mapper->addMapping(ui->tagYear, MediaStorageModelColumns::column("DATE"));
 
     mapper->setCurrentIndex(selectionNotifier->current());
 
