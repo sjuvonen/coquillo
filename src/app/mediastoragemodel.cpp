@@ -130,7 +130,7 @@ void MediaStorageModel::update() {
         qDebug() << "update model" << first << last;
 
         beginInsertRows(QModelIndex(), first, last);
-        size = last;
+        size = last + 1;
         endInsertRows();
     }
 }
