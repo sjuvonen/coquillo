@@ -70,15 +70,15 @@ void Media::MediaPrivate::normalize() {
         /**
          * URL ("WXXX") is a list of multiple frames indicated by prefix "[] " or "[FOO] ".
          */
-        // if (!values.value("CONTACT").isNull()) {
-        //     // qDebug() << "term:" << values.value("CONTACT").indexOf('\0');
+        if (!values.value("CONTACT").isNull()) {
+            // qDebug() << "term:" << values.value("CONTACT").indexOf('\0');
 
-        //     qDebug() << "\n\n\nHELLLLOOOO\n\n\n" << values.value("CONTACT").indexOf('\0');
+            qDebug() << "\n\n\nHELLLLOOOO\n\n\n" << values.value("CONTACT").indexOf('\0');
 
-        //     // const auto url = values.value("CONTACT").remove(QRegularExpression("^\\[\\] "));
+            const auto url = values.value("CONTACT").remove(QRegularExpression("^\\[.*?\\] "));
 
-        //     // values.replace("CONTACT", url);
-        // }
+            values.replace("CONTACT", url);
+        }
 
         if (!values.value("TRACKNUMBER").isNull()) {
             const auto trackAndTotal = values.value("TRACKNUMBER").split("/");
