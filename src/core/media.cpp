@@ -15,10 +15,11 @@ class Media::MediaPrivate {
     void addTag(const QString &name, const Tag &values);
     void normalize();
     void reset();
+    void reset(const QString &field);
 
     Type type;
     QString path;
-    QString rename;
+    QString renamed;
 
     /**
      * Primary tag name.
@@ -103,9 +104,11 @@ void Media::MediaPrivate::normalize() {
 }
 
 void Media::MediaPrivate::reset() {
-    rename.clear();
+    renamed.clear();
     updates.clear();
 }
+
+void Media::MediaPrivate::reset(const QString &field) { updates.remove(field); }
 
 Media::Media(Type type, const QString &path)
     : d(std::make_shared<Media::MediaPrivate>(type, path)) {}
@@ -133,7 +136,13 @@ Media Media::fromFileRef(const TagLib::FileRef &ref) {
 
 const QString Media::path() const { return d->path; }
 
+const QString Media::renamed() const { return d->renamed; }
+
+const QString Media::primary() const { return d->primary; }
+
 const QMap<QString, Tag> Media::tags() const { return d->tags; }
+
+void Media::addTag(const QString &name, const Tag &values) { d->addTag(name, values); }
 
 const QString Media::get(const QString &field) const {
     if (d->updates.contains(field)) {
@@ -143,11 +152,18 @@ const QString Media::get(const QString &field) const {
     }
 }
 
-void Media::set(const QString &field, const QString &value) { d->updates.replace(field, value); }
+void Media::set(const QString &field, const QString &value) {
+    reset(field);
 
-void Media::addTag(const QString &name, const Tag &values) { d->addTag(name, values); }
+    if (get(field) != value) {
+        d->updates.replace(field, value);
+    }
+}
 
 void Media::normalize() { d->normalize(); }
 
 void Media::reset() { d->reset(); }
+void Media::reset(const QString &field) { d->reset(field); }
+
+bool Media::modified() const { return !d->updates.empty(); }
 } // namespace Coquillo

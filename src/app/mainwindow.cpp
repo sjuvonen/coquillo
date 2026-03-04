@@ -13,7 +13,12 @@
 #include <QStandardPaths>
 #include <QTimer>
 #include <QWindowStateChangeEvent>
+#include <qaction.h>
+#include <qitemselectionmodel.h>
+#include <qmenubar.h>
 #include <qnamespace.h>
+#include <qstatusbar.h>
+#include <qtoolbar.h>
 
 namespace Coquillo {
 MainWindow::MainWindow(QWidget *parent)
@@ -31,8 +36,34 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::setup() {
+QMenu *MainWindow::createPopupMenu() {
+    auto menu = new QMenu(this);
 
+    auto aMenuBar = new QAction(ui->actionMenubar->text());
+    aMenuBar->setCheckable(true);
+    aMenuBar->setChecked(ui->menuBar->isVisible());
+
+    auto aToolBar = new QAction(ui->actionToolbar->text());
+    aToolBar->setCheckable(true);
+    aToolBar->setChecked(ui->toolBar->isVisible());
+
+    auto aStatusBar = new QAction(ui->actionStatusbar->text());
+    aStatusBar->setCheckable(true);
+    aStatusBar->setChecked(ui->statusBar->isVisible());
+
+    menu->addAction(aMenuBar);
+    menu->addAction(aStatusBar);
+    menu->addSeparator();
+    menu->addAction(aToolBar);
+
+    connect(aMenuBar, &QAction::triggered, ui->menuBar, &QMenuBar::setVisible);
+    connect(aToolBar, &QAction::triggered, ui->toolBar, &QToolBar::setVisible);
+    connect(aStatusBar, &QAction::triggered, ui->statusBar, &QStatusBar::setVisible);
+
+    return menu;
+}
+
+void MainWindow::setup() {
     auto fallbackLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).at(0);
     auto location = QSettings().value("DefaultLocation", fallbackLocation);
 
@@ -43,7 +74,12 @@ void MainWindow::setup() {
 
     ui->statusBar->addPermanentWidget(progressBar);
     ui->browser->setDirectory(location.toString());
+
     ui->mediaView->setModel(proxyModel);
+    ui->mediaView->horizontalHeader()->setSectionsMovable(true);
+    ui->mediaView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    ui->mediaView->horizontalHeader()->resizeSection(0, 20);
+    ui->mediaView->horizontalHeader()->resizeSection(1, 200);
 
     selectionNotifier->setModel(proxyModel);
 
@@ -57,12 +93,23 @@ void MainWindow::setup() {
      */
     ui->mediaTags->setSelectionNotifier(selectionNotifier);
 
+    ui->mediaRaw->setMediaStorage(storage);
+    ui->mediaRaw->setSelectionNotifier(selectionNotifier);
+
     currentMediaPath->setComboBox(ui->currentMediaPath);
     currentMediaPath->setSelectionNotifier(selectionNotifier);
 
     connect(ui->browser, &FileBrowser::pathAdded, storage, &MediaStorage::addPath);
     connect(ui->browser, &FileBrowser::pathRemoved, storage, &MediaStorage::removePath);
     connect(ui->browser, &FileBrowser::recursiveToggled, storage, &MediaStorage::setRecursive);
+
+    connect(ui->actionSelectAll, &QAction::triggered, [this]() {
+        const auto first = proxyModel->index(0, 0);
+        const auto last = first.siblingAtRow(proxyModel->rowCount() - 1);
+        auto flags = QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows;
+
+        ui->mediaView->selectionModel()->select(QItemSelection(first, last), flags);
+    });
 
     connect(storage, &MediaStorage::started, progressBar, &QProgressBar::show);
     connect(storage, &MediaStorage::finished, progressBar, &QProgressBar::hide);
@@ -80,6 +127,8 @@ void MainWindow::setup() {
     });
 
     addAction(ui->actionQuit);
+    addAction(ui->actionSelectAll);
+    addAction(ui->actionMenubar);
 
     resize(settings->mainWindowSize());
 

@@ -4,6 +4,8 @@
 #include "ui_mediatags.h"
 #include <QLineEdit>
 #include <QSpinBox>
+#include <qdatawidgetmapper.h>
+#include <qlineedit.h>
 
 namespace Coquillo {
 MediaTags::MediaTags(QWidget *parent)
@@ -14,6 +16,19 @@ MediaTags::MediaTags(QWidget *parent)
      * NOTE: Qt Designer does not allow setting spinboxes empty (only 0) so we clear manually.
      */
     clear();
+
+    // mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+
+    // const auto inputs = findChildren<QLineEdit *>();
+    // const auto spinners = findChildren<QSpinBox *>();
+
+    // for (auto input : inputs) {
+    //     connect(input, &QLineEdit::textChanged, mapper, &QDataWidgetMapper::submit);
+    // }
+
+    // for (auto spinner : spinners) {
+    //     connect(spinner, &QSpinBox::textChanged, mapper, &QDataWidgetMapper::submit);
+    // }
 }
 
 MediaTags::~MediaTags() { delete ui; }
@@ -53,9 +68,13 @@ void MediaTags::setSelectionNotifier(SelectionNotifier *selectionNotifier) {
     });
 }
 
+void MediaTags::submit() { mapper->submit(); }
+
 void MediaTags::clear() {
     const auto inputs = findChildren<QLineEdit *>();
     const auto spinners = findChildren<QSpinBox *>();
+
+    mapper->setCurrentIndex(-1);
 
     for (auto input : inputs) {
         input->clear();

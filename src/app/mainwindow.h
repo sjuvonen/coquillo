@@ -24,6 +24,8 @@ class MainWindow : public QMainWindow {
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    QMenu *createPopupMenu() override;
+
   protected:
     bool event(QEvent *event) override;
 

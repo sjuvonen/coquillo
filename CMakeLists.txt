@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
         src/app/mediastoragemodelcolumns.h
         src/app/mediastorageworker.cpp
         src/app/mediastorageworker.h
+        src/app/metadatamodel.cpp
+        src/app/metadatamodel.h
         src/app/selectionnotifier.cpp
         src/app/selectionnotifier.h
         src/app/settings.cpp

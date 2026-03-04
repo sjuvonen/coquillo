@@ -16,13 +16,20 @@ class Media {
     static Media fromFileRef(const TagLib::FileRef &ref);
 
     const QString path() const;
+    const QString renamed() const;
+
+    const QString primary() const;
     const QMap<QString, Tag> tags() const;
+    void addTag(const QString &name, const Tag &values);
+
     const QString get(const QString &field) const;
     void set(const QString &field, const QString &value);
 
-    void addTag(const QString &name, const Tag &values);
     void normalize();
     void reset();
+    void reset(const QString &field);
+
+    bool modified() const;
 
   private:
     Media(Type type, const QString &path);

@@ -3,7 +3,6 @@
 
 #include "../selectionnotifier.h"
 #include <QDataWidgetMapper>
-#include <QPointer>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +21,9 @@ class MediaTags : public QWidget {
     ~MediaTags();
 
     void setSelectionNotifier(SelectionNotifier *selectionNotifier);
+
+  protected:
+    void submit();
 
   private:
     void clear();

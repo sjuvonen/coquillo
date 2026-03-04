@@ -3,8 +3,13 @@
 #include <QDebug>
 #include <QSize>
 #include <QVariant>
+#include <qapplication.h>
+#include <qcontainerfwd.h>
+#include <qfont.h>
+#include <qicon.h>
 #include <qlogging.h>
 #include <qnamespace.h>
+#include <qpalette.h>
 
 namespace Coquillo {
 MediaStorageModel::MediaStorageModel(QObject *parent) : QAbstractItemModel(parent), size(0) {}
@@ -30,6 +35,7 @@ int MediaStorageModel::columnCount(const QModelIndex &parent) const {
         return MediaStorageModelColumns::size();
     }
 }
+
 QModelIndex MediaStorageModel::index(int row, int col, const QModelIndex &parent) const {
     if (row < 0 || row >= rowCount() || col < 0 || col >= columnCount()) {
         return QModelIndex();
@@ -53,35 +59,79 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
 
     int column = idx.column();
 
-    if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        const auto field = MediaStorageModelColumns::field(column);
-        const auto media = storage->at(idx.row());
+    const auto field = MediaStorageModelColumns::field(column);
+    const auto media = storage->at(idx.row());
 
-        if (field.isNull()) {
-            if (column == MediaStorageModelColumns::pathColumn()) {
-                return media.path();
+    if (role == Qt::ForegroundRole) {
+        if (media.modified()) {
+            const auto palette = QGuiApplication::palette();
+
+            return palette.accent().color();
+        }
+    }
+
+    if (field.isNull()) {
+        if (column == MediaStorageModelColumns::pathColumn()) {
+            switch (role) {
+            case Qt::DisplayRole:
+            case Qt::EditRole:
+            case Qt::ToolTipRole:
+                return media.renamed().isNull() ? media.path() : media.renamed();
+
+            default:
+                return QVariant();
+            }
+        }
+
+        if (column == 0) {
+            switch (role) {
+                // case Qt::DecorationRole:
+                //     return media.modified() ? QIcon::fromTheme("emblem-important") : QVariant();
+
+                // case Qt::BackgroundRole:
+                //     return media.modified() ? QGuiApplication::palette().accent().color() :
+                //     QVariant();
+
+            case Qt::DisplayRole:
+                return media.modified() ? QString("⦿") : QString();
+
+            case Qt::FontRole: {
+                if (media.modified()) {
+                    auto font = QApplication::font();
+
+                    if (font.pixelSize() != -1) {
+                        font.setPixelSize(font.pixelSize() * 1.6);
+                    } else {
+                        font.setPointSize(font.pointSize() * 1.6);
+                    }
+
+                    return font;
+                }
             }
 
-            switch (column) {
-            case 0:
-                // FIXME: Modification status.
+            default:
                 return QVariant();
+            }
+        }
 
-            case 16:
+        if (column == 16) {
+            switch (role) {
+            case Qt::DisplayRole:
                 return 0;
 
             default:
-                qWarning() << "mediastoragemodel: Unhandled special column" << column;
-
                 return QVariant();
             }
-        } else {
+        }
+
+        qWarning() << "mediastoragemodel: Unhandled special column" << column;
+
+        return QVariant();
+    } else {
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
             return media.get(field);
         }
 
-    } else if (role == Qt::SizeHintRole) {
-        return QSize(200, 0);
-    } else {
         return QVariant();
     }
 }
@@ -98,6 +148,7 @@ bool MediaStorageModel::setData(const QModelIndex &idx, const QVariant &value, i
     if (!field.isNull()) {
         media.set(field, value.toString());
 
+        emit dataChanged(idx.siblingAtColumn(0), idx.siblingAtColumn(0), {Qt::DisplayRole});
         emit dataChanged(idx, idx, {Qt::EditRole, Qt::DisplayRole});
 
         return true;

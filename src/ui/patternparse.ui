@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>424</height>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,7 +85,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Apply</string>
+           <string>Parse</string>
           </property>
           <property name="autoDefault">
            <bool>false</bool>
