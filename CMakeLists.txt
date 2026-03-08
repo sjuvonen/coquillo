@@ -17,9 +17,18 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 set(TS_FILES Coquillo_fi_FI.ts)
 
 set(PROJECT_SOURCES
+        src/resources.qrc
         src/main.cpp
         src/app/currentmediapathdelegate.cpp
         src/app/currentmediapathdelegate.h
+        src/app/filebrowser/bookmarks.cpp
+        src/app/filebrowser/bookmarks.h
+        src/app/filebrowser/filebrowser.cpp
+        src/app/filebrowser/filebrowser.h
+        src/app/filebrowser/filebrowsermodel.cpp
+        src/app/filebrowser/filebrowsermodel.h
+        src/app/filebrowser/history.cpp
+        src/app/filebrowser/history.h
         src/app/mainwindow.cpp
         src/app/mainwindow.h
         src/app/mediastorage.cpp
@@ -32,18 +41,14 @@ set(PROJECT_SOURCES
         src/app/mediastorageworker.h
         src/app/metadatamodel.cpp
         src/app/metadatamodel.h
-        src/app/selectionnotifier.cpp
-        src/app/selectionnotifier.h
-        src/app/settings.cpp
-        src/app/settings.h
-        src/app/filebrowser/filebrowser.cpp
-        src/app/filebrowser/filebrowser.h
-        src/app/filebrowser/filebrowsermodel.cpp
-        src/app/filebrowser/filebrowsermodel.h
         src/app/processor/patternparse.cpp
         src/app/processor/patternparse.h
         src/app/processor/patternrename.cpp
         src/app/processor/patternrename.h
+        src/app/selectionnotifier.cpp
+        src/app/selectionnotifier.h
+        src/app/settings.cpp
+        src/app/settings.h
         src/app/tagseditor/mediaimages.cpp
         src/app/tagseditor/mediaimages.h
         src/app/tagseditor/mediametadata.cpp

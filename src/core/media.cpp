@@ -138,6 +138,8 @@ const QString Media::path() const { return d->path; }
 
 const QString Media::renamed() const { return d->renamed; }
 
+void Media::rename(const QString &newPath) { d->renamed = newPath; }
+
 const QString Media::primary() const { return d->primary; }
 
 const QMap<QString, Tag> Media::tags() const { return d->tags; }
@@ -165,5 +167,5 @@ void Media::normalize() { d->normalize(); }
 void Media::reset() { d->reset(); }
 void Media::reset(const QString &field) { d->reset(field); }
 
-bool Media::modified() const { return !d->updates.empty(); }
+bool Media::changed() const { return !d->updates.empty() || !d->renamed.isNull(); }
 } // namespace Coquillo

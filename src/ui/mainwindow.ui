@@ -26,6 +26,9 @@
       <property name="orientation">
        <enum>Qt::Orientation::Horizontal</enum>
       </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
       <widget class="QTabWidget" name="toolBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -43,19 +46,19 @@
         <enum>QTabWidget::TabPosition::West</enum>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="Coquillo::FileBrowser" name="browser">
         <attribute name="title">
          <string>Browse</string>
         </attribute>
        </widget>
-       <widget class="Coquillo::PatternRename" name="renamer">
+       <widget class="Coquillo::PatternRename" name="patternRename">
         <attribute name="title">
          <string>Rename</string>
         </attribute>
        </widget>
-       <widget class="Coquillo::PatternParse" name="parser">
+       <widget class="Coquillo::PatternParse" name="patternParse">
         <attribute name="title">
          <string>Parse</string>
         </attribute>
@@ -64,7 +67,7 @@
       <widget class="QTableView" name="mediaView">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>1</horstretch>
+         <horstretch>10</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
@@ -168,6 +171,7 @@
     <addaction name="actionStatusbar"/>
     <addaction name="separator"/>
     <addaction name="actionToolbar"/>
+    <addaction name="actionLockToolBars"/>
     <addaction name="separator"/>
     <addaction name="actionConfigure"/>
    </widget>
@@ -350,6 +354,17 @@
     <string>&amp;Configure...</string>
    </property>
   </action>
+  <action name="actionLockToolBars">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Lock toolbars</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -390,70 +405,8 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>actionQuit</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>684</x>
-     <y>444</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionMenubar</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>menuBar</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>684</x>
-     <y>12</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionToolbar</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>toolBar</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>684</x>
-     <y>45</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionStatusbar</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>statusBar</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>684</x>
-     <y>878</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
+ <slots>
+  <slot>lockToolBars(bool)</slot>
+ </slots>
 </ui>

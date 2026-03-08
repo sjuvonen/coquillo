@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="menu">icons/bars-solid-full.svg</file>
+        <file alias="context-menu-h">icons/ellipsis-solid-full.svg</file>
+        <file alias="context-menu-v">icons/ellipsis-vertical-solid-full.svg</file>
+    </qresource>
+</RCC>

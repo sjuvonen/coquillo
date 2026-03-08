@@ -2,12 +2,16 @@
 #include "filebrowsermodel.h"
 #include "ui_filebrowser.h"
 #include <qcheckbox.h>
+#include <qmenu.h>
 
 namespace Coquillo {
 FileBrowser::FileBrowser(QWidget *parent)
-    : QWidget(parent), ui(new Ui::FileBrowser), fs(new FileBrowserModel) {
+    : QWidget(parent), ui(new Ui::FileBrowser), fs(new FileBrowserModel), bookmarks(new Bookmarks),
+      history(new History) {
     ui->setupUi(this);
     ui->directoryView->setModel(fs);
+
+    setupBookmarks();
 
     connect(ui->toggleRecursiveScan, &QCheckBox::toggled, fs, &FileBrowserModel::setRecursive);
 
@@ -33,5 +37,23 @@ void FileBrowser::setDirectory(const QString &directory) {
 }
 
 void FileBrowser::setRecursive(bool recursive) { fs->setRecursive(recursive); }
+
+void FileBrowser::setupBookmarks() {
+    auto aBookmarkCurrent =
+        new QAction(QIcon::fromTheme(QIcon::ThemeIcon::ListAdd), tr("Bookmark current location"));
+
+    auto menu = new QMenu();
+    menu->addAction(aBookmarkCurrent);
+
+    const auto cwd = ui->workingDirectory->currentText();
+    ui->bookmarks->setMenu(menu);
+    ui->workingDirectory->clear();
+
+    for (const auto entry : bookmarks->entries()) {
+        ui->workingDirectory->addItem(QIcon::fromTheme("starred"), entry.label, entry.path);
+    }
+
+    ui->workingDirectory->setCurrentText(cwd);
+}
 
 } // namespace Coquillo

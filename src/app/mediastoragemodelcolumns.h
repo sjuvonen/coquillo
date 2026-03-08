@@ -14,7 +14,9 @@ class MediaStorageModelColumns {
     static const QString field(int column);
     static const QString fieldFor(const QString &label);
 
+    inline static int indicatorColumn();
     inline static int pathColumn();
+
     static int column(const QString &field);
     static int size();
 
@@ -22,6 +24,8 @@ class MediaStorageModelColumns {
     static QStringList labels;
     static QStringList fields;
 };
+
+int MediaStorageModelColumns::indicatorColumn() { return 0; }
 
 int MediaStorageModelColumns::pathColumn() { return 1; }
 } // namespace Coquillo

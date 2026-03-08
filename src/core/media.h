@@ -16,7 +16,9 @@ class Media {
     static Media fromFileRef(const TagLib::FileRef &ref);
 
     const QString path() const;
+
     const QString renamed() const;
+    void rename(const QString &newPath);
 
     const QString primary() const;
     const QMap<QString, Tag> tags() const;
@@ -29,7 +31,7 @@ class Media {
     void reset();
     void reset(const QString &field);
 
-    bool modified() const;
+    bool changed() const;
 
   private:
     Media(Type type, const QString &path);

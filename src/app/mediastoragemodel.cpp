@@ -1,5 +1,6 @@
 #include "mediastoragemodel.h"
 #include "mediastoragemodelcolumns.h"
+#include "mediastoragemodelroles.h"
 #include <QDebug>
 #include <QSize>
 #include <QVariant>
@@ -63,11 +64,15 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
     const auto media = storage->at(idx.row());
 
     if (role == Qt::ForegroundRole) {
-        if (media.modified()) {
+        if (media.changed()) {
             const auto palette = QGuiApplication::palette();
 
             return palette.accent().color();
         }
+    }
+
+    if (role == FilePathRole) {
+        return media.path();
     }
 
     if (field.isNull()) {
@@ -83,7 +88,7 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
             }
         }
 
-        if (column == 0) {
+        if (column == MediaStorageModelColumns::indicatorColumn()) {
             switch (role) {
                 // case Qt::DecorationRole:
                 //     return media.modified() ? QIcon::fromTheme("emblem-important") : QVariant();
@@ -93,10 +98,10 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
                 //     QVariant();
 
             case Qt::DisplayRole:
-                return media.modified() ? QString("⦿") : QString();
+                return media.changed() ? QString("⦿") : QString();
 
             case Qt::FontRole: {
-                if (media.modified()) {
+                if (media.changed()) {
                     auto font = QApplication::font();
 
                     if (font.pixelSize() != -1) {
@@ -145,7 +150,16 @@ bool MediaStorageModel::setData(const QModelIndex &idx, const QVariant &value, i
     const auto field = MediaStorageModelColumns::field(column);
     auto media = storage->at(idx.row());
 
-    if (!field.isNull()) {
+    if (field.isNull()) {
+        if (column == MediaStorageModelColumns::pathColumn()) {
+            media.rename(value.toString());
+
+            emit dataChanged(idx, idx, {Qt::EditRole, Qt::DisplayRole});
+            emit dataChanged(idx.siblingAtColumn(0), idx.siblingAtColumn(0), {Qt::DisplayRole});
+
+            return true;
+        }
+    } else {
         media.set(field, value.toString());
 
         emit dataChanged(idx.siblingAtColumn(0), idx.siblingAtColumn(0), {Qt::DisplayRole});
@@ -178,8 +192,6 @@ void MediaStorageModel::update() {
     int last = storage->size() - 1;
 
     if (last > 0) {
-        qDebug() << "update model" << first << last;
-
         beginInsertRows(QModelIndex(), first, last);
         size = last + 1;
         endInsertRows();

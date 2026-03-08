@@ -1,8 +1,11 @@
-#ifndef COQUILLO_FILEBROWSER_H
-#define COQUILLO_FILEBROWSER_H
+#ifndef COQUILLO_FILEBROWSER_FILEBROWSER_H
+#define COQUILLO_FILEBROWSER_FILEBROWSER_H
 
-#include "filebrowser/filebrowsermodel.h"
+#include "bookmarks.h"
+#include "filebrowsermodel.h"
+#include "history.h"
 #include <QWidget>
+#include <qpointer.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,8 +31,12 @@ class FileBrowser : public QWidget {
     void recursiveToggled(bool recursive);
 
   private:
+    void setupBookmarks();
+
     Ui::FileBrowser *ui;
-    FileBrowserModel *fs;
+    QPointer<FileBrowserModel> fs;
+    QPointer<Bookmarks> bookmarks;
+    QPointer<History> history;
 };
 } // namespace Coquillo
 

@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QPointer>
 #include <QSortFilterProxyModel>
+#include <qevent.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,8 +29,14 @@ class MainWindow : public QMainWindow {
 
   protected:
     bool event(QEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
   private:
+    void lockToolBars(bool lock = true);
+    void showHeaderContextMenu(const QPoint &pos);
+    void setup();
+    void restore();
+
     Ui::MainWindow *ui;
     QPointer<Settings> settings;
     QPointer<MediaStorage> storage;
@@ -37,8 +44,6 @@ class MainWindow : public QMainWindow {
     QPointer<QSortFilterProxyModel> proxyModel;
     QPointer<SelectionNotifier> selectionNotifier;
     QPointer<CurrentMediaPathDelegate> currentMediaPath;
-
-    void setup();
 };
 } // namespace Coquillo
 #endif

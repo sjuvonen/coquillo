@@ -18,9 +18,6 @@ int main(int argc, char *argv[]) {
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
 
-    qDebug() << "UNICODE" << "ä" << "ö" << "Ä" << "Ö" << "é" << "É";
-    qDebug() << "UNICODE" << L"ä" << L"ö" << L"Ä" << L"Ö" << L"é" << L"É";
-
     for (const QString &locale : uiLanguages) {
         const QString baseName = "Coquillo_" + QLocale(locale).name();
 

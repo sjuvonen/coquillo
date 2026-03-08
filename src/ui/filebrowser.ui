@@ -43,27 +43,31 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="setBookmarked">
+      <widget class="QToolButton" name="bookmarks">
        <property name="toolTip">
         <string>Bookmark this directory</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QToolButton::menu-indicator { image: none; }</string>
        </property>
        <property name="text">
         <string>Bookmark</string>
        </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/icons/context-menu-v</normaloff>:/icons/context-menu-v</iconset>
+       </property>
        <property name="checkable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="popupMode">
-        <enum>QToolButton::ToolButtonPopupMode::MenuButtonPopup</enum>
+        <enum>QToolButton::ToolButtonPopupMode::InstantPopup</enum>
        </property>
        <property name="toolButtonStyle">
-        <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
+        <enum>Qt::ToolButtonStyle::ToolButtonIconOnly</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
-       </property>
-       <property name="arrowType">
-        <enum>Qt::ArrowType::NoArrow</enum>
        </property>
       </widget>
      </item>
@@ -104,6 +108,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

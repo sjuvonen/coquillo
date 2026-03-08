@@ -12,7 +12,7 @@ QStringList MediaStorageModelColumns::labels({
     QObject::tr("Genre"),
     QObject::tr("Comment"),
     QObject::tr("Year"),
-    QObject::tr("#"),
+    QObject::tr("Track"),
     QObject::tr("Total"),
     QObject::tr("Disc"),
     QObject::tr("Original Artist"),
