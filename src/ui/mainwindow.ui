@@ -46,7 +46,7 @@
         <enum>QTabWidget::TabPosition::West</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="Coquillo::FileBrowser" name="browser">
         <attribute name="title">

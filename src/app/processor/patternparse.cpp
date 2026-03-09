@@ -35,23 +35,28 @@ const QMap<int, QString> parse_filename(const QString &filePath, const QString &
 
         int column = mappings.value(token, -1);
 
-        const QString rxToken =
-            numericColumns.contains(column) ? QString("(\\d+)") : QString("(.*?)");
+        if (column != -1 || token == "%i") {
+            const QString rxToken =
+                numericColumns.contains(column) ? QString("(\\d+)") : QString("([^/\\\\]+)");
 
-        rxPattern.replace(i - slength + 2, slength, rxToken);
+            rxPattern.replace(i - slength + 2, slength, rxToken);
 
-        i += rxToken.length() - 2;
+            i += rxToken.length() - 2;
 
-        tokens << token;
+            tokens << token;
+        }
     }
 
     auto match = QRegularExpression(rxPattern).match(basePath);
 
     for (int i = 1; i <= match.lastCapturedIndex(); i++) {
         const auto token = tokens.takeFirst();
-        int column = mappings[token];
 
-        tags[column] = match.captured(i);
+        if (token != "%i") {
+            int column = mappings[token];
+
+            tags[column] = match.captured(i);
+        }
     }
 
     return tags;
@@ -94,7 +99,6 @@ const QHash<QString, int> PatternParse::mappings() const {
         {ui->labelTrackNumber->text().slice(0, 2), MediaStorageModelColumns::column("TRACKNUMBER")},
         {ui->labelTrackTotal->text().slice(0, 2), MediaStorageModelColumns::column("TRACKTOTAL")},
         {ui->labelYear->text().slice(0, 2), MediaStorageModelColumns::column("DATE")},
-        {"%i", -1},
     });
 
     return mappings;
