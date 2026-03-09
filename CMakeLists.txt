@@ -55,6 +55,8 @@ set(PROJECT_SOURCES
         src/app/tagseditor/mediametadata.h
         src/app/tagseditor/mediatags.cpp
         src/app/tagseditor/mediatags.h
+        src/app/tagseditor/modificationindicatordelegate.cpp
+        src/app/tagseditor/modificationindicatordelegate.h
         src/core/files.cpp
         src/core/files.h
         src/core/finder.cpp

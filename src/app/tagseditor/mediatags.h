@@ -30,6 +30,7 @@ class MediaTags : public QWidget {
 
     Ui::MediaTags *ui;
     QPointer<QDataWidgetMapper> mapper;
+    QPointer<QDataWidgetMapper> labelMapper;
     QPointer<SelectionNotifier> selection;
 };
 } // namespace Coquillo

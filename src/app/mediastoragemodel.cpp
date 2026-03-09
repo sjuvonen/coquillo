@@ -75,6 +75,10 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
         return media.path();
     }
 
+    if (role == ModificationRole) {
+        return media.changed(field);
+    }
+
     if (field.isNull()) {
         if (column == MediaStorageModelColumns::pathColumn()) {
             switch (role) {

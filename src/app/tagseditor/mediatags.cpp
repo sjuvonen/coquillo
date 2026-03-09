@@ -1,5 +1,6 @@
 #include "mediatags.h"
 #include "mediastoragemodelcolumns.h"
+#include "modificationindicatordelegate.h"
 #include "selectionnotifier.h"
 #include "ui_mediatags.h"
 #include <QLineEdit>
@@ -9,26 +10,14 @@
 
 namespace Coquillo {
 MediaTags::MediaTags(QWidget *parent)
-    : QWidget(parent), ui(new Ui::MediaTags), mapper(new QDataWidgetMapper(this)) {
+    : QWidget(parent), ui(new Ui::MediaTags), mapper(new QDataWidgetMapper(this)),
+      labelMapper(new QDataWidgetMapper(this)) {
     ui->setupUi(this);
 
     /**
      * NOTE: Qt Designer does not allow setting spinboxes empty (only 0) so we clear manually.
      */
     clear();
-
-    // mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
-
-    // const auto inputs = findChildren<QLineEdit *>();
-    // const auto spinners = findChildren<QSpinBox *>();
-
-    // for (auto input : inputs) {
-    //     connect(input, &QLineEdit::textChanged, mapper, &QDataWidgetMapper::submit);
-    // }
-
-    // for (auto spinner : spinners) {
-    //     connect(spinner, &QSpinBox::textChanged, mapper, &QDataWidgetMapper::submit);
-    // }
 }
 
 MediaTags::~MediaTags() { delete ui; }
@@ -55,7 +44,27 @@ void MediaTags::setSelectionNotifier(SelectionNotifier *selectionNotifier) {
     mapper->addMapping(ui->tagUrl, MediaStorageModelColumns::column("CONTACT"));
     mapper->addMapping(ui->tagYear, MediaStorageModelColumns::column("DATE"));
 
-    mapper->setCurrentIndex(selectionNotifier->current());
+    /**
+     * The model here is a proxy model: assuming it will not re-order columns.
+     */
+    labelMapper->setModel(selection->model());
+    labelMapper->addMapping(ui->labelAlbum, MediaStorageModelColumns::column("ALBUM"));
+    labelMapper->addMapping(ui->labelAlbumArtist, MediaStorageModelColumns::column("ALBUMARTIST"));
+    labelMapper->addMapping(ui->labelArtist, MediaStorageModelColumns::column("ARTIST"));
+    labelMapper->addMapping(ui->labelComment, MediaStorageModelColumns::column("COMMENT"));
+    labelMapper->addMapping(ui->labelComposer, MediaStorageModelColumns::column("COMPOSER"));
+    labelMapper->addMapping(ui->labelDisc, MediaStorageModelColumns::column("DISCNUMBER"));
+    labelMapper->addMapping(ui->labelEncoder, MediaStorageModelColumns::column("ENCODED-BY"));
+    labelMapper->addMapping(ui->labelGenre, MediaStorageModelColumns::column("GENRE"));
+    labelMapper->addMapping(ui->labelOriginalArtist, MediaStorageModelColumns::column("PERFORMER"));
+    labelMapper->addMapping(ui->labelTitle, MediaStorageModelColumns::column("TITLE"));
+    labelMapper->addMapping(ui->labelTrack, MediaStorageModelColumns::column("TRACKNUMBER"));
+    labelMapper->addMapping(ui->labelTrackTotal, MediaStorageModelColumns::column("TRACKTOTAL"));
+    labelMapper->addMapping(ui->labelUrl, MediaStorageModelColumns::column("CONTACT"));
+    labelMapper->addMapping(ui->labelYear, MediaStorageModelColumns::column("DATE"));
+
+    labelMapper->setCurrentIndex(selectionNotifier->current());
+    labelMapper->setItemDelegate(new ModificationIndicatorDelegate);
 
     connect(selection, &SelectionNotifier::currentChanged, [=](int row) {
         /**
@@ -65,6 +74,7 @@ void MediaTags::setSelectionNotifier(SelectionNotifier *selectionNotifier) {
         clear();
 
         mapper->setCurrentIndex(row);
+        labelMapper->setCurrentIndex(row);
     });
 }
 

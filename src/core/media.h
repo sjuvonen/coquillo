@@ -32,6 +32,7 @@ class Media {
     void reset(const QString &field);
 
     bool changed() const;
+    bool changed(const QString &field) const;
 
   private:
     Media(Type type, const QString &path);

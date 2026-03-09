@@ -165,7 +165,11 @@ void Media::set(const QString &field, const QString &value) {
 void Media::normalize() { d->normalize(); }
 
 void Media::reset() { d->reset(); }
+
 void Media::reset(const QString &field) { d->reset(field); }
 
 bool Media::changed() const { return !d->updates.empty() || !d->renamed.isNull(); }
+
+bool Media::changed(const QString &field) const { return d->updates.contains(field); }
+
 } // namespace Coquillo

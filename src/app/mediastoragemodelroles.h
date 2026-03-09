@@ -8,7 +8,12 @@ enum MediaStorageModelRoles {
     /**
      * Original absolute path to file.
      */
-    FilePathRole = Qt::UserRole + 1
+    FilePathRole = Qt::UserRole + 1,
+
+    /**
+     * Field modification status.
+     */
+    ModificationRole,
 };
 }
 #endif
