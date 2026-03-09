@@ -123,10 +123,10 @@ QVariant MediaStorageModel::data(const QModelIndex &idx, int role) const {
             }
         }
 
-        if (column == 16) {
+        if (column == MediaStorageModelColumns::imagesColumn()) {
             switch (role) {
             case Qt::DisplayRole:
-                return 0;
+                return media.imageCount();
 
             default:
                 return QVariant();

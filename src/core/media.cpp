@@ -37,12 +37,15 @@ class Media::MediaPrivate {
     Tag values;
 
     /**
-     * Modifications to tags.s
+     * Modifications to tags.
      */
     Tag updates;
+
+    int imageCount;
 };
 
-Media::MediaPrivate::MediaPrivate(Type type, const QString &path) : type(type), path(path) {}
+Media::MediaPrivate::MediaPrivate(Type type, const QString &path)
+    : type(type), path(path), imageCount(0) {}
 
 void Media::MediaPrivate::addTag(const QString &name, const Tag &values) {
     if (primary.isNull()) {
@@ -161,6 +164,10 @@ void Media::set(const QString &field, const QString &value) {
         d->updates.replace(field, value);
     }
 }
+
+int Media::imageCount() const { return d->imageCount; }
+
+void Media::setImageCount(int count) { d->imageCount = count; }
 
 void Media::normalize() { d->normalize(); }
 

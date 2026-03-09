@@ -2,6 +2,7 @@
 #include "src/core/media.h"
 #include "src/core/type.h"
 #include <QRegularExpression>
+#include <iostream>
 #include <taglib/flacfile.h>
 #include <taglib/id3v1tag.h>
 #include <taglib/id3v2tag.h>
@@ -117,16 +118,55 @@ bool try_read_mpeg(TagLib::File &source, Coquillo::Media &media) {
     return true;
 }
 
+bool try_read_vorbis(TagLib::File &source, Coquillo::Media &media) {
+    auto file = dynamic_cast<TagLib::Ogg::Vorbis::File *>(&source);
+
+    if (!file) {
+        return false;
+    }
+
+    if (file->tag()) {
+        read_xiph(*file->tag(), media);
+    }
+
+    return true;
+}
+
+bool try_read_flac(TagLib::File &source, Coquillo::Media &media) {
+    auto file = dynamic_cast<TagLib::FLAC::File *>(&source);
+
+    if (!file) {
+        return false;
+    }
+
+    if (file->hasXiphComment()) {
+        read_xiph(*file->xiphComment(), media);
+    }
+
+    if (file->hasID3v2Tag()) {
+        read_id3v2(*file->ID3v2Tag(), media);
+    }
+
+    if (file->hasID3v1Tag()) {
+        read_id3v1(*file->ID3v1Tag(), media);
+    }
+
+    media.setImageCount(media.imageCount() + file->pictureList().size());
+
+    return true;
+}
+
 void read_id3v2(const TagLib::ID3v2::Tag &tag, Coquillo::Media &media) {
     const auto frames = tag.frameListMap();
-    const QStringList ignored = {"APIC"};
     Coquillo::Tag values;
 
     for (auto it = frames.begin(); it != frames.end(); it++) {
         // Some apps seem to have added unicode trash at the end of tags.
         const QString field = QString(it->first.data()).mid(0, 4);
 
-        if (!ignored.contains(field)) {
+        if (it->first == "APIC") {
+            media.setImageCount(it->second.size());
+        } else {
             for (auto j = it->second.begin(); j != it->second.end(); j++) {
                 values.insert(field, TStringToQString((*j)->toString()));
 
@@ -162,58 +202,22 @@ void read_id3v1(const TagLib::ID3v1::Tag &tag, Coquillo::Media &media) {
     read_common(tag, media, "ID3v1");
 }
 
-bool try_read_vorbis(TagLib::File &source, Coquillo::Media &media) {
-    auto file = dynamic_cast<TagLib::Ogg::Vorbis::File *>(&source);
-
-    if (!file) {
-        return false;
-    }
-
-    if (file->tag()) {
-        read_xiph(*file->tag(), media);
-    }
-
-    return true;
-}
-
 void read_xiph(const TagLib::Ogg::XiphComment &tag, Coquillo::Media &media) {
-    const auto fields = tag.fieldListMap();
-    const QStringList ignored = {"METADATA_BLOCK_PICTURE"};
+    const auto &fields = tag.fieldListMap();
     Coquillo::Tag values;
 
     for (auto it = fields.begin(); it != fields.end(); it++) {
         const QString field = TStringToQString(it->first);
 
-        if (!ignored.contains(field)) {
-            for (auto j = it->second.begin(); j != it->second.end(); j++) {
-                values.insert(field, TStringToQString(*j));
-            }
+        std::cout << "\t" << it->first << std::endl;
+
+        for (auto j = it->second.begin(); j != it->second.end(); j++) {
+            values.insert(field, TStringToQString(*j));
         }
     }
 
+    media.setImageCount(tag.complexProperties("PICTURE").size());
     media.addTag("VorbisComment", std::move(values));
-}
-
-bool try_read_flac(TagLib::File &source, Coquillo::Media &media) {
-    auto file = dynamic_cast<TagLib::FLAC::File *>(&source);
-
-    if (!file) {
-        return false;
-    }
-
-    if (file->hasXiphComment()) {
-        read_xiph(*file->xiphComment(), media);
-    }
-
-    if (file->hasID3v2Tag()) {
-        read_id3v2(*file->ID3v2Tag(), media);
-    }
-
-    if (file->hasID3v1Tag()) {
-        read_id3v1(*file->ID3v1Tag(), media);
-    }
-
-    return true;
 }
 
 void read_common(const TagLib::Tag &tag, Coquillo::Media &media, const QString &name) {

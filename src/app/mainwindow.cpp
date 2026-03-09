@@ -62,6 +62,16 @@ MainWindow::MainWindow(QWidget *parent)
         ui->mediaView->selectionModel()->select(QItemSelection(first, last), flags);
     });
 
+    connect(selectionNotifier, &SelectionNotifier::currentChanged, [=](int row) {
+        const auto idx = proxyModel->index(row, MediaStorageModelColumns::imagesColumn());
+        int imageCount = idx.data().toInt();
+
+        const auto label =
+            tr("Images").append(imageCount ? QString(" (%1)").arg(imageCount) : QString());
+
+        ui->mediaTabs->setTabText(1, label);
+    });
+
     QTimer::singleShot(1000, [this]() {
         storage->setRecursive(true);
         storage->addPath("/home/samu/Music/examples");
@@ -107,7 +117,6 @@ QMenu *MainWindow::createPopupMenu() {
 }
 
 void MainWindow::setup() {
-
     addAction(ui->actionQuit);
     addAction(ui->actionSelectAll);
     addAction(ui->actionMenubar);
@@ -212,6 +221,7 @@ void MainWindow::showHeaderContextMenu(const QPoint &pos) {
     QAction *action = menu->addAction(tr("Modification indicator"));
     action->setCheckable(true);
     action->setChecked(!header->isSectionHidden(0));
+
     menu->addSeparator();
 
     mapper.setMapping(action, 0);
@@ -219,9 +229,11 @@ void MainWindow::showHeaderContextMenu(const QPoint &pos) {
 
     for (int i = 1; i < header->count(); i++) {
         const QString label = header->model()->headerData(i, Qt::Horizontal).toString();
+
         QAction *action = new QAction(label, menu);
         action->setCheckable(true);
         action->setChecked(!header->isSectionHidden(i));
+
         mapper.setMapping(action, i);
         labels[label] = action;
 

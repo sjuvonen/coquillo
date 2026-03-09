@@ -27,6 +27,9 @@ class Media {
     const QString get(const QString &field) const;
     void set(const QString &field, const QString &value);
 
+    int imageCount() const;
+    void setImageCount(int count);
+
     void normalize();
     void reset();
     void reset(const QString &field);
